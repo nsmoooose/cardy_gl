@@ -1,7 +1,7 @@
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include "keyboard_handler.h"
+#include "mygl.h"
 
 void render_scene() {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -16,9 +16,6 @@ void setup_render_context() {
 void window_size_change(int width, int height) {
 }
 
-void window_key_press(unsigned char key, int x, int y) {
-	printf("Keyboard pressed: %c\n", key);
-}
 
 int main(int argc, char* argv[]) {
 	glutInit(&argc, argv);
@@ -27,6 +24,7 @@ int main(int argc, char* argv[]) {
 	glutCreateWindow("Cardy 4");
 	glutReshapeFunc(window_size_change);
 	glutKeyboardFunc(window_key_press);
+	glutSpecialFunc(window_special_key_press);
 	glutDisplayFunc(render_scene);
 
 	setup_render_context();
