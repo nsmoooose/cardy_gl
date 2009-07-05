@@ -9,5 +9,6 @@ clean:
 
 cardy_gl: $(OBJECTS)
 	@echo Building $@
-	@gcc -o $@ $(OBJECTS) -lglut -lGL -lGLU -lm
+	@gcc -g -Os -o $@ $(OBJECTS) -lglut -lGL -lGLU -lm
+
 

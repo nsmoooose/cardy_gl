@@ -1,19 +1,20 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "card.h"
 #include "keyboard_handler.h"
 #include "mygl.h"
 
-void render_scene() {
+static void render_scene() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glutSwapBuffers();
 }
 
-void setup_render_context() {
+static void setup_render_context() {
 	glClearColor(0.0f, 0.8f, 0.0f, 0.0f);
 }
 
-void window_size_change(int width, int height) {
+static void window_size_change(int width, int height) {
 }
 
 
