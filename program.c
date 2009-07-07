@@ -3,6 +3,12 @@
 #include "card.h"
 #include "keyboard_handler.h"
 #include "mygl.h"
+#include "solitaire_theidiot.h"
+
+/** Global instance of the one and only solitaire that is currently
+ *  running.
+ */
+solitaire* g_solitaire = 0;
 
 static void render_scene() {
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -19,6 +25,8 @@ static void window_size_change(int width, int height) {
 
 
 int main(int argc, char* argv[]) {
+	g_solitaire = solitaire_theidiot();
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(800, 600);

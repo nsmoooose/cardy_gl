@@ -34,27 +34,45 @@ typedef struct {
 /** Interface with a solitaire game. All members of this
  *  struct is callbacks to the logic.
  */
-typedef struct {
-	/* Member functions about this game. Most of these
-	 * are callbacks to the real hidden logic. */
+typedef struct solitaire_St {
+	/** Deal the deck of cards. This means that a new solitaire is
+	 *  started.
+	 */
+	void (*deal)(struct solitaire_St* sol);
 
-	/* deal = deal the deck of cards. This means that
-	 * a new solitaire is started.*/
+	/** Returns the number of piles available to display.
+	 */
+	int (*get_pile_count)(struct solitaire_St* sol);
 
-	/* move card = move card between two positions. */
+	/** Returns information about a pile and a list of all
+	 *  the cards in it.
+	 */
+	pile* (*get_pile)(struct solitaire_St* sol);
 
-	/* card revealed|hidden = events that is called
-	 * when a card has been revealed beqause of user
-	 * action. */
+	/** Move card between two positions.
+	 */
+	void (*move)(struct solitaire_St* sol, card_proxy* card_proxy);
 
-	/* finished = the solitaire has been solved. */
+	/** Event that is called when a card has been revealed
+	 *  or hidden beqause of user action.
+	 */
+	void (*card_revealed)(struct solitaire_St* sol);
 
-	/* free = free all memory held by this solitaire. */
+	/** The solitaire has been solved.
+	 */
+	void (*finished)(struct solitaire_St* sol);
+
+	/** Free all memory held by this solitaire.
+	 */
+	void (*free)(struct solitaire_St* sol);
 
 	/** Internal representation of this game. Don't mess
 	 *  with this one.
 	 */
 	void* data;
 } solitaire;
+
+
+void create_deck(card* list[], int count);
 
 #endif // __CARD_H__
