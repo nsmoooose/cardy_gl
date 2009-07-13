@@ -15,6 +15,8 @@ void create_deck(card* list[], int count) {
 			card* card = calloc(1, sizeof(card));
 			card->value = value;
 			card->suit = suit;
+
+			card->data = calloc(1, sizeof(card_proxy));
 			list[index] = card;
 
 			index++;

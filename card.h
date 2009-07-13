@@ -13,6 +13,8 @@ typedef enum {
 typedef struct {
 	unsigned char value;
 	card_suit suit;
+
+	void* data;
 } card;
 
 /** This is a placeholder for a single card. If the card
@@ -47,7 +49,7 @@ typedef struct solitaire_St {
 	/** Returns information about a pile and a list of all
 	 *  the cards in it.
 	 */
-	pile* (*get_pile)(struct solitaire_St* sol);
+	pile* (*get_pile)(struct solitaire_St* sol, int no);
 
 	/** Move card between two positions.
 	 */
