@@ -9,7 +9,7 @@ typedef struct {
 	card* pile3[13];
 	card* pile4[13];
 
-	card* done[52];
+	card* done[48];
 
 	pile deck_pile;
 	pile pile1_pile;
@@ -18,6 +18,34 @@ typedef struct {
 	pile pile4_pile;
 	pile done_pile;
 } internal;
+
+static void sync_pile(card** src, int src_count, pile* dest) {
+	dest->card_count = 0;
+	int i;
+	for(i=0;i<src_count;++i) {
+		if(src[i] == 0) {
+			/* No card. */
+			dest->first[i] = 0;
+		}
+		else {
+			/* Yes there was a card. */
+			dest->first[i] = (card_proxy*)src[i]->data;
+			dest->card_count++;
+		}
+	}
+}
+
+static void sync(internal* i) {
+	sync_pile(i->deck, 52, &i->deck_pile);
+	sync_pile(i->pile1, 13, &i->pile1_pile);
+	sync_pile(i->pile2, 13, &i->pile2_pile);
+	sync_pile(i->pile3, 13, &i->pile3_pile);
+	sync_pile(i->pile4, 13, &i->pile4_pile);
+	sync_pile(i->done, 48, &i->done_pile);
+}
+
+static void my_new_game(solitaire* sol) {
+}
 
 static void my_deal(solitaire* sol) {
 	/* Collect all cards back to the deck. */
@@ -52,11 +80,19 @@ static pile* my_get_pile(struct solitaire_St* sol, int no) {
 }
 
 static void my_move(solitaire* sol, card_proxy* card_proxy) {
+	internal* i = sol->data;
+
+	sync(i);
 }
 
 static void my_free(solitaire* sol) {
 	internal* i = sol->data;
 	int index;
+
+	/*
+	 * Free the proxy data.
+	 * Free piles and vectors of proxy cards.
+	 */
 
 	for(index=0;index<52;++index) {
 		if(i->deck[index]) {
@@ -94,8 +130,18 @@ solitaire* solitaire_theidiot() {
 	internal* i = calloc(1, sizeof(internal));
 	s->data = i;
 
+	i->deck_pile.first = calloc(52, sizeof(card_proxy*));
+	i->pile1_pile.first = calloc(13, sizeof(card_proxy*));
+	i->pile2_pile.first = calloc(13, sizeof(card_proxy*));
+	i->pile3_pile.first = calloc(13, sizeof(card_proxy*));
+	i->pile4_pile.first = calloc(13, sizeof(card_proxy*));
+	i->done_pile.first = calloc(48, sizeof(card_proxy*));
+
+	sync(i);
+
 	/* Add our implementation for the common functionality
 	 * shared by all solitaires. */
+	s->new_game = my_new_game;
 	s->deal = my_deal;
 	s->get_pile_count = my_get_pile_count;
 	s->get_pile = my_get_pile;

@@ -24,21 +24,24 @@ typedef struct {
 	card* card;
 } card_proxy;
 
-typedef struct card_proxy_list_St {
-	card_proxy* item;
-	struct card_proxy_list_St* next;
-} card_proxy_list;
-
+/** Contains information about a pile. All this information
+ *  is then used by the rendering engine to visualize the
+ *  content.
+ */
 typedef struct {
-	card_proxy_list* cards;
+	card_proxy** first;
+	unsigned int card_count;
 } pile;
 
 /** Interface with a solitaire game. All members of this
  *  struct is callbacks to the logic.
  */
 typedef struct solitaire_St {
-	/** Deal the deck of cards. This means that a new solitaire is
-	 *  started.
+	/** Start a new game.
+	 */
+	void (*new_game)(struct solitaire_St* sol);
+
+	/** Deal the deck of cards.
 	 */
 	void (*deal)(struct solitaire_St* sol);
 
@@ -76,5 +79,6 @@ typedef struct solitaire_St {
 
 
 void create_deck(card* list[], int count);
+void print_solitaire_info(solitaire* sol);
 
 #endif // __CARD_H__

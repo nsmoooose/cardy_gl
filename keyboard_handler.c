@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include "keyboard_handler.h"
-#include "gameengine.h"
-#include "mygl.h"
-#include "solitaire_theidiot.h"
+#include "lib/gameengine.h"
+#include "lib/mygl.h"
+#include "lib/solitaire_theidiot.h"
 
 void new_game() {
 	if(g_solitaire) {

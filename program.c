@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "card.h"
+#include "lib/card.h"
 #include "keyboard_handler.h"
-#include "mygl.h"
-#include "solitaire_theidiot.h"
+#include "lib/mygl.h"
+#include "lib/solitaire_theidiot.h"
 
 /** Global instance of the one and only solitaire that is currently
  *  running.
@@ -12,6 +12,8 @@ solitaire* g_solitaire = 0;
 
 static void render_scene() {
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	print_solitaire_info(g_solitaire);
 
 	glutSwapBuffers();
 }

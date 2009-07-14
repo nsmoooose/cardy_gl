@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "card.h"
 
 void create_deck(card* list[], int count) {
@@ -20,6 +21,22 @@ void create_deck(card* list[], int count) {
 			list[index] = card;
 
 			index++;
+		}
+	}
+}
+
+void print_solitaire_info(solitaire* sol) {
+	int i, j;
+	for(i=0;i<sol->get_pile_count(sol);++i) {
+		printf("Pile: %d\n", i);
+		pile* pile = sol->get_pile(sol, i);
+		for(j=0;j<pile->card_count;++j) {
+			if(pile->first[j]->card == 0) {
+				printf("Card at index: %d is facing down.\n", j);
+			}
+			else {
+				printf("TODO");
+			}
 		}
 	}
 }
