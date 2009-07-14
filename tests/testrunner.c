@@ -12,7 +12,7 @@ int main(int argc, char argv[]) {
 	suite_add_tcase(suite, card_case);
 
 	SRunner* runner = srunner_create(suite);
-	srunner_run_all(runner, CK_NORMAL);
+	srunner_run_all(runner, CK_VERBOSE);
 
 	// failed = srunner_ntest_failed(runner);
 	srunner_free(runner);

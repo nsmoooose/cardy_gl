@@ -9,4 +9,4 @@ clean:
 
 cardy_tests:  $(OBJECTS)
 	@echo Building $@
-	@gcc -g -Os -o $@ $(OBJECTS) -lglut -lGL -lGLU -lm -lcheck
+	@gcc -g -Os -o $@ $(OBJECTS) -lglut -lGL -lGLU -lm -lcheck -lcardy -L../lib

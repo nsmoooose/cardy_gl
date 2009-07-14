@@ -7,9 +7,9 @@ void create_deck(card* list[], int count) {
 	card_suit suit;
 	char value;
 
-	for(suit=e_diamonds;suit<e_spades;++suit) {
-		for(value=0;value<13;++value) {
-			if(index < count) {
+	for(suit=e_diamonds;suit<=e_spades;++suit) {
+		for(value=1;value<14;++value) {
+			if(index >= count) {
 				return;
 			}
 
