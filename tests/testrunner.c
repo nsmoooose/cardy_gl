@@ -1,6 +1,7 @@
 #include <check.h>
 #include <stdlib.h>
 #include "test_card.h"
+#include "test_sol_theidiot.h"
 
 int main(int argc, char argv[]) {
 	int failed;
@@ -10,6 +11,10 @@ int main(int argc, char argv[]) {
 	TCase* card_case = tcase_create("Card");
 	tcase_add_test(card_case, test_create_deck);
 	suite_add_tcase(suite, card_case);
+
+	TCase* sol_theidiot = tcase_create("Sol-TheIdiot");
+	tcase_add_test(sol_theidiot, test_sol_theidiot_init);
+	suite_add_tcase(suite, sol_theidiot);
 
 	SRunner* runner = srunner_create(suite);
 	srunner_run_all(runner, CK_VERBOSE);

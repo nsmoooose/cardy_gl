@@ -137,6 +137,8 @@ solitaire* solitaire_theidiot() {
 	i->pile4_pile.first = calloc(13, sizeof(card_proxy*));
 	i->done_pile.first = calloc(48, sizeof(card_proxy*));
 
+	create_deck(i->deck, 52);
+
 	sync(i);
 
 	/* Add our implementation for the common functionality
@@ -147,6 +149,5 @@ solitaire* solitaire_theidiot() {
 	s->get_pile = my_get_pile;
 	s->move = my_move;
 	s->free = my_free;
-	create_deck(i->deck, 52);
 	return s;
 }
