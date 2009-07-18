@@ -1,6 +1,10 @@
 #ifndef __CARD_H__
 #define __CARD_H__
 
+#define CARD_WIDTH 40.0
+#define CARD_HEIGHT 60.0
+#define CARD_SPACING 4.0
+
 typedef enum {
 	e_diamonds,
 	e_clubs,
@@ -31,6 +35,11 @@ typedef struct {
 typedef struct {
 	card_proxy** first;
 	unsigned int card_count;
+
+	float origin[3];
+	float rotation;
+	float transformationX;
+	float transformationY;
 } pile;
 
 /** Interface with a solitaire game. All members of this
@@ -76,7 +85,6 @@ typedef struct solitaire_St {
 	 */
 	void* data;
 } solitaire;
-
 
 void create_deck(card* list[], int count);
 void print_solitaire_info(solitaire* sol);

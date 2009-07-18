@@ -137,6 +137,20 @@ solitaire* solitaire_theidiot() {
 	i->pile4_pile.first = calloc(13, sizeof(card_proxy*));
 	i->done_pile.first = calloc(48, sizeof(card_proxy*));
 
+	i->deck_pile.origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2);
+	i->pile1_pile.origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING);
+	i->pile2_pile.origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2);
+	i->pile3_pile.origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2;
+	i->pile4_pile.origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING;
+	i->done_pile.origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2;
+
+	i->deck_pile.origin[1] = 40.0f;
+	i->pile1_pile.origin[1] = 40.0f;
+	i->pile2_pile.origin[1] = 40.0f;
+	i->pile3_pile.origin[1] = 40.0f;
+	i->pile4_pile.origin[1] = 40.0f;
+	i->done_pile.origin[1] = 40.0f;
+
 	create_deck(i->deck, 52);
 
 	sync(i);
