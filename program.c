@@ -2,53 +2,14 @@
 #include <stdio.h>
 #include "lib/card.h"
 #include "keyboard_handler.h"
+#include "rendering.h"
 #include "lib/gameengine.h"
 #include "lib/mygl.h"
 #include "lib/solitaire_theidiot.h"
 
-static void render_pile(pile* pile) {
-	glColor3f(0.0f, 0.7f, 0.0f);
-	glBegin(GL_QUADS);
-	glVertex2f(pile->origin[0] - CARD_WIDTH/2.0f, pile->origin[1] + CARD_HEIGHT/2.0f);
-	glVertex2f(pile->origin[0] + CARD_WIDTH/2.0f, pile->origin[1] + CARD_HEIGHT/2.0f);
-	glVertex2f(pile->origin[0] + CARD_WIDTH/2.0f, pile->origin[1] - CARD_HEIGHT/2.0f);
-	glVertex2f(pile->origin[0] - CARD_WIDTH/2.0f, pile->origin[1] - CARD_HEIGHT/2.0f);
-	glEnd();
-}
-
-static void render_card(pile* pile, card_proxy* proxy) {
-	if(proxy->card == 0) {
-		glColor3f(0.7f, 0.7f, 1.0f);
-	}
-	else {
-		glColor3f(1.0f, 1.0f, 1.0f);
-	}
-	glBegin(GL_QUADS);
-	glVertex2f(pile->origin[0] - CARD_WIDTH/2.0f, pile->origin[1] + CARD_HEIGHT/2.0f);
-	glVertex2f(pile->origin[0] + CARD_WIDTH/2.0f, pile->origin[1] + CARD_HEIGHT/2.0f);
-	glVertex2f(pile->origin[0] + CARD_WIDTH/2.0f, pile->origin[1] - CARD_HEIGHT/2.0f);
-	glVertex2f(pile->origin[0] - CARD_WIDTH/2.0f, pile->origin[1] - CARD_HEIGHT/2.0f);
-	glEnd();
-}
-
 static void render_scene() {
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	// print_solitaire_info(g_solitaire);
-
-	int pile_index;
-	int pile_count = g_solitaire->get_pile_count(g_solitaire);
-	for(pile_index=0;pile_index<pile_count;++pile_index) {
-		pile* pile = g_solitaire->get_pile(g_solitaire, pile_index);
-
-		render_pile(pile);
-
-		int card_index;
-		for(card_index=0;card_index<pile->card_count;++card_index) {
-			render_card(pile, pile->first[card_index]);
-		}
-	}
-
+	render_desktop();
+	render_solitaire(g_solitaire);
 	glutSwapBuffers();
 }
 

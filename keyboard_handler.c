@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "keyboard_handler.h"
+#include "rendering.h"
 #include "lib/gameengine.h"
 #include "lib/mygl.h"
 #include "lib/solitaire_theidiot.h"
