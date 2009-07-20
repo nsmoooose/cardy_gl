@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "lib/card.h"
 #include "keyboard_handler.h"
+#include "mouse_handler.h"
 #include "rendering.h"
 #include "lib/gameengine.h"
 #include "lib/mygl.h"
@@ -15,6 +16,7 @@ static void render_scene() {
 
 static void setup_render_context() {
 	glClearColor(0.0f, 0.8f, 0.0f, 0.0f);
+	glEnableClientState(GL_VERTEX_ARRAY);
 }
 
 static void window_size_change(int width, int height) {
@@ -43,6 +45,7 @@ int main(int argc, char* argv[]) {
 	glutReshapeFunc(window_size_change);
 	glutKeyboardFunc(window_key_press);
 	glutSpecialFunc(window_special_key_press);
+	glutMouseFunc(window_mouse);
 	glutDisplayFunc(render_scene);
 
 	setup_render_context();
