@@ -4,15 +4,8 @@
 #include "keyboard_handler.h"
 #include "mouse_handler.h"
 #include "rendering.h"
-#include "lib/gameengine.h"
 #include "lib/mygl.h"
 #include "lib/solitaire_theidiot.h"
-
-static void render_scene() {
-	render_desktop();
-	render_solitaire(g_solitaire);
-	glutSwapBuffers();
-}
 
 static void setup_render_context() {
 	glClearColor(0.0f, 0.8f, 0.0f, 0.0f);
@@ -29,7 +22,7 @@ static void window_size_change(int width, int height) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	aspect = (float)width/(float)height;
-	gluPerspective(45.0, aspect, 1.0, 500.0);
+	gluPerspective(g_perspective_fov, aspect, g_perspective_near, g_perspective_far);
 
 	update_camera_pos();
 }

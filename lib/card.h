@@ -29,11 +29,13 @@ typedef struct {
 	card* card;
 } card_proxy;
 
+struct solitaire_St;
+
 /** Contains information about a pile. All this information
  *  is then used by the rendering engine to visualize the
  *  content.
  */
-typedef struct {
+typedef struct pile_St {
 	card_proxy** first;
 	unsigned int card_count;
 
@@ -41,6 +43,9 @@ typedef struct {
 	float rotation;
 	float transformationX;
 	float transformationY;
+
+	void (*pile_action)(struct solitaire_St* sol, struct pile_St* pile);
+	void (*card_action)(struct solitaire_St* sol, struct pile_St* pile, card_proxy* proxy);
 } pile;
 
 /** Interface with a solitaire game. All members of this
@@ -87,7 +92,14 @@ typedef struct solitaire_St {
 	void* data;
 } solitaire;
 
+extern solitaire* g_solitaire;
+
 void create_deck(card* list[], int count);
 void print_solitaire_info(solitaire* sol);
+
+int card_count(card* cards[], int size);
+card* card_take_last(card* cards[], int size);
+void card_append(card* card_to_append, card* cards[], int size);
+int card_first_free(card* cards[], int size);
 
 #endif // __CARD_H__

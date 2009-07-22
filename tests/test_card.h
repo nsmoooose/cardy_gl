@@ -21,3 +21,42 @@ START_TEST(test_create_deck) {
 	}
 }
 END_TEST
+
+START_TEST(test_card_count) {
+	card c1, c2;
+
+	card* cards[3] = {&c1, 0, &c2};
+
+	ck_assert_msg(card_count(cards, 3) == 2, "There should be two cards in this pile.");
+}
+END_TEST
+
+START_TEST(test_card_take_last) {
+	card c1, c2;
+
+	card* cards[3] = {&c1, 0, &c2};
+
+	card* last = card_take_last(cards, 3);
+	ck_assert_msg(&c2 == last, "The last card wasn't taken.");
+}
+END_TEST
+
+START_TEST(test_card_append) {
+	card* cards[3] = {0, 0, 0};
+	card c1;
+
+	card_append(&c1, cards, 3);
+
+	ck_assert_msg(cards[0] == &c1, "First card should be set.");
+}
+END_TEST
+
+START_TEST(test_card_first_free) {
+	card* cards[3] = {1, 1, 0 };
+
+	ck_assert_msg(card_first_free(cards, 3) == 2, "Didn't return the correct index for the first free position.");
+
+	cards[2] = 1;
+	ck_assert_msg(card_first_free(cards, 3) == -1, "Didn't return -1 for non free array.");
+}
+END_TEST

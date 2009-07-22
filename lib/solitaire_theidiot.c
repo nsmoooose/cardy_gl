@@ -48,8 +48,21 @@ static void my_new_game(solitaire* sol) {
 }
 
 static void my_deal(solitaire* sol) {
-	/* Collect all cards back to the deck. */
-	/* Randomize them. */
+	internal* i = sol->data;
+
+	if(card_count(i->deck, 52) >= 4) {
+		card* card1 = card_take_last(i->deck, 52);
+		card* card2 = card_take_last(i->deck, 52);
+		card* card3 = card_take_last(i->deck, 52);
+		card* card4 = card_take_last(i->deck, 52);
+
+		card_append(card1, i->pile1, 13);
+		card_append(card2, i->pile2, 13);
+		card_append(card3, i->pile3, 13);
+		card_append(card4, i->pile4, 13);
+	}
+
+	sync(i);
 }
 
 static int my_get_pile_count(struct solitaire_St* sol) {
@@ -146,6 +159,7 @@ solitaire* solitaire_theidiot() {
 
 	i->deck_pile.origin[1] = 40.0f;
 	i->deck_pile.rotation = 45.0f;
+	i->deck_pile.pile_action = my_deal;
 
 	i->pile1_pile.origin[1] = 40.0f;
 	i->pile2_pile.origin[1] = 40.0f;

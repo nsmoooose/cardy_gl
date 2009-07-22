@@ -4,6 +4,9 @@
 float g_camera_zoom = -250.0f;
 float g_camera_translateX = 0.0f;
 float g_camera_translateY = 0.0f;
+float g_perspective_near = 1.0f;
+float g_perspective_far = 500.0f;
+float g_perspective_fov = 45.0f;
 
 /* Build a vector of coordinates for a card. */
 static GLfloat g_card_coords[8*3] = {
@@ -57,6 +60,8 @@ void render_pile(pile* pile) {
 	glPushMatrix();
 	glTranslatef(pile->origin[0], pile->origin[1], pile->origin[2]);
 
+	glLoadName((GLuint)pile);
+
 	if(pile->rotation != 0.0f) {
 		glRotatef(pile->rotation, 0.0f, 0.0f, 1.0f);
 	}
@@ -87,8 +92,10 @@ void render_card(pile* pile, card_proxy* proxy) {
 		glColor3f(1.0f, 1.0f, 1.0f);
 	}
 
+	glPushName((GLuint)proxy);
 	glVertexPointer(3, GL_FLOAT, 0, g_card_coords);
 	glDrawElements(GL_QUADS, 24, GL_UNSIGNED_BYTE, g_card_indexes);
+	glPopName();
 
 	/* Do a translation of our position for the next card. */
 	glTranslatef(0.0f, 0.0f, CARD_THICKNESS);
@@ -96,4 +103,13 @@ void render_card(pile* pile, card_proxy* proxy) {
 
 void render_desktop() {
 	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void render_scene() {
+	glInitNames();
+	glPushName(0);
+
+	render_desktop();
+	render_solitaire(g_solitaire);
+	glutSwapBuffers();
 }

@@ -26,3 +26,13 @@ START_TEST(test_sol_theidiot_init) {
 	}
 }
 END_TEST
+
+START_TEST(test_sol_theidiot_deal) {
+	solitaire* sol = solitaire_theidiot();
+
+	pile* deck = sol->get_pile(sol, 0);
+	deck->pile_action(sol, deck);
+
+	ck_assert_msg(deck->card_count == (52 - 4), "The deck should have 4 less cards now.");
+}
+END_TEST
