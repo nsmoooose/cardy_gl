@@ -20,8 +20,9 @@ typedef struct {
 } internal;
 
 static void sync_pile(card** src, int src_count, pile* dest) {
-	dest->card_count = 0;
 	int i;
+
+	dest->card_count = 0;
 	for(i=0;i<src_count;++i) {
 		if(src[i] == 0) {
 			/* No card. */
@@ -47,7 +48,7 @@ static void sync(internal* i) {
 static void my_new_game(solitaire* sol) {
 }
 
-static void my_deal(solitaire* sol) {
+static void my_deal(solitaire* sol, pile* pile) {
 	internal* i = sol->data;
 
 	if(card_count(i->deck, 52) >= 4) {
@@ -55,6 +56,11 @@ static void my_deal(solitaire* sol) {
 		card* card2 = card_take_last(i->deck, 52);
 		card* card3 = card_take_last(i->deck, 52);
 		card* card4 = card_take_last(i->deck, 52);
+
+		card_reveal(card1);
+		card_reveal(card2);
+		card_reveal(card3);
+		card_reveal(card4);
 
 		card_append(card1, i->pile1, 13);
 		card_append(card2, i->pile2, 13);
@@ -102,6 +108,13 @@ static void my_free(solitaire* sol) {
 	internal* i = sol->data;
 	int index;
 
+	card_append_all(i->deck, 52, i->done, 52);
+	card_append_all(i->deck, 52, i->pile1, 13);
+	card_append_all(i->deck, 52, i->pile2, 13);
+	card_append_all(i->deck, 52, i->pile3, 13);
+	card_append_all(i->deck, 52, i->pile4, 13);
+
+
 	/*
 	 * Free the proxy data.
 	 * Free piles and vectors of proxy cards.
@@ -111,26 +124,9 @@ static void my_free(solitaire* sol) {
 		if(i->deck[index]) {
 			free(i->deck[index]);
 		}
-		if(i->done[index]) {
-			free(i->done[index]);
-		}
 	}
-	for(index=0;index<13;++index) {
-		if(i->pile1[index]) {
-			free(i->pile1[index]);
-		}
-		if(i->pile2[index]) {
-			free(i->pile2[index]);
-		}
-		if(i->pile3[index]) {
-			free(i->pile3[index]);
-		}
-		if(i->pile4[index]) {
-			free(i->pile4[index]);
-		}
-	}
-	free(i);
-	free(sol);
+	/* free(i); */
+	/* free(sol); */
 }
 
 solitaire* solitaire_theidiot() {
@@ -161,10 +157,15 @@ solitaire* solitaire_theidiot() {
 	i->deck_pile.rotation = 45.0f;
 	i->deck_pile.pile_action = my_deal;
 
-	i->pile1_pile.origin[1] = 40.0f;
-	i->pile2_pile.origin[1] = 40.0f;
-	i->pile3_pile.origin[1] = 40.0f;
-	i->pile4_pile.origin[1] = 40.0f;
+	i->pile1_pile.origin[1] = 70.0f;
+	i->pile2_pile.origin[1] = 70.0f;
+	i->pile3_pile.origin[1] = 70.0f;
+	i->pile4_pile.origin[1] = 70.0f;
+
+	i->pile1_pile.translateY = 0 - CARD_HEIGHT / 5;
+	i->pile2_pile.translateY = 0 - CARD_HEIGHT / 5;
+	i->pile3_pile.translateY = 0 - CARD_HEIGHT / 5;
+	i->pile4_pile.translateY = 0 - CARD_HEIGHT / 5;
 
 	i->done_pile.origin[1] = 40.0f;
 	i->done_pile.rotation = -45.0f;
@@ -176,7 +177,6 @@ solitaire* solitaire_theidiot() {
 	/* Add our implementation for the common functionality
 	 * shared by all solitaires. */
 	s->new_game = my_new_game;
-	s->deal = my_deal;
 	s->get_pile_count = my_get_pile_count;
 	s->get_pile = my_get_pile;
 	s->move = my_move;

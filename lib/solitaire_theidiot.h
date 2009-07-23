@@ -5,4 +5,4 @@
 
 solitaire* solitaire_theidiot();
 
-#endif // __SOLITAIRE_THEIDIOT_H__
+#endif /* __SOLITAIRE_THEIDIOT_H__ */

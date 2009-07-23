@@ -41,8 +41,8 @@ typedef struct pile_St {
 
 	float origin[3];
 	float rotation;
-	float transformationX;
-	float transformationY;
+	float translateX;
+	float translateY;
 
 	void (*pile_action)(struct solitaire_St* sol, struct pile_St* pile);
 	void (*card_action)(struct solitaire_St* sol, struct pile_St* pile, card_proxy* proxy);
@@ -55,10 +55,6 @@ typedef struct solitaire_St {
 	/** Start a new game.
 	 */
 	void (*new_game)(struct solitaire_St* sol);
-
-	/** Deal the deck of cards.
-	 */
-	void (*deal)(struct solitaire_St* sol);
 
 	/** Returns the number of piles available to display.
 	 */
@@ -100,6 +96,8 @@ void print_solitaire_info(solitaire* sol);
 int card_count(card* cards[], int size);
 card* card_take_last(card* cards[], int size);
 void card_append(card* card_to_append, card* cards[], int size);
+void card_append_all(card* dest[], int dest_size, card* src[], int src_size);
 int card_first_free(card* cards[], int size);
+void card_reveal(card* card);
 
-#endif // __CARD_H__
+#endif /* __CARD_H__ */

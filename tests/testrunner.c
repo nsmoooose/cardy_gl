@@ -13,6 +13,7 @@ int main(int argc, char argv[]) {
 	tcase_add_test(card_case, test_card_count);
 	tcase_add_test(card_case, test_card_take_last);
 	tcase_add_test(card_case, test_card_append);
+	tcase_add_test(card_case, test_card_append_all);
 	tcase_add_test(card_case, test_card_first_free);
 	suite_add_tcase(suite, card_case);
 
@@ -24,7 +25,7 @@ int main(int argc, char argv[]) {
 	SRunner* runner = srunner_create(suite);
 	srunner_run_all(runner, CK_VERBOSE);
 
-	// failed = srunner_ntest_failed(runner);
+	failed = srunner_ntests_failed(runner);
 	srunner_free(runner);
 
 	return (failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;

@@ -56,6 +56,8 @@ void render_solitaire(solitaire* sol) {
 }
 
 void render_pile(pile* pile) {
+	int card_index;
+
 	/* Do a translation of our position for the pile. */
 	glPushMatrix();
 	glTranslatef(pile->origin[0], pile->origin[1], pile->origin[2]);
@@ -75,7 +77,6 @@ void render_pile(pile* pile) {
 	glEnd();
 
 	glPushMatrix();
-	int card_index;
 	for(card_index=0;card_index<pile->card_count;++card_index) {
 		render_card(pile, pile->first[card_index]);
 	}
@@ -98,7 +99,7 @@ void render_card(pile* pile, card_proxy* proxy) {
 	glPopName();
 
 	/* Do a translation of our position for the next card. */
-	glTranslatef(0.0f, 0.0f, CARD_THICKNESS);
+	glTranslatef(pile->translateX, pile->translateY, CARD_THICKNESS);
 }
 
 void render_desktop() {

@@ -5,7 +5,6 @@ START_TEST(test_sol_theidiot_init) {
 	solitaire* sol = solitaire_theidiot();
 
 	ck_assert_msg(sol->new_game != 0, "New game isn't implemented.");
-	ck_assert_msg(sol->deal != 0, "Deal new cards isn't implemented.");
 	ck_assert_msg(sol->get_pile_count != 0, "Get pile count isn't implemented.");
 	ck_assert_msg(sol->get_pile != 0, "Get pile isn't implemented.");
 	ck_assert_msg(sol->move != 0, "Move card isn't implemented.");
@@ -33,6 +32,19 @@ START_TEST(test_sol_theidiot_deal) {
 	pile* deck = sol->get_pile(sol, 0);
 	deck->pile_action(sol, deck);
 
+	pile* pile1 = sol->get_pile(sol, 1);
+	pile* pile2 = sol->get_pile(sol, 2);
+	pile* pile3 = sol->get_pile(sol, 3);
+	pile* pile4 = sol->get_pile(sol, 4);
+
 	ck_assert_msg(deck->card_count == (52 - 4), "The deck should have 4 less cards now.");
+	ck_assert_msg(pile1->card_count == 1, "The number of cards should be 1");
+	ck_assert_msg(pile2->card_count == 1, "The number of cards should be 1");
+	ck_assert_msg(pile3->card_count == 1, "The number of cards should be 1");
+	ck_assert_msg(pile4->card_count == 1, "The number of cards should be 1");
+	ck_assert_msg(pile1->first[0]->card != 0, "Card should have been revealed.");
+	ck_assert_msg(pile2->first[0]->card != 0, "Card should have been revealed.");
+	ck_assert_msg(pile3->first[0]->card != 0, "Card should have been revealed.");
+	ck_assert_msg(pile4->first[0]->card != 0, "Card should have been revealed.");
 }
 END_TEST

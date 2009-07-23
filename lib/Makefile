@@ -12,3 +12,7 @@ libcardy.a: $(OBJECTS)
 	@echo Building $@
 	@ar rcs $@ $(OBJECTS)
 	# @gcc --shared -g -Os -o $@ $(OBJECTS) -lglut -lGL -lGLU -lm -lcheck
+
+%.o: %.c
+	@echo $<
+	@gcc -c -g -Os -Wall -pedantic $<

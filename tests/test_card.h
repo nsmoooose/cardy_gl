@@ -38,6 +38,7 @@ START_TEST(test_card_take_last) {
 
 	card* last = card_take_last(cards, 3);
 	ck_assert_msg(&c2 == last, "The last card wasn't taken.");
+	ck_assert_msg(cards[2] == 0, "The card has been taken. This index should be 0.");
 }
 END_TEST
 
@@ -52,11 +53,26 @@ START_TEST(test_card_append) {
 END_TEST
 
 START_TEST(test_card_first_free) {
-	card* cards[3] = {1, 1, 0 };
+	card c1;
+	card* cards[3] = {&c1, &c1, 0 };
 
 	ck_assert_msg(card_first_free(cards, 3) == 2, "Didn't return the correct index for the first free position.");
 
-	cards[2] = 1;
+	cards[2] = &c1;
 	ck_assert_msg(card_first_free(cards, 3) == -1, "Didn't return -1 for non free array.");
+}
+END_TEST
+
+START_TEST(test_card_append_all) {
+	card c1, c2;
+	card* src[3] = {&c1, &c2, 0};
+	card* dst[3] = {0, 0, 0};
+
+	card_append_all(dst, 3, src, 3);
+
+	ck_assert_msg(dst[0] == &c1, "c1 card wasn't appended.");
+	ck_assert_msg(dst[1] == &c2, "c2 card wasn't appended.");
+	ck_assert_msg(src[0] == 0, "c1 origin wasn't cleared.");
+	ck_assert_msg(src[1] == 0, "c2 origin wasn't cleared.");
 }
 END_TEST

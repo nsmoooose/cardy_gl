@@ -4,20 +4,11 @@
 #include "lib/mygl.h"
 #include "lib/solitaire_theidiot.h"
 
-void new_game() {
-	if(g_solitaire) {
-		g_solitaire->deal(g_solitaire);
-		printf("COMMAND: deal\n");
-	}
-}
-
 void window_key_press(unsigned char key, int x, int y) {
-	static float zoom = -250.0f;
-	static float translateX = 0.0f;
-	static float translateY = 0.0f;
+	int key_modifiers;
 
 	printf("Keyboard pressed: ");
-	int key_modifiers = glutGetModifiers();
+	key_modifiers = glutGetModifiers();
 	if(key_modifiers & GLUT_ACTIVE_SHIFT) {
 		printf("SHIFT+");
 	}
@@ -46,18 +37,13 @@ void window_key_press(unsigned char key, int x, int y) {
 		g_camera_zoom += 10.0f;
 		update_camera_pos();
 		break;
-
-	case 'n':
-	case 'N':
-		new_game();
-		break;
 	};
 	glutPostRedisplay();
 }
 
 void window_special_key_press(int key, int x, int y) {
-	printf("Keyboard pressed: ");
 	int key_modifiers = glutGetModifiers();
+	printf("Keyboard pressed: ");
 	if(key_modifiers & GLUT_ACTIVE_SHIFT) {
 		printf("SHIFT+");
 	}

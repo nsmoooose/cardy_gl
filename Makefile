@@ -18,5 +18,9 @@ cardy_tests:
 
 cardy_gl: cardy_lib cardy_tests $(OBJECTS)
 	@echo Building $@
-	@gcc -g -Os -o $@ $(OBJECTS) -lglut -lGL -lGLU -lm -lcardy -Llib
+	@gcc -Wall -pedantic -g -Os -o $@ $(OBJECTS) -lglut -lGL -lGLU -lm -lcardy -Llib
 	@make -C tests
+
+%.o: %.c
+	@echo $<
+	@gcc -c -g -Os -Wall -pedantic $<
