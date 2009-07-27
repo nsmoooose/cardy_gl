@@ -1,3 +1,4 @@
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "card.h"
@@ -7,26 +8,33 @@
  */
 solitaire* g_solitaire = 0;
 
+card* card_create(card_suit suit, card_value value) {
+	card* card = calloc(1, sizeof(card));
+	card->value = value;
+	card->suit = suit;
+	card->proxy = calloc(1, sizeof(card_proxy));
+	return card;
+}
+
+void card_free(card* card) {
+	if(card) {
+		free(card->proxy);
+		free(card);
+	}
+}
+
 void create_deck(card* list[], int count) {
 	int index = 0;
 	card_suit suit;
-	char value;
-	card* card;
+	card_value value;
 
 	for(suit=e_diamonds;suit<=e_spades;++suit) {
-		for(value=1;value<14;++value) {
+		for(value=1;value<14;++value, ++index) {
 			if(index >= count) {
 				return;
 			}
 
-			card = calloc(1, sizeof(card));
-			card->value = value;
-			card->suit = suit;
-
-			card->data = calloc(1, sizeof(card_proxy));
-			list[index] = card;
-
-			index++;
+			list[index] = card_create(suit, value);
 		}
 	}
 }
@@ -35,9 +43,9 @@ void print_solitaire_info(solitaire* sol) {
 	int i, j;
 	pile* pile;
 
-	for(i=0;i<sol->get_pile_count(sol);++i) {
+	for(i=0;i<sol->visual->pile_count;++i) {
 		printf("Pile: %d\n", i);
-		pile = sol->get_pile(sol, i);
+		pile = sol->visual->piles[i];
 		for(j=0;j<pile->card_count;++j) {
 			if(pile->first[j]->card == 0) {
 				printf("Card at index: %d is facing down.\n", j);
@@ -106,6 +114,38 @@ int card_first_free(card* cards[], int size) {
 }
 
 void card_reveal(card* card) {
-	card_proxy* proxy = (card_proxy*)card->data;
-	proxy->card = card;
+	card->proxy->card = card;
+}
+
+visual* visual_create() {
+	visual* vis = calloc(1, sizeof(visual));
+	return vis;
+}
+
+void visual_add_pile(visual* vis, pile* p) {
+	pile** old_piles  = vis->piles;
+	vis->piles = calloc(vis->pile_count + 1, sizeof(pile*));
+	vis->pile_count++;
+
+	if(old_piles) {
+		memcpy(vis->piles, old_piles, sizeof(pile*) * (vis->pile_count - 1));
+		free(old_piles);
+	}
+	vis->piles[vis->pile_count - 1] = p;
+}
+
+void visual_free(visual* vis) {
+	free(vis->piles);
+	free(vis);
+}
+
+pile* pile_create(int size) {
+	pile* p = calloc(1, sizeof(pile));
+	p->first = calloc(size, sizeof(card_proxy*));
+	return p;
+}
+
+void pile_free(pile* pile) {
+	free(pile->first);
+	free(pile);
 }

@@ -16,16 +16,19 @@ START_TEST(test_create_deck) {
 					  list[i]->suit == e_hearts ||
 					  list[i]->suit == e_spades,
 					  "Suit wasn't correct: %d", list[i]->suit);
-		ck_assert_msg(list[i]->data != 0, "Card should point to a proxy.");
-		ck_assert_msg(((card_proxy*)list[i]->data)->card == 0, "Proxy shouldn't reveal the card.");
+		ck_assert_msg(list[i]->proxy != 0, "Card should point to a proxy.");
+		ck_assert_msg(list[i]->proxy->card == 0, "Proxy shouldn't reveal the card.");
 	}
 }
 END_TEST
 
 START_TEST(test_card_count) {
 	card c1, c2;
+	card* cards[3];
 
-	card* cards[3] = {&c1, 0, &c2};
+	cards[0] = &c1;
+	cards[1] = 0;
+	cards[2] = &c2;
 
 	ck_assert_msg(card_count(cards, 3) == 2, "There should be two cards in this pile.");
 }
@@ -33,10 +36,13 @@ END_TEST
 
 START_TEST(test_card_take_last) {
 	card c1, c2;
+	card *cards[3], *last;
 
-	card* cards[3] = {&c1, 0, &c2};
+	cards[0] = &c1;
+	cards[1] = 0;
+	cards[2] = &c2;
 
-	card* last = card_take_last(cards, 3);
+	last = card_take_last(cards, 3);
 	ck_assert_msg(&c2 == last, "The last card wasn't taken.");
 	ck_assert_msg(cards[2] == 0, "The card has been taken. This index should be 0.");
 }
@@ -54,7 +60,10 @@ END_TEST
 
 START_TEST(test_card_first_free) {
 	card c1;
-	card* cards[3] = {&c1, &c1, 0 };
+	card* cards[3];
+
+	cards[0] = cards[1] = &c1;
+	cards[2] = 0;
 
 	ck_assert_msg(card_first_free(cards, 3) == 2, "Didn't return the correct index for the first free position.");
 
@@ -65,8 +74,12 @@ END_TEST
 
 START_TEST(test_card_append_all) {
 	card c1, c2;
-	card* src[3] = {&c1, &c2, 0};
-	card* dst[3] = {0, 0, 0};
+	card* src[3];
+	card* dst[3];
+	src[0] = &c1;
+	src[1] = &c2;
+	src[2] = 0;
+	dst[0] = dst[1] = dst[2] = 0;
 
 	card_append_all(dst, 3, src, 3);
 
@@ -74,5 +87,39 @@ START_TEST(test_card_append_all) {
 	ck_assert_msg(dst[1] == &c2, "c2 card wasn't appended.");
 	ck_assert_msg(src[0] == 0, "c1 origin wasn't cleared.");
 	ck_assert_msg(src[1] == 0, "c2 origin wasn't cleared.");
+}
+END_TEST
+
+START_TEST(test_pile_create) {
+	pile* pile;
+
+	pile = pile_create(2);
+	pile->first[0] = 0;
+	pile->first[1] = 0;
+}
+END_TEST
+
+START_TEST(test_visual_create) {
+	visual* vis = visual_create();
+
+	ck_assert_msg(vis->piles == 0, "piles member should be initialized to 0.");
+	ck_assert_msg(vis->pile_count == 0, "No of piles shall be 0");
+}
+END_TEST
+
+START_TEST(test_visual_add_pile) {
+	visual* vis = visual_create();
+	pile* pile1 = pile_create(10);
+	pile* pile2 = pile_create(10);
+
+	visual_add_pile(vis, pile1);
+
+	ck_assert_msg(vis->pile_count == 1, "pile_count should be 1 since one pile has been added.");
+	ck_assert_msg(vis->piles[0] == pile1, "The first pile should be assigned.");
+
+	visual_add_pile(vis, pile2);
+	ck_assert_msg(vis->pile_count == 2, "pile_count should be 2 since two pile has been added.");
+	ck_assert_msg(vis->piles[0] == pile1, "The first pile should be assigned.");
+	ck_assert_msg(vis->piles[1] == pile2, "The second pile should be assigned.");
 }
 END_TEST

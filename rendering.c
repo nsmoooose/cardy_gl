@@ -47,9 +47,9 @@ void update_camera_pos() {
 
 void render_solitaire(solitaire* sol) {
 	int pile_index;
-	int pile_count = sol->get_pile_count(sol);
+	int pile_count = sol->visual->pile_count;
 	for(pile_index=0;pile_index<pile_count;++pile_index) {
-		pile* pile = sol->get_pile(sol, pile_index);
+		pile* pile = sol->visual->piles[pile_index];
 		if(!pile) {
 			continue;
 		}

@@ -10,3 +10,7 @@ clean:
 cardy_tests:  $(OBJECTS)
 	@echo Building $@
 	@gcc -g -Os -o $@ $(OBJECTS) -lglut -lGL -lGLU -lm -lcheck -lcardy -L../lib
+
+%.o: %.c
+	@echo $<
+	@gcc -c -g -Os -Wall -pedantic $<
