@@ -15,19 +15,21 @@ typedef enum {
 
 typedef unsigned char card_value;
 
+struct card_proxy_St;
+
 /** This is information about a single card.
  */
 typedef struct {
 	card_value value;
 	card_suit suit;
 
-	void* data;
+	struct card_proxy_St* proxy;
 } card;
 
 /** This is a placeholder for a single card. If the card
  *  hasn't been revealed yet the card pointer is null.
  */
-typedef struct {
+typedef struct card_proxy_St {
 	card* card;
 } card_proxy;
 
@@ -67,15 +69,6 @@ typedef struct solitaire_St {
 	 */
 	void (*new_game)(struct solitaire_St* sol);
 
-	/** Returns the number of piles available to display.
-	 */
-	int (*get_pile_count)(struct solitaire_St* sol);
-
-	/** Returns information about a pile and a list of all
-	 *  the cards in it.
-	 */
-	pile* (*get_pile)(struct solitaire_St* sol, int no);
-
 	/** Move card between two positions.
 	 */
 	void (*move)(struct solitaire_St* sol, card_proxy* card_proxy);
@@ -92,6 +85,8 @@ typedef struct solitaire_St {
 	/** Free all memory held by this solitaire.
 	 */
 	void (*free)(struct solitaire_St* sol);
+
+	visual* visual;
 
 	/** Internal representation of this game. Don't mess
 	 *  with this one.

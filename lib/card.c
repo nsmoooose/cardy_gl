@@ -1,3 +1,4 @@
+#include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "card.h"
@@ -11,13 +12,13 @@ card* card_create(card_suit suit, card_value value) {
 	card* card = calloc(1, sizeof(card));
 	card->value = value;
 	card->suit = suit;
-	card->data = calloc(1, sizeof(card_proxy));
+	card->proxy = calloc(1, sizeof(card_proxy));
 	return card;
 }
 
 void card_free(card* card) {
 	if(card) {
-		free(card->data);
+		free(card->proxy);
 		free(card);
 	}
 }
@@ -42,9 +43,9 @@ void print_solitaire_info(solitaire* sol) {
 	int i, j;
 	pile* pile;
 
-	for(i=0;i<sol->get_pile_count(sol);++i) {
+	for(i=0;i<sol->visual->pile_count;++i) {
 		printf("Pile: %d\n", i);
-		pile = sol->get_pile(sol, i);
+		pile = sol->visual->piles[i];
 		for(j=0;j<pile->card_count;++j) {
 			if(pile->first[j]->card == 0) {
 				printf("Card at index: %d is facing down.\n", j);
@@ -113,8 +114,7 @@ int card_first_free(card* cards[], int size) {
 }
 
 void card_reveal(card* card) {
-	card_proxy* proxy = (card_proxy*)card->data;
-	proxy->card = card;
+	card->proxy->card = card;
 }
 
 visual* visual_create() {
@@ -123,12 +123,12 @@ visual* visual_create() {
 }
 
 void visual_add_pile(visual* vis, pile* p) {
-	pile** old_piles = vis->piles;
+	pile** old_piles  = vis->piles;
 	vis->piles = calloc(vis->pile_count + 1, sizeof(pile*));
 	vis->pile_count++;
 
 	if(old_piles) {
-		memcpy(vis->piles, old_piles, sizeof(pile*) * vis->pile_count - 1);
+		memcpy(vis->piles, old_piles, sizeof(pile*) * (vis->pile_count - 1));
 		free(old_piles);
 	}
 	vis->piles[vis->pile_count - 1] = p;
@@ -140,9 +140,9 @@ void visual_free(visual* vis) {
 }
 
 pile* pile_create(int size) {
-	pile* pile = calloc(1, sizeof(pile));
-	pile->first = calloc(size, sizeof(card_proxy*));
-	return pile;
+	pile* p = calloc(1, sizeof(pile));
+	p->first = calloc(size, sizeof(card_proxy*));
+	return p;
 }
 
 void pile_free(pile* pile) {
