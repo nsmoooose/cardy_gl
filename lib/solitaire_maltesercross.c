@@ -1,15 +1,33 @@
 #include <stdlib.h>
-#include "solitaire_theidiot.h"
+#include "solitaire_maltesercross.h"
 
 typedef struct {
-	card* deck[52];
+	card* deck[104];
 
-	card* pile1[13];
-	card* pile2[13];
-	card* pile3[13];
-	card* pile4[13];
+	/* The four piles where we draw cards from. */
+	card* src_pile1[13];
+	card* src_pile2[13];
+	card* src_pile3[13];
+	card* src_pile4[13];
 
-	card* done[48];
+	/* The four diagonal piles where you build
+	 * from king to ace. */
+	card* king_pile1[13];
+	card* king_pile2[13];
+	card* king_pile3[13];
+	card* king_pile4[13];
+
+	/* Center pile build from ace to king. */
+	card* center_pile[13];
+
+	/* Build from any card up. */
+	card* build_pile1[13];
+	card* build_pile2[13];
+	card* build_pile3[13];
+	card* build_pile4[13];
+
+	/* All cards are moved to this pile. */
+	card* done[104];
 
 	pile deck_pile;
 	pile pile1_pile;
@@ -37,18 +55,18 @@ static void sync_pile(card** src, int src_count, pile* dest) {
 }
 
 static void sync(internal* i) {
+/*
 	sync_pile(i->deck, 52, &i->deck_pile);
 	sync_pile(i->pile1, 13, &i->pile1_pile);
 	sync_pile(i->pile2, 13, &i->pile2_pile);
 	sync_pile(i->pile3, 13, &i->pile3_pile);
 	sync_pile(i->pile4, 13, &i->pile4_pile);
 	sync_pile(i->done, 48, &i->done_pile);
-}
-
-static void my_new_game(solitaire* sol) {
+*/
 }
 
 static void my_deal(solitaire* sol, pile* pile) {
+/*
 	internal* i = sol->data;
 
 	if(card_count(i->deck, 52) >= 4) {
@@ -69,6 +87,7 @@ static void my_deal(solitaire* sol, pile* pile) {
 	}
 
 	sync(i);
+*/
 }
 
 static int my_get_pile_count(struct solitaire_St* sol) {
@@ -83,6 +102,7 @@ static pile* my_get_pile(struct solitaire_St* sol, int no) {
 	switch(no) {
 	case 0:
 		return &i->deck_pile;
+/*
 	case 1:
 		return &i->pile1_pile;
 	case 2:
@@ -93,6 +113,7 @@ static pile* my_get_pile(struct solitaire_St* sol, int no) {
 		return &i->pile4_pile;
 	case 5:
 		return &i->done_pile;
+*/
 	default:
 		return 0;
 	}
@@ -107,7 +128,7 @@ static void my_move(solitaire* sol, card_proxy* card_proxy) {
 static void my_free(solitaire* sol) {
 	internal* i = sol->data;
 	int index;
-
+/*
 	card_append_all(i->deck, 52, i->done, 48);
 	card_append_all(i->deck, 52, i->pile1, 13);
 	card_append_all(i->deck, 52, i->pile2, 13);
@@ -119,11 +140,12 @@ static void my_free(solitaire* sol) {
 			free(i->deck[index]);
 		}
 	}
+*/
 	free(i);
 	free(sol);
 }
 
-solitaire* solitaire_theidiot() {
+solitaire* solitaire_maltesercross() {
 	/* The one solitaire instance we have.*/
 	solitaire* s = calloc(1, sizeof(solitaire));
 
@@ -133,6 +155,7 @@ solitaire* solitaire_theidiot() {
 	internal* i = calloc(1, sizeof(internal));
 	s->data = i;
 
+/*
 	i->deck_pile.first = calloc(52, sizeof(card_proxy*));
 	i->pile1_pile.first = calloc(13, sizeof(card_proxy*));
 	i->pile2_pile.first = calloc(13, sizeof(card_proxy*));
@@ -167,7 +190,7 @@ solitaire* solitaire_theidiot() {
 	create_deck(i->deck, 52);
 
 	sync(i);
-
+*/
 	/* Add our implementation for the common functionality
 	 * shared by all solitaires. */
 	s->get_pile_count = my_get_pile_count;

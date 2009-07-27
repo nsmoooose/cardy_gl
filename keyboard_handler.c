@@ -3,6 +3,8 @@
 #include "rendering.h"
 #include "lib/mygl.h"
 #include "lib/solitaire_theidiot.h"
+#include "lib/solitaire_maltesercross.h"
+#include "lib/solitaire_noname1.h"
 
 void window_key_press(unsigned char key, int x, int y) {
 	int key_modifiers;
@@ -27,6 +29,20 @@ void window_key_press(unsigned char key, int x, int y) {
 			g_solitaire->free(g_solitaire);
 		}
 		g_solitaire = solitaire_theidiot();
+		break;
+	case '2':
+		if(g_solitaire) {
+			/* Free the existing instance before we create a new one. */
+			g_solitaire->free(g_solitaire);
+		}
+		g_solitaire = solitaire_maltesercross();
+		break;
+	case '3':
+		if(g_solitaire) {
+			/* Free the existing instance before we create a new one. */
+			g_solitaire->free(g_solitaire);
+		}
+		g_solitaire = solitaire_noname1();
 		break;
 	case '-':
 		g_camera_zoom -= 10.0f;

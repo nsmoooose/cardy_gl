@@ -52,10 +52,6 @@ typedef struct pile_St {
  *  struct is callbacks to the logic.
  */
 typedef struct solitaire_St {
-	/** Start a new game.
-	 */
-	void (*new_game)(struct solitaire_St* sol);
-
 	/** Returns the number of piles available to display.
 	 */
 	int (*get_pile_count)(struct solitaire_St* sol);

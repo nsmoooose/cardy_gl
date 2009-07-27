@@ -10,10 +10,12 @@ static void process_selection(GLint hits, GLuint* selections) {
 	pile* selected_pile = 0;
 	card_proxy* selected_proxy = 0;
 
+	/*
 	printf("Number of hits: %d\n", hits);
 	for(i=0;i<20;++i) {
 		printf("0x%x\n", selections[i]);
 	}
+	*/
 
 	for(index=0, hit=0;hit<hits;++hit) {
 		if(selections[index] == 1) {
@@ -39,7 +41,7 @@ void window_mouse(int button, int state, int x, int y) {
 	GLint viewport[4], hits;
 	GLfloat aspect;
 
-	printf("Button: %d, state: %d, position (%d,%d)\n", button, state, x, y);
+	/* printf("Button: %d, state: %d, position (%d,%d)\n", button, state, x, y); */
 
 	/* Do nothing unless it is a left button and a mouse
 	 * down event.

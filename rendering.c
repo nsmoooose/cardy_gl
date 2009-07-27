@@ -50,7 +50,9 @@ void render_solitaire(solitaire* sol) {
 	int pile_count = sol->get_pile_count(sol);
 	for(pile_index=0;pile_index<pile_count;++pile_index) {
 		pile* pile = sol->get_pile(sol, pile_index);
-
+		if(!pile) {
+			continue;
+		}
 		render_pile(pile);
 	}
 }

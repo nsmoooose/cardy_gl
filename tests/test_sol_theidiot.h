@@ -4,7 +4,6 @@
 START_TEST(test_sol_theidiot_init) {
 	solitaire* sol = solitaire_theidiot();
 
-	ck_assert_msg(sol->new_game != 0, "New game isn't implemented.");
 	ck_assert_msg(sol->get_pile_count != 0, "Get pile count isn't implemented.");
 	ck_assert_msg(sol->get_pile != 0, "Get pile isn't implemented.");
 	ck_assert_msg(sol->move != 0, "Move card isn't implemented.");
