@@ -7,26 +7,33 @@
  */
 solitaire* g_solitaire = 0;
 
+card* card_create(card_suit suit, card_value value) {
+	card* card = calloc(1, sizeof(card));
+	card->value = value;
+	card->suit = suit;
+	card->data = calloc(1, sizeof(card_proxy));
+	return card;
+}
+
+void card_free(card* card) {
+	if(card) {
+		free(card->data);
+		free(card);
+	}
+}
+
 void create_deck(card* list[], int count) {
 	int index = 0;
 	card_suit suit;
-	char value;
-	card* card;
+	card_value value;
 
 	for(suit=e_diamonds;suit<=e_spades;++suit) {
-		for(value=1;value<14;++value) {
+		for(value=1;value<14;++value, ++index) {
 			if(index >= count) {
 				return;
 			}
 
-			card = calloc(1, sizeof(card));
-			card->value = value;
-			card->suit = suit;
-
-			card->data = calloc(1, sizeof(card_proxy));
-			list[index] = card;
-
-			index++;
+			list[index] = card_create(suit, value);
 		}
 	}
 }

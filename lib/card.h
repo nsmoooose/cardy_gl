@@ -13,10 +13,12 @@ typedef enum {
 	e_spades
 } card_suit;
 
+typedef unsigned char card_value;
+
 /** This is information about a single card.
  */
 typedef struct {
-	unsigned char value;
+	card_value value;
 	card_suit suit;
 
 	void* data;
@@ -89,6 +91,14 @@ typedef struct solitaire_St {
 } solitaire;
 
 extern solitaire* g_solitaire;
+
+/** Creates a single card with the suit and value.
+ */
+card* card_create(card_suit suit, card_value value);
+
+/** Frees the memory used by the card.
+ */
+void card_free(card* card);
 
 /** Creates a deck of cards with 52 cards if the array permits it.
  */

@@ -122,7 +122,7 @@ static void my_free(solitaire* sol) {
 
 	for(index=0;index<52;++index) {
 		if(i->deck[index]) {
-			free(i->deck[index]);
+			card_free(i->deck[index]);
 		}
 	}
 	/* free(i); */
