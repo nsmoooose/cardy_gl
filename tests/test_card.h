@@ -76,3 +76,28 @@ START_TEST(test_card_append_all) {
 	ck_assert_msg(src[1] == 0, "c2 origin wasn't cleared.");
 }
 END_TEST
+
+START_TEST(test_visual_create) {
+	visual* vis = visual_create();
+
+	ck_assert_msg(vis->piles == 0, "piles member should be initialized to 0.");
+	ck_assert_msg(vis->pile_count == 0, "No of piles shall be 0");
+}
+END_TEST
+
+START_TEST(test_visual_add_pile) {
+	visual* vis = visual_create();
+	pile* pile1 = pile_create(10);
+	pile* pile2 = pile_create(10);
+
+	visual_add_pile(vis, pile1);
+
+	ck_assert_msg(vis->pile_count == 1, "pile_count should be 1 since one pile has been added.");
+	ck_assert_msg(vis->piles[0] == pile1, "The first pile should be assigned.");
+
+	visual_add_pile(vis, pile2);
+	ck_assert_msg(vis->pile_count == 2, "pile_count should be 2 since two pile has been added.");
+	ck_assert_msg(vis->piles[0] == pile1, "The first pile should be assigned.");
+	ck_assert_msg(vis->piles[1] == pile2, "The second pile should be assigned.");
+}
+END_TEST

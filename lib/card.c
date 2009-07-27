@@ -116,3 +116,36 @@ void card_reveal(card* card) {
 	card_proxy* proxy = (card_proxy*)card->data;
 	proxy->card = card;
 }
+
+visual* visual_create() {
+	visual* vis = calloc(1, sizeof(visual));
+	return vis;
+}
+
+void visual_add_pile(visual* vis, pile* p) {
+	pile** old_piles = vis->piles;
+	vis->piles = calloc(vis->pile_count + 1, sizeof(pile*));
+	vis->pile_count++;
+
+	if(old_piles) {
+		memcpy(vis->piles, old_piles, sizeof(pile*) * vis->pile_count - 1);
+		free(old_piles);
+	}
+	vis->piles[vis->pile_count - 1] = p;
+}
+
+void visual_free(visual* vis) {
+	free(vis->piles);
+	free(vis);
+}
+
+pile* pile_create(int size) {
+	pile* pile = calloc(1, sizeof(pile));
+	pile->first = calloc(size, sizeof(card_proxy*));
+	return pile;
+}
+
+void pile_free(pile* pile) {
+	free(pile->first);
+	free(pile);
+}

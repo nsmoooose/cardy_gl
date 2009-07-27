@@ -15,6 +15,8 @@ int main(int argc, char argv[]) {
 	tcase_add_test(card_case, test_card_append);
 	tcase_add_test(card_case, test_card_append_all);
 	tcase_add_test(card_case, test_card_first_free);
+	tcase_add_test(card_case, test_visual_create);
+	tcase_add_test(card_case, test_visual_add_pile);
 	suite_add_tcase(suite, card_case);
 
 	TCase* sol_theidiot = tcase_create("Sol-TheIdiot");

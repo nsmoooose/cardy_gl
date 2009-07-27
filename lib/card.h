@@ -50,6 +50,15 @@ typedef struct pile_St {
 	void (*card_action)(struct solitaire_St* sol, struct pile_St* pile, card_proxy* proxy);
 } pile;
 
+/** Represents the visual presentation of a game. Together
+ *  with the pile struct it describes how to render the user
+ *  interface.
+ */
+typedef struct {
+	pile** piles;
+	int pile_count;
+} visual;
+
 /** Interface with a solitaire game. All members of this
  *  struct is callbacks to the logic.
  */
@@ -134,5 +143,12 @@ int card_first_free(card* cards[], int size);
 /** Reveals the card to the user.
  */
 void card_reveal(card* card);
+
+visual* visual_create();
+void visual_add_pile(visual* vis, pile* p);
+void visual_free(visual* vis);
+
+pile* pile_create(int size);
+void pile_free(pile* pile);
 
 #endif /* __CARD_H__ */
