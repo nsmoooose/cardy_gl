@@ -5,36 +5,29 @@ typedef struct {
 	card* deck[104];
 
 	/* The four piles where we draw cards from. */
-	card* src_pile1[13];
-	card* src_pile2[13];
-	card* src_pile3[13];
-	card* src_pile4[13];
+	card* src1[13];
+	card* src2[13];
+	card* src3[13];
+	card* src4[13];
 
 	/* The four diagonal piles where you build
 	 * from king to ace. */
-	card* king_pile1[13];
-	card* king_pile2[13];
-	card* king_pile3[13];
-	card* king_pile4[13];
+	card* king1[13];
+	card* king2[13];
+	card* king3[13];
+	card* king4[13];
 
 	/* Center pile build from ace to king. */
-	card* center_pile[13];
+	card* center[13];
 
 	/* Build from any card up. */
-	card* build_pile1[13];
-	card* build_pile2[13];
-	card* build_pile3[13];
-	card* build_pile4[13];
+	card* build1[13];
+	card* build2[13];
+	card* build3[13];
+	card* build4[13];
 
 	/* All cards are moved to this pile. */
 	card* done[104];
-
-	pile deck_pile;
-	pile pile1_pile;
-	pile pile2_pile;
-	pile pile3_pile;
-	pile pile4_pile;
-	pile done_pile;
 } internal;
 
 static void sync_pile(card** src, int src_count, pile* dest) {
@@ -48,21 +41,18 @@ static void sync_pile(card** src, int src_count, pile* dest) {
 		}
 		else {
 			/* Yes there was a card. */
-			dest->first[i] = (card_proxy*)src[i]->data;
+			dest->first[i] = src[i]->proxy;
 			dest->card_count++;
 		}
 	}
 }
 
-static void sync(internal* i) {
-/*
-	sync_pile(i->deck, 52, &i->deck_pile);
-	sync_pile(i->pile1, 13, &i->pile1_pile);
-	sync_pile(i->pile2, 13, &i->pile2_pile);
-	sync_pile(i->pile3, 13, &i->pile3_pile);
-	sync_pile(i->pile4, 13, &i->pile4_pile);
-	sync_pile(i->done, 48, &i->done_pile);
-*/
+static void sync(solitaire* sol) {
+	internal* i = sol->data;
+
+	sync_pile(i->deck, 104, sol->visual->piles[0]);
+	sync_pile(i->done, 104, sol->visual->piles[1]);
+	sync_pile(i->center, 13, sol->visual->piles[2]);
 }
 
 static void my_deal(solitaire* sol, pile* pile) {
@@ -86,43 +76,12 @@ static void my_deal(solitaire* sol, pile* pile) {
 		card_append(card4, i->pile4, 13);
 	}
 
-	sync(i);
+	sync(sol);
 */
-}
-
-static int my_get_pile_count(struct solitaire_St* sol) {
-	/* We have 6 piles of cards. The deck. the 4 piles
-	 * with cards and the pile with thrown away cards.*/
-	return 6;
-}
-
-static pile* my_get_pile(struct solitaire_St* sol, int no) {
-	internal* i = sol->data;
-
-	switch(no) {
-	case 0:
-		return &i->deck_pile;
-/*
-	case 1:
-		return &i->pile1_pile;
-	case 2:
-		return &i->pile2_pile;
-	case 3:
-		return &i->pile3_pile;
-	case 4:
-		return &i->pile4_pile;
-	case 5:
-		return &i->done_pile;
-*/
-	default:
-		return 0;
-	}
 }
 
 static void my_move(solitaire* sol, card_proxy* card_proxy) {
-	internal* i = sol->data;
-
-	sync(i);
+	sync(sol);
 }
 
 static void my_free(solitaire* sol) {
@@ -141,11 +100,17 @@ static void my_free(solitaire* sol) {
 		}
 	}
 */
+	visual_free(sol->visual);
 	free(i);
 	free(sol);
 }
 
 solitaire* solitaire_maltesercross() {
+	pile *deck, *done, *king1, *king2, *king3, *king4;
+	pile *src1, *src2, *src3, *src4;
+	pile *center, *build1, *build2, *build3, *build4;
+	pile *pile1, *pile2, *pile3, *pile4, *pile5;
+
 	/* The one solitaire instance we have.*/
 	solitaire* s = calloc(1, sizeof(solitaire));
 
@@ -154,47 +119,90 @@ solitaire* solitaire_maltesercross() {
 	 * members. */
 	internal* i = calloc(1, sizeof(internal));
 	s->data = i;
+	s->visual = visual_create();
 
-/*
-	i->deck_pile.first = calloc(52, sizeof(card_proxy*));
-	i->pile1_pile.first = calloc(13, sizeof(card_proxy*));
-	i->pile2_pile.first = calloc(13, sizeof(card_proxy*));
-	i->pile3_pile.first = calloc(13, sizeof(card_proxy*));
-	i->pile4_pile.first = calloc(13, sizeof(card_proxy*));
-	i->done_pile.first = calloc(48, sizeof(card_proxy*));
+	deck = pile_create(104);
+	deck->origin[0] = 0 - (CARD_WIDTH + CARD_SPACING * 2 + CARD_HEIGHT * 2);
+	deck->origin[1] = CARD_WIDTH;
+	deck->rotation = -30.0f;
+	visual_add_pile(s->visual, deck);
 
-	i->deck_pile.origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2 + CARD_WIDTH / 2);
-	i->pile1_pile.origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING);
-	i->pile2_pile.origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2);
-	i->pile3_pile.origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2;
-	i->pile4_pile.origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING;
-	i->done_pile.origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2 + CARD_WIDTH / 2;
+	done = pile_create(104);
+	done->origin[0] = CARD_WIDTH + CARD_SPACING * 2 + CARD_HEIGHT * 2;
+	done->origin[1] = 0 - CARD_WIDTH;
+	done->rotation = -30.0f;
+	visual_add_pile(s->visual, done);
 
-	i->deck_pile.origin[1] = 40.0f;
-	i->deck_pile.rotation = 45.0f;
-	i->deck_pile.pile_action = my_deal;
+	center = pile_create(13);
+	visual_add_pile(s->visual, center);
 
-	i->pile1_pile.origin[1] = 70.0f;
-	i->pile2_pile.origin[1] = 70.0f;
-	i->pile3_pile.origin[1] = 70.0f;
-	i->pile4_pile.origin[1] = 70.0f;
+	king1 = pile_create(13);
+	king1->origin[0] = CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2;
+	king1->origin[1] = CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2;
+	king1->rotation = -45.0f;
+	visual_add_pile(s->visual, king1);
 
-	i->pile1_pile.translateY = 0 - CARD_HEIGHT / 5;
-	i->pile2_pile.translateY = 0 - CARD_HEIGHT / 5;
-	i->pile3_pile.translateY = 0 - CARD_HEIGHT / 5;
-	i->pile4_pile.translateY = 0 - CARD_HEIGHT / 5;
+	king2 = pile_create(13);
+	king2->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2);
+	king2->origin[1] = CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2;
+	king2->rotation = 45.0f;
+	visual_add_pile(s->visual, king2);
 
-	i->done_pile.origin[1] = 40.0f;
-	i->done_pile.rotation = -45.0f;
+	king3 = pile_create(13);
+	king3->origin[0] = CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2;
+	king3->origin[1] = 0 - (CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2);
+	king3->rotation = 45.0f;
+	visual_add_pile(s->visual, king3);
+
+	king4 = pile_create(13);
+	king4->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2);
+	king4->origin[1] = 0 - (CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2);
+	king4->rotation = -45.0f;
+	visual_add_pile(s->visual, king4);
+
+	src1 = pile_create(13);
+	src1->origin[1] = CARD_HEIGHT + CARD_SPACING;
+	visual_add_pile(s->visual, src1);
+
+	src2 = pile_create(13);
+	src2->origin[1] = 0 - (CARD_HEIGHT + CARD_SPACING);
+	visual_add_pile(s->visual, src2);
+
+	src3 = pile_create(13);
+	src3->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING + CARD_HEIGHT / 2);
+	src3->rotation = 90.0f;
+	visual_add_pile(s->visual, src3);
+
+	src4 = pile_create(13);
+	src4->origin[0] = CARD_WIDTH / 2 + CARD_SPACING + CARD_HEIGHT / 2;
+	src4->rotation = 90.0f;
+	visual_add_pile(s->visual, src4);
+
+	build1 = pile_create(13);
+	build1->origin[0] = 0 - (CARD_WIDTH + CARD_SPACING * 2 + CARD_HEIGHT);
+	visual_add_pile(s->visual, build1);
+
+	build2 = pile_create(13);
+	build2->origin[0] = CARD_WIDTH + CARD_SPACING * 2 + CARD_HEIGHT;
+	visual_add_pile(s->visual, build2);
+
+	build3 = pile_create(13);
+	build3->origin[1] = CARD_HEIGHT / 2 + CARD_SPACING * 2 + CARD_HEIGHT + CARD_WIDTH / 2;
+	build3->rotation = 90.0f;
+	visual_add_pile(s->visual, build3);
+
+	build4 = pile_create(13);
+	build4->origin[1] = 0 - (CARD_HEIGHT / 2 + CARD_SPACING * 2 + CARD_HEIGHT + CARD_WIDTH / 2);
+	build4->rotation = 90.0f;
+	visual_add_pile(s->visual, build4);
 
 	create_deck(i->deck, 52);
+	create_deck(&i->deck[52], 52);
 
-	sync(i);
-*/
+	sync(s);
+
 	/* Add our implementation for the common functionality
 	 * shared by all solitaires. */
-	s->get_pile_count = my_get_pile_count;
-	s->get_pile = my_get_pile;
 	s->move = my_move;
 	s->free = my_free;
 	return s;

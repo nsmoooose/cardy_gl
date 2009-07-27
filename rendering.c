@@ -1,11 +1,11 @@
 #include "lib/mygl.h"
 #include "rendering.h"
 
-float g_camera_zoom = -250.0f;
+float g_camera_zoom = -500.0f;
 float g_camera_translateX = 0.0f;
 float g_camera_translateY = 0.0f;
 float g_perspective_near = 1.0f;
-float g_perspective_far = 500.0f;
+float g_perspective_far = 5000.0f;
 float g_perspective_fov = 45.0f;
 
 /* Build a vector of coordinates for a card. */

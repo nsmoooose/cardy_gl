@@ -20,21 +20,6 @@ typedef struct {
 	card* pile6[52];
 	card* pile7[52];
 	card* pile8[52];
-
-	pile vis_deck;
-	pile vis_ace1;
-	pile vis_ace2;
-	pile vis_ace3;
-	pile vis_ace4;
-	pile vis_1;
-	pile vis_2;
-	pile vis_3;
-	pile vis_4;
-	pile vis_5;
-	pile vis_6;
-	pile vis_7;
-	pile vis_8;
-
 } internal;
 
 static void sync_pile(card** src, int src_count, pile* dest) {
@@ -48,26 +33,28 @@ static void sync_pile(card** src, int src_count, pile* dest) {
 		}
 		else {
 			/* Yes there was a card. */
-			dest->first[i] = (card_proxy*)src[i]->data;
+			dest->first[i] = src[i]->proxy;
 			dest->card_count++;
 		}
 	}
 }
 
-static void sync(internal* i) {
-	sync_pile(i->deck, 52, &i->vis_deck);
-	sync_pile(i->ace1, 13, &i->vis_ace1);
-	sync_pile(i->ace2, 13, &i->vis_ace2);
-	sync_pile(i->ace3, 13, &i->vis_ace3);
-	sync_pile(i->ace4, 13, &i->vis_ace4);
-	sync_pile(i->pile1, 13, &i->vis_1);
-	sync_pile(i->pile2, 13, &i->vis_2);
-	sync_pile(i->pile3, 13, &i->vis_3);
-	sync_pile(i->pile4, 13, &i->vis_4);
-	sync_pile(i->pile5, 13, &i->vis_5);
-	sync_pile(i->pile6, 13, &i->vis_6);
-	sync_pile(i->pile7, 13, &i->vis_7);
-	sync_pile(i->pile8, 13, &i->vis_8);
+static void sync(solitaire* sol) {
+	internal* i = sol->data;
+
+	sync_pile(i->deck, 52, sol->visual->piles[0]);
+	sync_pile(i->ace1, 13, sol->visual->piles[1]);
+	sync_pile(i->ace2, 13, sol->visual->piles[2]);
+	sync_pile(i->ace3, 13, sol->visual->piles[3]);
+	sync_pile(i->ace4, 13, sol->visual->piles[4]);
+	sync_pile(i->pile1, 13, sol->visual->piles[5]);
+	sync_pile(i->pile2, 13, sol->visual->piles[6]);
+	sync_pile(i->pile3, 13, sol->visual->piles[7]);
+	sync_pile(i->pile4, 13, sol->visual->piles[8]);
+	sync_pile(i->pile5, 13, sol->visual->piles[9]);
+	sync_pile(i->pile6, 13, sol->visual->piles[10]);
+	sync_pile(i->pile7, 13, sol->visual->piles[11]);
+	sync_pile(i->pile8, 13, sol->visual->piles[12]);
 }
 
 static void my_deal(solitaire* sol, pile* pile) {
@@ -93,47 +80,6 @@ static void my_deal(solitaire* sol, pile* pile) {
 
 	sync(i);
 */
-}
-
-static int my_get_pile_count(struct solitaire_St* sol) {
-	/* We have 6 piles of cards. The deck. the 4 piles
-	 * with cards and the pile with thrown away cards.*/
-	return 13;
-}
-
-static pile* my_get_pile(struct solitaire_St* sol, int no) {
-	internal* i = sol->data;
-
-	switch(no) {
-	case 0:
-		return &i->vis_deck;
-	case 1:
-		return &i->vis_ace1;
-	case 2:
-		return &i->vis_ace2;
-	case 3:
-		return &i->vis_ace3;
-	case 4:
-		return &i->vis_ace4;
-	case 5:
-		return &i->vis_1;
-	case 6:
-		return &i->vis_2;
-	case 7:
-		return &i->vis_3;
-	case 8:
-		return &i->vis_4;
-	case 9:
-		return &i->vis_5;
-	case 10:
-		return &i->vis_6;
-	case 11:
-		return &i->vis_7;
-	case 12:
-		return &i->vis_8;
-	default:
-		return 0;
-	}
 }
 
 static void my_move(solitaire* sol, card_proxy* card_proxy) {
@@ -163,6 +109,9 @@ static void my_free(solitaire* sol) {
 }
 
 solitaire* solitaire_noname1() {
+	pile *deck, *ace1, *ace2, *ace3, *ace4;
+	pile *pile1, *pile2, *pile3, *pile4, *pile5, *pile6, *pile7, *pile8;
+
 	/* The one solitaire instance we have.*/
 	solitaire* s = calloc(1, sizeof(solitaire));
 
@@ -171,60 +120,80 @@ solitaire* solitaire_noname1() {
 	 * members. */
 	internal* i = calloc(1, sizeof(internal));
 	s->data = i;
+	s->visual = visual_create();
 
-	i->vis_deck.first = calloc(52, sizeof(card_proxy*));
-	i->vis_ace1.first = calloc(13, sizeof(card_proxy*));
-	i->vis_ace2.first = calloc(13, sizeof(card_proxy*));
-	i->vis_ace3.first = calloc(13, sizeof(card_proxy*));
-	i->vis_ace4.first = calloc(13, sizeof(card_proxy*));
-	i->vis_1.first = calloc(52, sizeof(card_proxy*));
-	i->vis_2.first = calloc(52, sizeof(card_proxy*));
-	i->vis_3.first = calloc(52, sizeof(card_proxy*));
-	i->vis_4.first = calloc(52, sizeof(card_proxy*));
-	i->vis_5.first = calloc(52, sizeof(card_proxy*));
-	i->vis_6.first = calloc(52, sizeof(card_proxy*));
-	i->vis_7.first = calloc(52, sizeof(card_proxy*));
-	i->vis_8.first = calloc(52, sizeof(card_proxy*));
+	deck = pile_create(52);
+	deck->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2 + CARD_WIDTH / 2);
+	deck->origin[1] = 70.0f;
+	deck->rotation = 45.0f;
+	visual_add_pile(s->visual, deck);
 
-	i->vis_deck.origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2 + CARD_WIDTH / 2);
-	i->vis_deck.origin[1] = 70.0f;
-	i->vis_deck.rotation = 45.0f;
+	ace1 = pile_create(13);
+	ace1->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2;
+	ace1->origin[1] = 70.0f;
+	visual_add_pile(s->visual, ace1);
 
-	i->vis_ace1.origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2;
-	i->vis_ace2.origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING;
-	i->vis_ace3.origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2;
-	i->vis_ace4.origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 3 + CARD_SPACING * 3;
-	i->vis_ace1.origin[1] = 70.0f;
-	i->vis_ace2.origin[1] = 70.0f;
-	i->vis_ace3.origin[1] = 70.0f;
-	i->vis_ace4.origin[1] = 70.0f;
+	ace2 = pile_create(13);
+	ace2->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING;
+	ace2->origin[1] = 70.0f;
+	visual_add_pile(s->visual, ace2);
 
-	i->vis_1.origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 3 + CARD_SPACING * 3);
-	i->vis_2.origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2);
-	i->vis_3.origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING);
-	i->vis_4.origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2);
-	i->vis_5.origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2;
-	i->vis_6.origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING;
-	i->vis_7.origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2;
-	i->vis_8.origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 3 + CARD_SPACING * 3;
+	ace3 = pile_create(13);
+	ace3->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2;
+	ace3->origin[1] = 70.0f;
+	visual_add_pile(s->visual, ace3);
 
-	i->vis_1.translateY = 0 - CARD_HEIGHT / 5;
-	i->vis_2.translateY = 0 - CARD_HEIGHT / 5;
-	i->vis_3.translateY = 0 - CARD_HEIGHT / 5;
-	i->vis_4.translateY = 0 - CARD_HEIGHT / 5;
-	i->vis_5.translateY = 0 - CARD_HEIGHT / 5;
-	i->vis_6.translateY = 0 - CARD_HEIGHT / 5;
-	i->vis_7.translateY = 0 - CARD_HEIGHT / 5;
-	i->vis_8.translateY = 0 - CARD_HEIGHT / 5;
+	ace4 = pile_create(13);
+	ace4->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 3 + CARD_SPACING * 3;
+	ace4->origin[1] = 70.0f;
+	visual_add_pile(s->visual, ace4);
+
+	pile1 = pile_create(52);
+	pile1->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 3 + CARD_SPACING * 3);
+	pile1->translateY = 0 - CARD_HEIGHT / 5;
+	visual_add_pile(s->visual, pile1);
+
+	pile2 = pile_create(52);
+	pile2->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2);
+	pile2->translateY = 0 - CARD_HEIGHT / 5;
+	visual_add_pile(s->visual, pile2);
+
+	pile3 = pile_create(52);
+	pile3->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING);
+	pile3->translateY = 0 - CARD_HEIGHT / 5;
+	visual_add_pile(s->visual, pile3);
+
+	pile4 = pile_create(52);
+	pile4->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2);
+	pile4->translateY = 0 - CARD_HEIGHT / 5;
+	visual_add_pile(s->visual, pile4);
+
+	pile5 = pile_create(52);
+	pile5->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2;
+	pile5->translateY = 0 - CARD_HEIGHT / 5;
+	visual_add_pile(s->visual, pile5);
+
+	pile6 = pile_create(52);
+	pile6->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING;
+	pile6->translateY = 0 - CARD_HEIGHT / 5;
+	visual_add_pile(s->visual, pile6);
+
+	pile7 = pile_create(52);
+	pile7->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2;
+	pile7->translateY = 0 - CARD_HEIGHT / 5;
+	visual_add_pile(s->visual, pile7);
+
+	pile8 = pile_create(52);
+	pile8->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 3 + CARD_SPACING * 3;
+	pile8->translateY = 0 - CARD_HEIGHT / 5;
+	visual_add_pile(s->visual, pile8);
 
 	create_deck(i->deck, 52);
 
-	sync(i);
+	sync(s);
 
 	/* Add our implementation for the common functionality
 	 * shared by all solitaires. */
-	s->get_pile_count = my_get_pile_count;
-	s->get_pile = my_get_pile;
 	s->move = my_move;
 	s->free = my_free;
 	return s;
