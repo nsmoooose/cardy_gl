@@ -28,6 +28,12 @@ typedef struct {
 
 	/* All cards are moved to this pile. */
 	card* done[104];
+
+	card* pile1[13];
+	card* pile2[13];
+	card* pile3[13];
+	card* pile4[13];
+	card* pile5[13];
 } internal;
 
 static void sync_pile(card** src, int src_count, pile* dest) {
@@ -195,6 +201,31 @@ solitaire* solitaire_maltesercross() {
 	build4->origin[1] = 0 - (CARD_HEIGHT / 2 + CARD_SPACING * 2 + CARD_HEIGHT + CARD_WIDTH / 2);
 	build4->rotation = 90.0f;
 	visual_add_pile(s->visual, build4);
+
+	pile1 = pile_create(13);
+	pile1->origin[0] = 0;
+	pile1->origin[1] = 0;
+	visual_add_pile(s->visual, pile1);
+
+	pile2 = pile_create(13);
+	pile2->origin[0] = 0;
+	pile2->origin[1] = 0;
+	visual_add_pile(s->visual, pile2);
+
+	pile3 = pile_create(13);
+	pile3->origin[0] = 0;
+	pile3->origin[1] = 0;
+	visual_add_pile(s->visual, pile3);
+
+	pile4 = pile_create(13);
+	pile4->origin[0] = 0;
+	pile4->origin[1] = 0;
+	visual_add_pile(s->visual, pile4);
+
+	pile5 = pile_create(13);
+	pile5->origin[0] = 0;
+	pile5->origin[1] = 0;
+	visual_add_pile(s->visual, pile5);
 
 	create_deck(i->deck, 52);
 	create_deck(&i->deck[52], 52);

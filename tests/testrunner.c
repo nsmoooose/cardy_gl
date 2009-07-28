@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include "test_card.h"
 #include "test_sol_theidiot.h"
+#include "test_sol_maltesercross.h"
 
 int main(int argc, char* argv[]) {
 	int failed;
-	TCase *card_case, *sol_theidiot;
+	TCase *card_case, *sol_theidiot, *sol_malteser;
 	SRunner* runner;
 
 	Suite* suite = suite_create("Cardy");
@@ -26,6 +27,11 @@ int main(int argc, char* argv[]) {
 	tcase_add_test(sol_theidiot, test_sol_theidiot_init);
 	tcase_add_test(sol_theidiot, test_sol_theidiot_deal);
 	suite_add_tcase(suite, sol_theidiot);
+
+	sol_malteser = tcase_create("Sol-MalteserCross");
+	tcase_add_test(sol_malteser, test_sol_maltesercross_init);
+	tcase_add_test(sol_malteser, test_sol_maltesercross_deal);
+	suite_add_tcase(suite, sol_malteser);
 
 	runner = srunner_create(suite);
 	srunner_run_all(runner, CK_VERBOSE);
