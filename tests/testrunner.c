@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
 	tcase_add_test(card_case, test_card_append);
 	tcase_add_test(card_case, test_card_move_all);
 	tcase_add_test(card_case, test_card_first_free);
-	tcase_add_test(card_case, test_pile_create);
+	tcase_add_test(card_case, test_vis_pile_create);
 	tcase_add_test(card_case, test_visual_create);
 	tcase_add_test(card_case, test_visual_add_pile);
 	suite_add_tcase(suite, card_case);

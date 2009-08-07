@@ -26,6 +26,15 @@ typedef struct {
 	struct card_proxy_St* proxy;
 } card;
 
+/** A pile of cards. This is the internal representation of
+ *  cards. No cards are hidden for the user and no visual
+ *  state is held here.
+ */
+typedef struct {
+	card* cards;
+	unsigned int card_count;
+} pile;
+
 /** This is a placeholder for a single card. If the card
  *  hasn't been revealed yet the card pointer is null.
  */
@@ -132,6 +141,8 @@ void card_append(card* card_to_append, card* cards[], int size);
 void card_move_all(card* dest[], int dest_size, card* src[], int src_size);
 void card_move_count(card* dest[], int dest_size, card* src[], int src_size, int count);
 
+pile* pile_create(int size);
+void pile_free(pile* pile);
 
 /** Returns the first free position of a card in the array.
  */
@@ -145,7 +156,7 @@ visual* visual_create();
 void visual_add_pile(visual* vis, vis_pile* p);
 void visual_free(visual* vis);
 
-vis_pile* pile_create(int size);
-void pile_free(vis_pile* pile);
+vis_pile* vis_pile_create(int size);
+void vis_pile_free(vis_pile* pile);
 
 #endif /* __CARD_H__ */

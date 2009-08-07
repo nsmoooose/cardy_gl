@@ -121,68 +121,68 @@ solitaire* solitaire_noname1() {
 	s->data = i;
 	s->visual = visual_create();
 
-	deck = pile_create(52);
+	deck = vis_pile_create(52);
 	deck->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2 + CARD_WIDTH / 2);
 	deck->origin[1] = 70.0f;
 	deck->rotation = 45.0f;
 	visual_add_pile(s->visual, deck);
 
-	ace1 = pile_create(13);
+	ace1 = vis_pile_create(13);
 	ace1->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2;
 	ace1->origin[1] = 70.0f;
 	visual_add_pile(s->visual, ace1);
 
-	ace2 = pile_create(13);
+	ace2 = vis_pile_create(13);
 	ace2->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING;
 	ace2->origin[1] = 70.0f;
 	visual_add_pile(s->visual, ace2);
 
-	ace3 = pile_create(13);
+	ace3 = vis_pile_create(13);
 	ace3->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2;
 	ace3->origin[1] = 70.0f;
 	visual_add_pile(s->visual, ace3);
 
-	ace4 = pile_create(13);
+	ace4 = vis_pile_create(13);
 	ace4->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 3 + CARD_SPACING * 3;
 	ace4->origin[1] = 70.0f;
 	visual_add_pile(s->visual, ace4);
 
-	pile1 = pile_create(52);
+	pile1 = vis_pile_create(52);
 	pile1->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 3 + CARD_SPACING * 3);
 	pile1->translateY = 0 - CARD_HEIGHT / 5;
 	visual_add_pile(s->visual, pile1);
 
-	pile2 = pile_create(52);
+	pile2 = vis_pile_create(52);
 	pile2->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2);
 	pile2->translateY = 0 - CARD_HEIGHT / 5;
 	visual_add_pile(s->visual, pile2);
 
-	pile3 = pile_create(52);
+	pile3 = vis_pile_create(52);
 	pile3->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING);
 	pile3->translateY = 0 - CARD_HEIGHT / 5;
 	visual_add_pile(s->visual, pile3);
 
-	pile4 = pile_create(52);
+	pile4 = vis_pile_create(52);
 	pile4->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2);
 	pile4->translateY = 0 - CARD_HEIGHT / 5;
 	visual_add_pile(s->visual, pile4);
 
-	pile5 = pile_create(52);
+	pile5 = vis_pile_create(52);
 	pile5->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2;
 	pile5->translateY = 0 - CARD_HEIGHT / 5;
 	visual_add_pile(s->visual, pile5);
 
-	pile6 = pile_create(52);
+	pile6 = vis_pile_create(52);
 	pile6->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING;
 	pile6->translateY = 0 - CARD_HEIGHT / 5;
 	visual_add_pile(s->visual, pile6);
 
-	pile7 = pile_create(52);
+	pile7 = vis_pile_create(52);
 	pile7->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2;
 	pile7->translateY = 0 - CARD_HEIGHT / 5;
 	visual_add_pile(s->visual, pile7);
 
-	pile8 = pile_create(52);
+	pile8 = vis_pile_create(52);
 	pile8->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 3 + CARD_SPACING * 3;
 	pile8->translateY = 0 - CARD_HEIGHT / 5;
 	visual_add_pile(s->visual, pile8);
