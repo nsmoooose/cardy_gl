@@ -6,7 +6,7 @@
 #define MAX_SELECTION 2000
 
 static void process_selection(GLint hits, GLuint* selections) {
-	int i, index, hit;
+	int /*i, */ index, hit;
 	pile* selected_pile = 0;
 	card_proxy* selected_proxy = 0;
 

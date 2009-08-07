@@ -72,7 +72,7 @@ START_TEST(test_card_first_free) {
 }
 END_TEST
 
-START_TEST(test_card_append_all) {
+START_TEST(test_card_move_all) {
 	card c1, c2;
 	card* src[3];
 	card* dst[3];
@@ -81,7 +81,7 @@ START_TEST(test_card_append_all) {
 	src[2] = 0;
 	dst[0] = dst[1] = dst[2] = 0;
 
-	card_append_all(dst, 3, src, 3);
+	card_move_all(dst, 3, src, 3);
 
 	ck_assert_msg(dst[0] == &c1, "c1 card wasn't appended.");
 	ck_assert_msg(dst[1] == &c2, "c2 card wasn't appended.");

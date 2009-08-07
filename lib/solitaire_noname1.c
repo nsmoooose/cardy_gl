@@ -56,9 +56,9 @@ static void sync(solitaire* sol) {
 	sync_pile(i->pile7, 13, sol->visual->piles[11]);
 	sync_pile(i->pile8, 13, sol->visual->piles[12]);
 }
+/*
 
 static void my_deal(solitaire* sol, pile* pile) {
-/*
 	internal* i = sol->data;
 
 	if(card_count(i->deck, 52) >= 4) {
@@ -79,18 +79,17 @@ static void my_deal(solitaire* sol, pile* pile) {
 	}
 
 	sync(i);
-*/
 }
+*/
 
 static void my_move(solitaire* sol, card_proxy* card_proxy) {
-	internal* i = sol->data;
+	/* internal* i = sol->data; */
 
-	sync(i);
+	sync(sol);
 }
 
 static void my_free(solitaire* sol) {
 	internal* i = sol->data;
-	int index;
 /*
 	card_append_all(i->deck, 52, i->done, 48);
 	card_append_all(i->deck, 52, i->pile1, 13);

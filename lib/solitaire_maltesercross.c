@@ -93,6 +93,16 @@ static void my_deal(solitaire* sol, pile* pile) {
 		i->state++;
 	}
 
+	if(i->state == 1) {
+		/* Dealing 5 cards to the bottom 5 columns. This state is valid
+		   until the deck is empty.
+		*/
+
+		if(card_count(i->deck, 104) == 0) {
+			i->state = 2;
+		}
+	}
+
 	sync(sol);
 }
 
@@ -102,7 +112,6 @@ static void my_move(solitaire* sol, card_proxy* card_proxy) {
 
 static void my_free(solitaire* sol) {
 	internal* i = sol->data;
-	int index;
 /*
 	card_append_all(i->deck, 52, i->done, 48);
 	card_append_all(i->deck, 52, i->pile1, 13);
@@ -238,8 +247,8 @@ solitaire* solitaire_maltesercross() {
 	pile5->origin[1] = 0;
 	visual_add_pile(s->visual, pile5);
 
-	create_deck(i->deck, 52);
-	create_deck(&i->deck[52], 52);
+	create_deck(i->deck, 104);
+	create_deck(i->deck, 104);
 
 	sync(s);
 

@@ -73,11 +73,11 @@ static void my_free(solitaire* sol) {
 	internal* i = sol->data;
 	int index;
 
-	card_append_all(i->deck, 52, i->done, 48);
-	card_append_all(i->deck, 52, i->pile1, 13);
-	card_append_all(i->deck, 52, i->pile2, 13);
-	card_append_all(i->deck, 52, i->pile3, 13);
-	card_append_all(i->deck, 52, i->pile4, 13);
+	card_move_all(i->deck, 52, i->done, 48);
+	card_move_all(i->deck, 52, i->pile1, 13);
+	card_move_all(i->deck, 52, i->pile2, 13);
+	card_move_all(i->deck, 52, i->pile3, 13);
+	card_move_all(i->deck, 52, i->pile4, 13);
 
 	for(index=0;index<52;++index) {
 		if(i->deck[index]) {
