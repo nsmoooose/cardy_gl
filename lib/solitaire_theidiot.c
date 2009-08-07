@@ -12,33 +12,6 @@ typedef struct {
 	pile* done;
 } internal;
 
-static void sync_pile(pile *src, vis_pile* dest) {
-	int i;
-
-	dest->card_count = 0;
-	for(i=0;i<src->card_count;++i) {
-		if(src->cards[i] == 0) {
-			/* No card. */
-			dest->first[i] = 0;
-		}
-		else {
-			/* Yes there was a card. */
-			dest->first[i] = src->cards[i]->proxy;
-			dest->card_count++;
-		}
-	}
-}
-
-static void sync(solitaire* sol) {
-	internal* i = sol->data;
-	sync_pile(i->deck, sol->visual->piles[0]);
-	sync_pile(i->pile1, sol->visual->piles[1]);
-	sync_pile(i->pile2, sol->visual->piles[2]);
-	sync_pile(i->pile3, sol->visual->piles[3]);
-	sync_pile(i->pile4, sol->visual->piles[4]);
-	sync_pile(i->done, sol->visual->piles[5]);
-}
-
 static void my_new_game(solitaire* sol) {
 }
 
@@ -62,11 +35,11 @@ static void my_deal(solitaire* sol, vis_pile* pile) {
 		card_append(card4, i->pile4);
 	}
 
-	sync(sol);
+	visual_sync(sol->visual);
 }
 
 static void my_move(solitaire* sol, card_proxy* card_proxy) {
-	sync(sol);
+	visual_sync(sol->visual);
 }
 
 static void my_free(solitaire* sol) {
@@ -143,7 +116,7 @@ solitaire* solitaire_theidiot() {
 
 	create_deck(i->deck);
 
-	sync(s);
+	visual_sync(s->visual);
 
 	/* Add our implementation for the common functionality
 	 * shared by all solitaires. */

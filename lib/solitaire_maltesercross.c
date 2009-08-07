@@ -38,50 +38,6 @@ typedef struct {
 	pile* pile5;
 } internal;
 
-static void sync_pile(pile *src, vis_pile* dest) {
-	int i;
-
-	dest->card_count = 0;
-	for(i=0;i<src->card_count;++i) {
-		if(src->cards[i] == 0) {
-			/* No card. */
-			dest->first[i] = 0;
-		}
-		else {
-			/* Yes there was a card. */
-			dest->first[i] = src->cards[i]->proxy;
-			dest->card_count++;
-		}
-	}
-}
-
-static void sync(solitaire* sol) {
-	internal* i = sol->data;
-
-	sync_pile(i->deck, sol->visual->piles[0]);
-	sync_pile(i->done, sol->visual->piles[1]);
-	sync_pile(i->center, sol->visual->piles[2]);
-	sync_pile(i->king1, sol->visual->piles[3]);
-	sync_pile(i->king2, sol->visual->piles[4]);
-	sync_pile(i->king3, sol->visual->piles[5]);
-	sync_pile(i->king4, sol->visual->piles[6]);
-	sync_pile(i->src1, sol->visual->piles[7]);
-	sync_pile(i->src2, sol->visual->piles[8]);
-	sync_pile(i->src3, sol->visual->piles[9]);
-	sync_pile(i->src4, sol->visual->piles[10]);
-
-	sync_pile(i->build1, sol->visual->piles[11]);
-	sync_pile(i->build2, sol->visual->piles[12]);
-	sync_pile(i->build3, sol->visual->piles[13]);
-	sync_pile(i->build4, sol->visual->piles[14]);
-
-	sync_pile(i->pile1, sol->visual->piles[15]);
-	sync_pile(i->pile2, sol->visual->piles[16]);
-	sync_pile(i->pile3, sol->visual->piles[17]);
-	sync_pile(i->pile4, sol->visual->piles[18]);
-	sync_pile(i->pile5, sol->visual->piles[19]);
-}
-
 static void my_deal(solitaire* sol, vis_pile* pile) {
 	internal* i = sol->data;
 
@@ -103,11 +59,11 @@ static void my_deal(solitaire* sol, vis_pile* pile) {
 		}
 	}
 
-	sync(sol);
+	visual_sync(sol->visual);
 }
 
 static void my_move(solitaire* sol, card_proxy* card_proxy) {
-	sync(sol);
+	visual_sync(sol->visual);
 }
 
 static void my_free(solitaire* sol) {
@@ -271,7 +227,7 @@ solitaire* solitaire_maltesercross() {
 	create_deck(i->deck);
 	create_deck(i->deck);
 
-	sync(s);
+	visual_sync(s->visual);
 
 	/* Add our implementation for the common functionality
 	 * shared by all solitaires. */

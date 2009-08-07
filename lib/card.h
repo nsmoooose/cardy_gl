@@ -59,6 +59,8 @@ typedef struct vis_pile_St {
 
 	void (*pile_action)(struct solitaire_St* sol, struct vis_pile_St* pile);
 	void (*card_action)(struct solitaire_St* sol, struct vis_pile_St* pile, card_proxy* proxy);
+
+	void *data;
 } vis_pile;
 
 /** Represents the visual presentation of a game. Together
@@ -142,7 +144,7 @@ void card_move_all(pile *dest, pile *src);
 void card_move_count(pile *dest, pile *src, int count);
 
 pile* pile_create(int size);
-void pile_free(pile* pile);
+void pile_free(pile *pile);
 
 /** Returns the first free position of a card in the array.
  */
@@ -153,10 +155,11 @@ int card_first_free(pile *pile);
 void card_reveal(card* card);
 
 visual* visual_create();
-void visual_add_pile(visual* vis, vis_pile* p);
-void visual_free(visual* vis);
+void visual_add_pile(visual *vis, vis_pile *p);
+void visual_free(visual *vis);
+void visual_sync(visual *vis);
 
-vis_pile* vis_pile_create(pile* pile);
-void vis_pile_free(vis_pile* pile);
+vis_pile* vis_pile_create(pile *pile);
+void vis_pile_free(vis_pile *pile);
 
 #endif /* __CARD_H__ */

@@ -146,6 +146,28 @@ visual* visual_create() {
 	return vis;
 }
 
+void visual_sync(visual *vis) {
+	int pile_index, card_index;
+	pile *src;
+	vis_pile *dst;
+
+	for(pile_index=0;pile_index<vis->pile_count;++pile_index) {
+		dst = vis->piles[pile_index];
+		src = (pile*)dst->data;
+
+		dst->card_count = 0;
+		for(card_index=0;card_index<src->card_count;++card_index) {
+			if(src->cards[card_index]) {
+				dst->first[card_index] = src->cards[card_index]->proxy;
+				dst->card_count++;
+			}
+			else {
+				dst->first[card_index] = 0;
+			}
+		}
+	}
+}
+
 void visual_add_pile(visual* vis, vis_pile* p) {
 	vis_pile** old_piles  = vis->piles;
 	vis->piles = calloc(vis->pile_count + 1, sizeof(vis_pile*));
@@ -169,6 +191,7 @@ void visual_free(visual* vis) {
 
 vis_pile* vis_pile_create(pile *pile) {
 	vis_pile* p = calloc(1, sizeof(vis_pile));
+	p->data = pile;
 	p->first = calloc(pile->card_count, sizeof(card_proxy*));
 	return p;
 }
