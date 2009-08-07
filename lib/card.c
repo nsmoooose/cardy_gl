@@ -39,7 +39,7 @@ void create_deck(card* cards[], int size) {
 
 void print_solitaire_info(solitaire* sol) {
 	int i, j;
-	pile* pile;
+	vis_pile *pile;
 
 	for(i=0;i<sol->visual->pile_count;++i) {
 		printf("Pile: %d\n", i);
@@ -134,13 +134,13 @@ visual* visual_create() {
 	return vis;
 }
 
-void visual_add_pile(visual* vis, pile* p) {
-	pile** old_piles  = vis->piles;
-	vis->piles = calloc(vis->pile_count + 1, sizeof(pile*));
+void visual_add_pile(visual* vis, vis_pile* p) {
+	vis_pile** old_piles  = vis->piles;
+	vis->piles = calloc(vis->pile_count + 1, sizeof(vis_pile*));
 	vis->pile_count++;
 
 	if(old_piles) {
-		memcpy(vis->piles, old_piles, sizeof(pile*) * (vis->pile_count - 1));
+		memcpy(vis->piles, old_piles, sizeof(vis_pile*) * (vis->pile_count - 1));
 		free(old_piles);
 	}
 	vis->piles[vis->pile_count - 1] = p;
@@ -151,13 +151,13 @@ void visual_free(visual* vis) {
 	free(vis);
 }
 
-pile* pile_create(int size) {
-	pile* p = calloc(1, sizeof(pile));
+vis_pile* pile_create(int size) {
+	vis_pile* p = calloc(1, sizeof(vis_pile));
 	p->first = calloc(size, sizeof(card_proxy*));
 	return p;
 }
 
-void pile_free(pile* pile) {
+void pile_free(vis_pile* pile) {
 	free(pile->first);
 	free(pile);
 }

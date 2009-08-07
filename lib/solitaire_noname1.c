@@ -22,7 +22,7 @@ typedef struct {
 	card* pile8[52];
 } internal;
 
-static void sync_pile(card** src, int src_count, pile* dest) {
+static void sync_pile(card** src, int src_count, vis_pile* dest) {
 	int i;
 
 	dest->card_count = 0;
@@ -108,8 +108,8 @@ static void my_free(solitaire* sol) {
 }
 
 solitaire* solitaire_noname1() {
-	pile *deck, *ace1, *ace2, *ace3, *ace4;
-	pile *pile1, *pile2, *pile3, *pile4, *pile5, *pile6, *pile7, *pile8;
+	vis_pile *deck, *ace1, *ace2, *ace3, *ace4;
+	vis_pile *pile1, *pile2, *pile3, *pile4, *pile5, *pile6, *pile7, *pile8;
 
 	/* The one solitaire instance we have.*/
 	solitaire* s = calloc(1, sizeof(solitaire));

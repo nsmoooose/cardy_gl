@@ -12,8 +12,8 @@ extern float g_perspective_fov;
 
 void update_camera_pos();
 
-void render_pile(pile* pile);
-void render_card(pile* pile, card_proxy* proxy);
+void render_pile(vis_pile* pile);
+void render_card(vis_pile* pile, card_proxy* proxy);
 void render_solitaire(solitaire* sol);
 void render_desktop();
 void render_scene();

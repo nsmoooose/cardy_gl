@@ -49,7 +49,7 @@ void render_solitaire(solitaire* sol) {
 	int pile_index;
 	int pile_count = sol->visual->pile_count;
 	for(pile_index=0;pile_index<pile_count;++pile_index) {
-		pile* pile = sol->visual->piles[pile_index];
+		vis_pile* pile = sol->visual->piles[pile_index];
 		if(!pile) {
 			continue;
 		}
@@ -57,7 +57,7 @@ void render_solitaire(solitaire* sol) {
 	}
 }
 
-void render_pile(pile* pile) {
+void render_pile(vis_pile* pile) {
 	int card_index;
 
 	/* Do a translation of our position for the pile. */
@@ -87,7 +87,7 @@ void render_pile(pile* pile) {
 	glPopMatrix();
 }
 
-void render_card(pile* pile, card_proxy* proxy) {
+void render_card(vis_pile* pile, card_proxy* proxy) {
 	if(proxy->card == 0) {
 		glColor3f(0.7f, 0.7f, 1.0f);
 	}

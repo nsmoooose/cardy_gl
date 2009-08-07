@@ -18,7 +18,7 @@ START_TEST(test_sol_theidiot_init) {
 	ck_assert_msg(sol->visual->pile_count == 6, "Incorrect number of piles.");
 
 	for(i=0;i<6;++i) {
-		pile* p = sol->visual->piles[i];
+		vis_pile* p = sol->visual->piles[i];
 		ck_assert_msg(p != 0, "Pile was 0");
 		ck_assert_msg(p->card_count == card_count[i], "The number of cards wasn't %d. It was: %d on pile: %d", card_count[i], p->card_count, i);
 		ck_assert_msg(p->first != 0, "Pile buffer empty");
@@ -27,7 +27,7 @@ START_TEST(test_sol_theidiot_init) {
 END_TEST
 
 START_TEST(test_sol_theidiot_deal) {
-	pile *deck, *pile1, *pile2, *pile3, *pile4;
+	vis_pile *deck, *pile1, *pile2, *pile3, *pile4;
 	solitaire* sol = solitaire_theidiot();
 
 	deck = sol->visual->piles[0];

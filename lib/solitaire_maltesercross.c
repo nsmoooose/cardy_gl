@@ -38,7 +38,7 @@ typedef struct {
 	card* pile5[13];
 } internal;
 
-static void sync_pile(card** src, int src_count, pile* dest) {
+static void sync_pile(card** src, int src_count, vis_pile* dest) {
 	int i;
 
 	dest->card_count = 0;
@@ -82,7 +82,7 @@ static void sync(solitaire* sol) {
 	sync_pile(i->pile5, 13, sol->visual->piles[19]);
 }
 
-static void my_deal(solitaire* sol, pile* pile) {
+static void my_deal(solitaire* sol, vis_pile* pile) {
 	internal* i = sol->data;
 
 	if(i->state == 0) {
@@ -131,10 +131,10 @@ static void my_free(solitaire* sol) {
 }
 
 solitaire* solitaire_maltesercross() {
-	pile *deck, *done, *king1, *king2, *king3, *king4;
-	pile *src1, *src2, *src3, *src4;
-	pile *center, *build1, *build2, *build3, *build4;
-	pile *pile1, *pile2, *pile3, *pile4, *pile5;
+	vis_pile *deck, *done, *king1, *king2, *king3, *king4;
+	vis_pile *src1, *src2, *src3, *src4;
+	vis_pile *center, *build1, *build2, *build3, *build4;
+	vis_pile *pile1, *pile2, *pile3, *pile4, *pile5;
 
 	/* The one solitaire instance we have.*/
 	solitaire* s = calloc(1, sizeof(solitaire));

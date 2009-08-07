@@ -12,7 +12,7 @@ typedef struct {
 	card* done[48];
 } internal;
 
-static void sync_pile(card** src, int src_count, pile* dest) {
+static void sync_pile(card** src, int src_count, vis_pile* dest) {
 	int i;
 
 	dest->card_count = 0;
@@ -42,7 +42,7 @@ static void sync(solitaire* sol) {
 static void my_new_game(solitaire* sol) {
 }
 
-static void my_deal(solitaire* sol, pile* pile) {
+static void my_deal(solitaire* sol, vis_pile* pile) {
 	internal* i = sol->data;
 
 	if(card_count(i->deck, 52) >= 4) {
@@ -89,7 +89,7 @@ static void my_free(solitaire* sol) {
 }
 
 solitaire* solitaire_theidiot() {
-	pile *deck, *pile1, *pile2, *pile3, *pile4, *done;
+	vis_pile *deck, *pile1, *pile2, *pile3, *pile4, *done;
 
 	/* The one solitaire instance we have.*/
 	solitaire* s = calloc(1, sizeof(solitaire));

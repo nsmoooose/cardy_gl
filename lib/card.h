@@ -39,7 +39,7 @@ struct solitaire_St;
  *  is then used by the rendering engine to visualize the
  *  content.
  */
-typedef struct pile_St {
+typedef struct vis_pile_St {
 	card_proxy** first;
 	unsigned int card_count;
 
@@ -48,16 +48,16 @@ typedef struct pile_St {
 	float translateX;
 	float translateY;
 
-	void (*pile_action)(struct solitaire_St* sol, struct pile_St* pile);
-	void (*card_action)(struct solitaire_St* sol, struct pile_St* pile, card_proxy* proxy);
-} pile;
+	void (*pile_action)(struct solitaire_St* sol, struct vis_pile_St* pile);
+	void (*card_action)(struct solitaire_St* sol, struct vis_pile_St* pile, card_proxy* proxy);
+} vis_pile;
 
 /** Represents the visual presentation of a game. Together
  *  with the pile struct it describes how to render the user
  *  interface.
  */
 typedef struct {
-	pile** piles;
+	vis_pile** piles;
 	int pile_count;
 } visual;
 
@@ -142,10 +142,10 @@ int card_first_free(card* cards[], int size);
 void card_reveal(card* card);
 
 visual* visual_create();
-void visual_add_pile(visual* vis, pile* p);
+void visual_add_pile(visual* vis, vis_pile* p);
 void visual_free(visual* vis);
 
-pile* pile_create(int size);
-void pile_free(pile* pile);
+vis_pile* pile_create(int size);
+void pile_free(vis_pile* pile);
 
 #endif /* __CARD_H__ */

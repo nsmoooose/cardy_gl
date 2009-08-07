@@ -91,7 +91,7 @@ START_TEST(test_card_move_all) {
 END_TEST
 
 START_TEST(test_pile_create) {
-	pile* pile;
+	vis_pile* pile;
 
 	pile = pile_create(2);
 	pile->first[0] = 0;
@@ -109,8 +109,8 @@ END_TEST
 
 START_TEST(test_visual_add_pile) {
 	visual* vis = visual_create();
-	pile* pile1 = pile_create(10);
-	pile* pile2 = pile_create(10);
+	vis_pile* pile1 = pile_create(10);
+	vis_pile* pile2 = pile_create(10);
 
 	visual_add_pile(vis, pile1);
 
