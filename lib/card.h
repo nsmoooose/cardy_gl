@@ -129,7 +129,9 @@ void card_append(card* card_to_append, card* cards[], int size);
 
 /** Moves all cards from src array into the destination array.
  */
-void card_append_all(card* dest[], int dest_size, card* src[], int src_size);
+void card_move_all(card* dest[], int dest_size, card* src[], int src_size);
+void card_move_count(card* dest[], int dest_size, card* src[], int src_size, int count);
+
 
 /** Returns the first free position of a card in the array.
  */

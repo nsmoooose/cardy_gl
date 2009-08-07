@@ -2,6 +2,8 @@
 #include "solitaire_maltesercross.h"
 
 typedef struct {
+	char state;
+
 	card* deck[104];
 
 	/* The four piles where we draw cards from. */
@@ -59,31 +61,39 @@ static void sync(solitaire* sol) {
 	sync_pile(i->deck, 104, sol->visual->piles[0]);
 	sync_pile(i->done, 104, sol->visual->piles[1]);
 	sync_pile(i->center, 13, sol->visual->piles[2]);
+	sync_pile(i->king1, 13, sol->visual->piles[3]);
+	sync_pile(i->king2, 13, sol->visual->piles[4]);
+	sync_pile(i->king3, 13, sol->visual->piles[5]);
+	sync_pile(i->king4, 13, sol->visual->piles[6]);
+	sync_pile(i->src1, 13, sol->visual->piles[7]);
+	sync_pile(i->src2, 13, sol->visual->piles[8]);
+	sync_pile(i->src3, 13, sol->visual->piles[9]);
+	sync_pile(i->src4, 13, sol->visual->piles[10]);
+
+	sync_pile(i->build1, 13, sol->visual->piles[11]);
+	sync_pile(i->build2, 13, sol->visual->piles[12]);
+	sync_pile(i->build3, 13, sol->visual->piles[13]);
+	sync_pile(i->build4, 13, sol->visual->piles[14]);
+
+	sync_pile(i->pile1, 13, sol->visual->piles[15]);
+	sync_pile(i->pile2, 13, sol->visual->piles[16]);
+	sync_pile(i->pile3, 13, sol->visual->piles[17]);
+	sync_pile(i->pile4, 13, sol->visual->piles[18]);
+	sync_pile(i->pile5, 13, sol->visual->piles[19]);
 }
 
 static void my_deal(solitaire* sol, pile* pile) {
-/*
 	internal* i = sol->data;
 
-	if(card_count(i->deck, 52) >= 4) {
-		card* card1 = card_take_last(i->deck, 52);
-		card* card2 = card_take_last(i->deck, 52);
-		card* card3 = card_take_last(i->deck, 52);
-		card* card4 = card_take_last(i->deck, 52);
-
-		card_reveal(card1);
-		card_reveal(card2);
-		card_reveal(card3);
-		card_reveal(card4);
-
-		card_append(card1, i->pile1, 13);
-		card_append(card2, i->pile2, 13);
-		card_append(card3, i->pile3, 13);
-		card_append(card4, i->pile4, 13);
+	if(i->state == 0) {
+		card_move_count(i->src1, 13, i->deck, 104, 13);
+		card_move_count(i->src2, 13, i->deck, 104, 13);
+		card_move_count(i->src3, 13, i->deck, 104, 13);
+		card_move_count(i->src4, 13, i->deck, 104, 13);
+		i->state++;
 	}
 
 	sync(sol);
-*/
 }
 
 static void my_move(solitaire* sol, card_proxy* card_proxy) {
@@ -131,6 +141,7 @@ solitaire* solitaire_maltesercross() {
 	deck->origin[0] = 0 - (CARD_WIDTH + CARD_SPACING * 2 + CARD_HEIGHT * 2);
 	deck->origin[1] = CARD_WIDTH;
 	deck->rotation = -30.0f;
+	deck->pile_action = my_deal;
 	visual_add_pile(s->visual, deck);
 
 	done = pile_create(104);

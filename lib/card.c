@@ -113,6 +113,23 @@ int card_first_free(card* cards[], int size) {
 	return -1;
 }
 
+void card_move_all(card* dest[], int dest_size, card* src[], int src_size) {
+}
+
+void card_move_count(card* dest[], int dest_size, card* src[], int src_size, int count) {
+	int index;
+	card* card;
+	for(index=0;index<count;++index) {
+		card = card_take_last(src, src_size);
+		if(card) {
+			card_append(card, dest, dest_size);
+		}
+		else {
+			/* TODO. This is an error that should be signalled or something. */
+		}
+	}
+}
+
 void card_reveal(card* card) {
 	card->proxy->card = card;
 }
