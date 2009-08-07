@@ -4,52 +4,52 @@
 typedef struct {
 	char state;
 
-	card* deck[104];
+	pile* deck;
 
 	/* The four piles where we draw cards from. */
-	card* src1[13];
-	card* src2[13];
-	card* src3[13];
-	card* src4[13];
+	pile* src1;
+	pile* src2;
+	pile* src3;
+	pile* src4;
 
 	/* The four diagonal piles where you build
 	 * from king to ace. */
-	card* king1[13];
-	card* king2[13];
-	card* king3[13];
-	card* king4[13];
+	pile* king1;
+	pile* king2;
+	pile* king3;
+	pile* king4;
 
 	/* Center pile build from ace to king. */
-	card* center[13];
+	pile* center;
 
 	/* Build from any card up. */
-	card* build1[13];
-	card* build2[13];
-	card* build3[13];
-	card* build4[13];
+	pile* build1;
+	pile* build2;
+	pile* build3;
+	pile* build4;
 
 	/* All cards are moved to this pile. */
-	card* done[104];
+	pile* done;
 
-	card* pile1[13];
-	card* pile2[13];
-	card* pile3[13];
-	card* pile4[13];
-	card* pile5[13];
+	pile* pile1;
+	pile* pile2;
+	pile* pile3;
+	pile* pile4;
+	pile* pile5;
 } internal;
 
-static void sync_pile(card** src, int src_count, vis_pile* dest) {
+static void sync_pile(pile *src, vis_pile* dest) {
 	int i;
 
 	dest->card_count = 0;
-	for(i=0;i<src_count;++i) {
-		if(src[i] == 0) {
+	for(i=0;i<src->card_count;++i) {
+		if(src->cards[i] == 0) {
 			/* No card. */
 			dest->first[i] = 0;
 		}
 		else {
 			/* Yes there was a card. */
-			dest->first[i] = src[i]->proxy;
+			dest->first[i] = src->cards[i]->proxy;
 			dest->card_count++;
 		}
 	}
@@ -58,38 +58,38 @@ static void sync_pile(card** src, int src_count, vis_pile* dest) {
 static void sync(solitaire* sol) {
 	internal* i = sol->data;
 
-	sync_pile(i->deck, 104, sol->visual->piles[0]);
-	sync_pile(i->done, 104, sol->visual->piles[1]);
-	sync_pile(i->center, 13, sol->visual->piles[2]);
-	sync_pile(i->king1, 13, sol->visual->piles[3]);
-	sync_pile(i->king2, 13, sol->visual->piles[4]);
-	sync_pile(i->king3, 13, sol->visual->piles[5]);
-	sync_pile(i->king4, 13, sol->visual->piles[6]);
-	sync_pile(i->src1, 13, sol->visual->piles[7]);
-	sync_pile(i->src2, 13, sol->visual->piles[8]);
-	sync_pile(i->src3, 13, sol->visual->piles[9]);
-	sync_pile(i->src4, 13, sol->visual->piles[10]);
+	sync_pile(i->deck, sol->visual->piles[0]);
+	sync_pile(i->done, sol->visual->piles[1]);
+	sync_pile(i->center, sol->visual->piles[2]);
+	sync_pile(i->king1, sol->visual->piles[3]);
+	sync_pile(i->king2, sol->visual->piles[4]);
+	sync_pile(i->king3, sol->visual->piles[5]);
+	sync_pile(i->king4, sol->visual->piles[6]);
+	sync_pile(i->src1, sol->visual->piles[7]);
+	sync_pile(i->src2, sol->visual->piles[8]);
+	sync_pile(i->src3, sol->visual->piles[9]);
+	sync_pile(i->src4, sol->visual->piles[10]);
 
-	sync_pile(i->build1, 13, sol->visual->piles[11]);
-	sync_pile(i->build2, 13, sol->visual->piles[12]);
-	sync_pile(i->build3, 13, sol->visual->piles[13]);
-	sync_pile(i->build4, 13, sol->visual->piles[14]);
+	sync_pile(i->build1, sol->visual->piles[11]);
+	sync_pile(i->build2, sol->visual->piles[12]);
+	sync_pile(i->build3, sol->visual->piles[13]);
+	sync_pile(i->build4, sol->visual->piles[14]);
 
-	sync_pile(i->pile1, 13, sol->visual->piles[15]);
-	sync_pile(i->pile2, 13, sol->visual->piles[16]);
-	sync_pile(i->pile3, 13, sol->visual->piles[17]);
-	sync_pile(i->pile4, 13, sol->visual->piles[18]);
-	sync_pile(i->pile5, 13, sol->visual->piles[19]);
+	sync_pile(i->pile1, sol->visual->piles[15]);
+	sync_pile(i->pile2, sol->visual->piles[16]);
+	sync_pile(i->pile3, sol->visual->piles[17]);
+	sync_pile(i->pile4, sol->visual->piles[18]);
+	sync_pile(i->pile5, sol->visual->piles[19]);
 }
 
 static void my_deal(solitaire* sol, vis_pile* pile) {
 	internal* i = sol->data;
 
 	if(i->state == 0) {
-		card_move_count(i->src1, 13, i->deck, 104, 13);
-		card_move_count(i->src2, 13, i->deck, 104, 13);
-		card_move_count(i->src3, 13, i->deck, 104, 13);
-		card_move_count(i->src4, 13, i->deck, 104, 13);
+		card_move_count(i->src1, i->deck, 13);
+		card_move_count(i->src2, i->deck, 13);
+		card_move_count(i->src3, i->deck, 13);
+		card_move_count(i->src4, i->deck, 13);
 		i->state++;
 	}
 
@@ -98,7 +98,7 @@ static void my_deal(solitaire* sol, vis_pile* pile) {
 		   until the deck is empty.
 		*/
 
-		if(card_count(i->deck, 104) == 0) {
+		if(card_count(i->deck) == 0) {
 			i->state = 2;
 		}
 	}
@@ -145,6 +145,27 @@ solitaire* solitaire_maltesercross() {
 	internal* i = calloc(1, sizeof(internal));
 	s->data = i;
 	s->visual = visual_create();
+
+	i->deck = pile_create(104);
+	i->src1 = pile_create(13);
+	i->src2 = pile_create(13);
+	i->src3 = pile_create(13);
+	i->src4 = pile_create(13);
+	i->king1 = pile_create(13);
+	i->king2 = pile_create(13);
+	i->king3 = pile_create(13);
+	i->king4 = pile_create(13);
+	i->center = pile_create(13);
+	i->build1 = pile_create(13);
+	i->build2 = pile_create(13);
+	i->build3 = pile_create(13);
+	i->build4 = pile_create(13);
+	i->done = pile_create(104);
+	i->pile1 = pile_create(52);
+	i->pile2 = pile_create(52);
+	i->pile3 = pile_create(52);
+	i->pile4 = pile_create(52);
+	i->pile5 = pile_create(52);
 
 	deck = vis_pile_create(104);
 	deck->origin[0] = 0 - (CARD_WIDTH + CARD_SPACING * 2 + CARD_HEIGHT * 2);
@@ -222,33 +243,33 @@ solitaire* solitaire_maltesercross() {
 	build4->rotation = 90.0f;
 	visual_add_pile(s->visual, build4);
 
-	pile1 = vis_pile_create(13);
+	pile1 = vis_pile_create(52);
 	pile1->origin[0] = 0;
 	pile1->origin[1] = 0;
 	visual_add_pile(s->visual, pile1);
 
-	pile2 = vis_pile_create(13);
+	pile2 = vis_pile_create(52);
 	pile2->origin[0] = 0;
 	pile2->origin[1] = 0;
 	visual_add_pile(s->visual, pile2);
 
-	pile3 = vis_pile_create(13);
+	pile3 = vis_pile_create(52);
 	pile3->origin[0] = 0;
 	pile3->origin[1] = 0;
 	visual_add_pile(s->visual, pile3);
 
-	pile4 = vis_pile_create(13);
+	pile4 = vis_pile_create(52);
 	pile4->origin[0] = 0;
 	pile4->origin[1] = 0;
 	visual_add_pile(s->visual, pile4);
 
-	pile5 = vis_pile_create(13);
+	pile5 = vis_pile_create(52);
 	pile5->origin[0] = 0;
 	pile5->origin[1] = 0;
 	visual_add_pile(s->visual, pile5);
 
-	create_deck(i->deck, 104);
-	create_deck(i->deck, 104);
+	create_deck(i->deck);
+	create_deck(i->deck);
 
 	sync(s);
 

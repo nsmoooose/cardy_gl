@@ -31,7 +31,7 @@ typedef struct {
  *  state is held here.
  */
 typedef struct {
-	card* cards;
+	card** cards;
 	unsigned int card_count;
 } pile;
 
@@ -115,7 +115,7 @@ void card_free(card* card);
 
 /** Creates a deck of cards with 52 cards if the array permits it.
  */
-void create_deck(card* list[], int count);
+void create_deck(pile *pile);
 
 /** Print information about the solitaire. Usefull for debugging purposes
  *  when we need to know the content of the solitaire.
@@ -124,29 +124,29 @@ void print_solitaire_info(solitaire* sol);
 
 /** Counts the number of cards that exists within the array.
  */
-int card_count(card* cards[], int size);
+int card_count(pile *pile);
 
 /** Takes the last card from the array and returns it. The index that
  *  The card was found on will be cleared. This makes the card ready to
  *  be inserted into any other array.
  */
-card* card_take_last(card* cards[], int size);
+card* card_take_last(pile *pile);
 
 /** Appends the card to the first free position in the array of cards.
  */
-void card_append(card* card_to_append, card* cards[], int size);
+void card_append(card* card_to_append, pile *pile);
 
 /** Moves all cards from src array into the destination array.
  */
-void card_move_all(card* dest[], int dest_size, card* src[], int src_size);
-void card_move_count(card* dest[], int dest_size, card* src[], int src_size, int count);
+void card_move_all(pile *dest, pile *src);
+void card_move_count(pile *dest, pile *src, int count);
 
 pile* pile_create(int size);
 void pile_free(pile* pile);
 
 /** Returns the first free position of a card in the array.
  */
-int card_first_free(card* cards[], int size);
+int card_first_free(pile *pile);
 
 /** Reveals the card to the user.
  */

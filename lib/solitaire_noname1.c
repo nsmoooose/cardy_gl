@@ -2,38 +2,38 @@
 #include "solitaire_maltesercross.h"
 
 typedef struct {
-	card* deck[52];
+	pile* deck;
 
 	/* The four piles where we draw cards from. */
-	card* ace1[13];
-	card* ace2[13];
-	card* ace3[13];
-	card* ace4[13];
+	pile* ace1;
+	pile* ace2;
+	pile* ace3;
+	pile* ace4;
 
 	/* The four diagonal piles where you build
 	 * from king to ace. */
-	card* pile1[52];
-	card* pile2[52];
-	card* pile3[52];
-	card* pile4[52];
-	card* pile5[52];
-	card* pile6[52];
-	card* pile7[52];
-	card* pile8[52];
+	pile* pile1;
+	pile* pile2;
+	pile* pile3;
+	pile* pile4;
+	pile* pile5;
+	pile* pile6;
+	pile* pile7;
+	pile* pile8;
 } internal;
 
-static void sync_pile(card** src, int src_count, vis_pile* dest) {
+static void sync_pile(pile *src, vis_pile* dest) {
 	int i;
 
 	dest->card_count = 0;
-	for(i=0;i<src_count;++i) {
-		if(src[i] == 0) {
+	for(i=0;i<src->card_count;++i) {
+		if(src->cards[i] == 0) {
 			/* No card. */
 			dest->first[i] = 0;
 		}
 		else {
 			/* Yes there was a card. */
-			dest->first[i] = src[i]->proxy;
+			dest->first[i] = src->cards[i]->proxy;
 			dest->card_count++;
 		}
 	}
@@ -42,19 +42,19 @@ static void sync_pile(card** src, int src_count, vis_pile* dest) {
 static void sync(solitaire* sol) {
 	internal* i = sol->data;
 
-	sync_pile(i->deck, 52, sol->visual->piles[0]);
-	sync_pile(i->ace1, 13, sol->visual->piles[1]);
-	sync_pile(i->ace2, 13, sol->visual->piles[2]);
-	sync_pile(i->ace3, 13, sol->visual->piles[3]);
-	sync_pile(i->ace4, 13, sol->visual->piles[4]);
-	sync_pile(i->pile1, 13, sol->visual->piles[5]);
-	sync_pile(i->pile2, 13, sol->visual->piles[6]);
-	sync_pile(i->pile3, 13, sol->visual->piles[7]);
-	sync_pile(i->pile4, 13, sol->visual->piles[8]);
-	sync_pile(i->pile5, 13, sol->visual->piles[9]);
-	sync_pile(i->pile6, 13, sol->visual->piles[10]);
-	sync_pile(i->pile7, 13, sol->visual->piles[11]);
-	sync_pile(i->pile8, 13, sol->visual->piles[12]);
+	sync_pile(i->deck, sol->visual->piles[0]);
+	sync_pile(i->ace1, sol->visual->piles[1]);
+	sync_pile(i->ace2, sol->visual->piles[2]);
+	sync_pile(i->ace3, sol->visual->piles[3]);
+	sync_pile(i->ace4, sol->visual->piles[4]);
+	sync_pile(i->pile1, sol->visual->piles[5]);
+	sync_pile(i->pile2, sol->visual->piles[6]);
+	sync_pile(i->pile3, sol->visual->piles[7]);
+	sync_pile(i->pile4, sol->visual->piles[8]);
+	sync_pile(i->pile5, sol->visual->piles[9]);
+	sync_pile(i->pile6, sol->visual->piles[10]);
+	sync_pile(i->pile7, sol->visual->piles[11]);
+	sync_pile(i->pile8, sol->visual->piles[12]);
 }
 /*
 
@@ -120,6 +120,20 @@ solitaire* solitaire_noname1() {
 	internal* i = calloc(1, sizeof(internal));
 	s->data = i;
 	s->visual = visual_create();
+
+	i->deck = pile_create(52);
+	i->ace1 = pile_create(13);
+	i->ace2 = pile_create(13);
+	i->ace3 = pile_create(13);
+	i->ace4 = pile_create(13);
+	i->pile1 = pile_create(52);
+	i->pile2 = pile_create(52);
+	i->pile3 = pile_create(52);
+	i->pile4 = pile_create(52);
+	i->pile5 = pile_create(52);
+	i->pile6 = pile_create(52);
+	i->pile7 = pile_create(52);
+	i->pile8 = pile_create(52);
 
 	deck = vis_pile_create(52);
 	deck->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2 + CARD_WIDTH / 2);
@@ -187,7 +201,7 @@ solitaire* solitaire_noname1() {
 	pile8->translateY = 0 - CARD_HEIGHT / 5;
 	visual_add_pile(s->visual, pile8);
 
-	create_deck(i->deck, 52);
+	create_deck(i->deck);
 
 	sync(s);
 

@@ -23,7 +23,7 @@ void card_free(card* card) {
 	}
 }
 
-void create_deck(card* cards[], int size) {
+void create_deck(pile *pile) {
 	int index = 0;
 	card* card;
 	card_suit suit;
@@ -32,7 +32,7 @@ void create_deck(card* cards[], int size) {
 	for(suit=e_diamonds;suit<=e_spades;++suit) {
 		for(value=1;value<14;++value, ++index) {
 			card = card_create(suit, value);
-			card_append(card, cards, size);
+			card_append(card, pile);
 		}
 	}
 }
@@ -55,69 +55,69 @@ void print_solitaire_info(solitaire* sol) {
 	}
 }
 
-int card_count(card* cards[], int size) {
+int card_count(pile *pile) {
 	int count = 0, index = 0;
-	for(;index<size;++index) {
-		if(cards[index]) {
+	for(;index<pile->card_count;++index) {
+		if(pile->cards[index]) {
 			count++;
 		}
 	}
 	return count;
 }
 
-card* card_take_last(card* cards[], int size) {
+card* card_take_last(pile *pile) {
 	card* last = 0;
 	int index = 0, last_index = -1;
-	for(;index<size;++index) {
-		if(cards[index]) {
-			last = cards[index];
+	for(;index<pile->card_count;++index) {
+		if(pile->cards[index]) {
+			last = pile->cards[index];
 			last_index = index;
 		}
 	}
 
 	if(last_index != -1) {
-		card* last = cards[last_index];
-		cards[last_index] = 0;
+		card* last = pile->cards[last_index];
+		pile->cards[last_index] = 0;
 		return last;
 	}
 	return 0;
 }
 
-void card_append(card* card_to_append, card* cards[], int size) {
-	int free_index = card_first_free(cards, size);
-	cards[free_index] = card_to_append;
+void card_append(card* card_to_append, pile *pile) {
+	int free_index = card_first_free(pile);
+	pile->cards[free_index] = card_to_append;
 }
 
-int card_first_free(card* cards[], int size) {
+int card_first_free(pile *pile) {
 	int index=0;
-	for(;index<size;++index) {
-		if(cards[index]==0) {
+	for(;index<pile->card_count;++index) {
+		if(pile->cards[index]==0) {
 			return index;
 		}
 	}
 	return -1;
 }
 
-void card_move_all(card* dest[], int dest_size, card* src[], int src_size) {
+void card_move_all(pile *dest, pile *src) {
 	int index, dest_index;
-	for(index=0;index<src_size;++index) {
-		if(!src[index]) {
+	for(index=0;index<src->card_count;++index) {
+		if(!src->cards[index]) {
 			continue;
 		}
 
-		dest_index = card_first_free(dest, dest_size);
-		dest[dest_index] = src[index];
-		src[index] = 0;
+		dest_index = card_first_free(dest);
+		dest->cards[dest_index] = src->cards[index];
+		src->cards[index] = 0;
 	}
 }
 
-void card_move_count(card* dest[], int dest_size, card* src[], int src_size, int count) {
+void card_move_count(pile *dest, pile *src, int count) {
 	int index;
 	card* card;
 	for(index=0;index<count;++index) {
-		card = card_take_last(src, src_size);
+		card = card_take_last(src);
 		if(card) {
-			card_append(card, dest, dest_size);
+			card_append(card, dest);
 		}
 		else {
 			/* TODO. This is an error that should be signalled or something. */
