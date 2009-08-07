@@ -104,38 +104,38 @@ solitaire* solitaire_theidiot() {
 	i->pile4 = pile_create(13);
 	i->done = pile_create(48);
 
-	deck = vis_pile_create(52);
+	deck = vis_pile_create(i->deck);
 	deck->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2 + CARD_WIDTH / 2);
 	deck->origin[1] = 40.0f;
 	deck->rotation = 45.0f;
 	deck->pile_action = my_deal;
 	visual_add_pile(s->visual, deck);
 
-	pile1 = vis_pile_create(13);
+	pile1 = vis_pile_create(i->pile1);
 	pile1->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING);
 	pile1->origin[1] = 70.0f;
 	pile1->translateY = 0 - CARD_HEIGHT / 5;
 	visual_add_pile(s->visual, pile1);
 
-	pile2 = vis_pile_create(13);
+	pile2 = vis_pile_create(i->pile2);
 	pile2->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2);
 	pile2->origin[1] = 70.0f;
 	pile2->translateY = 0 - CARD_HEIGHT / 5;
 	visual_add_pile(s->visual, pile2);
 
-	pile3 = vis_pile_create(13);
+	pile3 = vis_pile_create(i->pile3);
 	pile3->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2;
 	pile3->origin[1] = 70.0f;
 	pile3->translateY = 0 - CARD_HEIGHT / 5;
 	visual_add_pile(s->visual, pile3);
 
-	pile4 = vis_pile_create(13);
+	pile4 = vis_pile_create(i->pile4);
 	pile4->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING;
 	pile4->origin[1] = 70.0f;
 	pile4->translateY = 0 - CARD_HEIGHT / 5;
 	visual_add_pile(s->visual, pile4);
 
-	done = vis_pile_create(48);
+	done = vis_pile_create(i->done);
 	done->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2 + CARD_WIDTH / 2;
 	done->origin[1] = 40.0f;
 	done->rotation = -45.0f;

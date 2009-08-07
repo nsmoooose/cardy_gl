@@ -156,7 +156,7 @@ visual* visual_create();
 void visual_add_pile(visual* vis, vis_pile* p);
 void visual_free(visual* vis);
 
-vis_pile* vis_pile_create(int size);
+vis_pile* vis_pile_create(pile* pile);
 void vis_pile_free(vis_pile* pile);
 
 #endif /* __CARD_H__ */

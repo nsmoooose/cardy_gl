@@ -167,9 +167,9 @@ void visual_free(visual* vis) {
 	free(vis);
 }
 
-vis_pile* vis_pile_create(int size) {
+vis_pile* vis_pile_create(pile *pile) {
 	vis_pile* p = calloc(1, sizeof(vis_pile));
-	p->first = calloc(size, sizeof(card_proxy*));
+	p->first = calloc(pile->card_count, sizeof(card_proxy*));
 	return p;
 }
 

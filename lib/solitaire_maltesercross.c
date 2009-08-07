@@ -167,103 +167,103 @@ solitaire* solitaire_maltesercross() {
 	i->pile4 = pile_create(52);
 	i->pile5 = pile_create(52);
 
-	deck = vis_pile_create(104);
+	deck = vis_pile_create(i->deck);
 	deck->origin[0] = 0 - (CARD_WIDTH + CARD_SPACING * 2 + CARD_HEIGHT * 2);
 	deck->origin[1] = CARD_WIDTH;
 	deck->rotation = -30.0f;
 	deck->pile_action = my_deal;
 	visual_add_pile(s->visual, deck);
 
-	done = vis_pile_create(104);
+	done = vis_pile_create(i->done);
 	done->origin[0] = CARD_WIDTH + CARD_SPACING * 2 + CARD_HEIGHT * 2;
 	done->origin[1] = 0 - CARD_WIDTH;
 	done->rotation = -30.0f;
 	visual_add_pile(s->visual, done);
 
-	center = vis_pile_create(13);
+	center = vis_pile_create(i->center);
 	visual_add_pile(s->visual, center);
 
-	king1 = vis_pile_create(13);
+	king1 = vis_pile_create(i->king1);
 	king1->origin[0] = CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2;
 	king1->origin[1] = CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2;
 	king1->rotation = -45.0f;
 	visual_add_pile(s->visual, king1);
 
-	king2 = vis_pile_create(13);
+	king2 = vis_pile_create(i->king2);
 	king2->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2);
 	king2->origin[1] = CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2;
 	king2->rotation = 45.0f;
 	visual_add_pile(s->visual, king2);
 
-	king3 = vis_pile_create(13);
+	king3 = vis_pile_create(i->king3);
 	king3->origin[0] = CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2;
 	king3->origin[1] = 0 - (CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2);
 	king3->rotation = 45.0f;
 	visual_add_pile(s->visual, king3);
 
-	king4 = vis_pile_create(13);
+	king4 = vis_pile_create(i->king4);
 	king4->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2);
 	king4->origin[1] = 0 - (CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2);
 	king4->rotation = -45.0f;
 	visual_add_pile(s->visual, king4);
 
-	src1 = vis_pile_create(13);
+	src1 = vis_pile_create(i->src1);
 	src1->origin[1] = CARD_HEIGHT + CARD_SPACING;
 	visual_add_pile(s->visual, src1);
 
-	src2 = vis_pile_create(13);
+	src2 = vis_pile_create(i->src2);
 	src2->origin[1] = 0 - (CARD_HEIGHT + CARD_SPACING);
 	visual_add_pile(s->visual, src2);
 
-	src3 = vis_pile_create(13);
+	src3 = vis_pile_create(i->src3);
 	src3->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING + CARD_HEIGHT / 2);
 	src3->rotation = 90.0f;
 	visual_add_pile(s->visual, src3);
 
-	src4 = vis_pile_create(13);
+	src4 = vis_pile_create(i->src4);
 	src4->origin[0] = CARD_WIDTH / 2 + CARD_SPACING + CARD_HEIGHT / 2;
 	src4->rotation = 90.0f;
 	visual_add_pile(s->visual, src4);
 
-	build1 = vis_pile_create(13);
+	build1 = vis_pile_create(i->build1);
 	build1->origin[0] = 0 - (CARD_WIDTH + CARD_SPACING * 2 + CARD_HEIGHT);
 	visual_add_pile(s->visual, build1);
 
-	build2 = vis_pile_create(13);
+	build2 = vis_pile_create(i->build2);
 	build2->origin[0] = CARD_WIDTH + CARD_SPACING * 2 + CARD_HEIGHT;
 	visual_add_pile(s->visual, build2);
 
-	build3 = vis_pile_create(13);
+	build3 = vis_pile_create(i->build3);
 	build3->origin[1] = CARD_HEIGHT / 2 + CARD_SPACING * 2 + CARD_HEIGHT + CARD_WIDTH / 2;
 	build3->rotation = 90.0f;
 	visual_add_pile(s->visual, build3);
 
-	build4 = vis_pile_create(13);
+	build4 = vis_pile_create(i->build4);
 	build4->origin[1] = 0 - (CARD_HEIGHT / 2 + CARD_SPACING * 2 + CARD_HEIGHT + CARD_WIDTH / 2);
 	build4->rotation = 90.0f;
 	visual_add_pile(s->visual, build4);
 
-	pile1 = vis_pile_create(52);
+	pile1 = vis_pile_create(i->pile1);
 	pile1->origin[0] = 0;
 	pile1->origin[1] = 0;
 	visual_add_pile(s->visual, pile1);
 
-	pile2 = vis_pile_create(52);
+	pile2 = vis_pile_create(i->pile2);
 	pile2->origin[0] = 0;
 	pile2->origin[1] = 0;
 	visual_add_pile(s->visual, pile2);
 
-	pile3 = vis_pile_create(52);
+	pile3 = vis_pile_create(i->pile3);
 	pile3->origin[0] = 0;
 	pile3->origin[1] = 0;
 	visual_add_pile(s->visual, pile3);
 
-	pile4 = vis_pile_create(52);
+	pile4 = vis_pile_create(i->pile4);
 	pile4->origin[0] = 0;
 	pile4->origin[1] = 0;
 	visual_add_pile(s->visual, pile4);
 
-	pile5 = vis_pile_create(52);
+	pile5 = vis_pile_create(i->pile5);
 	pile5->origin[0] = 0;
 	pile5->origin[1] = 0;
 	visual_add_pile(s->visual, pile5);
