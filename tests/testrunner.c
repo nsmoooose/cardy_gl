@@ -3,10 +3,11 @@
 #include "test_card.h"
 #include "test_sol_theidiot.h"
 #include "test_sol_maltesercross.h"
+#include "test_sol_noname1.h"
 
 int main(int argc, char* argv[]) {
 	int failed;
-	TCase *card_case, *sol_theidiot, *sol_malteser;
+	TCase *card_case, *sol_theidiot, *sol_malteser, *sol_noname1;
 	SRunner* runner;
 
 	Suite* suite = suite_create("Cardy");
@@ -33,6 +34,11 @@ int main(int argc, char* argv[]) {
 	tcase_add_test(sol_malteser, test_sol_maltesercross_init);
 	tcase_add_test(sol_malteser, test_sol_maltesercross_deal);
 	suite_add_tcase(suite, sol_malteser);
+
+	sol_noname1 = tcase_create("Sol-Noname1");
+	tcase_add_test(sol_noname1, test_sol_noname1_init);
+	tcase_add_test(sol_noname1, test_sol_noname1_deal);
+	suite_add_tcase(suite, sol_noname1);
 
 	runner = srunner_create(suite);
 	srunner_run_all(runner, CK_VERBOSE);

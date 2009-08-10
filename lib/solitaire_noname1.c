@@ -22,30 +22,23 @@ typedef struct {
 	pile* pile8;
 } internal;
 
-/*
-static void my_deal(solitaire* sol, pile* pile) {
+static void my_deal(solitaire* sol, vis_pile* pile) {
 	internal* i = sol->data;
 
-	if(card_count(i->deck, 52) >= 4) {
-		card* card1 = card_take_last(i->deck, 52);
-		card* card2 = card_take_last(i->deck, 52);
-		card* card3 = card_take_last(i->deck, 52);
-		card* card4 = card_take_last(i->deck, 52);
+	if(card_count(i->deck) == 52) {
+		card_move_count(i->pile1, i->deck, 7);
+		card_move_count(i->pile2, i->deck, 7);
+		card_move_count(i->pile3, i->deck, 7);
+		card_move_count(i->pile4, i->deck, 7);
 
-		card_reveal(card1);
-		card_reveal(card2);
-		card_reveal(card3);
-		card_reveal(card4);
-
-		card_append(card1, i->pile1, 13);
-		card_append(card2, i->pile2, 13);
-		card_append(card3, i->pile3, 13);
-		card_append(card4, i->pile4, 13);
+		card_move_count(i->pile5, i->deck, 6);
+		card_move_count(i->pile6, i->deck, 6);
+		card_move_count(i->pile7, i->deck, 6);
+		card_move_count(i->pile8, i->deck, 6);
 	}
 
-	sync(i);
+	visual_sync(sol->visual);
 }
-*/
 
 static void my_move(solitaire* sol, card_proxy* card_proxy) {
 	/* internal* i = sol->data; */
@@ -104,6 +97,7 @@ solitaire* solitaire_noname1() {
 	deck->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2 + CARD_WIDTH / 2);
 	deck->origin[1] = 70.0f;
 	deck->rotation = 45.0f;
+	deck->pile_action = my_deal;
 	visual_add_pile(s->visual, deck);
 
 	ace1 = vis_pile_create(i->ace1);
