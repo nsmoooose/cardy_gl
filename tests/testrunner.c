@@ -13,6 +13,7 @@ int main(int argc, char* argv[]) {
 	Suite* suite = suite_create("Cardy");
 
 	card_case = tcase_create("Card");
+	tcase_add_test(card_case, test_card_create);
 	tcase_add_test(card_case, test_create_deck);
 	tcase_add_test(card_case, test_card_count);
 	tcase_add_test(card_case, test_card_take_last);
@@ -23,6 +24,7 @@ int main(int argc, char* argv[]) {
 	tcase_add_test(card_case, test_visual_create);
 	tcase_add_test(card_case, test_visual_add_pile);
 	tcase_add_test(card_case, test_visual_sync);
+	tcase_add_test(card_case, test_reveal);
 	suite_add_tcase(suite, card_case);
 
 	sol_theidiot = tcase_create("Sol-TheIdiot");

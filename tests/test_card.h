@@ -22,6 +22,24 @@ START_TEST(test_create_deck) {
 }
 END_TEST
 
+START_TEST(test_card_create) {
+	card *card = card_create(e_spades, 4);
+
+	ck_assert_msg(card->suit == e_spades, "Incorrect suit on card.");
+	ck_assert_msg(card->value == 4, "Incorrect value on card.");
+	ck_assert_msg(card->proxy->card == 0, "Card shouldn't be revealed.");
+}
+END_TEST
+
+START_TEST(test_reveal) {
+	card *card = card_create(e_spades, 4);
+
+	card_reveal(card);
+
+	ck_assert_msg(card->proxy->card != 0, "Card should have been revealed.");
+}
+END_TEST
+
 START_TEST(test_card_count) {
 	card c1, c2;
 	pile *pile = pile_create(3);
