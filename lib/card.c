@@ -57,7 +57,7 @@ void print_solitaire_info(solitaire* sol) {
 
 int card_count(pile *pile) {
 	int count = 0, index = 0;
-	for(;index<pile->card_count;++index) {
+	for(;index<pile->size;++index) {
 		if(pile->cards[index]) {
 			count++;
 		}
@@ -68,7 +68,7 @@ int card_count(pile *pile) {
 card* card_take_last(pile *pile) {
 	card* last = 0;
 	int index = 0, last_index = -1;
-	for(;index<pile->card_count;++index) {
+	for(;index<pile->size;++index) {
 		if(pile->cards[index]) {
 			last = pile->cards[index];
 			last_index = index;
@@ -90,7 +90,7 @@ void card_append(card* card_to_append, pile *pile) {
 
 int card_first_free(pile *pile) {
 	int index=0;
-	for(;index<pile->card_count;++index) {
+	for(;index<pile->size;++index) {
 		if(pile->cards[index]==0) {
 			return index;
 		}
@@ -100,7 +100,7 @@ int card_first_free(pile *pile) {
 
 void card_move_all(pile *dest, pile *src) {
 	int index, dest_index;
-	for(index=0;index<src->card_count;++index) {
+	for(index=0;index<src->size;++index) {
 		if(!src->cards[index]) {
 			continue;
 		}
@@ -132,7 +132,7 @@ void card_reveal(card* card) {
 void card_reveal_count(pile *pile, int start_index, int count) {
 	int index;
 	for(index=start_index;index<start_index+count;++index) {
-		if(index >= pile->card_count) {
+		if(index >= pile->size) {
 			/* TODO. This is an error. We should signal
 			   in some way that you didn't handle the number
 			   of cards correctly.
@@ -145,7 +145,7 @@ void card_reveal_count(pile *pile, int start_index, int count) {
 
 void card_reveal_all(pile *pile) {
 	int index;
-	for(index=0;index<pile->card_count;++index) {
+	for(index=0;index<pile->size;++index) {
 		if(pile->cards[index]) {
 			card_reveal(pile->cards[index]);
 		}
@@ -159,7 +159,7 @@ void card_hide(card *card) {
 void card_hide_count(pile *pile, int start_index, int count) {
 	int index;
 	for(index=start_index;index<start_index+count;++index) {
-		if(index >= pile->card_count) {
+		if(index >= pile->size) {
 			/* TODO. This is an error. We should signal
 			   in some way that you didn't handle the number
 			   of cards correctly.
@@ -172,7 +172,7 @@ void card_hide_count(pile *pile, int start_index, int count) {
 
 void card_hide_all(pile *pile) {
 	int index;
-	for(index=0;index<pile->card_count;++index) {
+	for(index=0;index<pile->size;++index) {
 		if(pile->cards[index]) {
 			card_hide(pile->cards[index]);
 		}
@@ -182,7 +182,7 @@ void card_hide_all(pile *pile) {
 pile* pile_create(int size) {
 	pile* p = calloc(1, sizeof(pile));
 	p->cards = calloc(size, sizeof(pile*));
-	p->card_count = size;
+	p->size = size;
 	return p;
 }
 
@@ -206,7 +206,7 @@ void visual_sync(visual *vis) {
 		src = (pile*)dst->data;
 
 		dst->card_count = 0;
-		for(card_index=0;card_index<src->card_count;++card_index) {
+		for(card_index=0;card_index<src->size;++card_index) {
 			if(src->cards[card_index]) {
 				dst->first[card_index] = src->cards[card_index]->proxy;
 				dst->card_count++;
@@ -242,7 +242,7 @@ void visual_free(visual* vis) {
 vis_pile* vis_pile_create(pile *pile) {
 	vis_pile* p = calloc(1, sizeof(vis_pile));
 	p->data = pile;
-	p->first = calloc(pile->card_count, sizeof(card_proxy*));
+	p->first = calloc(pile->size, sizeof(card_proxy*));
 	return p;
 }
 

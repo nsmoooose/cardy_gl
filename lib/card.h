@@ -32,7 +32,7 @@ typedef struct {
  */
 typedef struct {
 	card** cards;
-	unsigned int card_count;
+	unsigned int size;
 } pile;
 
 /** This is a placeholder for a single card. If the card
