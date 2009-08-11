@@ -189,8 +189,8 @@ START_TEST(test_vis_pile_create) {
 	src = pile_create(2);
 
 	pile = vis_pile_create(src);
-	pile->first[0] = 0;
-	pile->first[1] = 0;
+	pile->cards[0] = 0;
+	pile->cards[1] = 0;
 
 	ck_assert_msg(pile->card_count = 2, "Card count should be same as pile count.");
 	ck_assert_msg(pile->data == src, "data member should be set.");
@@ -235,6 +235,6 @@ START_TEST(test_visual_sync) {
 	visual_add_pile(vis, vis_pile);
 	visual_sync(vis);
 
-	ck_assert_msg(vis->piles[0]->first[0]->card == card, "first card wasn't synced.");
+	ck_assert_msg(vis->piles[0]->cards[0]->card == card, "first card wasn't synced.");
 }
 END_TEST

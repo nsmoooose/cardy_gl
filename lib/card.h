@@ -49,7 +49,7 @@ struct solitaire_St;
  *  content.
  */
 typedef struct vis_pile_St {
-	card_proxy** first;
+	card_proxy** cards;
 	unsigned int card_count;
 
 	float origin[3];

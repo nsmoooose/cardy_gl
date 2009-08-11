@@ -80,7 +80,7 @@ void render_pile(vis_pile* pile) {
 
 	glPushMatrix();
 	for(card_index=0;card_index<pile->card_count;++card_index) {
-		render_card(pile, pile->first[card_index]);
+		render_card(pile, pile->cards[card_index]);
 	}
 	glPopMatrix();
 

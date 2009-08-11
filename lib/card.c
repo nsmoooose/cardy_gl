@@ -45,7 +45,7 @@ void print_solitaire_info(solitaire* sol) {
 		printf("Pile: %d\n", i);
 		pile = sol->visual->piles[i];
 		for(j=0;j<pile->card_count;++j) {
-			if(pile->first[j]->card == 0) {
+			if(pile->cards[j]->card == 0) {
 				printf("Card at index: %d is facing down.\n", j);
 			}
 			else {
@@ -208,11 +208,11 @@ void visual_sync(visual *vis) {
 		dst->card_count = 0;
 		for(card_index=0;card_index<src->size;++card_index) {
 			if(src->cards[card_index]) {
-				dst->first[card_index] = src->cards[card_index]->proxy;
+				dst->cards[card_index] = src->cards[card_index]->proxy;
 				dst->card_count++;
 			}
 			else {
-				dst->first[card_index] = 0;
+				dst->cards[card_index] = 0;
 			}
 		}
 	}
@@ -242,11 +242,11 @@ void visual_free(visual* vis) {
 vis_pile* vis_pile_create(pile *pile) {
 	vis_pile* p = calloc(1, sizeof(vis_pile));
 	p->data = pile;
-	p->first = calloc(pile->size, sizeof(card_proxy*));
+	p->cards = calloc(pile->size, sizeof(card_proxy*));
 	return p;
 }
 
 void vis_pile_free(vis_pile* pile) {
-	free(pile->first);
+	free(pile->cards);
 	free(pile);
 }

@@ -40,17 +40,17 @@ START_TEST(test_sol_noname1_deal) {
 	for(index=5;index<=8;++index) {
 		for(index2=0;index2<7;++index2) {
 			if(index2 <= 3) {
-				ck_assert_msg(sol->visual->piles[index]->first[index2]->card == 0, "Card shouldn't be revealed.");
+				ck_assert_msg(sol->visual->piles[index]->cards[index2]->card == 0, "Card shouldn't be revealed.");
 			}
 			else {
-				ck_assert_msg(sol->visual->piles[index]->first[index2]->card != 0, "Card should be revealed.");
+				ck_assert_msg(sol->visual->piles[index]->cards[index2]->card != 0, "Card should be revealed.");
 			}
 		}
 	}
 
 	for(index=9;index<=12;++index) {
 		for(index2=0;index2<6;++index2) {
-			ck_assert_msg(sol->visual->piles[index]->first[index2]->card != 0, "Card should be revealed.");
+			ck_assert_msg(sol->visual->piles[index]->cards[index2]->card != 0, "Card should be revealed.");
 		}
 	}
 }
@@ -74,7 +74,7 @@ START_TEST(test_sol_noname1_deal2) {
 		}
 	}
 	for(index=0;index<52;++index) {
-		ck_assert_msg(sol->visual->piles[0]->first[index]->card == 0, "Card should be hidden.");
+		ck_assert_msg(sol->visual->piles[0]->cards[index]->card == 0, "Card should be hidden.");
 	}
 }
 END_TEST

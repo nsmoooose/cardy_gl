@@ -21,7 +21,7 @@ START_TEST(test_sol_theidiot_init) {
 		vis_pile* p = sol->visual->piles[i];
 		ck_assert_msg(p != 0, "Pile was 0");
 		ck_assert_msg(p->card_count == card_count[i], "The number of cards wasn't %d. It was: %d on pile: %d", card_count[i], p->card_count, i);
-		ck_assert_msg(p->first != 0, "Pile buffer empty");
+		ck_assert_msg(p->cards != 0, "Pile buffer empty");
 	}
 }
 END_TEST
@@ -43,9 +43,9 @@ START_TEST(test_sol_theidiot_deal) {
 	ck_assert_msg(pile2->card_count == 1, "The number of cards should be 1");
 	ck_assert_msg(pile3->card_count == 1, "The number of cards should be 1");
 	ck_assert_msg(pile4->card_count == 1, "The number of cards should be 1");
-	ck_assert_msg(pile1->first[0]->card != 0, "Card should have been revealed.");
-	ck_assert_msg(pile2->first[0]->card != 0, "Card should have been revealed.");
-	ck_assert_msg(pile3->first[0]->card != 0, "Card should have been revealed.");
-	ck_assert_msg(pile4->first[0]->card != 0, "Card should have been revealed.");
+	ck_assert_msg(pile1->cards[0]->card != 0, "Card should have been revealed.");
+	ck_assert_msg(pile2->cards[0]->card != 0, "Card should have been revealed.");
+	ck_assert_msg(pile3->cards[0]->card != 0, "Card should have been revealed.");
+	ck_assert_msg(pile4->cards[0]->card != 0, "Card should have been revealed.");
 }
 END_TEST
