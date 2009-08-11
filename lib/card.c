@@ -129,6 +129,20 @@ void card_reveal(card* card) {
 	card->proxy->card = card;
 }
 
+void card_reveal_count(pile *pile, int start_index, int count) {
+	int index;
+	for(index=start_index;index<start_index+count;++index) {
+		if(index >= pile->card_count) {
+			/* TODO. This is an error. We should signal
+			   in some way that you didn't handle the number
+			   of cards correctly.
+			*/
+			return;
+		}
+		card_reveal(pile->cards[index]);
+	}
+}
+
 pile* pile_create(int size) {
 	pile* p = calloc(1, sizeof(pile));
 	p->cards = calloc(size, sizeof(pile*));

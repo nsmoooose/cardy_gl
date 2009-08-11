@@ -31,12 +31,30 @@ START_TEST(test_card_create) {
 }
 END_TEST
 
-START_TEST(test_reveal) {
+START_TEST(test_card_reveal) {
 	card *card = card_create(e_spades, 4);
 
 	card_reveal(card);
 
 	ck_assert_msg(card->proxy->card != 0, "Card should have been revealed.");
+}
+END_TEST
+
+START_TEST(test_card_reveal_count) {
+	int index;
+	pile *deck = pile_create(52);
+
+	create_deck(deck);
+	card_reveal_count(deck, 3, 3);
+
+	for(index=0;index<52;++index) {
+		if(index >= 3 && index <= 5) {
+			ck_assert_msg(deck->cards[index]->proxy->card != 0, "Card should have been revealed.");
+		}
+		else {
+			ck_assert_msg(deck->cards[index]->proxy->card == 0, "Card should still be hidden.");
+		}
+	}
 }
 END_TEST
 

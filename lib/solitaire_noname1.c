@@ -27,14 +27,28 @@ static void my_deal(solitaire* sol, vis_pile* pile) {
 
 	if(card_count(i->deck) == 52) {
 		card_move_count(i->pile1, i->deck, 7);
+		card_reveal_count(i->pile1, 4, 3);
+
 		card_move_count(i->pile2, i->deck, 7);
+		card_reveal_count(i->pile2, 4, 3);
+
 		card_move_count(i->pile3, i->deck, 7);
+		card_reveal_count(i->pile3, 4, 3);
+
 		card_move_count(i->pile4, i->deck, 7);
+		card_reveal_count(i->pile4, 4, 3);
 
 		card_move_count(i->pile5, i->deck, 6);
+		card_reveal_count(i->pile5, 0, 6);
+
 		card_move_count(i->pile6, i->deck, 6);
+		card_reveal_count(i->pile6, 0, 6);
+
 		card_move_count(i->pile7, i->deck, 6);
+		card_reveal_count(i->pile7, 0, 6);
+
 		card_move_count(i->pile8, i->deck, 6);
+		card_reveal_count(i->pile8, 0, 6);
 	}
 
 	visual_sync(sol->visual);

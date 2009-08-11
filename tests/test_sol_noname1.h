@@ -39,7 +39,7 @@ START_TEST(test_sol_noname1_deal) {
 
 	for(index=5;index<=8;++index) {
 		for(index2=0;index2<7;++index2) {
-			if(index2 < 3) {
+			if(index2 <= 3) {
 				ck_assert_msg(sol->visual->piles[index]->first[index2]->card == 0, "Card shouldn't be revealed.");
 			}
 			else {
