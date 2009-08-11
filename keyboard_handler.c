@@ -9,6 +9,7 @@
 void window_key_press(unsigned char key, int x, int y) {
 	int key_modifiers;
 
+	/*
 	printf("Keyboard pressed: ");
 	key_modifiers = glutGetModifiers();
 	if(key_modifiers & GLUT_ACTIVE_SHIFT) {
@@ -21,6 +22,7 @@ void window_key_press(unsigned char key, int x, int y) {
 		printf("ALT+");
 	}
 	printf("%d\n", key);
+	*/
 
 	switch(key) {
 	case '1':
