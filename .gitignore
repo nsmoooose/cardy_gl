@@ -1,3 +1,4 @@
+.doxygen
 cardy_gl
 *.o
 lib/libcardy.a
