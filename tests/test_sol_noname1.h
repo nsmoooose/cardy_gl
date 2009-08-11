@@ -55,3 +55,24 @@ START_TEST(test_sol_noname1_deal) {
 	}
 }
 END_TEST
+
+START_TEST(test_sol_noname1_deal2) {
+	solitaire *sol = solitaire_noname1();
+	vis_pile *deck;
+	int index;
+
+	deck = sol->visual->piles[0];
+	deck->pile_action(sol, deck);
+	deck->pile_action(sol, deck);
+
+	for(index=0;index<sol->visual->pile_count;++index) {
+		if(index==0) {
+			ck_assert_msg(sol->visual->piles[index]->card_count == 52, "All cards should have been moved back to the deck");
+		}
+		else {
+			ck_assert_msg(sol->visual->piles[index]->card_count == 0, "There shouldn't be any cards here.");
+		}
+	}
+
+}
+END_TEST

@@ -50,6 +50,21 @@ static void my_deal(solitaire* sol, vis_pile* pile) {
 		card_move_count(i->pile8, i->deck, 6);
 		card_reveal_count(i->pile8, 0, 6);
 	}
+	else {
+		card_move_all(i->deck, i->pile1);
+		card_move_all(i->deck, i->pile2);
+		card_move_all(i->deck, i->pile3);
+		card_move_all(i->deck, i->pile4);
+		card_move_all(i->deck, i->pile5);
+		card_move_all(i->deck, i->pile6);
+		card_move_all(i->deck, i->pile7);
+		card_move_all(i->deck, i->pile8);
+
+		card_move_all(i->deck, i->ace1);
+		card_move_all(i->deck, i->ace2);
+		card_move_all(i->deck, i->ace3);
+		card_move_all(i->deck, i->ace4);
+	}
 
 	visual_sync(sol->visual);
 }
