@@ -79,3 +79,6 @@ void window_mouse(int button, int state, int x, int y) {
 	glutPostRedisplay();
 }
 
+void window_mouse_move(int x, int y) {
+	printf("Dragging.\n");
+}

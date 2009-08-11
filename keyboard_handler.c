@@ -7,9 +7,9 @@
 #include "lib/solitaire_noname1.h"
 
 void window_key_press(unsigned char key, int x, int y) {
+	/*
 	int key_modifiers;
 
-	/*
 	printf("Keyboard pressed: ");
 	key_modifiers = glutGetModifiers();
 	if(key_modifiers & GLUT_ACTIVE_SHIFT) {

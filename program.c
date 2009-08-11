@@ -39,6 +39,7 @@ int main(int argc, char* argv[]) {
 	glutKeyboardFunc(window_key_press);
 	glutSpecialFunc(window_special_key_press);
 	glutMouseFunc(window_mouse);
+	glutMotionFunc(window_mouse_move);
 	glutDisplayFunc(render_scene);
 
 	setup_render_context();
