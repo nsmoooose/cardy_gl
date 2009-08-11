@@ -39,16 +39,16 @@ static void my_deal(solitaire* sol, vis_pile* pile) {
 		card_reveal_count(i->pile4, 4, 3);
 
 		card_move_count(i->pile5, i->deck, 6);
-		card_reveal_count(i->pile5, 0, 6);
+		card_reveal_all(i->pile5);
 
 		card_move_count(i->pile6, i->deck, 6);
-		card_reveal_count(i->pile6, 0, 6);
+		card_reveal_all(i->pile6);
 
 		card_move_count(i->pile7, i->deck, 6);
-		card_reveal_count(i->pile7, 0, 6);
+		card_reveal_all(i->pile7);
 
 		card_move_count(i->pile8, i->deck, 6);
-		card_reveal_count(i->pile8, 0, 6);
+		card_reveal_all(i->pile8);
 	}
 	else {
 		card_move_all(i->deck, i->pile1);

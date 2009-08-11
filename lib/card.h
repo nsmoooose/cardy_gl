@@ -152,8 +152,13 @@ int card_first_free(pile *pile);
 
 /** Reveals the card to the user.
  */
-void card_reveal(card* card);
+void card_reveal(card *card);
 void card_reveal_count(pile *pile, int start_index, int count);
+void card_reveal_all(pile *pile);
+
+void card_hide(card *card);
+void card_hide_count(pile *pile, int start_index, int count);
+void card_hide_all(pile *pile);
 
 visual* visual_create();
 void visual_add_pile(visual *vis, vis_pile *p);

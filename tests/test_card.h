@@ -45,15 +45,71 @@ START_TEST(test_card_reveal_count) {
 	pile *deck = pile_create(52);
 
 	create_deck(deck);
-	card_reveal_count(deck, 3, 3);
+	card_reveal_count(deck, 3, 5);
 
 	for(index=0;index<52;++index) {
-		if(index >= 3 && index <= 5) {
+		if(index >= 3 && index <= 7) {
 			ck_assert_msg(deck->cards[index]->proxy->card != 0, "Card should have been revealed.");
 		}
 		else {
 			ck_assert_msg(deck->cards[index]->proxy->card == 0, "Card should still be hidden.");
 		}
+	}
+}
+END_TEST
+
+START_TEST(test_card_reveal_all) {
+	int index;
+	pile *deck = pile_create(104);
+
+	create_deck(deck);
+	card_reveal_all(deck);
+
+	for(index=0;index<52;++index) {
+		ck_assert_msg(deck->cards[index]->proxy->card != 0, "Card should have been revealed.");
+	}
+}
+END_TEST
+
+START_TEST(test_card_hide) {
+	card *card = card_create(e_spades, 5);
+
+	card_reveal(card);
+	card_hide(card);
+
+	ck_assert_msg(card->proxy->card == 0, "Card should have been hidden.");
+}
+END_TEST
+
+START_TEST(test_card_hide_count) {
+	int index;
+	pile *deck = pile_create(104);
+
+	create_deck(deck);
+	card_reveal_all(deck);
+	card_hide_count(deck, 3, 5);
+
+	for(index=0;index<52;++index) {
+		if(index >= 3 && index <= 7) {
+			ck_assert_msg(deck->cards[index]->proxy->card == 0, "Card should be hidden.");
+		}
+		else {
+			ck_assert_msg(deck->cards[index]->proxy->card != 0, "Card should be revealed.");
+		}
+	}
+}
+END_TEST
+
+START_TEST(test_card_hide_all) {
+	int index;
+	pile *deck = pile_create(104);
+
+	create_deck(deck);
+	card_reveal_all(deck);
+	card_hide_all(deck);
+
+	for(index=0;index<52;++index) {
+		ck_assert_msg(deck->cards[index]->proxy->card == 0, "Card should have been hidden.");
 	}
 }
 END_TEST

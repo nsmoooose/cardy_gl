@@ -143,6 +143,42 @@ void card_reveal_count(pile *pile, int start_index, int count) {
 	}
 }
 
+void card_reveal_all(pile *pile) {
+	int index;
+	for(index=0;index<pile->card_count;++index) {
+		if(pile->cards[index]) {
+			card_reveal(pile->cards[index]);
+		}
+	}
+}
+
+void card_hide(card *card) {
+	card->proxy->card = 0;
+}
+
+void card_hide_count(pile *pile, int start_index, int count) {
+	int index;
+	for(index=start_index;index<start_index+count;++index) {
+		if(index >= pile->card_count) {
+			/* TODO. This is an error. We should signal
+			   in some way that you didn't handle the number
+			   of cards correctly.
+			*/
+			return;
+		}
+		card_hide(pile->cards[index]);
+	}
+}
+
+void card_hide_all(pile *pile) {
+	int index;
+	for(index=0;index<pile->card_count;++index) {
+		if(pile->cards[index]) {
+			card_hide(pile->cards[index]);
+		}
+	}
+}
+
 pile* pile_create(int size) {
 	pile* p = calloc(1, sizeof(pile));
 	p->cards = calloc(size, sizeof(pile*));
