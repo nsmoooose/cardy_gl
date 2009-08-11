@@ -64,6 +64,8 @@ static void my_deal(solitaire* sol, vis_pile* pile) {
 		card_move_all(i->deck, i->ace2);
 		card_move_all(i->deck, i->ace3);
 		card_move_all(i->deck, i->ace4);
+
+		card_hide_all(i->deck);
 	}
 
 	visual_sync(sol->visual);

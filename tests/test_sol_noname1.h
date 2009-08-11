@@ -73,6 +73,8 @@ START_TEST(test_sol_noname1_deal2) {
 			ck_assert_msg(sol->visual->piles[index]->card_count == 0, "There shouldn't be any cards here.");
 		}
 	}
-
+	for(index=0;index<52;++index) {
+		ck_assert_msg(sol->visual->piles[0]->first[index]->card == 0, "Card should be hidden.");
+	}
 }
 END_TEST
