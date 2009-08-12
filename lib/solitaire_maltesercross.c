@@ -62,9 +62,11 @@ static void my_deal(solitaire* sol, vis_pile* pile) {
 	visual_sync(sol->visual);
 }
 
+/*
 static void my_move(solitaire* sol, card_proxy* card_proxy) {
 	visual_sync(sol->visual);
 }
+*/
 
 static void my_free(solitaire* sol) {
 	internal* i = sol->data;
@@ -231,7 +233,7 @@ solitaire* solitaire_maltesercross() {
 
 	/* Add our implementation for the common functionality
 	 * shared by all solitaires. */
-	s->move = my_move;
+	/* s->move = my_move; */
 	s->free = my_free;
 	return s;
 }

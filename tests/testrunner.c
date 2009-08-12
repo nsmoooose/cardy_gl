@@ -35,6 +35,7 @@ int main(int argc, char* argv[]) {
 	sol_theidiot = tcase_create("Sol-TheIdiot");
 	tcase_add_test(sol_theidiot, test_sol_theidiot_init);
 	tcase_add_test(sol_theidiot, test_sol_theidiot_deal);
+	tcase_add_test(sol_theidiot, test_sol_theidiot_moving_card);
 	suite_add_tcase(suite, sol_theidiot);
 
 	sol_malteser = tcase_create("Sol-MalteserCross");

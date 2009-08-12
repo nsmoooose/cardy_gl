@@ -6,6 +6,10 @@
 #define CARD_SPACING 4.0
 #define CARD_THICKNESS 0.4
 
+typedef int bool;
+const int true;
+const int false;
+
 typedef enum {
 	e_diamonds,
 	e_clubs,
@@ -78,31 +82,31 @@ typedef struct {
 typedef struct solitaire_St {
 	/** Start a new game.
 	 */
-	void (*new_game)(struct solitaire_St* sol);
+	void (*new_game)(struct solitaire_St *sol);
 
 	/** Move card between two positions.
 	 */
-	void (*move)(struct solitaire_St* sol, card_proxy* card_proxy);
+	bool (*append_to_pile)(struct solitaire_St *sol, vis_pile *dest, card_proxy *card);
 
 	/** Event that is called when a card has been revealed
 	 *  or hidden beqause of user action.
 	 */
-	void (*card_revealed)(struct solitaire_St* sol);
+	void (*card_revealed)(struct solitaire_St *sol);
 
 	/** The solitaire has been solved.
 	 */
-	void (*finished)(struct solitaire_St* sol);
+	void (*finished)(struct solitaire_St *sol);
 
 	/** Free all memory held by this solitaire.
 	 */
-	void (*free)(struct solitaire_St* sol);
+	void (*free)(struct solitaire_St *sol);
 
-	visual* visual;
+	visual *visual;
 
 	/** Internal representation of this game. Don't mess
 	 *  with this one.
 	 */
-	void* data;
+	void *data;
 } solitaire;
 
 extern solitaire* g_solitaire;

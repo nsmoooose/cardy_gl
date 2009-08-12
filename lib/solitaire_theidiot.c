@@ -15,6 +15,10 @@ typedef struct {
 static void my_new_game(solitaire* sol) {
 }
 
+static bool my_append_to_pile(solitaire *sol, vis_pile *dest, card_proxy *card) {
+	return false;
+}
+
 static void my_deal(solitaire* sol, vis_pile* pile) {
 	internal* i = sol->data;
 
@@ -35,10 +39,6 @@ static void my_deal(solitaire* sol, vis_pile* pile) {
 		card_append(card4, i->pile4);
 	}
 
-	visual_sync(sol->visual);
-}
-
-static void my_move(solitaire* sol, card_proxy* card_proxy) {
 	visual_sync(sol->visual);
 }
 
@@ -121,7 +121,7 @@ solitaire* solitaire_theidiot() {
 	/* Add our implementation for the common functionality
 	 * shared by all solitaires. */
 	s->new_game = my_new_game;
-	s->move = my_move;
+	s->append_to_pile = my_append_to_pile;
 	s->free = my_free;
 	return s;
 }

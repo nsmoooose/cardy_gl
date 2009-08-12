@@ -7,6 +7,8 @@
  *  running.
  */
 solitaire* g_solitaire = 0;
+const int true = 1;
+const int false = 0;
 
 card* card_create(card_suit suit, card_value value) {
 	card* card = calloc(1, sizeof(card));

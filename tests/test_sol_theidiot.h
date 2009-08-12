@@ -8,7 +8,6 @@ START_TEST(test_sol_theidiot_init) {
 	solitaire* sol = solitaire_theidiot();
 
 	ck_assert_msg(sol->new_game != 0, "New game isn't implemented.");
-	ck_assert_msg(sol->move != 0, "Move card isn't implemented.");
 	ck_assert_msg(sol->card_revealed == 0, "Card revealed callback is set.");
 	ck_assert_msg(sol->finished == 0, "Finished callback is set.");
 	ck_assert_msg(sol->free != 0, "Free isn't implemented.");
@@ -47,5 +46,32 @@ START_TEST(test_sol_theidiot_deal) {
 	ck_assert_msg(pile2->cards[0]->card != 0, "Card should have been revealed.");
 	ck_assert_msg(pile3->cards[0]->card != 0, "Card should have been revealed.");
 	ck_assert_msg(pile4->cards[0]->card != 0, "Card should have been revealed.");
+}
+END_TEST
+
+START_TEST(test_sol_theidiot_moving_card) {
+	solitaire* sol = solitaire_theidiot();
+	card *club_4, *club_5, *club_king, *spade_4;
+	pile *piles[4];
+
+	club_4 = card_create(e_clubs, 4);
+	club_5 = card_create(e_clubs, 5);
+	club_king = card_create(e_clubs, 13);
+	spade_4 = card_create(e_spades, 4);
+
+	piles[0] = (pile*)sol->visual->piles[1]->data;
+	piles[1] = (pile*)sol->visual->piles[2]->data;
+	piles[2] = (pile*)sol->visual->piles[3]->data;
+	piles[3] = (pile*)sol->visual->piles[4]->data;
+
+	piles[0]->cards[0] = club_4;
+	piles[1]->cards[0] = club_5;
+	piles[2]->cards[0] = club_king;
+	piles[3]->cards[0] = spade_4;
+
+	visual_sync(sol->visual);
+
+	ck_assert_msg(sol->append_to_pile != 0, "No append functionality implemented.");
+	ck_assert_msg(sol->append_to_pile(sol, sol->visual->piles[5], sol->visual->piles[1]->cards[0]) == true, "Card should be movable.");
 }
 END_TEST
