@@ -53,6 +53,33 @@ bool rule_check(rule *rule, move_action *action) {
 	return true;
 }
 
+ruleset *create_ruleset() {
+	return calloc(1, sizeof(ruleset));
+}
+
+void ruleset_add_rule(ruleset *ruleset, rule *new_rule) {
+	rule **old_rules = ruleset->rules;
+
+	ruleset->rules = calloc(ruleset->size + 1, sizeof(rule*));
+	ruleset->size++;
+
+	if(old_rules) {
+		memcpy(ruleset->rules, old_rules, sizeof(rule*) * (ruleset->size - 1));
+		free(old_rules);
+	}
+	ruleset->rules[ruleset->size - 1] = new_rule;
+}
+
+bool ruleset_check(ruleset *ruleset, move_action *action) {
+	int index;
+	for(index = 0;index<ruleset->size;++index) {
+		if(rule_check(ruleset->rules[index], action)) {
+			return true;
+		}
+	}
+	return false;
+}
+
 #if 0
 void stub() {
 	pile *pile1, *pile2, *pile3, *pile4, *done;

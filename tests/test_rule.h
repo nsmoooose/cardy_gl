@@ -1,6 +1,25 @@
 #include <check.h>
 #include "../lib/rule.h"
 
+bool condition_fail_check(condition *cond, move_action *action) {
+	return false;
+}
+condition *condition_fail() {
+	condition *c = calloc(1, sizeof(condition));
+	c->check = condition_fail_check;
+	return c;
+}
+
+bool condition_succeed_check(condition *cond, move_action *action) {
+	return true;
+}
+
+condition *condition_succeed() {
+	condition *c = calloc(1, sizeof(condition));
+	c->check = condition_succeed_check;
+	return c;
+}
+
 START_TEST(test_create_rule) {
 	rule *rule = create_rule();
 
@@ -24,26 +43,66 @@ START_TEST(test_rule_add_condition) {
 END_TEST
 
 START_TEST(test_rule_check) {
-	pile *pile1, *pile2;
 	condition *cond1, *cond2;
 	rule *rule;
 	move_action action;
 
-	pile1 = pile_create(12);
-	pile2 = pile_create(12);
-
 	rule = create_rule();
-	cond1 = condition_source(pile1);
+	cond1 = condition_succeed();
 	rule_add_condition(rule, cond1);
-
-	action.source = pile1;
 
 	ck_assert_msg(rule_check(rule, &action) == true, "Should have returned true");
 
-	cond2 = condition_source(pile2);
+	cond2 = condition_fail();
 	rule_add_condition(rule, cond2);
 
 	ck_assert_msg(rule_check(rule, &action) == false, "Should have returned false");
+}
+END_TEST
+
+START_TEST(test_create_ruleset) {
+	ruleset *ruleset;
+
+	ruleset = create_ruleset();
+
+	ck_assert_msg(ruleset != 0, "Failed to create ruleset.");
+	ck_assert_msg(ruleset->rules == 0, "rules should initially be 0.");
+	ck_assert_msg(ruleset->size == 0, "size should initially be 0.");
+}
+END_TEST
+
+START_TEST(test_ruleset_add_rule) {
+	rule *rule1, *rule2;
+	ruleset *ruleset;
+
+	ruleset = create_ruleset();
+	rule1 = create_rule();
+	rule2 = create_rule();
+	ruleset_add_rule(ruleset, rule1);
+	ruleset_add_rule(ruleset, rule2);
+
+	ck_assert_msg(ruleset->size == 2, "size of ruleset incorrect.");
+	ck_assert_msg(ruleset->rules[0] == rule1, "First rule incorrect.");
+	ck_assert_msg(ruleset->rules[1] == rule2, "Second rule incorrect.");
+}
+END_TEST
+
+START_TEST(test_ruleset_check) {
+	rule *rule1, *rule2;
+	ruleset *ruleset;
+	move_action action;
+
+	ruleset = create_ruleset();
+	rule1 = create_rule();
+	rule_add_condition(rule1, condition_fail());
+	ruleset_add_rule(ruleset, rule1);
+
+	ck_assert_msg(ruleset_check(ruleset, &action) == false, "Check should fail");
+
+	rule2 = create_rule();
+	rule_add_condition(rule2, condition_succeed());
+	ruleset_add_rule(ruleset, rule2);
+	ck_assert_msg(ruleset_check(ruleset, &action) == true, "Check should succeed");
 }
 END_TEST
 
