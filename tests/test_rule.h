@@ -123,3 +123,15 @@ START_TEST(test_condition_source) {
 	ck_assert_msg(cond->check(cond, &action) == false, "Should have returned false");
 }
 END_TEST
+
+START_TEST(test_condition_or) {
+	move_action action;
+	condition *cond;
+
+	cond = condition_or(condition_fail(), condition_fail());
+	ck_assert_msg(cond->check(cond, &action) == false, "Or operation should be false.");
+
+	cond = condition_or(condition_fail(), condition_succeed());
+	ck_assert_msg(cond->check(cond, &action) == true, "Or operation should be true.");
+}
+END_TEST

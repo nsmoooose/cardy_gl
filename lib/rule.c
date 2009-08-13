@@ -23,6 +23,9 @@ condition *condition_source(pile *pile) {
 	return c;
 }
 
+condition *condition_or(condition *c1, condition *c2) {
+}
+
 rule *create_rule() {
 	return calloc(1, sizeof(rule));
 }
