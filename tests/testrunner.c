@@ -1,13 +1,14 @@
 #include <check.h>
 #include <stdlib.h>
 #include "test_card.h"
+#include "test_rule.h"
 #include "test_sol_theidiot.h"
 #include "test_sol_maltesercross.h"
 #include "test_sol_noname1.h"
 
 int main(int argc, char* argv[]) {
 	int failed;
-	TCase *card_case, *sol_theidiot, *sol_malteser, *sol_noname1;
+	TCase *card_case, *rule_case, *sol_theidiot, *sol_malteser, *sol_noname1;
 	SRunner* runner;
 
 	Suite* suite = suite_create("Cardy");
@@ -31,6 +32,13 @@ int main(int argc, char* argv[]) {
 	tcase_add_test(card_case, test_card_hide_count);
 	tcase_add_test(card_case, test_card_hide_all);
 	suite_add_tcase(suite, card_case);
+
+	rule_case = tcase_create("Rules");
+	tcase_add_test(rule_case, test_condition_source);
+	tcase_add_test(rule_case, test_create_rule);
+	tcase_add_test(rule_case, test_rule_add_condition);
+	tcase_add_test(rule_case, test_rule_check);
+	suite_add_tcase(suite, rule_case);
 
 	sol_theidiot = tcase_create("Sol-TheIdiot");
 	tcase_add_test(sol_theidiot, test_sol_theidiot_init);
