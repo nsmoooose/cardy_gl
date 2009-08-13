@@ -1,5 +1,5 @@
 .doxygen
-cardy_gl
+cardy_gl*
 *.o
 lib/libcardy.a
 tests/cardy_tests

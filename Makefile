@@ -1,3 +1,13 @@
+PLATFORM := $(shell uname)
+
+ifeq ($(PLATFORM), Linux)
+LIBS=-lglut -lGL -lGLU -lm -lcardy
+endif
+
+ifeq ($(PLATFORM), MINGW32_NT-5.1)
+LIBS=-lglut32 -lGLU32 -lm -lcardy -lopengl32
+endif
+
 OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 
 all: cardy_gl
@@ -18,7 +28,8 @@ cardy_tests:
 
 cardy_gl: cardy_lib cardy_tests $(OBJECTS)
 	@echo Building $@
-	@gcc -Wall -pedantic -g -Os -o $@ $(OBJECTS) -lglut -lGL -lGLU -lm -lcardy -Llib
+	@echo gcc -Wall -pedantic -g -Os -o $@ $(OBJECTS) $(LIBS) -Llib
+	@gcc -Wall -pedantic -g -Os -o $@ $(OBJECTS) $(LIBS) -Llib
 	@make -C tests
 
 %.o: %.c

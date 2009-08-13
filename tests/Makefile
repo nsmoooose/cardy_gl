@@ -15,7 +15,7 @@ cardy_tests:  $(OBJECTS)
 	@gcc -g -Os -o $@ $(OBJECTS) -lglut -lGL -lGLU -lm -lcheck -lcardy -L../lib
 endif
 
-ifeq ($(PLATFORM), Windows)
+ifeq ($(PLATFORM), MINGW32_NT-5.1)
 cardy_tests:
 	@echo Tests is not supported on windows.
 endif
