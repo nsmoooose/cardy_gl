@@ -41,6 +41,7 @@ int main(int argc, char* argv[]) {
 	tcase_add_test(rule_case, test_create_ruleset);
 	tcase_add_test(rule_case, test_ruleset_add_rule);
 	tcase_add_test(rule_case, test_ruleset_check);
+	tcase_add_test(rule_case, test_get_move_action);
 	suite_add_tcase(suite, rule_case);
 
 	sol_theidiot = tcase_create("Sol-TheIdiot");

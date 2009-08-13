@@ -75,3 +75,28 @@ START_TEST(test_sol_theidiot_moving_card) {
 	ck_assert_msg(sol->append_to_pile(sol, sol->visual->piles[5], sol->visual->piles[1]->cards[0]) == true, "Card should be movable.");
 }
 END_TEST
+
+START_TEST(test_get_move_action) {
+	pile *deck, *done;
+	visual *vis;
+	move_action *action;
+
+	deck = pile_create(52);
+	done = pile_create(52);
+	create_deck(deck);
+
+	vis = visual_create();
+	visual_add_pile(vis, vis_pile_create(deck));
+	visual_add_pile(vis, vis_pile_create(done));
+	visual_sync(vis);
+
+	action = get_move_action(vis, vis->piles[0]->cards[4], vis->piles[1]);
+
+	ck_assert_msg(action != 0, "No action returned.");
+	ck_assert_msg(action->source == deck, "Deck should be the source.");
+	ck_assert_msg(action->source_index == 4, "Source index incorrect.");
+	ck_assert_msg(action->source_count == 1, "Source count incorrect.");
+	ck_assert_msg(action->destination == done, "Done should be destination.");
+	ck_assert_msg(action->destination_index == 0, "Destination index incorrect.");
+}
+END_TEST

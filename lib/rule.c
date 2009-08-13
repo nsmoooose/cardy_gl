@@ -80,57 +80,21 @@ bool ruleset_check(ruleset *ruleset, move_action *action) {
 	return false;
 }
 
-#if 0
-void stub() {
-	pile *pile1, *pile2, *pile3, *pile4, *done;
-	rulebook *rulebook;
-	rule *rule1, *rule2;
+move_action *get_move_action(visual *vis, card_proxy *card, vis_pile *destination_pile) {
+	int i, j;
+	move_action *a = calloc(1, sizeof(move_action));
+	for(i=0;i<vis->pile_count && a->source == 0;++i) {
+		for(j=0;j<vis->piles[i]->card_count;++j) {
+			if(vis->piles[i]->cards[j] == card) {
+				a->source = (pile*)vis->piles[i]->data;
+				a->source_index = j;
+				break;
+			}
+		}
+	}
 
-	ruleset = create_ruleset();
-
-	/* Move card to done pile if source is pile1-pile4 and there is
-	   a higher card in same suit in those piles. */
-	rule1 = create_rule();
-	rule_add_condition(
-		rule1,
-		condition_or(
-			condition_or(
-				condition_or(
-					condition_source(pile1),
-					condition_source(pile2)),
-				condition_source(pile3)),
-			condition_source(pile4))
-		);
-	rule_add_condition(rule1, condition_top_card());
-	rule_add_condition(rule1, condition_destination(done));
-	rule_add_condition(
-		rule1,
-		condition_or(
-			condition_or(
-				condition_or(
-					condition_top_card_compare(pile1, e_higher, e_follow_suit),
-					condition_top_card_compare(pile2, e_higher, e_follow_suit)),
-				condition_top_card_compare(pile3, e_higher, e_follow_suit)),
-			condition_top_card_compare(pile4, e_higher, e_follow_suit))
-		);
-	ruleset_add_rule(ruleset, rule1);
-
-	/* Allow move of cards if pile is empty. */
-	rule2 = create_rule();
-	rule_add_condition(
-		rule2,
-		condition_or(
-			condition_or(
-				condition_or(
-					condition_source(pile1),
-					condition_source(pile2)),
-				condition_source(pile3)),
-			condition_source(pile4))
-		);
-	rule_add_condition(rule1, condition_top_card());
-	rule_add_condition(rule2, condition_destination_empty());
-	ruleset_add_rule(ruleset, rule2);
-
-	ruleset_check(ruleset, action);
+	a->source_count = 1;
+	a->destination = (pile*)destination_pile->data;
+	a->destination_index = card_first_free(a->destination);
+	return a;
 }
-#endif

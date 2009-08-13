@@ -42,4 +42,5 @@ void ruleset_add_rule(ruleset *ruleset, rule *rule);
 bool ruleset_check(ruleset *ruleset, move_action *action);
 void ruleset_free(ruleset *ruleset);
 
+move_action *get_move_action(visual *vis, card_proxy *card, vis_pile *destination_pile);
 #endif /* __RULE_H__ */
