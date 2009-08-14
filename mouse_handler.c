@@ -34,6 +34,17 @@ static void process_selection(GLint hits, GLuint* selections) {
 	else if(selected_pile && selected_pile->pile_action) {
 		selected_pile->pile_action(g_solitaire, selected_pile);
 	}
+	else if(selected_pile && selected_proxy) {
+		if(g_selected_card == selected_proxy) {
+			g_selected_card = 0;
+		}
+		else {
+			g_selected_card = selected_proxy;
+		}
+	}
+	else {
+		g_selected_card = 0;
+	}
 }
 
 void window_mouse(int button, int state, int x, int y) {

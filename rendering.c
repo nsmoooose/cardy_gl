@@ -8,6 +8,8 @@ float g_perspective_near = 1.0f;
 float g_perspective_far = 5000.0f;
 float g_perspective_fov = 45.0f;
 
+card_proxy *g_selected_card = 0;
+
 /* Build a vector of coordinates for a card. */
 static GLfloat g_card_coords[8*3] = {
 	0 - CARD_WIDTH/2.0f, 0 + CARD_HEIGHT/2.0f, 0 + CARD_THICKNESS/2.0f, /* 0, top left, front */
@@ -93,6 +95,10 @@ void render_card(vis_pile* pile, card_proxy* proxy) {
 	}
 	else {
 		glColor3f(1.0f, 1.0f, 1.0f);
+	}
+
+	if(g_selected_card == proxy) {
+		glColor3f(1.0f, 0.7f, 0.7f);
 	}
 
 	glPushName((GLuint)proxy);

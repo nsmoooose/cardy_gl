@@ -9,6 +9,7 @@ extern float g_camera_translateY;
 extern float g_perspective_near;
 extern float g_perspective_far;
 extern float g_perspective_fov;
+extern card_proxy *g_selected_card;
 
 void update_camera_pos();
 
