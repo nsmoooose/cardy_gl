@@ -27,9 +27,17 @@ typedef struct {
 	int size;
 } ruleset;
 
+typedef enum {
+	e_equal_value=1,
+	e_dest_lower_value=2,
+	e_dest_higher_value=4,
+	e_follow_suit=8
+} e_compare_operation;
+
 condition *condition_or(condition *c1, condition *c2);
 condition *condition_source(pile *pile);
 condition *condition_top_card();
+condition *condition_top_card_compare(pile *dest, e_compare_operation operation);
 condition *condition_destination(pile *pile);
 condition *condition_destination_empty();
 

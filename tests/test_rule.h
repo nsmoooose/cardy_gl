@@ -180,6 +180,54 @@ START_TEST(test_condition_top_card) {
 }
 END_TEST
 
+START_TEST(test_condition_top_card_compare) {
+	pile *deck, *dest;
+	condition *cond;
+	move_action action;
+
+	deck = pile_create(52);
+	deck->cards[0] = card_create(e_spades, 3);
+	dest = pile_create(52);
+
+	action.source = deck;
+	action.source_index = 0;
+	action.destination = dest;
+
+	cond = condition_top_card_compare(dest, e_dest_higher_value|e_follow_suit);
+	ck_assert_msg(cond->check(cond, &action) == false, "false when destination doesn't contain any cards.");
+
+	/* e_follow_suit */
+	dest->cards[0] = card_create(e_clubs, 2);
+	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains other suit.");
+
+	/* e_dest_higher */
+	dest->cards[0] = card_create(e_spades, 2);
+	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains lower value.");
+
+	dest->cards[0] = card_create(e_spades, 4);
+	ck_assert_msg(cond->check(cond, &action) == true, "true when destination contains higher value.");
+
+	/* e_dest_lower */
+	cond = condition_top_card_compare(dest, e_dest_lower_value|e_follow_suit);
+	dest->cards[0] = card_create(e_spades, 2);
+	ck_assert_msg(cond->check(cond, &action) == true, "true when destination contains lower value.");
+
+	dest->cards[0] = card_create(e_spades, 4);
+	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains higher value.");
+
+	/* e_equal_value */
+	cond = condition_top_card_compare(dest, e_equal_value|e_follow_suit);
+	dest->cards[0] = card_create(e_spades, 2);
+	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains lower value.");
+
+	dest->cards[0] = card_create(e_spades, 4);
+	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains higher value.");
+
+	dest->cards[0] = card_create(e_spades, 3);
+	ck_assert_msg(cond->check(cond, &action) == true, "true when destination contains equal value.");
+}
+END_TEST
+
 START_TEST(test_get_move_action) {
 	pile *deck, *done;
 	visual *vis;

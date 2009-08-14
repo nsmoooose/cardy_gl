@@ -154,6 +154,8 @@ void pile_free(pile *pile);
  */
 int card_first_free(pile *pile);
 
+card *card_last(pile *pile);
+
 /** Reveals the card to the user.
  */
 void card_reveal(card *card);

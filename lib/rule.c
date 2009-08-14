@@ -2,6 +2,7 @@
 #include <string.h>
 #include "rule.h"
 
+/* ------------------------------------------------------------------------- */
 typedef struct {
 	pile *pile;
 } condition_source_data;
@@ -23,6 +24,8 @@ condition *condition_source(pile *pile) {
 	return c;
 }
 
+/* ------------------------------------------------------------------------- */
+
 typedef struct {
 	pile *pile;
 } condition_destination_data;
@@ -43,6 +46,8 @@ condition *condition_destination(pile *pile) {
 	c->check = condition_destination_check;
 	return c;
 }
+
+/* ------------------------------------------------------------------------- */
 
 typedef struct {
 	condition *c1;
@@ -67,6 +72,8 @@ condition *condition_or(condition *c1, condition *c2) {
 	return c;
 }
 
+/* ------------------------------------------------------------------------- */
+
 bool condition_destination_empty_check(condition *cond, move_action *action) {
 	return card_count(action->destination) == 0;
 }
@@ -76,6 +83,52 @@ condition *condition_destination_empty() {
 	c->check = condition_destination_empty_check;
 	return c;
 }
+
+/* ------------------------------------------------------------------------- */
+
+typedef struct {
+	pile *dest;
+	e_compare_operation operation;
+} condition_top_card_compare_data;
+
+bool condition_top_card_compare_check(condition *cond, move_action *action) {
+	condition_top_card_compare_data *data = cond->data;
+	card *src_card, *dst_card;
+
+	if(card_count(data->dest) == 0) {
+		return false;
+	}
+	src_card = action->source->cards[action->source_index];
+	dst_card = card_last(data->dest);
+	if(data->operation & e_follow_suit && dst_card->suit != src_card->suit) {
+		return false;
+	}
+	if(data->operation & e_dest_lower_value && dst_card->value >= src_card->value) {
+		return false;
+	}
+	if(data->operation & e_dest_higher_value && dst_card->value <= src_card->value) {
+		return false;
+	}
+	if(data->operation & e_equal_value && dst_card->value != src_card->value) {
+		return false;
+	}
+	return true;
+}
+
+condition *condition_top_card_compare(pile *dest, e_compare_operation operation) {
+	condition *c;
+	condition_top_card_compare_data *data;
+
+	c = calloc(1, sizeof(condition));
+	data = calloc(1, sizeof(condition_top_card_compare_data));
+	data->dest = dest;
+	data->operation = operation;
+	c->data = data;
+	c->check = condition_top_card_compare_check;
+	return c;
+}
+
+/* ------------------------------------------------------------------------- */
 
 rule *create_rule() {
 	return calloc(1, sizeof(rule));

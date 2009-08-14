@@ -85,7 +85,17 @@ card* card_take_last(pile *pile) {
 	return 0;
 }
 
-void card_append(card* card_to_append, pile *pile) {
+card *card_last(pile *pile) {
+	int index;
+	for(index = pile->size-1;index >= 0;--index) {
+		if(pile->cards[index]) {
+			return pile->cards[index];
+		}
+	}
+	return 0;
+}
+
+void card_append(card *card_to_append, pile *pile) {
 	int free_index = card_first_free(pile);
 	pile->cards[free_index] = card_to_append;
 }
