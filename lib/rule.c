@@ -23,7 +23,27 @@ condition *condition_source(pile *pile) {
 	return c;
 }
 
+typedef struct {
+	condition *c1;
+	condition *c2;
+} condition_or_data;
+
+static bool condition_or_check(condition *cond, move_action *action) {
+	condition_or_data *data = (condition_or_data*)cond->data;
+	return data->c1->check(data->c1, action) || data->c2->check(data->c2, action);
+}
+
 condition *condition_or(condition *c1, condition *c2) {
+	condition *c;
+	condition_or_data *data;
+
+	c = calloc(1, sizeof(condition));
+	data = calloc(1, sizeof(condition_or_data));
+	data->c1 = c1;
+	data->c2 = c2;
+	c->data = data;
+	c->check = condition_or_check;
+	return c;
 }
 
 rule *create_rule() {

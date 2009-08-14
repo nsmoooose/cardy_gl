@@ -133,5 +133,8 @@ START_TEST(test_condition_or) {
 
 	cond = condition_or(condition_fail(), condition_succeed());
 	ck_assert_msg(cond->check(cond, &action) == true, "Or operation should be true.");
+
+	cond = condition_or(condition_succeed(), condition_fail());
+	ck_assert_msg(cond->check(cond, &action) == true, "Or operation should be true.");
 }
 END_TEST
