@@ -11,11 +11,11 @@ const int true = 1;
 const int false = 0;
 
 card* card_create(card_suit suit, card_value value) {
-	card* card = calloc(1, sizeof(card));
-	card->value = value;
-	card->suit = suit;
-	card->proxy = calloc(1, sizeof(card_proxy));
-	return card;
+	card* c = calloc(1, sizeof(card));
+	c->value = value;
+	c->suit = suit;
+	c->proxy = calloc(1, sizeof(card_proxy));
+	return c;
 }
 
 void card_free(card* card) {
