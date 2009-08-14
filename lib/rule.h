@@ -31,6 +31,7 @@ condition *condition_or(condition *c1, condition *c2);
 condition *condition_source(pile *pile);
 condition *condition_top_card();
 condition *condition_destination(pile *pile);
+condition *condition_destination_empty();
 
 rule *create_rule();
 void rule_add_condition(rule *rule, condition *condition);

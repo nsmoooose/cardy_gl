@@ -138,3 +138,22 @@ START_TEST(test_condition_or) {
 	ck_assert_msg(cond->check(cond, &action) == true, "Or operation should be true.");
 }
 END_TEST
+
+START_TEST(test_condition_destination_empty) {
+	pile *p1, *p2;
+	condition *cond;
+	move_action action;
+
+	p1 = pile_create(52);
+	p2 = pile_create(52);
+	create_deck(p1);
+
+	cond = condition_destination_empty();
+
+	action.destination = p1;
+	ck_assert_msg(cond->check(cond, &action) == false, "Should return false");
+
+	action.destination = p2;
+	ck_assert_msg(cond->check(cond, &action) == true, "Should return true.");
+}
+END_TEST

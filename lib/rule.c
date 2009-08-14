@@ -46,6 +46,16 @@ condition *condition_or(condition *c1, condition *c2) {
 	return c;
 }
 
+bool condition_destination_empty_check(condition *cond, move_action *action) {
+	return card_count(action->destination) == 0;
+}
+
+condition *condition_destination_empty() {
+	condition *c = calloc(1, sizeof(condition));
+	c->check = condition_destination_empty_check;
+	return c;
+}
+
 rule *create_rule() {
 	return calloc(1, sizeof(rule));
 }
