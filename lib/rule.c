@@ -24,6 +24,27 @@ condition *condition_source(pile *pile) {
 }
 
 typedef struct {
+	pile *pile;
+} condition_destination_data;
+
+static bool condition_destination_check(condition *condition, move_action *action) {
+	condition_destination_data* data = (condition_destination_data*)condition->data;
+	return data->pile == action->destination;
+}
+
+condition *condition_destination(pile *pile) {
+	condition* c;
+	condition_destination_data* data;
+
+	c = calloc(1, sizeof(condition));
+	data = calloc(1, sizeof(condition_destination_data));
+	data->pile = pile;
+	c->data = data;
+	c->check = condition_destination_check;
+	return c;
+}
+
+typedef struct {
 	condition *c1;
 	condition *c2;
 } condition_or_data;

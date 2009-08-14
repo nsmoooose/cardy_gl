@@ -19,8 +19,6 @@ static bool my_append_to_pile(solitaire *sol, vis_pile *dest, card_proxy *card) 
 
 	action = get_move_action(sol->visual, card, dest);
 	result = ruleset_check(i->ruleset, action);
-
-
 	free(action);
 
 	visual_sync(sol->visual);
@@ -66,6 +64,8 @@ static void my_free(solitaire* sol) {
 
 solitaire* solitaire_theidiot() {
 	vis_pile *deck, *pile1, *pile2, *pile3, *pile4, *done;
+	rule *rule1, *rule2;
+	condition *pile1_4_cond;
 
 	/* The one solitaire instance we have.*/
 	solitaire* s = calloc(1, sizeof(solitaire));
@@ -127,6 +127,23 @@ solitaire* solitaire_theidiot() {
 
 	i->ruleset = create_ruleset();
 
+	/* Shared condition between several rules. */
+	pile1_4_cond =
+		condition_or(
+			condition_or(
+				condition_or(
+					condition_source(i->pile1),
+					condition_source(i->pile2)),
+				condition_source(i->pile3)),
+			condition_source(i->pile4));
+
+	/* Move card to done pile if source is pile1-pile4 and there is
+	   a higher card in same suit in those piles. */
+	rule1 = create_rule();
+	rule_add_condition(rule1, pile1_4_cond);
+	rule_add_condition(rule1, condition_destination(i->done));
+	ruleset_add_rule(i->ruleset, rule1);
+
 	/* Add our implementation for the common functionality
 	 * shared by all solitaires. */
 	s->new_game = my_new_game;
@@ -175,7 +192,7 @@ void ruleset_stub() {
 	/* Allow move of cards if pile is empty. */
 	rule2 = create_rule();
 	rule_add_condition(rule2, pile1_4_cond);
-	rule_add_condition(rule1, condition_top_card());
+	rule_add_condition(rule2, condition_top_card());
 	rule_add_condition(rule2, condition_destination_empty());
 	ruleset_add_rule(ruleset, rule2);
 

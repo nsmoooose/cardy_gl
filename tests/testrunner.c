@@ -36,7 +36,9 @@ int main(int argc, char* argv[]) {
 	rule_case = tcase_create("Rules");
 	tcase_add_test(rule_case, test_condition_source);
 	tcase_add_test(rule_case, test_condition_or);
+	tcase_add_test(rule_case, test_condition_destination);
 	tcase_add_test(rule_case, test_condition_destination_empty);
+	tcase_add_test(rule_case, test_condition_top_card);
 	tcase_add_test(rule_case, test_create_rule);
 	tcase_add_test(rule_case, test_rule_add_condition);
 	tcase_add_test(rule_case, test_rule_check);

@@ -139,6 +139,24 @@ START_TEST(test_condition_or) {
 }
 END_TEST
 
+START_TEST(test_condition_destination) {
+	move_action action;
+	pile *p1, *p2;
+	condition *cond;
+
+	p1 = pile_create(52);
+	p2 = pile_create(52);
+	action.destination = p1;
+
+	cond = condition_destination(p1);
+	ck_assert_msg(cond->check != 0, "Check method not implemented.");
+	ck_assert_msg(cond->check(cond, &action) == true, "Should have returned true");
+
+	action.destination = p2;
+	ck_assert_msg(cond->check(cond, &action) == false, "Should have returned false");
+}
+END_TEST
+
 START_TEST(test_condition_destination_empty) {
 	pile *p1, *p2;
 	condition *cond;
@@ -155,5 +173,34 @@ START_TEST(test_condition_destination_empty) {
 
 	action.destination = p2;
 	ck_assert_msg(cond->check(cond, &action) == true, "Should return true.");
+}
+END_TEST
+
+START_TEST(test_condition_top_card) {
+}
+END_TEST
+
+START_TEST(test_get_move_action) {
+	pile *deck, *done;
+	visual *vis;
+	move_action *action;
+
+	deck = pile_create(52);
+	done = pile_create(52);
+	create_deck(deck);
+
+	vis = visual_create();
+	visual_add_pile(vis, vis_pile_create(deck));
+	visual_add_pile(vis, vis_pile_create(done));
+	visual_sync(vis);
+
+	action = get_move_action(vis, vis->piles[0]->cards[4], vis->piles[1]);
+
+	ck_assert_msg(action != 0, "No action returned.");
+	ck_assert_msg(action->source == deck, "Deck should be the source.");
+	ck_assert_msg(action->source_index == 4, "Source index incorrect.");
+	ck_assert_msg(action->source_count == 1, "Source count incorrect.");
+	ck_assert_msg(action->destination == done, "Done should be destination.");
+	ck_assert_msg(action->destination_index == 0, "Destination index incorrect.");
 }
 END_TEST
