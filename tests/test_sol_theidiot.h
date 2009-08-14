@@ -51,11 +51,12 @@ END_TEST
 
 START_TEST(test_sol_theidiot_moving_card) {
 	solitaire* sol = solitaire_theidiot();
-	card *club_4, *club_5, *club_king, *spade_4;
+	card *club_4, *club_5, *club_6, *club_king, *spade_4;
 	pile *piles[4];
 
 	club_4 = card_create(e_clubs, 4);
 	club_5 = card_create(e_clubs, 5);
+	club_6 = card_create(e_clubs, 6);
 	club_king = card_create(e_clubs, 13);
 	spade_4 = card_create(e_spades, 4);
 
@@ -66,15 +67,17 @@ START_TEST(test_sol_theidiot_moving_card) {
 
 	piles[0]->cards[0] = club_4;
 	piles[1]->cards[0] = club_5;
+	piles[1]->cards[1] = club_6;
 	piles[2]->cards[0] = club_king;
 	piles[3]->cards[0] = spade_4;
 
 	visual_sync(sol->visual);
 
 	ck_assert_msg(sol->append_to_pile != 0, "No append functionality implemented.");
-	ck_assert_msg(sol->append_to_pile(sol, sol->visual->piles[5], sol->visual->piles[1]->cards[0]) == true, "Card should be movable to done.");
 	ck_assert_msg(sol->append_to_pile(sol, sol->visual->piles[0], sol->visual->piles[1]->cards[0]) == false, "Card shouldn't be movable to the deck.");
 	ck_assert_msg(sol->append_to_pile(sol, sol->visual->piles[5], sol->visual->piles[3]->cards[0]) == false, "King shouldn't be movable to the done pile.");
+	ck_assert_msg(sol->append_to_pile(sol, sol->visual->piles[5], sol->visual->piles[2]->cards[0]) == false, "Only top card should be movable");
+	ck_assert_msg(sol->append_to_pile(sol, sol->visual->piles[5], sol->visual->piles[1]->cards[0]) == true, "Card should be movable to done.");
 }
 END_TEST
 

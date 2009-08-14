@@ -177,6 +177,20 @@ START_TEST(test_condition_destination_empty) {
 END_TEST
 
 START_TEST(test_condition_top_card) {
+	pile *deck;
+	condition *cond;
+	move_action action;
+
+	deck = pile_create(52);
+	create_deck(deck);
+	action.source = deck;
+	cond = condition_top_card();
+
+	action.source_index = 0;
+	ck_assert_msg(cond->check(cond, &action) == false, "Isn't top card.");
+
+	action.source_index = 51;
+	ck_assert_msg(cond->check(cond, &action) == true, "Is top card.");
 }
 END_TEST
 

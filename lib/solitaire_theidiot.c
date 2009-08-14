@@ -142,6 +142,17 @@ solitaire* solitaire_theidiot() {
 	rule1 = create_rule();
 	rule_add_condition(rule1, pile1_4_cond);
 	rule_add_condition(rule1, condition_destination(i->done));
+	rule_add_condition(
+		rule1,
+		condition_or(
+			condition_or(
+				condition_or(
+					condition_top_card_compare(i->pile1, e_dest_higher_value | e_follow_suit),
+					condition_top_card_compare(i->pile2, e_dest_higher_value | e_follow_suit)),
+				condition_top_card_compare(i->pile3, e_dest_higher_value | e_follow_suit)),
+			condition_top_card_compare(i->pile4, e_dest_higher_value | e_follow_suit))
+		);
+	rule_add_condition(rule1, condition_top_card());
 	ruleset_add_rule(i->ruleset, rule1);
 
 	/* Add our implementation for the common functionality

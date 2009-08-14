@@ -86,6 +86,18 @@ condition *condition_destination_empty() {
 
 /* ------------------------------------------------------------------------- */
 
+bool condition_top_card_check(condition *cond, move_action *action) {
+	return action->source->cards[action->source_index] == card_last(action->source);
+}
+
+condition *condition_top_card() {
+	condition *c = calloc(1, sizeof(condition));
+	c->check = condition_top_card_check;
+	return c;
+}
+
+/* ------------------------------------------------------------------------- */
+
 typedef struct {
 	pile *dest;
 	e_compare_operation operation;
