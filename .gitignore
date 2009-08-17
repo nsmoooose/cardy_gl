@@ -1,5 +1,8 @@
 .doxygen
 cardy_gl*
+coverage
+*.gcda
+*.gcno
 *.o
 lib/libcardy.a
 tests/cardy_tests

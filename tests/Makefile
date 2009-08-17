@@ -12,7 +12,7 @@ clean:
 ifeq ($(PLATFORM), Linux)
 cardy_tests:  $(OBJECTS)
 	@echo Building $@
-	@gcc -g -Os -o $@ $(OBJECTS) -lglut -lGL -lGLU -lm -lcheck -lcardy -L../lib
+	@gcc $(CFLAGS) -o $@ $(OBJECTS) -lglut -lGL -lGLU -lm -lcheck -lcardy -L../lib
 endif
 
 ifeq ($(PLATFORM), MINGW32_NT-5.1)
@@ -22,4 +22,4 @@ endif
 
 %.o: %.c
 	@echo $<
-	@gcc -c -g -Os -Wall -pedantic $<
+	@gcc -c $(CFLAGS) $<

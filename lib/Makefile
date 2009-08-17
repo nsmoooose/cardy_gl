@@ -9,10 +9,9 @@ clean:
 	@rm libcardy.a -f
 
 libcardy.a: $(OBJECTS)
-	@echo Building $@
+	@echo Creating library $@
 	@ar rcs $@ $(OBJECTS)
-	# @gcc --shared -g -Os -o $@ $(OBJECTS) -lglut -lGL -lGLU -lm -lcheck
 
 %.o: %.c
 	@echo $<
-	@gcc -c -g -Os -Wall -pedantic $<
+	@gcc -c $(CFLAGS) $<
