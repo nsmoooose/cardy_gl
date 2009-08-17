@@ -21,3 +21,10 @@ START_TEST(test_sol_maltesercross_deal) {
 	ck_assert_msg(sol->visual->piles[10]->card_count == 13, "Source pile 4 should have 13 cards.");
 }
 END_TEST
+
+void add_sol_malteser_tests(Suite *suite) {
+	TCase *sol_malteser = tcase_create("Sol-MalteserCross");
+	tcase_add_test(sol_malteser, test_sol_maltesercross_init);
+	tcase_add_test(sol_malteser, test_sol_maltesercross_deal);
+	suite_add_tcase(suite, sol_malteser);
+}

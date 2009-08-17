@@ -78,3 +78,11 @@ START_TEST(test_sol_noname1_deal2) {
 	}
 }
 END_TEST
+
+void add_sol_noname1_tests(Suite *suite) {
+	TCase *sol_noname1 = tcase_create("Sol-Noname1");
+	tcase_add_test(sol_noname1, test_sol_noname1_init);
+	tcase_add_test(sol_noname1, test_sol_noname1_deal);
+	tcase_add_test(sol_noname1, test_sol_noname1_deal2);
+	suite_add_tcase(suite, sol_noname1);
+}

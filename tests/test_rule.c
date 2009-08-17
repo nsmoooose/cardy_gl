@@ -1,4 +1,5 @@
 #include <check.h>
+#include <stdlib.h>
 #include "../lib/rule.h"
 
 bool condition_fail_check(condition *cond, move_action *action) {
@@ -266,3 +267,21 @@ START_TEST(test_get_move_action) {
 	ck_assert_msg(action->destination_index == 0, "Destination index incorrect.");
 }
 END_TEST
+
+void add_rule_tests(Suite *suite) {
+	TCase *rule_case = tcase_create("Rules");
+	tcase_add_test(rule_case, test_condition_source);
+	tcase_add_test(rule_case, test_condition_or);
+	tcase_add_test(rule_case, test_condition_destination);
+	tcase_add_test(rule_case, test_condition_destination_empty);
+	tcase_add_test(rule_case, test_condition_top_card);
+	tcase_add_test(rule_case, test_condition_top_card_compare);
+	tcase_add_test(rule_case, test_create_rule);
+	tcase_add_test(rule_case, test_rule_add_condition);
+	tcase_add_test(rule_case, test_rule_check);
+	tcase_add_test(rule_case, test_create_ruleset);
+	tcase_add_test(rule_case, test_ruleset_add_rule);
+	tcase_add_test(rule_case, test_ruleset_check);
+	tcase_add_test(rule_case, test_get_move_action);
+	suite_add_tcase(suite, rule_case);
+}

@@ -7,6 +7,7 @@ clean:
 
 	@rm *.o -f
 	@rm libcardy.a -f
+	@rm *.gcda *.gcno -f
 
 libcardy.a: $(OBJECTS)
 	@echo Creating library $@

@@ -81,3 +81,10 @@ START_TEST(test_sol_theidiot_moving_card) {
 }
 END_TEST
 
+void add_sol_theidiot_tests(Suite *suite) {
+	TCase *sol_theidiot = tcase_create("Sol-TheIdiot");
+	tcase_add_test(sol_theidiot, test_sol_theidiot_init);
+	tcase_add_test(sol_theidiot, test_sol_theidiot_deal);
+	tcase_add_test(sol_theidiot, test_sol_theidiot_moving_card);
+	suite_add_tcase(suite, sol_theidiot);
+}

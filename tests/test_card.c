@@ -252,3 +252,26 @@ START_TEST(test_visual_sync) {
 	ck_assert_msg(vis->piles[0]->cards[0]->card == card, "first card wasn't synced.");
 }
 END_TEST
+
+void add_card_tests(Suite *suite) {
+	TCase *card_case = tcase_create("Card");
+	tcase_add_test(card_case, test_card_create);
+	tcase_add_test(card_case, test_create_deck);
+	tcase_add_test(card_case, test_card_count);
+	tcase_add_test(card_case, test_card_take_last);
+	tcase_add_test(card_case, test_card_append);
+	tcase_add_test(card_case, test_card_last);
+	tcase_add_test(card_case, test_card_move_all);
+	tcase_add_test(card_case, test_card_first_free);
+	tcase_add_test(card_case, test_vis_pile_create);
+	tcase_add_test(card_case, test_visual_create);
+	tcase_add_test(card_case, test_visual_add_pile);
+	tcase_add_test(card_case, test_visual_sync);
+	tcase_add_test(card_case, test_card_reveal);
+	tcase_add_test(card_case, test_card_reveal_count);
+	tcase_add_test(card_case, test_card_reveal_all);
+	tcase_add_test(card_case, test_card_hide);
+	tcase_add_test(card_case, test_card_hide_count);
+	tcase_add_test(card_case, test_card_hide_all);
+	suite_add_tcase(suite, card_case);
+}

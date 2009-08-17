@@ -24,6 +24,7 @@ clean:
 	@rm *.o -f
 	@rm cardy_gl -f
 	@rm coverage -rf
+	@rm *.gcda *.gcno -f
 	@make -C tests $@
 	@make -C lib $@
 
