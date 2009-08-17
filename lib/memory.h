@@ -6,8 +6,8 @@ typedef struct {
 	int size;
 } mem_context;
 
-mem_context *mem_create_context();
-void mem_free_context(mem_context *context);
+mem_context *mem_context_create();
+void mem_context_free(mem_context *context);
 void* mem_alloc(mem_context *context, int size);
 void mem_free(mem_context *context, void *mem);
 

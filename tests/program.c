@@ -3,6 +3,7 @@
 
 void add_card_tests(Suite *suite);
 void add_rule_tests(Suite *suite);
+void add_memory_tests(Suite *suite);
 void add_sol_theidiot_tests(Suite *suite);
 void add_sol_malteser_tests(Suite *suite);
 void add_sol_noname1_tests(Suite *suite);
@@ -14,6 +15,7 @@ int main(int argc, char* argv[]) {
 	Suite* suite = suite_create("Cardy");
 	add_card_tests(suite);
 	add_rule_tests(suite);
+	add_memory_tests(suite);
 	add_sol_theidiot_tests(suite);
 	add_sol_malteser_tests(suite);
 	add_sol_noname1_tests(suite);
