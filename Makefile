@@ -45,5 +45,9 @@ cardy_gl: cardy_lib cardy_tests $(OBJECTS)
 
 coverage:
 	@mkdir coverage
+	@echo ===========================================================================
+	@tests/cardy_tests
+	@echo ===========================================================================
 	@lcov --directory . --capture --output-file coverage/coverage.info
+	@echo ===========================================================================
 	@genhtml -o coverage/ coverage/coverage.info
