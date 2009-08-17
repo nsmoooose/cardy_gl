@@ -40,6 +40,18 @@ START_TEST(test_card_reveal) {
 }
 END_TEST
 
+START_TEST(test_card_last) {
+	pile *deck;
+
+	deck = pile_create(104);
+
+	ck_assert_msg(card_last(deck) == 0, "Last card should return 0 when no cards present.");
+
+	create_deck(deck);
+	ck_assert_msg(card_last(deck) == deck->cards[51], "Last card should be the last in the deck.");
+}
+END_TEST
+
 START_TEST(test_card_reveal_count) {
 	int index;
 	pile *deck = pile_create(52);
@@ -129,6 +141,8 @@ START_TEST(test_card_take_last) {
 	card c1, c2, *last;
 	pile *pile;
 	pile = pile_create(3);
+
+	ck_assert_msg(card_take_last(pile) == 0, "When no cards present should return 0.");
 
 	pile->cards[0] = &c1;
 	pile->cards[2] = &c2;
