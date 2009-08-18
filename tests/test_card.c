@@ -238,11 +238,10 @@ START_TEST(test_vis_pile_create) {
 	mem_context *context = mem_context_create();
 
 	src = pile_create(context, 2);
-
 	pile = vis_pile_create(context, src);
-	pile->cards[0] = 0;
-	pile->cards[1] = 0;
 
+	ck_assert_msg(context->blocks[2] == pile, "Pile allocation not done.");
+	ck_assert_msg(context->blocks[3] == pile->cards, "Card array not allocated.");
 	ck_assert_msg(pile->card_count = 2, "Card count should be same as pile count.");
 	ck_assert_msg(pile->data == src, "data member should be set.");
 }
@@ -266,12 +265,12 @@ START_TEST(test_visual_add_pile) {
 	vis_pile* pile1 = vis_pile_create(context, src1);
 	vis_pile* pile2 = vis_pile_create(context, src2);
 
-	visual_add_pile(vis, pile1);
+	visual_add_pile(context, vis, pile1);
 
 	ck_assert_msg(vis->pile_count == 1, "pile_count should be 1 since one pile has been added.");
 	ck_assert_msg(vis->piles[0] == pile1, "The first pile should be assigned.");
 
-	visual_add_pile(vis, pile2);
+	visual_add_pile(context, vis, pile2);
 	ck_assert_msg(vis->pile_count == 2, "pile_count should be 2 since two pile has been added.");
 	ck_assert_msg(vis->piles[0] == pile1, "The first pile should be assigned.");
 	ck_assert_msg(vis->piles[1] == pile2, "The second pile should be assigned.");
@@ -287,7 +286,7 @@ START_TEST(test_visual_sync) {
 	card_reveal(card);
 
 	card_append(card, pile);
-	visual_add_pile(vis, vis_pile);
+	visual_add_pile(context, vis, vis_pile);
 	visual_sync(vis);
 
 	ck_assert_msg(vis->piles[0]->cards[0]->card == card, "first card wasn't synced.");

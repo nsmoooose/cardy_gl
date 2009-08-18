@@ -220,21 +220,21 @@ void visual_sync(visual *vis) {
 	}
 }
 
-void visual_add_pile(visual* vis, vis_pile* p) {
+void visual_add_pile(mem_context *context, visual* vis, vis_pile* p) {
 	vis_pile** old_piles  = vis->piles;
-	vis->piles = calloc(vis->pile_count + 1, sizeof(vis_pile*));
+	vis->piles = mem_alloc(context, (vis->pile_count + 1) * sizeof(vis_pile*));
 	vis->pile_count++;
 
 	if(old_piles) {
 		memcpy(vis->piles, old_piles, sizeof(vis_pile*) * (vis->pile_count - 1));
-		free(old_piles);
+		mem_free(context, old_piles);
 	}
 	vis->piles[vis->pile_count - 1] = p;
 }
 
 vis_pile* vis_pile_create(mem_context *context, pile *pile) {
-	vis_pile* p = calloc(1, sizeof(vis_pile));
+	vis_pile* p = mem_alloc(context, sizeof(vis_pile));
 	p->data = pile;
-	p->cards = calloc(pile->size, sizeof(card_proxy*));
+	p->cards = mem_alloc(context, pile->size * sizeof(card_proxy*));
 	return p;
 }

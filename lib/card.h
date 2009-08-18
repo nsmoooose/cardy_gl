@@ -162,7 +162,7 @@ void card_hide_count(pile *pile, int start_index, int count);
 void card_hide_all(pile *pile);
 
 visual* visual_create(mem_context *context);
-void visual_add_pile(visual *vis, vis_pile *p);
+void visual_add_pile(mem_context *context, visual *vis, vis_pile *p);
 void visual_sync(visual *vis);
 
 vis_pile* vis_pile_create(mem_context *context, pile *pile);
