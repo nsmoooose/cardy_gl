@@ -5,7 +5,8 @@ START_TEST(test_sol_theidiot_init) {
 	int card_count[] = {52, 0, 0, 0, 0, 0};
 	int i;
 
-	solitaire* sol = solitaire_theidiot();
+	mem_context *context = mem_context_create();
+	solitaire* sol = solitaire_theidiot(context);
 
 	ck_assert_msg(sol->new_game != 0, "New game isn't implemented.");
 	ck_assert_msg(sol->card_revealed == 0, "Card revealed callback is set.");
@@ -27,7 +28,8 @@ END_TEST
 
 START_TEST(test_sol_theidiot_deal) {
 	vis_pile *deck, *pile1, *pile2, *pile3, *pile4;
-	solitaire* sol = solitaire_theidiot();
+	mem_context *context = mem_context_create();
+	solitaire* sol = solitaire_theidiot(context);
 
 	deck = sol->visual->piles[0];
 	deck->pile_action(sol, deck);
@@ -50,15 +52,16 @@ START_TEST(test_sol_theidiot_deal) {
 END_TEST
 
 START_TEST(test_sol_theidiot_moving_card) {
-	solitaire* sol = solitaire_theidiot();
+	mem_context *context = mem_context_create();
+	solitaire* sol = solitaire_theidiot(context);
 	card *club_4, *club_5, *club_6, *club_king, *spade_4;
 	pile *piles[4];
 
-	club_4 = card_create(e_clubs, 4);
-	club_5 = card_create(e_clubs, 5);
-	club_6 = card_create(e_clubs, 6);
-	club_king = card_create(e_clubs, 13);
-	spade_4 = card_create(e_spades, 4);
+	club_4 = card_create(context, e_clubs, 4);
+	club_5 = card_create(context, e_clubs, 5);
+	club_6 = card_create(context, e_clubs, 6);
+	club_king = card_create(context, e_clubs, 13);
+	spade_4 = card_create(context, e_spades, 4);
 
 	piles[0] = (pile*)sol->visual->piles[1]->data;
 	piles[1] = (pile*)sol->visual->piles[2]->data;

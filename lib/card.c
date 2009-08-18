@@ -3,14 +3,10 @@
 #include <stdio.h>
 #include "card.h"
 
-/** Global instance of the one and only solitaire that is currently
- *  running.
- */
-solitaire* g_solitaire = 0;
 const int true = 1;
 const int false = 0;
 
-card* card_create(card_suit suit, card_value value) {
+card* card_create(mem_context *context, card_suit suit, card_value value) {
 	card* c = calloc(1, sizeof(card));
 	c->value = value;
 	c->suit = suit;
@@ -25,7 +21,7 @@ void card_free(card* card) {
 	}
 }
 
-void create_deck(pile *pile) {
+void create_deck(mem_context *context, pile *pile) {
 	int index = 0;
 	card* card;
 	card_suit suit;
@@ -33,7 +29,7 @@ void create_deck(pile *pile) {
 
 	for(suit=e_diamonds;suit<=e_spades;++suit) {
 		for(value=1;value<14;++value, ++index) {
-			card = card_create(suit, value);
+			card = card_create(context, suit, value);
 			card_append(card, pile);
 		}
 	}
@@ -191,7 +187,7 @@ void card_hide_all(pile *pile) {
 	}
 }
 
-pile* pile_create(int size) {
+pile* pile_create(mem_context *context, int size) {
 	pile* p = calloc(1, sizeof(pile));
 	p->cards = calloc(size, sizeof(pile*));
 	p->size = size;
@@ -203,7 +199,7 @@ void pile_free(pile* pile) {
 	free(pile);
 }
 
-visual* visual_create() {
+visual* visual_create(mem_context *context) {
 	visual* vis = calloc(1, sizeof(visual));
 	return vis;
 }
@@ -251,7 +247,7 @@ void visual_free(visual* vis) {
 	free(vis);
 }
 
-vis_pile* vis_pile_create(pile *pile) {
+vis_pile* vis_pile_create(mem_context *context, pile *pile) {
 	vis_pile* p = calloc(1, sizeof(vis_pile));
 	p->data = pile;
 	p->cards = calloc(pile->size, sizeof(card_proxy*));

@@ -30,21 +30,21 @@ void window_key_press(unsigned char key, int x, int y) {
 			/* Free the existing instance before we create a new one. */
 			g_solitaire->free(g_solitaire);
 		}
-		g_solitaire = solitaire_theidiot();
+		g_solitaire = solitaire_theidiot(g_context);
 		break;
 	case '2':
 		if(g_solitaire) {
 			/* Free the existing instance before we create a new one. */
 			g_solitaire->free(g_solitaire);
 		}
-		g_solitaire = solitaire_maltesercross();
+		g_solitaire = solitaire_maltesercross(g_context);
 		break;
 	case '3':
 		if(g_solitaire) {
 			/* Free the existing instance before we create a new one. */
 			g_solitaire->free(g_solitaire);
 		}
-		g_solitaire = solitaire_noname1();
+		g_solitaire = solitaire_noname1(g_context);
 		break;
 	case '-':
 		g_camera_zoom -= 10.0f;

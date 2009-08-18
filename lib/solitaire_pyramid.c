@@ -52,7 +52,7 @@ static void my_free(solitaire* sol) {
 	free(sol);
 }
 
-solitaire* solitaire_pyramid() {
+solitaire* solitaire_pyramid(mem_context *context) {
 	card *ace;
 	vis_pile *deck, *pile1, *pile2, *pile3, *pile4, *done;
 
@@ -65,55 +65,55 @@ solitaire* solitaire_pyramid() {
 	internal* i = calloc(1, sizeof(internal));
 	s->data = i;
 
-	s->visual = visual_create();
+	s->visual = visual_create(context);
 
-	i->deck = pile_create(52);
-	i->pile1 = pile_create(13);
-	i->pile2 = pile_create(13);
-	i->pile3 = pile_create(13);
-	i->pile4 = pile_create(13);
-	i->done = pile_create(48);
+	i->deck = pile_create(context, 52);
+	i->pile1 = pile_create(context, 13);
+	i->pile2 = pile_create(context, 13);
+	i->pile3 = pile_create(context, 13);
+	i->pile4 = pile_create(context, 13);
+	i->done = pile_create(context, 48);
 
-	deck = vis_pile_create(i->deck);
+	deck = vis_pile_create(context, i->deck);
 	deck->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2 + CARD_WIDTH / 2);
 	deck->origin[1] = 40.0f;
 	deck->rotation = 45.0f;
 	deck->pile_action = my_deal;
 	visual_add_pile(s->visual, deck);
 
-	pile1 = vis_pile_create(i->pile1);
+	pile1 = vis_pile_create(context, i->pile1);
 	pile1->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING);
 	pile1->origin[1] = 70.0f;
 	pile1->translateY = 0 - CARD_HEIGHT / 5;
 	visual_add_pile(s->visual, pile1);
 
-	pile2 = vis_pile_create(i->pile2);
+	pile2 = vis_pile_create(context, i->pile2);
 	pile2->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2);
 	pile2->origin[1] = 70.0f;
 	pile2->translateY = 0 - CARD_HEIGHT / 5;
 	visual_add_pile(s->visual, pile2);
 
-	pile3 = vis_pile_create(i->pile3);
+	pile3 = vis_pile_create(context, i->pile3);
 	pile3->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2;
 	pile3->origin[1] = 70.0f;
 	pile3->translateY = 0 - CARD_HEIGHT / 5;
 	visual_add_pile(s->visual, pile3);
 
-	pile4 = vis_pile_create(i->pile4);
+	pile4 = vis_pile_create(context, i->pile4);
 	pile4->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING;
 	pile4->origin[1] = 70.0f;
 	pile4->translateY = 0 - CARD_HEIGHT / 5;
 	visual_add_pile(s->visual, pile4);
 
-	done = vis_pile_create(i->done);
+	done = vis_pile_create(context, i->done);
 	done->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2 + CARD_WIDTH / 2;
 	done->origin[1] = 40.0f;
 	done->rotation = -45.0f;
 	visual_add_pile(s->visual, done);
 
-	create_deck(i->deck);
+	create_deck(context, i->deck);
 
-	ace = card_create(e_spades, 1);
+	ace = card_create(context, e_spades, 1);
 	card_reveal(ace),
 	card_append(ace, i->pile1);
 

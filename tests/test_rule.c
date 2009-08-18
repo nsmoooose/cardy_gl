@@ -111,9 +111,10 @@ START_TEST(test_condition_source) {
 	move_action action;
 	pile *p1, *p2;
 	condition *cond;
+	mem_context *context = mem_context_create();
 
-	p1 = pile_create(52);
-	p2 = pile_create(52);
+	p1 = pile_create(context, 52);
+	p2 = pile_create(context, 52);
 	action.source = p1;
 
 	cond = condition_source(p1);
@@ -144,9 +145,10 @@ START_TEST(test_condition_destination) {
 	move_action action;
 	pile *p1, *p2;
 	condition *cond;
+	mem_context *context = mem_context_create();
 
-	p1 = pile_create(52);
-	p2 = pile_create(52);
+	p1 = pile_create(context, 52);
+	p2 = pile_create(context, 52);
 	action.destination = p1;
 
 	cond = condition_destination(p1);
@@ -162,10 +164,11 @@ START_TEST(test_condition_destination_empty) {
 	pile *p1, *p2;
 	condition *cond;
 	move_action action;
+	mem_context *context = mem_context_create();
 
-	p1 = pile_create(52);
-	p2 = pile_create(52);
-	create_deck(p1);
+	p1 = pile_create(context, 52);
+	p2 = pile_create(context, 52);
+	create_deck(context, p1);
 
 	cond = condition_destination_empty();
 
@@ -181,9 +184,10 @@ START_TEST(test_condition_top_card) {
 	pile *deck;
 	condition *cond;
 	move_action action;
+	mem_context *context = mem_context_create();
 
-	deck = pile_create(52);
-	create_deck(deck);
+	deck = pile_create(context, 52);
+	create_deck(context, deck);
 	action.source = deck;
 	cond = condition_top_card();
 
@@ -199,10 +203,11 @@ START_TEST(test_condition_top_card_compare) {
 	pile *deck, *dest;
 	condition *cond;
 	move_action action;
+	mem_context *context = mem_context_create();
 
-	deck = pile_create(52);
-	deck->cards[0] = card_create(e_spades, 3);
-	dest = pile_create(52);
+	deck = pile_create(context, 52);
+	deck->cards[0] = card_create(context, e_spades, 3);
+	dest = pile_create(context, 52);
 
 	action.source = deck;
 	action.source_index = 0;
@@ -212,33 +217,33 @@ START_TEST(test_condition_top_card_compare) {
 	ck_assert_msg(cond->check(cond, &action) == false, "false when destination doesn't contain any cards.");
 
 	/* e_follow_suit */
-	dest->cards[0] = card_create(e_clubs, 2);
+	dest->cards[0] = card_create(context, e_clubs, 2);
 	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains other suit.");
 
 	/* e_dest_higher */
-	dest->cards[0] = card_create(e_spades, 2);
+	dest->cards[0] = card_create(context, e_spades, 2);
 	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains lower value.");
 
-	dest->cards[0] = card_create(e_spades, 4);
+	dest->cards[0] = card_create(context, e_spades, 4);
 	ck_assert_msg(cond->check(cond, &action) == true, "true when destination contains higher value.");
 
 	/* e_dest_lower */
 	cond = condition_top_card_compare(dest, e_dest_lower_value|e_follow_suit);
-	dest->cards[0] = card_create(e_spades, 2);
+	dest->cards[0] = card_create(context, e_spades, 2);
 	ck_assert_msg(cond->check(cond, &action) == true, "true when destination contains lower value.");
 
-	dest->cards[0] = card_create(e_spades, 4);
+	dest->cards[0] = card_create(context, e_spades, 4);
 	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains higher value.");
 
 	/* e_equal_value */
 	cond = condition_top_card_compare(dest, e_equal_value|e_follow_suit);
-	dest->cards[0] = card_create(e_spades, 2);
+	dest->cards[0] = card_create(context, e_spades, 2);
 	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains lower value.");
 
-	dest->cards[0] = card_create(e_spades, 4);
+	dest->cards[0] = card_create(context, e_spades, 4);
 	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains higher value.");
 
-	dest->cards[0] = card_create(e_spades, 3);
+	dest->cards[0] = card_create(context, e_spades, 3);
 	ck_assert_msg(cond->check(cond, &action) == true, "true when destination contains equal value.");
 }
 END_TEST
@@ -247,14 +252,15 @@ START_TEST(test_get_move_action) {
 	pile *deck, *done;
 	visual *vis;
 	move_action *action;
+	mem_context *context = mem_context_create();
 
-	deck = pile_create(52);
-	done = pile_create(52);
-	create_deck(deck);
+	deck = pile_create(context, 52);
+	done = pile_create(context, 52);
+	create_deck(context, deck);
 
-	vis = visual_create();
-	visual_add_pile(vis, vis_pile_create(deck));
-	visual_add_pile(vis, vis_pile_create(done));
+	vis = visual_create(context);
+	visual_add_pile(vis, vis_pile_create(context, deck));
+	visual_add_pile(vis, vis_pile_create(context, done));
 	visual_sync(vis);
 
 	action = get_move_action(vis, vis->piles[0]->cards[4], vis->piles[1]);

@@ -1,6 +1,8 @@
 #ifndef __CARD_H__
 #define __CARD_H__
 
+#include "memory.h"
+
 #define CARD_WIDTH 40.0
 #define CARD_HEIGHT 60.0
 #define CARD_SPACING 4.0
@@ -109,11 +111,9 @@ typedef struct solitaire_St {
 	void *data;
 } solitaire;
 
-extern solitaire* g_solitaire;
-
 /** Creates a single card with the suit and value.
  */
-card* card_create(card_suit suit, card_value value);
+card* card_create(mem_context *context, card_suit suit, card_value value);
 
 /** Frees the memory used by the card.
  */
@@ -121,7 +121,7 @@ void card_free(card* card);
 
 /** Creates a deck of cards with 52 cards if the array permits it.
  */
-void create_deck(pile *pile);
+void create_deck(mem_context *context, pile *pile);
 
 /** Print information about the solitaire. Usefull for debugging purposes
  *  when we need to know the content of the solitaire.
@@ -147,7 +147,7 @@ void card_append(card* card_to_append, pile *pile);
 void card_move_all(pile *dest, pile *src);
 void card_move_count(pile *dest, pile *src, int count);
 
-pile* pile_create(int size);
+pile* pile_create(mem_context *context, int size);
 void pile_free(pile *pile);
 
 /** Returns the first free position of a card in the array.
@@ -166,12 +166,12 @@ void card_hide(card *card);
 void card_hide_count(pile *pile, int start_index, int count);
 void card_hide_all(pile *pile);
 
-visual* visual_create();
+visual* visual_create(mem_context *context);
 void visual_add_pile(visual *vis, vis_pile *p);
 void visual_free(visual *vis);
 void visual_sync(visual *vis);
 
-vis_pile* vis_pile_create(pile *pile);
+vis_pile* vis_pile_create(mem_context *context, pile *pile);
 void vis_pile_free(vis_pile *pile);
 
 #endif /* __CARD_H__ */

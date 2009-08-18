@@ -10,7 +10,8 @@ extern float g_perspective_near;
 extern float g_perspective_far;
 extern float g_perspective_fov;
 extern card_proxy *g_selected_card;
-
+extern solitaire *g_solitaire;
+extern mem_context *g_context;
 void update_camera_pos();
 
 void render_pile(vis_pile* pile);

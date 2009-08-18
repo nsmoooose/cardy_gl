@@ -4,10 +4,11 @@
 START_TEST(test_create_deck) {
 	pile* deck;
 	int i;
+	mem_context *context = mem_context_create();
 
-	deck = pile_create(52);
+	deck = pile_create(context, 52);
 
-	create_deck(deck);
+	create_deck(context, deck);
 	for(i=0;i<52;++i) {
 		ck_assert_msg(deck->cards[i] != 0, "Card pointer was NULL at index: %d", i);
 		ck_assert_msg(deck->cards[i]->value >= 1 && deck->cards[i]->value <= 13, "Card value isn't in range at index: %d", i);
@@ -23,7 +24,8 @@ START_TEST(test_create_deck) {
 END_TEST
 
 START_TEST(test_card_create) {
-	card *card = card_create(e_spades, 4);
+	mem_context *context = mem_context_create();
+	card *card = card_create(context, e_spades, 4);
 
 	ck_assert_msg(card->suit == e_spades, "Incorrect suit on card.");
 	ck_assert_msg(card->value == 4, "Incorrect value on card.");
@@ -32,7 +34,8 @@ START_TEST(test_card_create) {
 END_TEST
 
 START_TEST(test_card_reveal) {
-	card *card = card_create(e_spades, 4);
+	mem_context *context = mem_context_create();
+	card *card = card_create(context, e_spades, 4);
 
 	card_reveal(card);
 
@@ -42,21 +45,23 @@ END_TEST
 
 START_TEST(test_card_last) {
 	pile *deck;
+	mem_context *context = mem_context_create();
 
-	deck = pile_create(104);
+	deck = pile_create(context, 104);
 
 	ck_assert_msg(card_last(deck) == 0, "Last card should return 0 when no cards present.");
 
-	create_deck(deck);
+	create_deck(context, deck);
 	ck_assert_msg(card_last(deck) == deck->cards[51], "Last card should be the last in the deck.");
 }
 END_TEST
 
 START_TEST(test_card_reveal_count) {
 	int index;
-	pile *deck = pile_create(52);
+	mem_context *context = mem_context_create();
+	pile *deck = pile_create(context, 52);
 
-	create_deck(deck);
+	create_deck(context, deck);
 	card_reveal_count(deck, 3, 5);
 
 	for(index=0;index<52;++index) {
@@ -72,9 +77,10 @@ END_TEST
 
 START_TEST(test_card_reveal_all) {
 	int index;
-	pile *deck = pile_create(104);
+	mem_context *context = mem_context_create();
+	pile *deck = pile_create(context, 104);
 
-	create_deck(deck);
+	create_deck(context, deck);
 	card_reveal_all(deck);
 
 	for(index=0;index<52;++index) {
@@ -84,7 +90,8 @@ START_TEST(test_card_reveal_all) {
 END_TEST
 
 START_TEST(test_card_hide) {
-	card *card = card_create(e_spades, 5);
+	mem_context *context = mem_context_create();
+	card *card = card_create(context, e_spades, 5);
 
 	card_reveal(card);
 	card_hide(card);
@@ -95,9 +102,10 @@ END_TEST
 
 START_TEST(test_card_hide_count) {
 	int index;
-	pile *deck = pile_create(104);
+	mem_context *context = mem_context_create();
+	pile *deck = pile_create(context, 104);
 
-	create_deck(deck);
+	create_deck(context, deck);
 	card_reveal_all(deck);
 	card_hide_count(deck, 3, 5);
 
@@ -114,9 +122,10 @@ END_TEST
 
 START_TEST(test_card_hide_all) {
 	int index;
-	pile *deck = pile_create(104);
+	mem_context *context = mem_context_create();
+	pile *deck = pile_create(context, 104);
 
-	create_deck(deck);
+	create_deck(context, deck);
 	card_reveal_all(deck);
 	card_hide_all(deck);
 
@@ -128,7 +137,8 @@ END_TEST
 
 START_TEST(test_card_count) {
 	card c1, c2;
-	pile *pile = pile_create(3);
+	mem_context *context = mem_context_create();
+	pile *pile = pile_create(context, 3);
 
 	pile->cards[0] = &c1;
 	pile->cards[2] = &c2;
@@ -140,7 +150,8 @@ END_TEST
 START_TEST(test_card_take_last) {
 	card c1, c2, *last;
 	pile *pile;
-	pile = pile_create(3);
+	mem_context *context = mem_context_create();
+	pile = pile_create(context, 3);
 
 	ck_assert_msg(card_take_last(pile) == 0, "When no cards present should return 0.");
 
@@ -156,8 +167,9 @@ END_TEST
 START_TEST(test_card_append) {
 	pile *pile;
 	card c1;
+	mem_context *context = mem_context_create();
 
-	pile = pile_create(3);
+	pile = pile_create(context, 3);
 	card_append(&c1, pile);
 
 	ck_assert_msg(pile->cards[0] == &c1, "First card should be set.");
@@ -166,7 +178,8 @@ END_TEST
 
 START_TEST(test_card_first_free) {
 	card c1;
-	pile* pile = pile_create(3);
+	mem_context *context = mem_context_create();
+	pile* pile = pile_create(context, 3);
 
 	pile->cards[0] = pile->cards[1] = &c1;
 
@@ -181,9 +194,10 @@ START_TEST(test_card_move_all) {
 	card c1, c2;
 	pile *src;
 	pile *dst;
+	mem_context *context = mem_context_create();
 
-	src = pile_create(3);
-	dst = pile_create(3);
+	src = pile_create(context, 3);
+	dst = pile_create(context, 3);
 	src->cards[0] = &c1;
 	src->cards[1] = &c2;
 
@@ -199,10 +213,11 @@ END_TEST
 START_TEST(test_vis_pile_create) {
 	pile *src;
 	vis_pile* pile;
+	mem_context *context = mem_context_create();
 
-	src = pile_create(2);
+	src = pile_create(context, 2);
 
-	pile = vis_pile_create(src);
+	pile = vis_pile_create(context, src);
 	pile->cards[0] = 0;
 	pile->cards[1] = 0;
 
@@ -212,7 +227,8 @@ START_TEST(test_vis_pile_create) {
 END_TEST
 
 START_TEST(test_visual_create) {
-	visual* vis = visual_create();
+	mem_context *context = mem_context_create();
+	visual* vis = visual_create(context);
 
 	ck_assert_msg(vis->piles == 0, "piles member should be initialized to 0.");
 	ck_assert_msg(vis->pile_count == 0, "No of piles shall be 0");
@@ -220,11 +236,12 @@ START_TEST(test_visual_create) {
 END_TEST
 
 START_TEST(test_visual_add_pile) {
-	pile *src1 = pile_create(10);
-	pile *src2 = pile_create(10);
-	visual* vis = visual_create();
-	vis_pile* pile1 = vis_pile_create(src1);
-	vis_pile* pile2 = vis_pile_create(src2);
+	mem_context *context = mem_context_create();
+	pile *src1 = pile_create(context, 10);
+	pile *src2 = pile_create(context, 10);
+	visual* vis = visual_create(context);
+	vis_pile* pile1 = vis_pile_create(context, src1);
+	vis_pile* pile2 = vis_pile_create(context, src2);
 
 	visual_add_pile(vis, pile1);
 
@@ -239,10 +256,11 @@ START_TEST(test_visual_add_pile) {
 END_TEST
 
 START_TEST(test_visual_sync) {
-	pile *pile = pile_create(10);
-	visual *vis = visual_create();
-	vis_pile *vis_pile = vis_pile_create(pile);
-	card* card = card_create(e_spades, 3);
+	mem_context *context = mem_context_create();
+	pile *pile = pile_create(context, 10);
+	visual *vis = visual_create(context);
+	vis_pile *vis_pile = vis_pile_create(context, pile);
+	card* card = card_create(context, e_spades, 3);
 	card_reveal(card);
 
 	card_append(card, pile);

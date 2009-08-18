@@ -1,6 +1,12 @@
 #include "lib/mygl.h"
 #include "rendering.h"
 
+/** Global instance of the one and only solitaire that is currently
+ *  running.
+ */
+solitaire* g_solitaire = 0;
+mem_context *g_context = 0;
+
 float g_camera_zoom = -500.0f;
 float g_camera_translateX = 0.0f;
 float g_camera_translateY = 0.0f;

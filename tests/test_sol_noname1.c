@@ -2,7 +2,8 @@
 #include "../lib/solitaire_noname1.h"
 
 START_TEST(test_sol_noname1_init) {
-	solitaire *sol = solitaire_noname1();
+	mem_context *context = mem_context_create();
+	solitaire *sol = solitaire_noname1(context);
 
 	ck_assert_msg(sol->visual != 0, "visual member should be set");
 	ck_assert_msg(sol->visual->pile_count == 13, "incorrect number of piles.");
@@ -11,7 +12,8 @@ END_TEST
 
 START_TEST(test_sol_noname1_deal) {
 	vis_pile *deck;
-	solitaire *sol = solitaire_noname1();
+	mem_context *context = mem_context_create();
+	solitaire *sol = solitaire_noname1(context);
 	int index, index2;
 
 	deck = sol->visual->piles[0];
@@ -57,7 +59,8 @@ START_TEST(test_sol_noname1_deal) {
 END_TEST
 
 START_TEST(test_sol_noname1_deal2) {
-	solitaire *sol = solitaire_noname1();
+	mem_context *context = mem_context_create();
+	solitaire *sol = solitaire_noname1(context);
 	vis_pile *deck;
 	int index;
 

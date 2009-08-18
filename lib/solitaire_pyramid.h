@@ -3,6 +3,6 @@
 
 #include "card.h"
 
-solitaire* solitaire_pyramid();
+solitaire* solitaire_pyramid(mem_context *context);
 
 #endif /* __SOLITAIRE_PYRAMID_H__ */

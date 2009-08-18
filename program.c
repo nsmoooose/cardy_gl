@@ -27,9 +27,9 @@ static void window_size_change(int width, int height) {
 	update_camera_pos();
 }
 
-
 int main(int argc, char* argv[]) {
-	g_solitaire = solitaire_theidiot();
+	g_context = mem_context_create();
+	g_solitaire = solitaire_theidiot(g_context);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);

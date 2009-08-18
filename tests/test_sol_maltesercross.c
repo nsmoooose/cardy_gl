@@ -2,7 +2,8 @@
 #include "../lib/solitaire_maltesercross.h"
 
 START_TEST(test_sol_maltesercross_init) {
-	solitaire* sol = solitaire_maltesercross();
+	mem_context *context = mem_context_create();
+	solitaire* sol = solitaire_maltesercross(context);
 
 	ck_assert_msg(sol->visual->pile_count == 20, "There should be 20 piles of cards.");
 	ck_assert_msg(sol->visual->piles[0]->card_count == 104, "The deck should hold 2 decks of cards.");
@@ -10,7 +11,8 @@ START_TEST(test_sol_maltesercross_init) {
 END_TEST
 
 START_TEST(test_sol_maltesercross_deal) {
-	solitaire* sol = solitaire_maltesercross();
+	mem_context *context = mem_context_create();
+	solitaire* sol = solitaire_maltesercross(context);
 
 	ck_assert_msg(sol->visual->piles[0]->pile_action != 0, "There should be a pile action to deal new cards.");
 
