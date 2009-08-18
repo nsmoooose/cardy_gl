@@ -26,6 +26,7 @@ void mem_context_free(mem_context *context) {
 			free(context->blocks[index]);
 		}
 	}
+	free(context->blocks);
 	free(context);
 }
 

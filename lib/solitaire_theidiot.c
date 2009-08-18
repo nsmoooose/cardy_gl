@@ -111,35 +111,42 @@ solitaire* solitaire_theidiot(mem_context *context) {
 
 	visual_sync(s->visual);
 
-	i->ruleset = create_ruleset();
+	i->ruleset = create_ruleset(context);
 
 	/* Shared condition between several rules. */
 	pile1_4_cond =
 		condition_or(
+			context,
 			condition_or(
+				context,
 				condition_or(
-					condition_source(i->pile1),
-					condition_source(i->pile2)),
-				condition_source(i->pile3)),
-			condition_source(i->pile4));
+					context,
+					condition_source(context, i->pile1),
+					condition_source(context, i->pile2)),
+				condition_source(context, i->pile3)),
+			condition_source(context, i->pile4));
 
 	/* Move card to done pile if source is pile1-pile4 and there is
 	   a higher card in same suit in those piles. */
-	rule1 = create_rule();
-	rule_add_condition(rule1, pile1_4_cond);
-	rule_add_condition(rule1, condition_destination(i->done));
+	rule1 = create_rule(context);
+	rule_add_condition(context, rule1, pile1_4_cond);
+	rule_add_condition(context, rule1, condition_destination(context, i->done));
 	rule_add_condition(
+		context,
 		rule1,
 		condition_or(
+			context,
 			condition_or(
+				context,
 				condition_or(
-					condition_top_card_compare(i->pile1, e_dest_higher_value | e_follow_suit),
-					condition_top_card_compare(i->pile2, e_dest_higher_value | e_follow_suit)),
-				condition_top_card_compare(i->pile3, e_dest_higher_value | e_follow_suit)),
-			condition_top_card_compare(i->pile4, e_dest_higher_value | e_follow_suit))
+					context,
+					condition_top_card_compare(context, i->pile1, e_dest_higher_value | e_follow_suit),
+					condition_top_card_compare(context, i->pile2, e_dest_higher_value | e_follow_suit)),
+				condition_top_card_compare(context, i->pile3, e_dest_higher_value | e_follow_suit)),
+			condition_top_card_compare(context, i->pile4, e_dest_higher_value | e_follow_suit))
 		);
-	rule_add_condition(rule1, condition_top_card());
-	ruleset_add_rule(i->ruleset, rule1);
+	rule_add_condition(context, rule1, condition_top_card(context));
+	ruleset_add_rule(context, i->ruleset, rule1);
 
 	/* Add our implementation for the common functionality
 	 * shared by all solitaires. */

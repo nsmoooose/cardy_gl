@@ -12,12 +12,12 @@ static bool condition_source_check(condition *condition, move_action *action) {
 	return data->pile == action->source;
 }
 
-condition *condition_source(pile *pile) {
+condition *condition_source(mem_context *context, pile *pile) {
 	condition* c;
 	condition_source_data* data;
 
-	c = calloc(1, sizeof(condition));
-	data = calloc(1, sizeof(condition_source_data));
+	c = mem_alloc(context, sizeof(condition));
+	data = mem_alloc(context, sizeof(condition_source_data));
 	data->pile = pile;
 	c->data = data;
 	c->check = condition_source_check;
@@ -35,12 +35,12 @@ static bool condition_destination_check(condition *condition, move_action *actio
 	return data->pile == action->destination;
 }
 
-condition *condition_destination(pile *pile) {
+condition *condition_destination(mem_context *context, pile *pile) {
 	condition* c;
 	condition_destination_data* data;
 
-	c = calloc(1, sizeof(condition));
-	data = calloc(1, sizeof(condition_destination_data));
+	c = mem_alloc(context, sizeof(condition));
+	data = mem_alloc(context, sizeof(condition_destination_data));
 	data->pile = pile;
 	c->data = data;
 	c->check = condition_destination_check;
@@ -59,12 +59,12 @@ static bool condition_or_check(condition *cond, move_action *action) {
 	return data->c1->check(data->c1, action) || data->c2->check(data->c2, action);
 }
 
-condition *condition_or(condition *c1, condition *c2) {
+condition *condition_or(mem_context *context, condition *c1, condition *c2) {
 	condition *c;
 	condition_or_data *data;
 
-	c = calloc(1, sizeof(condition));
-	data = calloc(1, sizeof(condition_or_data));
+	c = mem_alloc(context, sizeof(condition));
+	data = mem_alloc(context, sizeof(condition_or_data));
 	data->c1 = c1;
 	data->c2 = c2;
 	c->data = data;
@@ -78,8 +78,8 @@ bool condition_destination_empty_check(condition *cond, move_action *action) {
 	return card_count(action->destination) == 0;
 }
 
-condition *condition_destination_empty() {
-	condition *c = calloc(1, sizeof(condition));
+condition *condition_destination_empty(mem_context *context) {
+	condition *c = mem_alloc(context, sizeof(condition));
 	c->check = condition_destination_empty_check;
 	return c;
 }
@@ -90,8 +90,8 @@ bool condition_top_card_check(condition *cond, move_action *action) {
 	return action->source->cards[action->source_index] == card_last(action->source);
 }
 
-condition *condition_top_card() {
-	condition *c = calloc(1, sizeof(condition));
+condition *condition_top_card(mem_context *context) {
+	condition *c = mem_alloc(context, sizeof(condition));
 	c->check = condition_top_card_check;
 	return c;
 }
@@ -127,12 +127,12 @@ bool condition_top_card_compare_check(condition *cond, move_action *action) {
 	return true;
 }
 
-condition *condition_top_card_compare(pile *dest, e_compare_operation operation) {
+condition *condition_top_card_compare(mem_context *context, pile *dest, e_compare_operation operation) {
 	condition *c;
 	condition_top_card_compare_data *data;
 
-	c = calloc(1, sizeof(condition));
-	data = calloc(1, sizeof(condition_top_card_compare_data));
+	c = mem_alloc(context, sizeof(condition));
+	data = mem_alloc(context, sizeof(condition_top_card_compare_data));
 	data->dest = dest;
 	data->operation = operation;
 	c->data = data;
@@ -142,14 +142,14 @@ condition *condition_top_card_compare(pile *dest, e_compare_operation operation)
 
 /* ------------------------------------------------------------------------- */
 
-rule *create_rule() {
-	return calloc(1, sizeof(rule));
+rule *create_rule(mem_context *context) {
+	return mem_alloc(context, sizeof(rule));
 }
 
-void rule_add_condition(rule *rule, condition *cond) {
+void rule_add_condition(mem_context *context, rule *rule, condition *cond) {
 	condition **old_cond = rule->conditions;
 
-	rule->conditions = calloc(rule->size + 1, sizeof(condition*));
+	rule->conditions = mem_alloc(context, (rule->size + 1) * sizeof(condition*));
 	rule->size++;
 
 	if(old_cond) {
@@ -172,14 +172,14 @@ bool rule_check(rule *rule, move_action *action) {
 	return true;
 }
 
-ruleset *create_ruleset() {
-	return calloc(1, sizeof(ruleset));
+ruleset *create_ruleset(mem_context *context) {
+	return mem_alloc(context, sizeof(ruleset));
 }
 
-void ruleset_add_rule(ruleset *ruleset, rule *new_rule) {
+void ruleset_add_rule(mem_context *context, ruleset *ruleset, rule *new_rule) {
 	rule **old_rules = ruleset->rules;
 
-	ruleset->rules = calloc(ruleset->size + 1, sizeof(rule*));
+	ruleset->rules = mem_alloc(context, (ruleset->size + 1) * sizeof(rule*));
 	ruleset->size++;
 
 	if(old_rules) {
