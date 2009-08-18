@@ -154,7 +154,7 @@ void rule_add_condition(mem_context *context, rule *rule, condition *cond) {
 
 	if(old_cond) {
 		memcpy(rule->conditions, old_cond, sizeof(condition*) * (rule->size - 1));
-		free(old_cond);
+		mem_free(context, old_cond);
 	}
 	rule->conditions[rule->size - 1] = cond;
 }
@@ -184,7 +184,7 @@ void ruleset_add_rule(mem_context *context, ruleset *ruleset, rule *new_rule) {
 
 	if(old_rules) {
 		memcpy(ruleset->rules, old_rules, sizeof(rule*) * (ruleset->size - 1));
-		free(old_rules);
+		mem_free(context, old_rules);
 	}
 	ruleset->rules[ruleset->size - 1] = new_rule;
 }
