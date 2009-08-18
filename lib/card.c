@@ -7,17 +7,17 @@ const int true = 1;
 const int false = 0;
 
 card* card_create(mem_context *context, card_suit suit, card_value value) {
-	card* c = calloc(1, sizeof(card));
+	card* c = mem_alloc(context, sizeof(card));
 	c->value = value;
 	c->suit = suit;
-	c->proxy = calloc(1, sizeof(card_proxy));
+	c->proxy = mem_alloc(context, sizeof(card_proxy));
 	return c;
 }
 
-void card_free(card* card) {
+void card_free(mem_context *context, card* card) {
 	if(card) {
-		free(card->proxy);
-		free(card);
+		mem_free(context, card->proxy);
+		mem_free(context, card);
 	}
 }
 
@@ -188,20 +188,14 @@ void card_hide_all(pile *pile) {
 }
 
 pile* pile_create(mem_context *context, int size) {
-	pile* p = calloc(1, sizeof(pile));
-	p->cards = calloc(size, sizeof(pile*));
+	pile* p = mem_alloc(context, sizeof(pile));
+	p->cards = mem_alloc(context, size * sizeof(pile*));
 	p->size = size;
 	return p;
 }
 
-void pile_free(pile* pile) {
-	free(pile->cards);
-	free(pile);
-}
-
 visual* visual_create(mem_context *context) {
-	visual* vis = calloc(1, sizeof(visual));
-	return vis;
+	return (visual*)mem_alloc(context, sizeof(visual));
 }
 
 void visual_sync(visual *vis) {
@@ -238,23 +232,9 @@ void visual_add_pile(visual* vis, vis_pile* p) {
 	vis->piles[vis->pile_count - 1] = p;
 }
 
-void visual_free(visual* vis) {
-	int index;
-	for(index=0;index<vis->pile_count;++index) {
-		vis_pile_free(vis->piles[index]);
-	}
-	free(vis->piles);
-	free(vis);
-}
-
 vis_pile* vis_pile_create(mem_context *context, pile *pile) {
 	vis_pile* p = calloc(1, sizeof(vis_pile));
 	p->data = pile;
 	p->cards = calloc(pile->size, sizeof(card_proxy*));
 	return p;
-}
-
-void vis_pile_free(vis_pile* pile) {
-	free(pile->cards);
-	free(pile);
 }

@@ -45,5 +45,7 @@ int main(int argc, char* argv[]) {
 	setup_render_context();
 
 	glutMainLoop();
+
+	mem_context_free(g_context);
 	return 0;
 }

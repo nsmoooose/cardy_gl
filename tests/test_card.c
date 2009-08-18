@@ -27,9 +27,31 @@ START_TEST(test_card_create) {
 	mem_context *context = mem_context_create();
 	card *card = card_create(context, e_spades, 4);
 
+	ck_assert_msg(context->blocks[0] == card, "No allocation made for card.");
+	ck_assert_msg(context->blocks[1] == card->proxy, "Proxy not allocated.");
 	ck_assert_msg(card->suit == e_spades, "Incorrect suit on card.");
 	ck_assert_msg(card->value == 4, "Incorrect value on card.");
 	ck_assert_msg(card->proxy->card == 0, "Card shouldn't be revealed.");
+}
+END_TEST
+
+START_TEST(test_card_free) {
+	mem_context *context = mem_context_create();
+	card *card = card_create(context, e_spades, 4);
+
+	card_free(context, card);
+
+	ck_assert_msg(context->blocks[0] == 0, "Card wasn't freed.");
+	ck_assert_msg(context->blocks[1] == 0, "Proxy wasn't freed.");
+}
+END_TEST
+
+START_TEST(test_pile_create) {
+	mem_context *context = mem_context_create();
+	pile *p = pile_create(context, 3);
+
+	ck_assert_msg(context->blocks[0] == p, "Pile allocation not done.");
+	ck_assert_msg(context->blocks[1] == p->cards, "Array allocation not done.");
 }
 END_TEST
 
@@ -230,6 +252,7 @@ START_TEST(test_visual_create) {
 	mem_context *context = mem_context_create();
 	visual* vis = visual_create(context);
 
+	ck_assert_msg(context->blocks[0] == vis, "No allocation made.");
 	ck_assert_msg(vis->piles == 0, "piles member should be initialized to 0.");
 	ck_assert_msg(vis->pile_count == 0, "No of piles shall be 0");
 }
@@ -274,6 +297,8 @@ END_TEST
 void add_card_tests(Suite *suite) {
 	TCase *card_case = tcase_create("Card");
 	tcase_add_test(card_case, test_card_create);
+	tcase_add_test(card_case, test_card_free);
+	tcase_add_test(card_case, test_pile_create);
 	tcase_add_test(card_case, test_create_deck);
 	tcase_add_test(card_case, test_card_count);
 	tcase_add_test(card_case, test_card_take_last);

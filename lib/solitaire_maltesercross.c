@@ -68,26 +68,6 @@ static void my_move(solitaire* sol, card_proxy* card_proxy) {
 }
 */
 
-static void my_free(solitaire* sol) {
-	internal* i = sol->data;
-/*
-	card_append_all(i->deck, 52, i->done, 48);
-	card_append_all(i->deck, 52, i->pile1, 13);
-	card_append_all(i->deck, 52, i->pile2, 13);
-	card_append_all(i->deck, 52, i->pile3, 13);
-	card_append_all(i->deck, 52, i->pile4, 13);
-
-	for(index=0;index<52;++index) {
-		if(i->deck[index]) {
-			free(i->deck[index]);
-		}
-	}
-*/
-	visual_free(sol->visual);
-	free(i);
-	free(sol);
-}
-
 solitaire* solitaire_maltesercross(mem_context *context) {
 	vis_pile *deck, *done, *king1, *king2, *king3, *king4;
 	vis_pile *src1, *src2, *src3, *src4;
@@ -234,6 +214,5 @@ solitaire* solitaire_maltesercross(mem_context *context) {
 	/* Add our implementation for the common functionality
 	 * shared by all solitaires. */
 	/* s->move = my_move; */
-	s->free = my_free;
 	return s;
 }

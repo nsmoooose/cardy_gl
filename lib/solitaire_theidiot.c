@@ -48,20 +48,6 @@ static void my_deal(solitaire* sol, vis_pile* pile) {
 	visual_sync(sol->visual);
 }
 
-static void my_free(solitaire* sol) {
-	internal* i = sol->data;
-
-	pile_free(i->deck);
-	pile_free(i->pile1);
-	pile_free(i->pile2);
-	pile_free(i->pile3);
-	pile_free(i->pile4);
-	pile_free(i->done);
-
-	free(i);
-	free(sol);
-}
-
 solitaire* solitaire_theidiot(mem_context *context) {
 	vis_pile *deck, *pile1, *pile2, *pile3, *pile4, *done;
 	rule *rule1, *rule2;
@@ -159,7 +145,6 @@ solitaire* solitaire_theidiot(mem_context *context) {
 	 * shared by all solitaires. */
 	s->new_game = my_new_game;
 	s->append_to_pile = my_append_to_pile;
-	s->free = my_free;
 	return s;
 }
 

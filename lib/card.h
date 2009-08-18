@@ -99,10 +99,6 @@ typedef struct solitaire_St {
 	 */
 	void (*finished)(struct solitaire_St *sol);
 
-	/** Free all memory held by this solitaire.
-	 */
-	void (*free)(struct solitaire_St *sol);
-
 	visual *visual;
 
 	/** Internal representation of this game. Don't mess
@@ -117,7 +113,7 @@ card* card_create(mem_context *context, card_suit suit, card_value value);
 
 /** Frees the memory used by the card.
  */
-void card_free(card* card);
+void card_free(mem_context *context, card* card);
 
 /** Creates a deck of cards with 52 cards if the array permits it.
  */
@@ -148,7 +144,6 @@ void card_move_all(pile *dest, pile *src);
 void card_move_count(pile *dest, pile *src, int count);
 
 pile* pile_create(mem_context *context, int size);
-void pile_free(pile *pile);
 
 /** Returns the first free position of a card in the array.
  */
@@ -168,10 +163,8 @@ void card_hide_all(pile *pile);
 
 visual* visual_create(mem_context *context);
 void visual_add_pile(visual *vis, vis_pile *p);
-void visual_free(visual *vis);
 void visual_sync(visual *vis);
 
 vis_pile* vis_pile_create(mem_context *context, pile *pile);
-void vis_pile_free(vis_pile *pile);
 
 #endif /* __CARD_H__ */

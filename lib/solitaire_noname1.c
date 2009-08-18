@@ -71,25 +71,6 @@ static void my_deal(solitaire* sol, vis_pile* pile) {
 	visual_sync(sol->visual);
 }
 
-static void my_free(solitaire* sol) {
-	internal* i = sol->data;
-/*
-	card_append_all(i->deck, 52, i->done, 48);
-	card_append_all(i->deck, 52, i->pile1, 13);
-	card_append_all(i->deck, 52, i->pile2, 13);
-	card_append_all(i->deck, 52, i->pile3, 13);
-	card_append_all(i->deck, 52, i->pile4, 13);
-
-	for(index=0;index<52;++index) {
-		if(i->deck[index]) {
-			free(i->deck[index]);
-		}
-	}
-*/
-	free(i);
-	free(sol);
-}
-
 solitaire* solitaire_noname1(mem_context *context) {
 	vis_pile *deck, *ace1, *ace2, *ace3, *ace4;
 	vis_pile *pile1, *pile2, *pile3, *pile4, *pile5, *pile6, *pile7, *pile8;
@@ -189,8 +170,5 @@ solitaire* solitaire_noname1(mem_context *context) {
 
 	visual_sync(s->visual);
 
-	/* Add our implementation for the common functionality
-	 * shared by all solitaires. */
-	s->free = my_free;
 	return s;
 }

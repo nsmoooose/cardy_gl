@@ -38,20 +38,6 @@ static void my_deal(solitaire* sol, vis_pile* pile) {
 	visual_sync(sol->visual);
 }
 
-static void my_free(solitaire* sol) {
-	internal* i = sol->data;
-
-	pile_free(i->deck);
-	pile_free(i->pile1);
-	pile_free(i->pile2);
-	pile_free(i->pile3);
-	pile_free(i->pile4);
-	pile_free(i->done);
-
-	free(i);
-	free(sol);
-}
-
 solitaire* solitaire_pyramid(mem_context *context) {
 	card *ace;
 	vis_pile *deck, *pile1, *pile2, *pile3, *pile4, *done;
@@ -122,6 +108,5 @@ solitaire* solitaire_pyramid(mem_context *context) {
 	/* Add our implementation for the common functionality
 	 * shared by all solitaires. */
 	s->new_game = my_new_game;
-	s->free = my_free;
 	return s;
 }
