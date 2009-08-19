@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "lib/image.h"
 #include "lib/mygl.h"
 #include "rendering.h"
@@ -38,23 +40,24 @@ static GLubyte g_card_indexes[] = {
 	4, 0, 3, 7
 };
 
+static GLuint g_card_textures[] = {0};
+
 void setup_render_resources() {
 	GLbyte *image;
-	GLint *width, *height, components;
+	GLint width, height, components;
 	GLenum format;
 
-	/* Generate normals. */
+	glGenTextures(1, g_card_textures);
 
-	/* Generate texture coordinates. */
-
-	/* Build a display list for each card with
-	 * a bitmap for each card.
-	 */
 	image = loadTGA("images/1_club.tga", &width, &height, &components, &format);
 	if(image == 0) {
 		printf("Failed to load texture.\n");
 	}
-	free(image);
+	else {
+		glBindTexture(GL_TEXTURE_2D, g_card_textures[0]);
+		glTexImage2D(GL_TEXTURE_2D, 0, components, width, height, 0, format, GL_UNSIGNED_BYTE, image);
+		free(image);
+	}
 }
 
 void update_camera_pos() {
@@ -131,10 +134,20 @@ void render_desktop() {
 }
 
 void render_scene() {
+	GLenum errCode;
+	const GLubyte *errString;
+
 	glInitNames();
 	glPushName(0);
 
 	render_desktop();
 	render_solitaire(g_solitaire);
+
+	/* Print errors if there are any. */
+	if ((errCode = glGetError()) != GL_NO_ERROR) {
+		errString = gluErrorString(errCode);
+		fprintf(stderr, "OpenGL Error: %s\n", errString);
+	}
+
 	glutSwapBuffers();
 }
