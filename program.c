@@ -43,6 +43,7 @@ int main(int argc, char* argv[]) {
 	glutDisplayFunc(render_scene);
 
 	setup_render_context();
+	setup_render_resources();
 
 	glutMainLoop();
 

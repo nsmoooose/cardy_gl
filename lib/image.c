@@ -33,7 +33,7 @@ GLbyte *loadTGA(const char *szFileName, GLint *iWidth, GLint *iHeight, GLint *iC
     unsigned long lImageSize;/* Size in bytes of image */
     short sDepth;			/* Pixel depth */
     GLbyte *pBits = NULL;   /* Pointer to bits */
-    
+
     /* Default/Failed values */
     *iWidth = 0;
     *iHeight = 0;

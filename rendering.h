@@ -12,6 +12,9 @@ extern float g_perspective_fov;
 extern card_proxy *g_selected_card;
 extern solitaire *g_solitaire;
 extern mem_context *g_context;
+
+void setup_render_resources();
+
 void update_camera_pos();
 
 void render_pile(visual_pile* pile);

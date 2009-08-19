@@ -1,3 +1,4 @@
+#include "lib/image.h"
 #include "lib/mygl.h"
 #include "rendering.h"
 
@@ -38,6 +39,10 @@ static GLubyte g_card_indexes[] = {
 };
 
 void setup_render_resources() {
+	GLbyte *image;
+	GLint *width, *height, components;
+	GLenum format;
+
 	/* Generate normals. */
 
 	/* Generate texture coordinates. */
@@ -45,6 +50,11 @@ void setup_render_resources() {
 	/* Build a display list for each card with
 	 * a bitmap for each card.
 	 */
+	image = loadTGA("images/1_club.tga", &width, &height, &components, &format);
+	if(image == 0) {
+		printf("Failed to load texture.\n");
+	}
+	free(image);
 }
 
 void update_camera_pos() {
