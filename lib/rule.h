@@ -49,5 +49,5 @@ ruleset *create_ruleset(mem_context *context);
 void ruleset_add_rule(mem_context *context, ruleset *ruleset, rule *rule);
 bool ruleset_check(ruleset *ruleset, move_action *action);
 
-move_action *get_move_action(visual *vis, card_proxy *card, vis_pile *destination_pile);
+move_action *get_move_action(visual *vis, card_proxy *card, visual_pile *destination_pile);
 #endif /* __RULE_H__ */

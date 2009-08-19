@@ -1,11 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "lib/card.h"
+#include "lib/mygl.h"
+#include "lib/solitaire_theidiot.h"
 #include "keyboard_handler.h"
 #include "mouse_handler.h"
 #include "rendering.h"
-#include "lib/mygl.h"
-#include "lib/solitaire_theidiot.h"
 
 static void setup_render_context() {
 	glClearColor(0.0f, 0.8f, 0.0f, 0.0f);

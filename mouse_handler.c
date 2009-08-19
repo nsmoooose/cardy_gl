@@ -7,7 +7,7 @@
 
 static void process_selection(GLint hits, GLuint* selections) {
 	int /*i, */ index, hit;
-	vis_pile* selected_pile = 0;
+	visual_pile* selected_pile = 0;
 	card_proxy* selected_proxy = 0;
 
 	/*
@@ -19,10 +19,10 @@ static void process_selection(GLint hits, GLuint* selections) {
 
 	for(index=0, hit=0;hit<hits;++hit) {
 		if(selections[index] == 1) {
-			selected_pile = (vis_pile*)selections[index+3];
+			selected_pile = (visual_pile*)selections[index+3];
 		}
 		else if(selections[index] == 2) {
-			selected_pile = (vis_pile*)selections[index+3];
+			selected_pile = (visual_pile*)selections[index+3];
 			selected_proxy = (card_proxy*)selections[index+4];
 		}
 		index += selections[index] + 3;

@@ -37,7 +37,7 @@ void create_deck(mem_context *context, pile *pile) {
 
 void print_solitaire_info(solitaire* sol) {
 	int i, j;
-	vis_pile *pile;
+	visual_pile *pile;
 
 	for(i=0;i<sol->visual->pile_count;++i) {
 		printf("Pile: %d\n", i);
@@ -201,7 +201,7 @@ visual* visual_create(mem_context *context) {
 void visual_sync(visual *vis) {
 	int pile_index, card_index;
 	pile *src;
-	vis_pile *dst;
+	visual_pile *dst;
 
 	for(pile_index=0;pile_index<vis->pile_count;++pile_index) {
 		dst = vis->piles[pile_index];
@@ -220,20 +220,20 @@ void visual_sync(visual *vis) {
 	}
 }
 
-void visual_add_pile(mem_context *context, visual* vis, vis_pile* p) {
-	vis_pile** old_piles  = vis->piles;
-	vis->piles = mem_alloc(context, (vis->pile_count + 1) * sizeof(vis_pile*));
+void visual_add_pile(mem_context *context, visual* vis, visual_pile* p) {
+	visual_pile** old_piles  = vis->piles;
+	vis->piles = mem_alloc(context, (vis->pile_count + 1) * sizeof(visual_pile*));
 	vis->pile_count++;
 
 	if(old_piles) {
-		memcpy(vis->piles, old_piles, sizeof(vis_pile*) * (vis->pile_count - 1));
+		memcpy(vis->piles, old_piles, sizeof(visual_pile*) * (vis->pile_count - 1));
 		mem_free(context, old_piles);
 	}
 	vis->piles[vis->pile_count - 1] = p;
 }
 
-vis_pile* vis_pile_create(mem_context *context, pile *pile) {
-	vis_pile* p = mem_alloc(context, sizeof(vis_pile));
+visual_pile* visual_pile_create(mem_context *context, pile *pile) {
+	visual_pile* p = mem_alloc(context, sizeof(visual_pile));
 	p->data = pile;
 	p->cards = mem_alloc(context, pile->size * sizeof(card_proxy*));
 	return p;

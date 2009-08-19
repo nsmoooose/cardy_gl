@@ -266,8 +266,8 @@ START_TEST(test_get_move_action) {
 	create_deck(context, deck);
 
 	vis = visual_create(context);
-	visual_add_pile(context, vis, vis_pile_create(context, deck));
-	visual_add_pile(context, vis, vis_pile_create(context, done));
+	visual_add_pile(context, vis, visual_pile_create(context, deck));
+	visual_add_pile(context, vis, visual_pile_create(context, done));
 	visual_sync(vis);
 
 	action = get_move_action(vis, vis->piles[0]->cards[4], vis->piles[1]);

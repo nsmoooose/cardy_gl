@@ -11,7 +11,7 @@ START_TEST(test_sol_noname1_init) {
 END_TEST
 
 START_TEST(test_sol_noname1_deal) {
-	vis_pile *deck;
+	visual_pile *deck;
 	mem_context *context = mem_context_create();
 	solitaire *sol = solitaire_noname1(context);
 	int index, index2;
@@ -61,7 +61,7 @@ END_TEST
 START_TEST(test_sol_noname1_deal2) {
 	mem_context *context = mem_context_create();
 	solitaire *sol = solitaire_noname1(context);
-	vis_pile *deck;
+	visual_pile *deck;
 	int index;
 
 	deck = sol->visual->piles[0];

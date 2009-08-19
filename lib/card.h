@@ -29,6 +29,10 @@ typedef struct {
 	card_value value;
 	card_suit suit;
 
+	/* A pointer to the proxy object. This is the object
+	   that is known to the client app that renders this game.
+	   This was way we can prevent the user from peeking at cards
+	   that hasn't been revealed yet. */
 	struct card_proxy_St* proxy;
 } card;
 
@@ -54,27 +58,36 @@ struct solitaire_St;
  *  is then used by the rendering engine to visualize the
  *  content.
  */
-typedef struct vis_pile_St {
+typedef struct visual_pile_St {
 	card_proxy** cards;
 	unsigned int card_count;
 
+	/** The origin of this pile. Where it should be placed on the desk.
+	 */
 	float origin[3];
+
+	/** Rotation of the pile of cards. All cards rendered on this pile
+	 *  will have the same rotation.
+	 */
 	float rotation;
+
+	/** Translation for every card.
+	 */
 	float translateX;
 	float translateY;
 
-	void (*pile_action)(struct solitaire_St* sol, struct vis_pile_St* pile);
-	void (*card_action)(struct solitaire_St* sol, struct vis_pile_St* pile, card_proxy* proxy);
+	void (*pile_action)(struct solitaire_St* sol, struct visual_pile_St* pile);
+	void (*card_action)(struct solitaire_St* sol, struct visual_pile_St* pile, card_proxy* proxy);
 
 	void *data;
-} vis_pile;
+} visual_pile;
 
 /** Represents the visual presentation of a game. Together
  *  with the pile struct it describes how to render the user
  *  interface.
  */
 typedef struct {
-	vis_pile** piles;
+	visual_pile** piles;
 	int pile_count;
 } visual;
 
@@ -88,7 +101,7 @@ typedef struct solitaire_St {
 
 	/** Move card between two positions.
 	 */
-	bool (*append_to_pile)(struct solitaire_St *sol, vis_pile *dest, card_proxy *card);
+	bool (*append_to_pile)(struct solitaire_St *sol, visual_pile *dest, card_proxy *card);
 
 	/** Event that is called when a card has been revealed
 	 *  or hidden beqause of user action.
@@ -143,12 +156,16 @@ void card_append(card* card_to_append, pile *pile);
 void card_move_all(pile *dest, pile *src);
 void card_move_count(pile *dest, pile *src, int count);
 
+/** Creates a pile with the specified fixed size.
+ */
 pile* pile_create(mem_context *context, int size);
 
 /** Returns the first free position of a card in the array.
  */
 int card_first_free(pile *pile);
 
+/** Returns the last (top card) in a pile.
+ */
 card *card_last(pile *pile);
 
 /** Reveals the card to the user.
@@ -162,9 +179,9 @@ void card_hide_count(pile *pile, int start_index, int count);
 void card_hide_all(pile *pile);
 
 visual* visual_create(mem_context *context);
-void visual_add_pile(mem_context *context, visual *vis, vis_pile *p);
+void visual_add_pile(mem_context *context, visual *vis, visual_pile *p);
 void visual_sync(visual *vis);
 
-vis_pile* vis_pile_create(mem_context *context, pile *pile);
+visual_pile* visual_pile_create(mem_context *context, pile *pile);
 
 #endif /* __CARD_H__ */

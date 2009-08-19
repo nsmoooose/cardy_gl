@@ -232,13 +232,13 @@ START_TEST(test_card_move_all) {
 }
 END_TEST
 
-START_TEST(test_vis_pile_create) {
+START_TEST(test_visual_pile_create) {
 	pile *src;
-	vis_pile* pile;
+	visual_pile* pile;
 	mem_context *context = mem_context_create();
 
 	src = pile_create(context, 2);
-	pile = vis_pile_create(context, src);
+	pile = visual_pile_create(context, src);
 
 	ck_assert_msg(context->blocks[2] == pile, "Pile allocation not done.");
 	ck_assert_msg(context->blocks[3] == pile->cards, "Card array not allocated.");
@@ -262,8 +262,8 @@ START_TEST(test_visual_add_pile) {
 	pile *src1 = pile_create(context, 10);
 	pile *src2 = pile_create(context, 10);
 	visual* vis = visual_create(context);
-	vis_pile* pile1 = vis_pile_create(context, src1);
-	vis_pile* pile2 = vis_pile_create(context, src2);
+	visual_pile* pile1 = visual_pile_create(context, src1);
+	visual_pile* pile2 = visual_pile_create(context, src2);
 
 	visual_add_pile(context, vis, pile1);
 
@@ -281,12 +281,12 @@ START_TEST(test_visual_sync) {
 	mem_context *context = mem_context_create();
 	pile *pile = pile_create(context, 10);
 	visual *vis = visual_create(context);
-	vis_pile *vis_pile = vis_pile_create(context, pile);
+	visual_pile *visual_pile = visual_pile_create(context, pile);
 	card* card = card_create(context, e_spades, 3);
 	card_reveal(card);
 
 	card_append(card, pile);
-	visual_add_pile(context, vis, vis_pile);
+	visual_add_pile(context, vis, visual_pile);
 	visual_sync(vis);
 
 	ck_assert_msg(vis->piles[0]->cards[0]->card == card, "first card wasn't synced.");
@@ -305,7 +305,7 @@ void add_card_tests(Suite *suite) {
 	tcase_add_test(card_case, test_card_last);
 	tcase_add_test(card_case, test_card_move_all);
 	tcase_add_test(card_case, test_card_first_free);
-	tcase_add_test(card_case, test_vis_pile_create);
+	tcase_add_test(card_case, test_visual_pile_create);
 	tcase_add_test(card_case, test_visual_create);
 	tcase_add_test(card_case, test_visual_add_pile);
 	tcase_add_test(card_case, test_visual_sync);

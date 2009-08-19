@@ -199,7 +199,7 @@ bool ruleset_check(ruleset *ruleset, move_action *action) {
 	return false;
 }
 
-move_action *get_move_action(visual *vis, card_proxy *card, vis_pile *destination_pile) {
+move_action *get_move_action(visual *vis, card_proxy *card, visual_pile *destination_pile) {
 	int i, j;
 	move_action *a = calloc(1, sizeof(move_action));
 	for(i=0;i<vis->pile_count && a->source == 0;++i) {

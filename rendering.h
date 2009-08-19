@@ -14,8 +14,8 @@ extern solitaire *g_solitaire;
 extern mem_context *g_context;
 void update_camera_pos();
 
-void render_pile(vis_pile* pile);
-void render_card(vis_pile* pile, card_proxy* proxy);
+void render_pile(visual_pile* pile);
+void render_card(visual_pile* pile, card_proxy* proxy);
 void render_solitaire(solitaire* sol);
 void render_desktop();
 void render_scene();
