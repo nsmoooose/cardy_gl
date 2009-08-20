@@ -1,3 +1,7 @@
+#include <cairo/cairo.h>
+#include <librsvg/rsvg.h>
+#include <librsvg/rsvg-cairo.h>
+#include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "lib/image.h"
@@ -43,12 +47,64 @@ static GLubyte g_card_indexes[] = {
 static GLuint g_card_textures[] = {0};
 
 void setup_render_resources() {
+	RsvgHandle* h;
+	int width = 500;
+	int height = 500;
+	int stride = width * 4;
+	unsigned char* cairo_data;
+	cairo_surface_t *cairo_surface;
+	cairo_t *cr;
+	GError* e = NULL;
+
+/*
+  This can be some source of information on how to render a svg file
+  into a bitmap. This is the svg -> bitmap conversion tool part of
+  gnome.
+
+  http://svn.gnome.org/viewvc/librsvg/trunk/rsvg-convert.c?view=markup
+
+*/
+/*
 	GLbyte *image;
 	GLint width, height, components;
 	GLenum format;
-
+*/
 	glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glGenTextures(1, g_card_textures);
+
+	cairo_data = (unsigned char *) calloc(stride * height, 1);
+	cairo_surface = cairo_image_surface_create_for_data(
+		cairo_data, CAIRO_FORMAT_ARGB32, width, height, stride);
+
+	cr = cairo_create(cairo_surface);
+	cairo_set_source_rgb (cr, 0.0, 1.0, 1.0);
+	cairo_save(cr);
+	cairo_scale(cr, width, height);
+	cairo_set_source_rgba(cr, 1, 1, 1, 1);
+	cairo_paint(cr);
+
+	h = rsvg_handle_new_from_file("images/gnomangelo_bitmap.svg", &e);
+	if(e != NULL) {
+		exit(1);
+	}
+
+	rsvg_handle_render_cairo(h, cr);
+	cairo_surface_write_to_png (cairo_surface, "test.png");
+	cairo_destroy(cr);
+
+/*
+  Some information on how to render to the screen using SDL.
+
+	SDL_Surface* sf;
+	sf = SDL_CreateRGBSurfaceFrom((void *) cairo_data, width,
+								  height, 32, stride, 0x00ff0000, 0x0000ff00,
+								  0x000000ff, 0xff000000);
+	SDL_BlitSurface(sf, NULL, screen, NULL);
+	SDL_UpdateRect(screen, 0, 0, 0, 0);
+*/
+
+/*
+  Old TGA based image loader.
 
 	image = loadTGA("images/1_club.tga", &width, &height, &components, &format);
 	if(image == 0) {
@@ -63,6 +119,7 @@ void setup_render_resources() {
 		glTexImage2D(GL_TEXTURE_2D, 0, components, width, height, 0, format, GL_UNSIGNED_BYTE, image);
 		free(image);
 	}
+*/
 }
 
 void update_camera_pos() {
