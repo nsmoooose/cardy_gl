@@ -20,7 +20,7 @@ float g_perspective_fov = 45.0f;
 card_proxy *g_selected_card = 0;
 
 /* Build a vector of coordinates for a card. */
-static GLfloat g_card_coords[8*3] = {
+static GLfloat g_card_vertexes[8*3] = {
 	0 - CARD_WIDTH/2.0f, 0 + CARD_HEIGHT/2.0f, 0 + CARD_THICKNESS/2.0f, /* 0, top left, front */
 	0 + CARD_WIDTH/2.0f, 0 + CARD_HEIGHT/2.0f, 0 + CARD_THICKNESS/2.0f, /* 1, top right, front */
 	0 + CARD_WIDTH/2.0f, 0 - CARD_HEIGHT/2.0f, 0 + CARD_THICKNESS/2.0f, /* 2, bottom right, front */
@@ -47,6 +47,7 @@ void setup_render_resources() {
 	GLint width, height, components;
 	GLenum format;
 
+	glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glGenTextures(1, g_card_textures);
 
 	image = loadTGA("images/1_club.tga", &width, &height, &components, &format);
@@ -55,6 +56,10 @@ void setup_render_resources() {
 	}
 	else {
 		glBindTexture(GL_TEXTURE_2D, g_card_textures[0]);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexImage2D(GL_TEXTURE_2D, 0, components, width, height, 0, format, GL_UNSIGNED_BYTE, image);
 		free(image);
 	}
@@ -109,6 +114,8 @@ void render_pile(visual_pile* pile) {
 }
 
 void render_card(visual_pile* pile, card_proxy* proxy) {
+	int index;
+
 	if(proxy->card == 0) {
 		glColor3f(0.7f, 0.7f, 1.0f);
 	}
@@ -121,8 +128,43 @@ void render_card(visual_pile* pile, card_proxy* proxy) {
 	}
 
 	glPushName((GLuint)proxy);
-	glVertexPointer(3, GL_FLOAT, 0, g_card_coords);
+
+	for(index=0;index<6;++index) {
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, g_card_textures[0]);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 0.0f);
+		glVertex3f(
+			g_card_vertexes[g_card_indexes[index*4+0] * 3 + 0],
+			g_card_vertexes[g_card_indexes[index*4+0] * 3 + 1],
+			g_card_vertexes[g_card_indexes[index*4+0] * 3 + 2]);
+
+		glTexCoord2f(1.0f, 0.0f);
+		glVertex3f(
+			g_card_vertexes[g_card_indexes[index*4+1] * 3 + 0],
+			g_card_vertexes[g_card_indexes[index*4+1] * 3 + 1],
+			g_card_vertexes[g_card_indexes[index*4+1] * 3 + 2]);
+
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex3f(
+			g_card_vertexes[g_card_indexes[index*4+2] * 3 + 0],
+			g_card_vertexes[g_card_indexes[index*4+2] * 3 + 1],
+			g_card_vertexes[g_card_indexes[index*4+2] * 3 + 2]);
+
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex3f(
+			g_card_vertexes[g_card_indexes[index*4+3] * 3 + 0],
+			g_card_vertexes[g_card_indexes[index*4+3] * 3 + 1],
+			g_card_vertexes[g_card_indexes[index*4+3] * 3 + 2]);
+		glEnd();
+		glDisable(GL_TEXTURE_2D);
+	}
+
+	/*
+	glVertexPointer(3, GL_FLOAT, 0, g_card_vertexes);
 	glDrawElements(GL_QUADS, 24, GL_UNSIGNED_BYTE, g_card_indexes);
+	*/
+
 	glPopName();
 
 	/* Do a translation of our position for the next card. */
