@@ -48,9 +48,10 @@ static GLuint g_card_textures[] = {0};
 
 void setup_render_resources() {
 	RsvgHandle* h;
-	int width = 500;
-	int height = 500;
-	int stride = width * 4;
+    RsvgDimensionData dimensions;
+	int width;
+	int height;
+	int stride;
 	unsigned char* cairo_data;
 	cairo_surface_t *cairo_surface;
 	cairo_t *cr;
@@ -61,7 +62,10 @@ void setup_render_resources() {
   into a bitmap. This is the svg -> bitmap conversion tool part of
   gnome.
 
-  http://svn.gnome.org/viewvc/librsvg/trunk/rsvg-convert.c?view=markup
+  git clone git://git.gnome.org/librsvg
+
+  This file contains information about how to render things into bitmaps.
+  rsvg-convert.c
 
 */
 /*
@@ -72,25 +76,32 @@ void setup_render_resources() {
 	glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glGenTextures(1, g_card_textures);
 
+	rsvg_init();
+	h = rsvg_handle_new_from_file("images/gnomangelo_bitmap.svg", &e);
+	if(e != NULL) {
+		exit(1);
+	}
+	rsvg_handle_get_dimensions (h, &dimensions);
+	printf("Width: %d, Height: %d\n", dimensions.width, dimensions.height);
+
+	width = dimensions.width;
+	height = dimensions.height;
+	stride = width * 4;
+
 	cairo_data = (unsigned char *) calloc(stride * height, 1);
 	cairo_surface = cairo_image_surface_create_for_data(
 		cairo_data, CAIRO_FORMAT_ARGB32, width, height, stride);
 
 	cr = cairo_create(cairo_surface);
 	cairo_set_source_rgb (cr, 0.0, 1.0, 1.0);
-	cairo_save(cr);
-	cairo_scale(cr, width, height);
-	cairo_set_source_rgba(cr, 1, 1, 1, 1);
-	cairo_paint(cr);
-
-	h = rsvg_handle_new_from_file("images/gnomangelo_bitmap.svg", &e);
-	if(e != NULL) {
-		exit(1);
-	}
+	cairo_rectangle (cr, 0, 0, dimensions.width, dimensions.height);
+	cairo_fill (cr);
 
 	rsvg_handle_render_cairo(h, cr);
 	cairo_surface_write_to_png (cairo_surface, "test.png");
 	cairo_destroy(cr);
+
+	exit(0);
 
 /*
   Some information on how to render to the screen using SDL.
