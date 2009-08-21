@@ -13,10 +13,12 @@ const int true;
 const int false;
 
 typedef enum {
-	e_diamonds,
+	e_suit_first = 0,
+	e_diamonds = e_suit_first,
 	e_clubs,
 	e_hearts,
-	e_spades
+	e_spades,
+	e_suit_last = e_spades
 } card_suit;
 
 typedef unsigned char card_value;

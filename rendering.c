@@ -44,9 +44,36 @@ static GLubyte g_card_indexes[] = {
 	4, 0, 3, 7
 };
 
-static GLuint g_card_textures[] = {0};
+/* Card textures. First one is the back of a card. Index 1-52 are the actual cards. */
+static GLuint g_card_textures[53] = {
+	0,
+	0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0,
+	0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0,
+	0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0,
+	0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0
+};
+
+static char* g_card_suit_names[] = {"diamond", "club", "heart", "spade"};
+static char* g_card_value_names[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"};
+
+char *get_card_suit_name(card_suit suit) {
+	return g_card_suit_names[suit];
+}
+
+char *get_card_value_name(card_value value) {
+	return g_card_value_names[value-1];
+}
+
+GLuint get_card_texture(card *card) {
+	return g_card_textures[card->suit * 13 + card->value];
+}
+
+GLuint get_card_back_texture() {
+	return g_card_textures[0];
+}
 
 void setup_render_resources() {
+	GError* e = NULL;
 	RsvgHandle* h;
     RsvgDimensionData dimensions;
 	int width;
@@ -55,7 +82,12 @@ void setup_render_resources() {
 	unsigned char* cairo_data;
 	cairo_surface_t *cairo_surface;
 	cairo_t *cr;
-	GError* e = NULL;
+
+	card card;
+	card_suit suit;
+	card_value value;
+	char name_buffer[20];
+	char filename_buffer[24];
 
 /*
   This can be some source of information on how to render a svg file
@@ -64,9 +96,8 @@ void setup_render_resources() {
 
   git clone git://git.gnome.org/librsvg
 
-  This file contains information about how to render things into bitmaps.
-  rsvg-convert.c
-
+  This file contains information about how to render things into bitmaps:
+    rsvg-convert.c
 */
 /*
 	GLbyte *image;
@@ -97,40 +128,38 @@ void setup_render_resources() {
 	cairo_rectangle (cr, 0, 0, dimensions.width, dimensions.height);
 	cairo_fill (cr);
 
-	rsvg_handle_render_cairo(h, cr);
-	cairo_surface_write_to_png (cairo_surface, "test.png");
+	for(suit=e_suit_first;suit<e_suit_last;++suit) {
+		card.suit = suit;
+		for(value=1;value<=13;++value) {
+			card.value = value;
+
+			snprintf(name_buffer, sizeof(name_buffer), "%s_%s", get_card_value_name(value), get_card_suit_name(suit));
+
+			printf("rendering: %s\n", name_buffer);
+			if(!rsvg_handle_has_sub(h, name_buffer)) {
+				fprintf(stderr, "%s wasn found within the svg document.", name_buffer);
+				continue;
+			}
+
+			if(!rsvg_handle_render_cairo_sub(h, cr, name_buffer)) {
+				fprintf(stderr, "Failed to render image.\n");
+			}
+
+			snprintf(filename_buffer, sizeof(filename_buffer), "tmp/%s.png", name_buffer);
+			cairo_surface_write_to_png (cairo_surface, filename_buffer);
+
+			glBindTexture(GL_TEXTURE_2D, get_card_texture(&card));
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, dimensions.width, dimensions.height,
+						 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, cairo_data);
+		}
+	}
+
 	cairo_destroy(cr);
-
 	exit(0);
-
-/*
-  Some information on how to render to the screen using SDL.
-
-	SDL_Surface* sf;
-	sf = SDL_CreateRGBSurfaceFrom((void *) cairo_data, width,
-								  height, 32, stride, 0x00ff0000, 0x0000ff00,
-								  0x000000ff, 0xff000000);
-	SDL_BlitSurface(sf, NULL, screen, NULL);
-	SDL_UpdateRect(screen, 0, 0, 0, 0);
-*/
-
-/*
-  Old TGA based image loader.
-
-	image = loadTGA("images/1_club.tga", &width, &height, &components, &format);
-	if(image == 0) {
-		printf("Failed to load texture.\n");
-	}
-	else {
-		glBindTexture(GL_TEXTURE_2D, g_card_textures[0]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexImage2D(GL_TEXTURE_2D, 0, components, width, height, 0, format, GL_UNSIGNED_BYTE, image);
-		free(image);
-	}
-*/
 }
 
 void update_camera_pos() {
@@ -184,22 +213,34 @@ void render_pile(visual_pile* pile) {
 void render_card(visual_pile* pile, card_proxy* proxy) {
 	int index;
 
-	if(proxy->card == 0) {
-		glColor3f(0.7f, 0.7f, 1.0f);
+	if(g_selected_card == proxy) {
+		glColor3f(1.0f, 0.7f, 0.7f);
 	}
 	else {
 		glColor3f(1.0f, 1.0f, 1.0f);
 	}
 
-	if(g_selected_card == proxy) {
-		glColor3f(1.0f, 0.7f, 0.7f);
-	}
-
 	glPushName((GLuint)proxy);
 
+	/* Test to see if we need to rotate the card around its axis
+	   to show the front face. */
+	glPushMatrix();
+	if(proxy->card != 0) {
+		/* Rotate the card to show the front face of the card. */
+	}
+
 	for(index=0;index<6;++index) {
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, g_card_textures[0]);
+		/* Only apply texturing on the front and the back of the
+		   card. */
+		if(index == 0 && proxy->card != 0) {
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, get_card_texture(proxy->card));
+		}
+		if(index == 3) {
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, get_card_back_texture());
+		}
+
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex3f(
@@ -225,14 +266,13 @@ void render_card(visual_pile* pile, card_proxy* proxy) {
 			g_card_vertexes[g_card_indexes[index*4+3] * 3 + 1],
 			g_card_vertexes[g_card_indexes[index*4+3] * 3 + 2]);
 		glEnd();
-		glDisable(GL_TEXTURE_2D);
+
+		if(index == 0 || index == 3) {
+			glDisable(GL_TEXTURE_2D);
+		}
 	}
 
-	/*
-	glVertexPointer(3, GL_FLOAT, 0, g_card_vertexes);
-	glDrawElements(GL_QUADS, 24, GL_UNSIGNED_BYTE, g_card_indexes);
-	*/
-
+	glPopMatrix();
 	glPopName();
 
 	/* Do a translation of our position for the next card. */
