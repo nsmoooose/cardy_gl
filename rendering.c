@@ -76,8 +76,8 @@ void setup_render_resources() {
 	GError* e = NULL;
 	RsvgHandle* h;
     RsvgDimensionData dimensions;
-	int width;
-	int height;
+	RsvgPositionData pos;
+	cairo_matrix_t matrix;
 	int stride;
 	unsigned char* cairo_data;
 	cairo_surface_t *cairo_surface;
@@ -112,42 +112,61 @@ void setup_render_resources() {
 	if(e != NULL) {
 		exit(1);
 	}
-	rsvg_handle_get_dimensions (h, &dimensions);
-	printf("Width: %d, Height: %d\n", dimensions.width, dimensions.height);
-
-	width = dimensions.width;
-	height = dimensions.height;
-	stride = width * 4;
-
-	cairo_data = (unsigned char *) calloc(stride * height, 1);
-	cairo_surface = cairo_image_surface_create_for_data(
-		cairo_data, CAIRO_FORMAT_ARGB32, width, height, stride);
-
-	cr = cairo_create(cairo_surface);
-	cairo_set_source_rgb (cr, 0.0, 1.0, 1.0);
-	cairo_rectangle (cr, 0, 0, dimensions.width, dimensions.height);
-	cairo_fill (cr);
 
 	for(suit=e_suit_first;suit<e_suit_last;++suit) {
 		card.suit = suit;
 		for(value=1;value<=13;++value) {
 			card.value = value;
 
-			snprintf(name_buffer, sizeof(name_buffer), "%s_%s", get_card_value_name(value), get_card_suit_name(suit));
+			snprintf(name_buffer, sizeof(name_buffer), "#%s_%s", get_card_value_name(value), get_card_suit_name(suit));
 
-			printf("rendering: %s\n", name_buffer);
 			if(!rsvg_handle_has_sub(h, name_buffer)) {
-				fprintf(stderr, "%s wasn found within the svg document.", name_buffer);
+				fprintf(stderr, "%s wasn't found within the svg document.\n", name_buffer);
 				continue;
 			}
 
+			if(!rsvg_handle_get_dimensions_sub(h, &dimensions, name_buffer)) {
+				fprintf(stderr, "Failed to obtain the card dimensions for: %s\n", name_buffer);
+				exit(0);
+			}
+
+			rsvg_handle_get_position_sub(h, &pos, name_buffer);
+			if (dimensions.width <= 0 || dimensions.height <= 0) {
+				exit(0);
+			}
+			printf("Width: %d, Height: %d, Position: (%d,%d)\n",
+				   dimensions.width, dimensions.height, pos.x, pos.y);
+
+			stride = dimensions.width * 4;
+
+			cairo_data = (unsigned char *) calloc(stride * dimensions.height, 1);
+			cairo_surface = cairo_image_surface_create_for_data(
+				cairo_data, CAIRO_FORMAT_ARGB32, dimensions.width,
+				dimensions.height, stride);
+
+			cr = cairo_create(cairo_surface);
+			cairo_set_source_rgb (cr, 0.0, 1.0, 1.0);
+			cairo_rectangle (cr, 0, 0, dimensions.width, dimensions.height);
+			cairo_fill (cr);
+
+			cairo_matrix_init_identity(&matrix);
+			/* cairo_matrix_scale(&matrix, xzoom, yzoom); */
+			/* cairo_matrix_translate(&matrix, pos.x, pos.y); */
+			cairo_matrix_translate(&matrix, 0 - pos.x, 0 - pos.y);
+
+			cairo_set_matrix(cr, &matrix);
+
 			if(!rsvg_handle_render_cairo_sub(h, cr, name_buffer)) {
-				fprintf(stderr, "Failed to render image.\n");
+				fprintf(stderr, "Failed to render image: %s.\n", name_buffer);
 			}
 
 			snprintf(filename_buffer, sizeof(filename_buffer), "tmp/%s.png", name_buffer);
 			cairo_surface_write_to_png (cairo_surface, filename_buffer);
 
+			free(cairo_data);
+			cairo_destroy(cr);
+			cairo_surface_destroy(cairo_surface);
+/*
 			glBindTexture(GL_TEXTURE_2D, get_card_texture(&card));
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -155,10 +174,10 @@ void setup_render_resources() {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, dimensions.width, dimensions.height,
 						 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, cairo_data);
+*/
 		}
 	}
 
-	cairo_destroy(cr);
 	exit(0);
 }
 
