@@ -27,7 +27,7 @@ void create_deck(mem_context *context, pile *pile) {
 	card_suit suit;
 	card_value value;
 
-	for(suit=e_diamonds;suit<=e_spades;++suit) {
+	for(suit=e_suit_first;suit<=e_suit_last;++suit) {
 		for(value=1;value<14;++value, ++index) {
 			card = card_create(context, suit, value);
 			card_append(card, pile);

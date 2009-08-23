@@ -65,6 +65,8 @@ static char *get_card_value_name(card_value value) {
 }
 
 static GLuint get_card_texture(card *card) {
+	printf("%d\n", card->suit * 13 + card->value);
+
 	return g_card_textures[card->suit * 13 + card->value];
 }
 
@@ -73,10 +75,20 @@ static GLuint get_card_back_texture() {
 }
 
 static void setup_card_texture(RsvgHandle *h, GLuint texture, char *node_name) {
+
+/*
+  This can be some source of information on how to render a svg file
+  into a bitmap. This is the svg -> bitmap conversion tool part of
+  gnome.
+
+  git clone git://git.gnome.org/librsvg
+
+  This file contains information about how to render things into bitmaps:
+    rsvg-convert.c
+*/
+
     RsvgDimensionData dimensions;
 	RsvgPositionData pos;
-	char filename_buffer[24];
-
 	cairo_matrix_t matrix;
 	int stride;
 	unsigned char* cairo_data;
@@ -97,11 +109,8 @@ static void setup_card_texture(RsvgHandle *h, GLuint texture, char *node_name) {
 	if (dimensions.width <= 0 || dimensions.height <= 0) {
 		exit(0);
 	}
-	dimensions.width = 128;
+	dimensions.width = 64;
 	dimensions.height = 128;
-	printf("Width: %d, Height: %d, Position: (%d,%d)\n",
-		   dimensions.width, dimensions.height, pos.x, pos.y);
-
 	stride = dimensions.width * 4;
 
 	cairo_data = (unsigned char *) calloc(stride * dimensions.height, 1);
@@ -116,16 +125,17 @@ static void setup_card_texture(RsvgHandle *h, GLuint texture, char *node_name) {
 
 	cairo_matrix_init_identity(&matrix);
 	/* cairo_matrix_scale(&matrix, xzoom, yzoom); */
-	/* cairo_matrix_translate(&matrix, pos.x, pos.y); */
 	cairo_matrix_translate(&matrix, 0 - pos.x, 0 - pos.y);
 
 	cairo_set_matrix(cr, &matrix);
 
 	if(!rsvg_handle_render_cairo_sub(h, cr, node_name)) {
 		fprintf(stderr, "Failed to render image: %s.\n", node_name);
+		exit(0);
 	}
 
 	/*
+	char filename_buffer[24];
 	snprintf(filename_buffer, sizeof(filename_buffer), "tmp/%s.png", node_name);
 	cairo_surface_write_to_png (cairo_surface, filename_buffer);
 	*/
@@ -154,17 +164,6 @@ void setup_render_resources() {
 
 	glEnable(GL_NORMALIZE);
 
-/*
-  This can be some source of information on how to render a svg file
-  into a bitmap. This is the svg -> bitmap conversion tool part of
-  gnome.
-
-  git clone git://git.gnome.org/librsvg
-
-  This file contains information about how to render things into bitmaps:
-    rsvg-convert.c
-*/
-
 	glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glGenTextures(53, g_card_textures);
 
@@ -174,7 +173,7 @@ void setup_render_resources() {
 		exit(1);
 	}
 
-	for(suit=e_suit_first;suit<e_suit_last;++suit) {
+	for(suit=e_suit_first;suit<=e_suit_last;++suit) {
 		card.suit = suit;
 		for(value=1;value<=13;++value) {
 			card.value = value;
