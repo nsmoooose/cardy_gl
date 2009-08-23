@@ -14,8 +14,8 @@ const int false;
 
 typedef enum {
 	e_suit_first = 0,
-	e_diamonds = e_suit_first,
-	e_clubs,
+	e_clubs = e_suit_first,
+	e_diamonds,
 	e_hearts,
 	e_spades,
 	e_suit_last = e_spades

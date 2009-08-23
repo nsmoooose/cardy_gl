@@ -36,12 +36,12 @@ static GLfloat g_card_vertexes[8*3] = {
 };
 
 static GLubyte g_card_indexes[] = {
-	0, 1, 2, 3,
-	4, 5, 1, 0,
-	3, 2, 6, 7,
-	5, 4, 7, 6,
-	1, 5, 6, 2,
-	4, 0, 3, 7
+	0, 1, 2, 3, /* front face */
+	4, 5, 1, 0, /* top */
+	3, 2, 6, 7, /* bottom */
+	4, 5, 6, 7, /* back face */
+	1, 5, 6, 2, /* right OK */
+	4, 0, 3, 7 /* left OK */
 };
 
 /* Card textures. First one is the back of a card. Index 1-52 are the actual cards. */
@@ -53,41 +53,106 @@ static GLuint g_card_textures[53] = {
 	0, 0, 0, 0, 0,  0, 0, 0, 0, 0,  0, 0, 0
 };
 
-static char* g_card_suit_names[] = {"diamond", "club", "heart", "spade"};
+static char* g_card_suit_names[] = {"club", "diamond", "heart", "spade"};
 static char* g_card_value_names[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"};
 
-char *get_card_suit_name(card_suit suit) {
+static char *get_card_suit_name(card_suit suit) {
 	return g_card_suit_names[suit];
 }
 
-char *get_card_value_name(card_value value) {
+static char *get_card_value_name(card_value value) {
 	return g_card_value_names[value-1];
 }
 
-GLuint get_card_texture(card *card) {
+static GLuint get_card_texture(card *card) {
 	return g_card_textures[card->suit * 13 + card->value];
 }
 
-GLuint get_card_back_texture() {
+static GLuint get_card_back_texture() {
 	return g_card_textures[0];
 }
 
-void setup_render_resources() {
-	GError* e = NULL;
-	RsvgHandle* h;
+static void setup_card_texture(RsvgHandle *h, GLuint texture, char *node_name) {
     RsvgDimensionData dimensions;
 	RsvgPositionData pos;
+	char filename_buffer[24];
+
 	cairo_matrix_t matrix;
 	int stride;
 	unsigned char* cairo_data;
 	cairo_surface_t *cairo_surface;
 	cairo_t *cr;
 
+	if(!rsvg_handle_has_sub(h, node_name)) {
+		fprintf(stderr, "%s wasn't found within the svg document.\n", node_name);
+		exit(0);
+	}
+
+	if(!rsvg_handle_get_dimensions_sub(h, &dimensions, node_name)) {
+		fprintf(stderr, "Failed to obtain the card dimensions for: %s\n", node_name);
+		exit(0);
+	}
+
+	rsvg_handle_get_position_sub(h, &pos, node_name);
+	if (dimensions.width <= 0 || dimensions.height <= 0) {
+		exit(0);
+	}
+	dimensions.width = 128;
+	dimensions.height = 128;
+	printf("Width: %d, Height: %d, Position: (%d,%d)\n",
+		   dimensions.width, dimensions.height, pos.x, pos.y);
+
+	stride = dimensions.width * 4;
+
+	cairo_data = (unsigned char *) calloc(stride * dimensions.height, 1);
+	cairo_surface = cairo_image_surface_create_for_data(
+		cairo_data, CAIRO_FORMAT_ARGB32, dimensions.width,
+		dimensions.height, stride);
+
+	cr = cairo_create(cairo_surface);
+	cairo_set_source_rgb (cr, 0.0, 1.0, 1.0);
+	cairo_rectangle (cr, 0, 0, dimensions.width, dimensions.height);
+	cairo_fill (cr);
+
+	cairo_matrix_init_identity(&matrix);
+	/* cairo_matrix_scale(&matrix, xzoom, yzoom); */
+	/* cairo_matrix_translate(&matrix, pos.x, pos.y); */
+	cairo_matrix_translate(&matrix, 0 - pos.x, 0 - pos.y);
+
+	cairo_set_matrix(cr, &matrix);
+
+	if(!rsvg_handle_render_cairo_sub(h, cr, node_name)) {
+		fprintf(stderr, "Failed to render image: %s.\n", node_name);
+	}
+
+	/*
+	snprintf(filename_buffer, sizeof(filename_buffer), "tmp/%s.png", node_name);
+	cairo_surface_write_to_png (cairo_surface, filename_buffer);
+	*/
+
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, dimensions.width, dimensions.height,
+				 0, GL_RGBA, GL_UNSIGNED_BYTE, cairo_data);
+
+	free(cairo_data);
+	cairo_destroy(cr);
+	cairo_surface_destroy(cairo_surface);
+}
+
+void setup_render_resources() {
+	GError* e = NULL;
+	RsvgHandle* h;
+
 	card card;
 	card_suit suit;
 	card_value value;
 	char name_buffer[20];
-	char filename_buffer[24];
+
+	glEnable(GL_NORMALIZE);
 
 /*
   This can be some source of information on how to render a svg file
@@ -99,13 +164,9 @@ void setup_render_resources() {
   This file contains information about how to render things into bitmaps:
     rsvg-convert.c
 */
-/*
-	GLbyte *image;
-	GLint width, height, components;
-	GLenum format;
-*/
+
 	glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glGenTextures(1, g_card_textures);
+	glGenTextures(53, g_card_textures);
 
 	rsvg_init();
 	h = rsvg_handle_new_from_file("images/gnomangelo_bitmap.svg", &e);
@@ -119,66 +180,10 @@ void setup_render_resources() {
 			card.value = value;
 
 			snprintf(name_buffer, sizeof(name_buffer), "#%s_%s", get_card_value_name(value), get_card_suit_name(suit));
-
-			if(!rsvg_handle_has_sub(h, name_buffer)) {
-				fprintf(stderr, "%s wasn't found within the svg document.\n", name_buffer);
-				continue;
-			}
-
-			if(!rsvg_handle_get_dimensions_sub(h, &dimensions, name_buffer)) {
-				fprintf(stderr, "Failed to obtain the card dimensions for: %s\n", name_buffer);
-				exit(0);
-			}
-
-			rsvg_handle_get_position_sub(h, &pos, name_buffer);
-			if (dimensions.width <= 0 || dimensions.height <= 0) {
-				exit(0);
-			}
-			printf("Width: %d, Height: %d, Position: (%d,%d)\n",
-				   dimensions.width, dimensions.height, pos.x, pos.y);
-
-			stride = dimensions.width * 4;
-
-			cairo_data = (unsigned char *) calloc(stride * dimensions.height, 1);
-			cairo_surface = cairo_image_surface_create_for_data(
-				cairo_data, CAIRO_FORMAT_ARGB32, dimensions.width,
-				dimensions.height, stride);
-
-			cr = cairo_create(cairo_surface);
-			cairo_set_source_rgb (cr, 0.0, 1.0, 1.0);
-			cairo_rectangle (cr, 0, 0, dimensions.width, dimensions.height);
-			cairo_fill (cr);
-
-			cairo_matrix_init_identity(&matrix);
-			/* cairo_matrix_scale(&matrix, xzoom, yzoom); */
-			/* cairo_matrix_translate(&matrix, pos.x, pos.y); */
-			cairo_matrix_translate(&matrix, 0 - pos.x, 0 - pos.y);
-
-			cairo_set_matrix(cr, &matrix);
-
-			if(!rsvg_handle_render_cairo_sub(h, cr, name_buffer)) {
-				fprintf(stderr, "Failed to render image: %s.\n", name_buffer);
-			}
-
-			snprintf(filename_buffer, sizeof(filename_buffer), "tmp/%s.png", name_buffer);
-			cairo_surface_write_to_png (cairo_surface, filename_buffer);
-
-			free(cairo_data);
-			cairo_destroy(cr);
-			cairo_surface_destroy(cairo_surface);
-/*
-			glBindTexture(GL_TEXTURE_2D, get_card_texture(&card));
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, dimensions.width, dimensions.height,
-						 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, cairo_data);
-*/
+			setup_card_texture(h, get_card_texture(&card), name_buffer);
 		}
 	}
-
-	exit(0);
+	setup_card_texture(h, get_card_back_texture(), "#back");
 }
 
 void update_camera_pos() {
@@ -244,8 +249,9 @@ void render_card(visual_pile* pile, card_proxy* proxy) {
 	/* Test to see if we need to rotate the card around its axis
 	   to show the front face. */
 	glPushMatrix();
-	if(proxy->card != 0) {
+	if(proxy->card == 0) {
 		/* Rotate the card to show the front face of the card. */
+		glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
 	}
 
 	for(index=0;index<6;++index) {
@@ -299,7 +305,9 @@ void render_card(visual_pile* pile, card_proxy* proxy) {
 }
 
 void render_desktop() {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
 }
 
 void render_scene() {
