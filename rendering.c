@@ -111,8 +111,7 @@ static void setup_card_texture(RsvgHandle *h, GLuint texture, char *node_name) {
 	if (dimensions.width <= 0 || dimensions.height <= 0) {
 		exit(0);
 	}
-	stride = card_texture_width * 4;
-
+	stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, card_texture_width);
 	cairo_data = (unsigned char *) calloc(stride * card_texture_height, 1);
 	cairo_surface = cairo_image_surface_create_for_data(
 		cairo_data, CAIRO_FORMAT_ARGB32, card_texture_width,
