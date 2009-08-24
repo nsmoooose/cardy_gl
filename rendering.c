@@ -39,9 +39,9 @@ static GLubyte g_card_indexes[] = {
 	0, 1, 2, 3, /* front face */
 	4, 5, 1, 0, /* top */
 	3, 2, 6, 7, /* bottom */
-	4, 5, 6, 7, /* back face */
-	1, 5, 6, 2, /* right OK */
-	4, 0, 3, 7 /* left OK */
+	5, 4, 7, 6, /* back face */
+	1, 5, 6, 2, /* right */
+	4, 0, 3, 7 /* left */
 };
 
 /* Card textures. First one is the back of a card. Index 1-52 are the actual cards. */
@@ -65,8 +65,6 @@ static char *get_card_value_name(card_value value) {
 }
 
 static GLuint get_card_texture(card *card) {
-	printf("%d\n", card->suit * 13 + card->value);
-
 	return g_card_textures[card->suit * 13 + card->value];
 }
 

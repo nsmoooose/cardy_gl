@@ -77,7 +77,7 @@ void window_mouse(int button, int state, int x, int y) {
 
 	hits = glRenderMode(GL_RENDER);
 	if(hits == -1) {
-		printf("-1 hits. Selection buffer not large enough.");
+		fprintf(stderr, "-1 hits. Selection buffer not large enough.\n");
 	}
 	else if(hits > 0) {
 		process_selection(hits, selections);
@@ -91,5 +91,7 @@ void window_mouse(int button, int state, int x, int y) {
 }
 
 void window_mouse_move(int x, int y) {
+	/*
 	printf("Dragging.\n");
+	*/
 }
