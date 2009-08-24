@@ -148,8 +148,8 @@ static void setup_card_texture(RsvgHandle *h, GLuint texture, char *node_name) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, card_texture_width, card_texture_height,
-				 0, GL_RGBA, GL_UNSIGNED_BYTE, cairo_data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, card_texture_width, card_texture_height,
+				 0, GL_BGRA, GL_UNSIGNED_BYTE, cairo_data);
 
 	free(cairo_data);
 	cairo_destroy(cr);
