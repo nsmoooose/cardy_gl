@@ -21,6 +21,9 @@ float g_perspective_near = 1.0f;
 float g_perspective_far = 5000.0f;
 float g_perspective_fov = 45.0f;
 
+const int card_texture_width = 128;
+const int card_texture_height = 256;
+
 card_proxy *g_selected_card = 0;
 
 /* Build a vector of coordinates for a card. */
@@ -92,6 +95,7 @@ static void setup_card_texture(RsvgHandle *h, GLuint texture, char *node_name) {
 	unsigned char* cairo_data;
 	cairo_surface_t *cairo_surface;
 	cairo_t *cr;
+	double xzoom=1.0f, yzoom=1.0f;
 
 	if(!rsvg_handle_has_sub(h, node_name)) {
 		fprintf(stderr, "%s wasn't found within the svg document.\n", node_name);
@@ -107,22 +111,23 @@ static void setup_card_texture(RsvgHandle *h, GLuint texture, char *node_name) {
 	if (dimensions.width <= 0 || dimensions.height <= 0) {
 		exit(0);
 	}
-	dimensions.width = 64;
-	dimensions.height = 128;
-	stride = dimensions.width * 4;
+	stride = card_texture_width * 4;
 
-	cairo_data = (unsigned char *) calloc(stride * dimensions.height, 1);
+	cairo_data = (unsigned char *) calloc(stride * card_texture_height, 1);
 	cairo_surface = cairo_image_surface_create_for_data(
-		cairo_data, CAIRO_FORMAT_ARGB32, dimensions.width,
-		dimensions.height, stride);
+		cairo_data, CAIRO_FORMAT_ARGB32, card_texture_width,
+		card_texture_height, stride);
 
 	cr = cairo_create(cairo_surface);
-	cairo_set_source_rgb (cr, 0.0, 1.0, 1.0);
-	cairo_rectangle (cr, 0, 0, dimensions.width, dimensions.height);
+	cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+	cairo_rectangle (cr, 0, 0, card_texture_width, card_texture_height);
 	cairo_fill (cr);
 
+	xzoom = (double)card_texture_width / (double)dimensions.width;
+	yzoom = (double)card_texture_height / (double)dimensions.height;
+
 	cairo_matrix_init_identity(&matrix);
-	/* cairo_matrix_scale(&matrix, xzoom, yzoom); */
+	cairo_matrix_scale(&matrix, xzoom, yzoom);
 	cairo_matrix_translate(&matrix, 0 - pos.x, 0 - pos.y);
 
 	cairo_set_matrix(cr, &matrix);
@@ -143,7 +148,7 @@ static void setup_card_texture(RsvgHandle *h, GLuint texture, char *node_name) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, dimensions.width, dimensions.height,
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, card_texture_width, card_texture_height,
 				 0, GL_RGBA, GL_UNSIGNED_BYTE, cairo_data);
 
 	free(cairo_data);
