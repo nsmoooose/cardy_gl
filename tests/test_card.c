@@ -249,11 +249,13 @@ END_TEST
 
 START_TEST(test_visual_create) {
 	mem_context *context = mem_context_create();
-	visual* vis = visual_create(context);
+	visual_settings *settings = calloc(1, sizeof(visual_settings));
+	visual* vis = visual_create(context, settings);
 
 	ck_assert_msg(context->blocks[0] == vis, "No allocation made.");
 	ck_assert_msg(vis->piles == 0, "piles member should be initialized to 0.");
 	ck_assert_msg(vis->pile_count == 0, "No of piles shall be 0");
+	ck_assert_msg(vis->settings == settings, "Settings wasn't assigned.");
 }
 END_TEST
 
@@ -261,7 +263,7 @@ START_TEST(test_visual_add_pile) {
 	mem_context *context = mem_context_create();
 	pile *src1 = pile_create(context, 10);
 	pile *src2 = pile_create(context, 10);
-	visual* vis = visual_create(context);
+	visual* vis = visual_create(context, 0);
 	visual_pile* pile1 = visual_pile_create(context, src1);
 	visual_pile* pile2 = visual_pile_create(context, src2);
 
@@ -280,7 +282,7 @@ END_TEST
 START_TEST(test_visual_sync) {
 	mem_context *context = mem_context_create();
 	pile *pile = pile_create(context, 10);
-	visual *vis = visual_create(context);
+	visual *vis = visual_create(context, 0);
 	visual_pile *visual_pile = visual_pile_create(context, pile);
 	card* card = card_create(context, e_spades, 3);
 	card_reveal(card);

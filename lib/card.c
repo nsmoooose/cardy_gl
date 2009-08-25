@@ -176,8 +176,10 @@ pile* pile_create(mem_context *context, int size) {
 	return p;
 }
 
-visual* visual_create(mem_context *context) {
-	return (visual*)mem_alloc(context, sizeof(visual));
+visual* visual_create(mem_context *context, visual_settings *settings) {
+	visual *vis = (visual*)mem_alloc(context, sizeof(visual));
+	vis->settings = settings;
+	return vis;
 }
 
 void visual_sync(visual *vis) {

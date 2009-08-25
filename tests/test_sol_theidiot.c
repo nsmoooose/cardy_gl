@@ -6,7 +6,8 @@ START_TEST(test_sol_theidiot_init) {
 	int i;
 
 	mem_context *context = mem_context_create();
-	solitaire* sol = solitaire_theidiot(context);
+	visual_settings *settings = mem_alloc(context, sizeof(visual_settings));
+	solitaire* sol = solitaire_theidiot(context, settings);
 
 	ck_assert_msg(sol->new_game != 0, "New game isn't implemented.");
 	ck_assert_msg(sol->card_revealed == 0, "Card revealed callback is set.");
@@ -28,7 +29,8 @@ END_TEST
 START_TEST(test_sol_theidiot_deal) {
 	visual_pile *deck, *pile1, *pile2, *pile3, *pile4;
 	mem_context *context = mem_context_create();
-	solitaire* sol = solitaire_theidiot(context);
+	visual_settings *settings = mem_alloc(context, sizeof(visual_settings));
+	solitaire* sol = solitaire_theidiot(context, settings);
 
 	deck = sol->visual->piles[0];
 	deck->pile_action(sol, deck);
@@ -52,7 +54,8 @@ END_TEST
 
 START_TEST(test_sol_theidiot_moving_card) {
 	mem_context *context = mem_context_create();
-	solitaire* sol = solitaire_theidiot(context);
+	visual_settings *settings = mem_alloc(context, sizeof(visual_settings));
+	solitaire* sol = solitaire_theidiot(context, settings);
 	card *club_4, *club_5, *club_6, *club_king, *spade_4;
 	pile *piles[4];
 

@@ -71,7 +71,7 @@ static void my_deal(solitaire* sol, visual_pile* pile) {
 	visual_sync(sol->visual);
 }
 
-solitaire* solitaire_noname1(mem_context *context) {
+solitaire* solitaire_noname1(mem_context *context, visual_settings *settings) {
 	visual_pile *deck, *ace1, *ace2, *ace3, *ace4;
 	visual_pile *pile1, *pile2, *pile3, *pile4, *pile5, *pile6, *pile7, *pile8;
 
@@ -83,7 +83,7 @@ solitaire* solitaire_noname1(mem_context *context) {
 	 * members. */
 	internal* i = mem_alloc(context, sizeof(internal));
 	s->data = i;
-	s->visual = visual_create(context);
+	s->visual = visual_create(context, settings);
 
 	i->deck = pile_create(context, 52);
 	i->ace1 = pile_create(context, 13);

@@ -3,7 +3,8 @@
 
 START_TEST(test_sol_noname1_init) {
 	mem_context *context = mem_context_create();
-	solitaire *sol = solitaire_noname1(context);
+	visual_settings *settings = mem_alloc(context, sizeof(visual_settings));
+	solitaire *sol = solitaire_noname1(context, settings);
 
 	ck_assert_msg(sol->visual != 0, "visual member should be set");
 	ck_assert_msg(sol->visual->pile_count == 13, "incorrect number of piles.");
@@ -13,7 +14,8 @@ END_TEST
 START_TEST(test_sol_noname1_deal) {
 	visual_pile *deck;
 	mem_context *context = mem_context_create();
-	solitaire *sol = solitaire_noname1(context);
+	visual_settings *settings = mem_alloc(context, sizeof(visual_settings));
+	solitaire *sol = solitaire_noname1(context, settings);
 	int index, index2;
 
 	deck = sol->visual->piles[0];
@@ -60,7 +62,8 @@ END_TEST
 
 START_TEST(test_sol_noname1_deal2) {
 	mem_context *context = mem_context_create();
-	solitaire *sol = solitaire_noname1(context);
+	visual_settings *settings = mem_alloc(context, sizeof(visual_settings));
+	solitaire *sol = solitaire_noname1(context, settings);
 	visual_pile *deck;
 	int index;
 

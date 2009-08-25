@@ -75,6 +75,15 @@ static GLuint get_card_back_texture() {
 	return g_card_textures[0];
 }
 
+visual_settings *visual_settings_create(mem_context *context) {
+	visual_settings *settings = mem_alloc(context, sizeof(visual_settings));
+	settings->card_width = 40.0f;
+	settings->card_height = 60.0f;
+	settings->card_spacing = 4.0f;
+	settings->card_thickness = 0.4f;
+	return settings;
+}
+
 static void setup_card_texture(RsvgHandle *h, GLuint texture, char *node_name) {
 
 /*

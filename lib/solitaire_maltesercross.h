@@ -3,6 +3,6 @@
 
 #include "card.h"
 
-solitaire* solitaire_maltesercross(mem_context *context);
+solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settings);
 
 #endif /* __SOLITAIRE_MALTESERCROSS_H__ */

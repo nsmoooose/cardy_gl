@@ -265,7 +265,7 @@ START_TEST(test_get_move_action) {
 	done = pile_create(context, 52);
 	create_deck(context, deck);
 
-	vis = visual_create(context);
+	vis = visual_create(context, 0);
 	visual_add_pile(context, vis, visual_pile_create(context, deck));
 	visual_add_pile(context, vis, visual_pile_create(context, done));
 	visual_sync(vis);

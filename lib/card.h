@@ -84,6 +84,16 @@ typedef struct visual_pile_St {
 	void *data;
 } visual_pile;
 
+/** Defines some common settings used to calculate positions of piles
+ *  and cards.
+ */
+typedef struct {
+	unsigned int card_width;
+	unsigned int card_height;
+	unsigned int card_spacing;
+	unsigned int card_thickness;
+} visual_settings;
+
 /** Represents the visual presentation of a game. Together
  *  with the pile struct it describes how to render the user
  *  interface.
@@ -91,6 +101,8 @@ typedef struct visual_pile_St {
 typedef struct {
 	visual_pile** piles;
 	int pile_count;
+
+	visual_settings* settings;
 } visual;
 
 /** Interface with a solitaire game. All members of this
@@ -180,7 +192,7 @@ void card_hide(card *card);
 void card_hide_count(pile *pile, int start_index, int count);
 void card_hide_all(pile *pile);
 
-visual* visual_create(mem_context *context);
+visual* visual_create(mem_context *context, visual_settings *settings);
 void visual_add_pile(mem_context *context, visual *vis, visual_pile *p);
 void visual_sync(visual *vis);
 

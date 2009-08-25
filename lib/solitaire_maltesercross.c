@@ -68,7 +68,7 @@ static void my_move(solitaire* sol, card_proxy* card_proxy) {
 }
 */
 
-solitaire* solitaire_maltesercross(mem_context *context) {
+solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settings) {
 	visual_pile *deck, *done, *king1, *king2, *king3, *king4;
 	visual_pile *src1, *src2, *src3, *src4;
 	visual_pile *center, *build1, *build2, *build3, *build4;
@@ -82,7 +82,7 @@ solitaire* solitaire_maltesercross(mem_context *context) {
 	 * members. */
 	internal* i = mem_alloc(context, sizeof(internal));
 	s->data = i;
-	s->visual = visual_create(context);
+	s->visual = visual_create(context, settings);
 
 	i->deck = pile_create(context, 104);
 	deck = visual_pile_create(context, i->deck);

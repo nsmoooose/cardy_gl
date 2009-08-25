@@ -3,6 +3,6 @@
 
 #include "card.h"
 
-solitaire* solitaire_noname1(mem_context *context);
+solitaire* solitaire_noname1(mem_context *context, visual_settings *settings);
 
 #endif /* __SOLITAIRE_NONAME1_H__ */

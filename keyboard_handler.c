@@ -28,17 +28,17 @@ void window_key_press(unsigned char key, int x, int y) {
 	case '1':
 		mem_context_free(g_context);
 		g_context = mem_context_create();
-		g_solitaire = solitaire_theidiot(g_context);
+		g_solitaire = solitaire_theidiot(g_context, visual_settings_create(g_context));
 		break;
 	case '2':
 		mem_context_free(g_context);
 		g_context = mem_context_create();
-		g_solitaire = solitaire_maltesercross(g_context);
+		g_solitaire = solitaire_maltesercross(g_context, visual_settings_create(g_context));
 		break;
 	case '3':
 		mem_context_free(g_context);
 		g_context = mem_context_create();
-		g_solitaire = solitaire_noname1(g_context);
+		g_solitaire = solitaire_noname1(g_context, visual_settings_create(g_context));
 		break;
 	case '-':
 		g_camera_zoom -= 10.0f;

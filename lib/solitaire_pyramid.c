@@ -38,7 +38,7 @@ static void my_deal(solitaire* sol, visual_pile* pile) {
 	visual_sync(sol->visual);
 }
 
-solitaire* solitaire_pyramid(mem_context *context) {
+solitaire* solitaire_pyramid(mem_context *context, visual_settings *settings) {
 	card *ace;
 	visual_pile *deck, *pile1, *pile2, *pile3, *pile4, *done;
 
@@ -51,7 +51,7 @@ solitaire* solitaire_pyramid(mem_context *context) {
 	internal* i = mem_alloc(context, sizeof(internal));
 	s->data = i;
 
-	s->visual = visual_create(context);
+	s->visual = visual_create(context, settings);
 
 	i->deck = pile_create(context, 52);
 	i->pile1 = pile_create(context, 13);
