@@ -14,6 +14,7 @@ extern solitaire *g_solitaire;
 extern mem_context *g_context;
 
 void setup_render_resources();
+void check_gl_errors(char *last_section);
 
 void update_camera_pos();
 

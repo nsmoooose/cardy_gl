@@ -173,8 +173,9 @@ void setup_render_resources() {
 	card_value value;
 	char name_buffer[20];
 
+/*
 	glEnable(GL_NORMALIZE);
-
+*/
 	glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	glGenTextures(53, g_card_textures);
 
@@ -194,6 +195,7 @@ void setup_render_resources() {
 		}
 	}
 	setup_card_texture(h, get_card_back_texture(), "#back");
+	check_gl_errors("setup_render_resources");
 }
 
 void update_camera_pos() {
@@ -235,6 +237,8 @@ void render_pile(visual_pile* pile, visual_settings *settings) {
 	glVertex2f(0 - settings->card_width/2.0f, 0 - settings->card_height/2.0f);
 	glEnd();
 
+	check_gl_errors("render_pile (1)");
+
 	glPushMatrix();
 	for(card_index=0;card_index<pile->card_count;++card_index) {
 		render_card(pile, pile->cards[card_index]);
@@ -242,6 +246,7 @@ void render_pile(visual_pile* pile, visual_settings *settings) {
 	glPopMatrix();
 
 	glPopMatrix();
+	check_gl_errors("render_pile (2)");
 }
 
 void render_card(visual_pile* pile, card_proxy* proxy) {
@@ -312,6 +317,7 @@ void render_card(visual_pile* pile, card_proxy* proxy) {
 
 	/* Do a translation of our position for the next card. */
 	glTranslatef(pile->translateX, pile->translateY, CARD_THICKNESS);
+	check_gl_errors("render_card");
 }
 
 void render_desktop() {
@@ -321,8 +327,7 @@ void render_desktop() {
 }
 
 void render_scene() {
-	GLenum errCode;
-	const GLubyte *errString;
+	glMatrixMode(GL_MODELVIEW);
 
 	glInitNames();
 	glPushName(0);
@@ -330,11 +335,18 @@ void render_scene() {
 	render_desktop();
 	render_solitaire(g_solitaire);
 
+	check_gl_errors("render_scene");
+
+	glutSwapBuffers();
+}
+
+void check_gl_errors(char *last_section) {
+	GLenum errCode;
+	const GLubyte *errString;
+
 	/* Print errors if there are any. */
 	if ((errCode = glGetError()) != GL_NO_ERROR) {
 		errString = gluErrorString(errCode);
-		fprintf(stderr, "OpenGL Error: %s\n", errString);
+		fprintf(stderr, "OpenGL Error in section: %s, %s\n", last_section, errString);
 	}
-
-	glutSwapBuffers();
 }

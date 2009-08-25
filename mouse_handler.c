@@ -73,6 +73,8 @@ void window_mouse(int button, int state, int x, int y) {
 	aspect = (float)viewport[2] / (float)viewport[3];
 	gluPerspective(g_perspective_fov, aspect, g_perspective_near, g_perspective_far);
 
+	check_gl_errors("window_mouse (selection setup)");
+
 	render_scene();
 
 	hits = glRenderMode(GL_RENDER);
