@@ -210,11 +210,11 @@ void render_solitaire(solitaire* sol) {
 		if(!pile) {
 			continue;
 		}
-		render_pile(pile);
+		render_pile(pile, sol->visual->settings);
 	}
 }
 
-void render_pile(visual_pile* pile) {
+void render_pile(visual_pile* pile, visual_settings *settings) {
 	int card_index;
 
 	/* Do a translation of our position for the pile. */
@@ -229,10 +229,10 @@ void render_pile(visual_pile* pile) {
 
 	glColor3f(0.0f, 0.7f, 0.0f);
 	glBegin(GL_QUADS);
-	glVertex2f(0 - CARD_WIDTH/2.0f, 0 + CARD_HEIGHT/2.0f);
-	glVertex2f(0 + CARD_WIDTH/2.0f, 0 + CARD_HEIGHT/2.0f);
-	glVertex2f(0 + CARD_WIDTH/2.0f, 0 - CARD_HEIGHT/2.0f);
-	glVertex2f(0 - CARD_WIDTH/2.0f, 0 - CARD_HEIGHT/2.0f);
+	glVertex2f(0 - settings->card_width/2.0f, 0 + settings->card_height/2.0f);
+	glVertex2f(0 + settings->card_width/2.0f, 0 + settings->card_height/2.0f);
+	glVertex2f(0 + settings->card_width/2.0f, 0 - settings->card_height/2.0f);
+	glVertex2f(0 - settings->card_width/2.0f, 0 - settings->card_height/2.0f);
 	glEnd();
 
 	glPushMatrix();

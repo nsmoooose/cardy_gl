@@ -61,38 +61,38 @@ solitaire* solitaire_pyramid(mem_context *context, visual_settings *settings) {
 	i->done = pile_create(context, 48);
 
 	deck = visual_pile_create(context, i->deck);
-	deck->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2 + CARD_WIDTH / 2);
+	deck->origin[0] = 0 - (settings->card_width / 2 + settings->card_spacing / 2 + settings->card_width * 2 + settings->card_spacing * 2 + settings->card_width / 2);
 	deck->origin[1] = 40.0f;
 	deck->rotation = 45.0f;
 	deck->pile_action = my_deal;
 	visual_add_pile(context, s->visual, deck);
 
 	pile1 = visual_pile_create(context, i->pile1);
-	pile1->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING);
+	pile1->origin[0] = 0 - (settings->card_width / 2 + settings->card_spacing / 2 + settings->card_width + settings->card_spacing);
 	pile1->origin[1] = 70.0f;
-	pile1->translateY = 0 - CARD_HEIGHT / 5;
+	pile1->translateY = 0 - settings->card_height / 5;
 	visual_add_pile(context, s->visual, pile1);
 
 	pile2 = visual_pile_create(context, i->pile2);
-	pile2->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING / 2);
+	pile2->origin[0] = 0 - (settings->card_width / 2 + settings->card_spacing / 2);
 	pile2->origin[1] = 70.0f;
-	pile2->translateY = 0 - CARD_HEIGHT / 5;
+	pile2->translateY = 0 - settings->card_height / 5;
 	visual_add_pile(context, s->visual, pile2);
 
 	pile3 = visual_pile_create(context, i->pile3);
-	pile3->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2;
+	pile3->origin[0] = settings->card_width / 2 + settings->card_spacing / 2;
 	pile3->origin[1] = 70.0f;
-	pile3->translateY = 0 - CARD_HEIGHT / 5;
+	pile3->translateY = 0 - settings->card_height / 5;
 	visual_add_pile(context, s->visual, pile3);
 
 	pile4 = visual_pile_create(context, i->pile4);
-	pile4->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH + CARD_SPACING;
+	pile4->origin[0] = settings->card_width / 2 + settings->card_spacing / 2 + settings->card_width + settings->card_spacing;
 	pile4->origin[1] = 70.0f;
-	pile4->translateY = 0 - CARD_HEIGHT / 5;
+	pile4->translateY = 0 - settings->card_height / 5;
 	visual_add_pile(context, s->visual, pile4);
 
 	done = visual_pile_create(context, i->done);
-	done->origin[0] = CARD_WIDTH / 2 + CARD_SPACING / 2 + CARD_WIDTH * 2 + CARD_SPACING * 2 + CARD_WIDTH / 2;
+	done->origin[0] = settings->card_width / 2 + settings->card_spacing / 2 + settings->card_width * 2 + settings->card_spacing * 2 + settings->card_width / 2;
 	done->origin[1] = 40.0f;
 	done->rotation = -45.0f;
 	visual_add_pile(context, s->visual, done);

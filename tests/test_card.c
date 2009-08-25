@@ -1,4 +1,5 @@
 #include <check.h>
+#include <stdlib.h>
 #include "../lib/card.h"
 
 START_TEST(test_create_deck) {

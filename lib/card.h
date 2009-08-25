@@ -88,10 +88,10 @@ typedef struct visual_pile_St {
  *  and cards.
  */
 typedef struct {
-	unsigned int card_width;
-	unsigned int card_height;
-	unsigned int card_spacing;
-	unsigned int card_thickness;
+	float card_width;
+	float card_height;
+	float card_spacing;
+	float card_thickness;
 } visual_settings;
 
 /** Represents the visual presentation of a game. Together

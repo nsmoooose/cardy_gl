@@ -19,7 +19,7 @@ void update_camera_pos();
 
 visual_settings *visual_settings_create(mem_context *context);
 
-void render_pile(visual_pile* pile);
+void render_pile(visual_pile* pile, visual_settings *settings);
 void render_card(visual_pile* pile, card_proxy* proxy);
 void render_solitaire(solitaire* sol);
 void render_desktop();

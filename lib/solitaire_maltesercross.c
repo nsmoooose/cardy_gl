@@ -86,16 +86,16 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 
 	i->deck = pile_create(context, 104);
 	deck = visual_pile_create(context, i->deck);
-	deck->origin[0] = 0 - (CARD_WIDTH + CARD_SPACING * 2 + CARD_HEIGHT * 2);
-	deck->origin[1] = CARD_WIDTH;
+	deck->origin[0] = 0 - (settings->card_width + settings->card_spacing * 2 + settings->card_height * 2);
+	deck->origin[1] = settings->card_width;
 	deck->rotation = -30.0f;
 	deck->pile_action = my_deal;
 	visual_add_pile(context, s->visual, deck);
 
 	i->done = pile_create(context, 104);
 	done = visual_pile_create(context, i->done);
-	done->origin[0] = CARD_WIDTH + CARD_SPACING * 2 + CARD_HEIGHT * 2;
-	done->origin[1] = 0 - CARD_WIDTH;
+	done->origin[0] = settings->card_width + settings->card_spacing * 2 + settings->card_height * 2;
+	done->origin[1] = 0 - settings->card_width;
 	done->rotation = -30.0f;
 	visual_add_pile(context, s->visual, done);
 
@@ -105,73 +105,73 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 
 	i->king1 = pile_create(context, 13);
 	king1 = visual_pile_create(context, i->king1);
-	king1->origin[0] = CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2;
-	king1->origin[1] = CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2;
+	king1->origin[0] = settings->card_width / 2 + settings->card_spacing * 2 + settings->card_height / 2;
+	king1->origin[1] = settings->card_width / 2 + settings->card_spacing * 2 + settings->card_height / 2;
 	king1->rotation = -45.0f;
 	visual_add_pile(context, s->visual, king1);
 
 	i->king2 = pile_create(context, 13);
 	king2 = visual_pile_create(context, i->king2);
-	king2->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2);
-	king2->origin[1] = CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2;
+	king2->origin[0] = 0 - (settings->card_width / 2 + settings->card_spacing * 2 + settings->card_height / 2);
+	king2->origin[1] = settings->card_width / 2 + settings->card_spacing * 2 + settings->card_height / 2;
 	king2->rotation = 45.0f;
 	visual_add_pile(context, s->visual, king2);
 
 	i->king3 = pile_create(context, 13);
 	king3 = visual_pile_create(context, i->king3);
-	king3->origin[0] = CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2;
-	king3->origin[1] = 0 - (CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2);
+	king3->origin[0] = settings->card_width / 2 + settings->card_spacing * 2 + settings->card_height / 2;
+	king3->origin[1] = 0 - (settings->card_width / 2 + settings->card_spacing * 2 + settings->card_height / 2);
 	king3->rotation = 45.0f;
 	visual_add_pile(context, s->visual, king3);
 
 	i->king4 = pile_create(context, 13);
 	king4 = visual_pile_create(context, i->king4);
-	king4->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2);
-	king4->origin[1] = 0 - (CARD_WIDTH / 2 + CARD_SPACING * 2 + CARD_HEIGHT / 2);
+	king4->origin[0] = 0 - (settings->card_width / 2 + settings->card_spacing * 2 + settings->card_height / 2);
+	king4->origin[1] = 0 - (settings->card_width / 2 + settings->card_spacing * 2 + settings->card_height / 2);
 	king4->rotation = -45.0f;
 	visual_add_pile(context, s->visual, king4);
 
 	i->src1 = pile_create(context, 13);
 	src1 = visual_pile_create(context, i->src1);
-	src1->origin[1] = CARD_HEIGHT + CARD_SPACING;
+	src1->origin[1] = settings->card_height + settings->card_spacing;
 	visual_add_pile(context, s->visual, src1);
 
 	i->src2 = pile_create(context, 13);
 	src2 = visual_pile_create(context, i->src2);
-	src2->origin[1] = 0 - (CARD_HEIGHT + CARD_SPACING);
+	src2->origin[1] = 0 - (settings->card_height + settings->card_spacing);
 	visual_add_pile(context, s->visual, src2);
 
 	i->src3 = pile_create(context, 13);
 	src3 = visual_pile_create(context, i->src3);
-	src3->origin[0] = 0 - (CARD_WIDTH / 2 + CARD_SPACING + CARD_HEIGHT / 2);
+	src3->origin[0] = 0 - (settings->card_width / 2 + settings->card_spacing + settings->card_height / 2);
 	src3->rotation = 90.0f;
 	visual_add_pile(context, s->visual, src3);
 
 	i->src4 = pile_create(context, 13);
 	src4 = visual_pile_create(context, i->src4);
-	src4->origin[0] = CARD_WIDTH / 2 + CARD_SPACING + CARD_HEIGHT / 2;
+	src4->origin[0] = settings->card_width / 2 + settings->card_spacing + settings->card_height / 2;
 	src4->rotation = 90.0f;
 	visual_add_pile(context, s->visual, src4);
 
 	i->build1 = pile_create(context, 13);
 	build1 = visual_pile_create(context, i->build1);
-	build1->origin[0] = 0 - (CARD_WIDTH + CARD_SPACING * 2 + CARD_HEIGHT);
+	build1->origin[0] = 0 - (settings->card_width + settings->card_spacing * 2 + settings->card_height);
 	visual_add_pile(context, s->visual, build1);
 
 	i->build2 = pile_create(context, 13);
 	build2 = visual_pile_create(context, i->build2);
-	build2->origin[0] = CARD_WIDTH + CARD_SPACING * 2 + CARD_HEIGHT;
+	build2->origin[0] = settings->card_width + settings->card_spacing * 2 + settings->card_height;
 	visual_add_pile(context, s->visual, build2);
 
 	i->build3 = pile_create(context, 13);
 	build3 = visual_pile_create(context, i->build3);
-	build3->origin[1] = CARD_HEIGHT / 2 + CARD_SPACING * 2 + CARD_HEIGHT + CARD_WIDTH / 2;
+	build3->origin[1] = settings->card_height / 2 + settings->card_spacing * 2 + settings->card_height + settings->card_width / 2;
 	build3->rotation = 90.0f;
 	visual_add_pile(context, s->visual, build3);
 
 	i->build4 = pile_create(context, 13);
 	build4 = visual_pile_create(context, i->build4);
-	build4->origin[1] = 0 - (CARD_HEIGHT / 2 + CARD_SPACING * 2 + CARD_HEIGHT + CARD_WIDTH / 2);
+	build4->origin[1] = 0 - (settings->card_height / 2 + settings->card_spacing * 2 + settings->card_height + settings->card_width / 2);
 	build4->rotation = 90.0f;
 	visual_add_pile(context, s->visual, build4);
 
