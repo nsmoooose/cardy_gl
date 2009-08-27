@@ -2,6 +2,7 @@
 #define __RENDERING_H__
 
 #include "lib/card.h"
+#include "lib/theme.h"
 
 extern float g_camera_zoom;
 extern float g_camera_translateX;
@@ -12,9 +13,9 @@ extern float g_perspective_fov;
 extern card_proxy *g_selected_card;
 extern solitaire *g_solitaire;
 extern mem_context *g_context;
+extern theme *g_theme;
 
 void setup_render_resources();
-void check_gl_errors(char *last_section);
 
 void update_camera_pos();
 

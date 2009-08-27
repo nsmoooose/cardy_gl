@@ -49,6 +49,19 @@ void window_key_press(unsigned char key, int x, int y) {
 		g_camera_zoom += 10.0f;
 		update_camera_pos();
 		break;
+
+	case 'a':
+		theme_unload(g_theme);
+		g_theme = theme_load("themes", "anglo");
+		break;
+	case 'g':
+		theme_unload(g_theme);
+		g_theme = theme_load("themes", "gnome");
+		break;
+	case 'k':
+		theme_unload(g_theme);
+		g_theme = theme_load("themes", "kde");
+		break;
 	};
 	glutPostRedisplay();
 }
