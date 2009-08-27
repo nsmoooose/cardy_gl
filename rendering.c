@@ -180,7 +180,7 @@ void setup_render_resources() {
 	glGenTextures(53, g_card_textures);
 
 	rsvg_init();
-	h = rsvg_handle_new_from_file("images/gnomangelo_bitmap.svg", &e);
+	h = rsvg_handle_new_from_file("themes/gnome/cards.svg", &e);
 	if(e != NULL) {
 		exit(1);
 	}
