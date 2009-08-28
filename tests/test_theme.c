@@ -7,12 +7,13 @@ START_TEST(test_theme_list) {
 	themes *t = theme_list(context, "themes");
 
 	ck_assert_msg(t != 0, "No themes struct returned.");
-	ck_assert_msg(t->theme_count == 3, "Incorrect number of themes listed.");
+	ck_assert_msg(t->theme_count == 4, "Incorrect number of themes listed.");
 
-	for(i=0;i<3;++i) {
+	for(i=0;i<4;++i) {
 		ck_assert_msg(
 			strcmp(t->theme_names[i], "anglo") == 0 ||
 			strcmp(t->theme_names[i], "gnome") == 0 ||
+			strcmp(t->theme_names[i], "life_and_smoth") == 0 ||
 			strcmp(t->theme_names[i], "kde") == 0, "Not a matching theme name.");
 	}
 }
