@@ -45,6 +45,12 @@ int card_count(pile *pile) {
 	return count;
 }
 
+card *card_take(pile *pile, int index) {
+	card *c = pile->cards[index];
+	pile->cards[index] = 0;
+	return c;
+}
+
 card* card_take_last(pile *pile) {
 	card* last = 0;
 	int index = 0, last_index = -1;

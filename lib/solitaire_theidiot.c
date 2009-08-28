@@ -19,6 +19,9 @@ static bool my_append_to_pile(solitaire *sol, visual_pile *dest, card_proxy *car
 
 	action = get_move_action(sol->visual, card, dest);
 	result = ruleset_check(i->ruleset, action);
+	if(result) {
+		apply_move_action(sol->visual, action);
+	}
 	free(action);
 
 	visual_sync(sol->visual);

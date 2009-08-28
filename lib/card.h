@@ -155,6 +155,8 @@ void print_solitaire_info(solitaire* sol);
  */
 int card_count(pile *pile);
 
+card *card_take(pile *pile, int index);
+
 /** Takes the last card from the array and returns it. The index that
  *  The card was found on will be cleared. This makes the card ready to
  *  be inserted into any other array.

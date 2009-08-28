@@ -281,6 +281,32 @@ START_TEST(test_get_move_action) {
 }
 END_TEST
 
+START_TEST(test_apply_move_action) {
+	pile *deck, *done;
+	visual *vis;
+	move_action *action;
+	mem_context *context = mem_context_create();
+
+	deck = pile_create(context, 52);
+	done = pile_create(context, 52);
+	create_deck(context, deck);
+
+	vis = visual_create(context, 0);
+	visual_add_pile(context, vis, visual_pile_create(context, deck));
+	visual_add_pile(context, vis, visual_pile_create(context, done));
+	visual_sync(vis);
+
+	action = get_move_action(vis, vis->piles[0]->cards[51], vis->piles[1]);
+	apply_move_action(vis, action);
+	visual_sync(vis);
+
+	ck_assert_msg(vis->piles[0]->card_count == 51, "Card count should be one less.");
+	ck_assert_msg(vis->piles[1]->card_count == 1, "Card count should be one more.");
+	ck_assert_msg(vis->piles[0]->cards[51] == 0, "Card should have been moved.");
+	ck_assert_msg(vis->piles[1]->cards[0] != 0, "Card should have been moved here.");
+}
+END_TEST
+
 void add_rule_tests(Suite *suite) {
 	TCase *rule_case = tcase_create("Rules");
 	tcase_add_test(rule_case, test_condition_source);
@@ -296,5 +322,6 @@ void add_rule_tests(Suite *suite) {
 	tcase_add_test(rule_case, test_ruleset_add_rule);
 	tcase_add_test(rule_case, test_ruleset_check);
 	tcase_add_test(rule_case, test_get_move_action);
+	tcase_add_test(rule_case, test_apply_move_action);
 	suite_add_tcase(suite, rule_case);
 }

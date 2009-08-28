@@ -50,4 +50,6 @@ void ruleset_add_rule(mem_context *context, ruleset *ruleset, rule *rule);
 bool ruleset_check(ruleset *ruleset, move_action *action);
 
 move_action *get_move_action(visual *vis, card_proxy *card, visual_pile *destination_pile);
+void apply_move_action(visual *vis, move_action *action);
+
 #endif /* __RULE_H__ */
