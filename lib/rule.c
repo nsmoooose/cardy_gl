@@ -219,7 +219,7 @@ move_action *get_move_action(visual *vis, card_proxy *card, visual_pile *destina
 }
 
 void apply_move_action(visual *vis, move_action *action) {
-	action->destination->cards[action->destination_index] = card_take(action->source, action->source_index);
+	action->destination->cards[card_first_free(action->destination)] = card_take(action->source, action->source_index);
 
 	/* TODO There is a lot more to handle here. Like:
 	 * source_count,
