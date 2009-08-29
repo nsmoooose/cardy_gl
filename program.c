@@ -28,6 +28,8 @@ static void window_size_change(int width, int height) {
 }
 
 int main(int argc, char* argv[]) {
+	srand(time(NULL));
+
 	g_context = mem_context_create();
 	g_solitaire = solitaire_theidiot(g_context, visual_settings_create(g_context));
 

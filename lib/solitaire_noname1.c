@@ -189,6 +189,8 @@ solitaire* solitaire_noname1(mem_context *context, visual_settings *settings) {
 
 	create_deck(context, i->deck);
 
+	card_shuffle(i->deck);
+
 	visual_sync(s->visual);
 
 	i->ruleset = create_ruleset(context);

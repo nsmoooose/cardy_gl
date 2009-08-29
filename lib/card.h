@@ -195,6 +195,8 @@ void card_hide(card *card);
 void card_hide_count(pile *pile, int start_index, int count);
 void card_hide_all(pile *pile);
 
+void card_shuffle(pile *pile);
+
 visual* visual_create(mem_context *context, visual_settings *settings);
 void visual_add_pile(mem_context *context, visual *vis, visual_pile *p);
 void visual_sync(visual *vis);

@@ -175,6 +175,22 @@ void card_hide_all(pile *pile) {
 	}
 }
 
+void card_shuffle(pile *pile) {
+	card *tmp;
+	int i1, i2, i = 0, count = card_count(pile);
+	if(count == 0) {
+		return;
+	}
+
+	for(i=0;i<count*4;++i) {
+		i1 = rand() % count;
+		i2 = rand() % count;
+		tmp = pile->cards[i1];
+		pile->cards[i1] = pile->cards[i2];
+		pile->cards[i2] = tmp;
+	}
+}
+
 pile* pile_create(mem_context *context, int size) {
 	pile* p = mem_alloc(context, sizeof(pile));
 	p->cards = mem_alloc(context, size * sizeof(pile*));

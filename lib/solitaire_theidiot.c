@@ -111,6 +111,7 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 	visual_add_pile(context, s->visual, done);
 
 	create_deck(context, i->deck);
+	card_shuffle(i->deck);
 
 	visual_sync(s->visual);
 

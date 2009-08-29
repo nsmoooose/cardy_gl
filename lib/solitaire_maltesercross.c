@@ -208,6 +208,8 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 	create_deck(context, i->deck);
 	create_deck(context, i->deck);
 
+	card_shuffle(i->deck);
+
 	visual_sync(s->visual);
 
 	/* Add our implementation for the common functionality
