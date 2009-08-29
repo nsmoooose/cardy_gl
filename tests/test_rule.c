@@ -175,7 +175,7 @@ START_TEST(test_condition_destination_empty) {
 
 	p1 = pile_create(context, 52);
 	p2 = pile_create(context, 52);
-	create_deck(context, p1);
+	create_deck(context, p1, 1);
 
 	cond = condition_destination_empty(context);
 
@@ -194,7 +194,7 @@ START_TEST(test_condition_top_card) {
 	mem_context *context = mem_context_create();
 
 	deck = pile_create(context, 52);
-	create_deck(context, deck);
+	create_deck(context, deck, 1);
 	action.source = deck;
 	cond = condition_top_card(context);
 
@@ -311,7 +311,7 @@ START_TEST(test_get_move_action) {
 
 	deck = pile_create(context, 52);
 	done = pile_create(context, 52);
-	create_deck(context, deck);
+	create_deck(context, deck, 1);
 
 	vis = visual_create(context, 0);
 	visual_add_pile(context, vis, visual_pile_create(context, deck));
@@ -337,7 +337,7 @@ START_TEST(test_apply_move_action) {
 
 	deck = pile_create(context, 52);
 	done = pile_create(context, 52);
-	create_deck(context, deck);
+	create_deck(context, deck, 1);
 
 	vis = visual_create(context, 0);
 	visual_add_pile(context, vis, visual_pile_create(context, deck));

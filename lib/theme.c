@@ -67,7 +67,12 @@ void theme_unload(theme *theme) {
 }
 
 GLuint theme_get_card_texture(theme *theme, card_suit suit, card_value value) {
-	return theme->card_textures[suit * 13 + value];
+	if(value == 14) {
+		return theme->card_textures[suit * 13 + 1];
+	}
+	else {
+		return theme->card_textures[suit * 13 + value];
+	}
 }
 
 GLuint theme_get_card_back_texture(theme *theme) {

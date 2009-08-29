@@ -21,7 +21,7 @@ void card_free(mem_context *context, card* card) {
 	}
 }
 
-void create_deck(mem_context *context, pile *pile) {
+void create_deck(mem_context *context, pile *pile, card_value ace) {
 	int index = 0;
 	card* card;
 	card_suit suit;
@@ -30,6 +30,9 @@ void create_deck(mem_context *context, pile *pile) {
 	for(suit=e_suit_first;suit<=e_suit_last;++suit) {
 		for(value=1;value<14;++value, ++index) {
 			card = card_create(context, suit, value);
+			if(value == 1) {
+				card->value = ace;
+			}
 			card_append(card, pile);
 		}
 	}

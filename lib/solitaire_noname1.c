@@ -187,7 +187,7 @@ solitaire* solitaire_noname1(mem_context *context, visual_settings *settings) {
 	pile8->translateY = 0 - settings->card_height / 5;
 	visual_add_pile(context, s->visual, pile8);
 
-	create_deck(context, i->deck);
+	create_deck(context, i->deck, 1);
 
 	card_shuffle(i->deck);
 

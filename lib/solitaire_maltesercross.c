@@ -205,8 +205,8 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 	pile5->origin[1] = 0;
 	visual_add_pile(context, s->visual, pile5);
 
-	create_deck(context, i->deck);
-	create_deck(context, i->deck);
+	create_deck(context, i->deck, 1);
+	create_deck(context, i->deck, 1);
 
 	card_shuffle(i->deck);
 

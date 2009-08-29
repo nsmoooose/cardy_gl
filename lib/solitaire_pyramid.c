@@ -97,7 +97,7 @@ solitaire* solitaire_pyramid(mem_context *context, visual_settings *settings) {
 	done->rotation = -45.0f;
 	visual_add_pile(context, s->visual, done);
 
-	create_deck(context, i->deck);
+	create_deck(context, i->deck, 1);
 
 	ace = card_create(context, e_spades, 1);
 	card_reveal(ace),

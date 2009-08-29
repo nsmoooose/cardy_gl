@@ -9,7 +9,7 @@ START_TEST(test_create_deck) {
 
 	deck = pile_create(context, 52);
 
-	create_deck(context, deck);
+	create_deck(context, deck, 1);
 	for(i=0;i<52;++i) {
 		ck_assert_msg(deck->cards[i] != 0, "Card pointer was NULL at index: %d", i);
 		ck_assert_msg(deck->cards[i]->value >= 1 && deck->cards[i]->value <= 13, "Card value isn't in range at index: %d", i);
@@ -74,7 +74,7 @@ START_TEST(test_card_last) {
 
 	ck_assert_msg(card_last(deck) == 0, "Last card should return 0 when no cards present.");
 
-	create_deck(context, deck);
+	create_deck(context, deck, 1);
 	ck_assert_msg(card_last(deck) == deck->cards[51], "Last card should be the last in the deck.");
 }
 END_TEST
@@ -84,7 +84,7 @@ START_TEST(test_card_reveal_count) {
 	mem_context *context = mem_context_create();
 	pile *deck = pile_create(context, 52);
 
-	create_deck(context, deck);
+	create_deck(context, deck, 1);
 	card_reveal_count(deck, 3, 5);
 
 	for(index=0;index<52;++index) {
@@ -103,7 +103,7 @@ START_TEST(test_card_reveal_all) {
 	mem_context *context = mem_context_create();
 	pile *deck = pile_create(context, 104);
 
-	create_deck(context, deck);
+	create_deck(context, deck, 1);
 	card_reveal_all(deck);
 
 	for(index=0;index<52;++index) {
@@ -128,7 +128,7 @@ START_TEST(test_card_hide_count) {
 	mem_context *context = mem_context_create();
 	pile *deck = pile_create(context, 104);
 
-	create_deck(context, deck);
+	create_deck(context, deck, 1);
 	card_reveal_all(deck);
 	card_hide_count(deck, 3, 5);
 
@@ -148,7 +148,7 @@ START_TEST(test_card_hide_all) {
 	mem_context *context = mem_context_create();
 	pile *deck = pile_create(context, 104);
 
-	create_deck(context, deck);
+	create_deck(context, deck, 1);
 	card_reveal_all(deck);
 	card_hide_all(deck);
 
