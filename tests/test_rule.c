@@ -206,6 +206,27 @@ START_TEST(test_condition_top_card) {
 }
 END_TEST
 
+START_TEST(test_condition_top_card_equal) {
+	move_action action;
+	pile *deck;
+	condition *cond;
+	mem_context *context = mem_context_create();
+
+	deck = pile_create(context, 52);
+	deck->cards[0] = card_create(context, e_spades, 2);
+	action.source = deck;
+
+	cond = condition_top_card_equal(context, e_suit_none, 3, e_equal_value);
+	ck_assert_msg(cond->check(cond, &action) == false, "Should fail since card isn't the right value.");
+
+	deck->cards[1] = card_create(context, e_spades, 3);
+	ck_assert_msg(cond->check(cond, &action) == true, "Should be movable since top card value is equal.");
+
+	cond = condition_top_card_equal(context, e_clubs, 3, e_equal_value|e_follow_suit);
+	ck_assert_msg(cond->check(cond, &action) == false, "Should fail since card suit isn't the right value.");
+}
+END_TEST
+
 START_TEST(test_condition_top_card_compare) {
 	pile *deck, *dest;
 	condition *cond;
@@ -234,6 +255,17 @@ START_TEST(test_condition_top_card_compare) {
 	dest->cards[0] = card_create(context, e_spades, 4);
 	ck_assert_msg(cond->check(cond, &action) == true, "true when destination contains higher value.");
 
+	/* e_dest_1higher */
+	cond = condition_top_card_compare(context, dest, e_dest_1higher_value|e_follow_suit);
+	dest->cards[0] = card_create(context, e_spades, 2);
+	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains lower value.");
+
+	dest->cards[0] = card_create(context, e_spades, 4);
+	ck_assert_msg(cond->check(cond, &action) == true, "true when destination contains higher value.");
+
+	dest->cards[0] = card_create(context, e_spades, 5);
+	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains higher value more than one step.");
+
 	/* e_dest_lower */
 	cond = condition_top_card_compare(context, dest, e_dest_lower_value|e_follow_suit);
 	dest->cards[0] = card_create(context, e_spades, 2);
@@ -241,6 +273,17 @@ START_TEST(test_condition_top_card_compare) {
 
 	dest->cards[0] = card_create(context, e_spades, 4);
 	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains higher value.");
+
+	/* e_dest_1lower */
+	cond = condition_top_card_compare(context, dest, e_dest_1lower_value|e_follow_suit);
+	dest->cards[0] = card_create(context, e_spades, 2);
+	ck_assert_msg(cond->check(cond, &action) == true, "true when destination contains lower value.");
+
+	dest->cards[0] = card_create(context, e_spades, 4);
+	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains higher value.");
+
+	dest->cards[0] = card_create(context, e_spades, 1);
+	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains lower value more than 1 step.");
 
 	/* e_equal_value */
 	cond = condition_top_card_compare(context, dest, e_equal_value|e_follow_suit);
@@ -252,6 +295,11 @@ START_TEST(test_condition_top_card_compare) {
 
 	dest->cards[0] = card_create(context, e_spades, 3);
 	ck_assert_msg(cond->check(cond, &action) == true, "true when destination contains equal value.");
+
+	/* Use destination from move_action */
+	cond = condition_top_card_compare(context, 0, e_equal_value|e_follow_suit);
+	dest->cards[0] = card_create(context, e_spades, 2);
+	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains lower value.");
 }
 END_TEST
 
@@ -314,6 +362,7 @@ void add_rule_tests(Suite *suite) {
 	tcase_add_test(rule_case, test_condition_destination);
 	tcase_add_test(rule_case, test_condition_destination_empty);
 	tcase_add_test(rule_case, test_condition_top_card);
+	tcase_add_test(rule_case, test_condition_top_card_equal);
 	tcase_add_test(rule_case, test_condition_top_card_compare);
 	tcase_add_test(rule_case, test_create_rule);
 	tcase_add_test(rule_case, test_rule_add_condition);

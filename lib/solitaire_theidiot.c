@@ -155,6 +155,19 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 	rule_add_condition(context, rule2, pile1_4_cond);
 	rule_add_condition(context, rule2, condition_top_card(context));
 	rule_add_condition(context, rule2, condition_destination_empty(context));
+	rule_add_condition(
+		context,
+		rule2,
+		condition_or(
+			context,
+			condition_or(
+				context,
+				condition_or(
+					context,
+					condition_destination(context, i->pile1),
+					condition_destination(context, i->pile2)),
+				condition_destination(context, i->pile3)),
+			condition_destination(context, i->pile4)));
 	ruleset_add_rule(context, i->ruleset, rule2);
 
 	/* Add our implementation for the common functionality
@@ -163,51 +176,3 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 	s->append_to_pile = my_append_to_pile;
 	return s;
 }
-
-#if 0
-void ruleset_stub() {
-	pile *pile1, *pile2, *pile3, *pile4, *done;
-	rulebook *rulebook;
-	rule *rule1, *rule2;
-	condition *pile1_4_cond;
-
-	ruleset = create_ruleset();
-
-	/* Shared condition between several rules. */
-	pile1_4_cond =
-		condition_or(
-			condition_or(
-				condition_or(
-					condition_source(pile1),
-					condition_source(pile2)),
-				condition_source(pile3)),
-			condition_source(pile4))
-
-	/* Move card to done pile if source is pile1-pile4 and there is
-	   a higher card in same suit in those piles. */
-	rule1 = create_rule();
-	rule_add_condition(rule1, pile1_4_cond);
-	rule_add_condition(rule1, condition_top_card());
-	rule_add_condition(rule1, condition_destination(done));
-	rule_add_condition(
-		rule1,
-		condition_or(
-			condition_or(
-				condition_or(
-					condition_top_card_compare(pile1, e_higher, e_follow_suit),
-					condition_top_card_compare(pile2, e_higher, e_follow_suit)),
-				condition_top_card_compare(pile3, e_higher, e_follow_suit)),
-			condition_top_card_compare(pile4, e_higher, e_follow_suit))
-		);
-	ruleset_add_rule(ruleset, rule1);
-
-	/* Allow move of cards if pile is empty. */
-	rule2 = create_rule();
-	rule_add_condition(rule2, pile1_4_cond);
-	rule_add_condition(rule2, condition_top_card());
-	rule_add_condition(rule2, condition_destination_empty());
-	ruleset_add_rule(ruleset, rule2);
-
-	ruleset_check(ruleset, action);
-}
-#endif

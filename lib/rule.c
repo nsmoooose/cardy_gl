@@ -97,6 +97,46 @@ condition *condition_top_card(mem_context *context) {
 }
 
 /* ------------------------------------------------------------------------- */
+typedef struct {
+	card_suit suit;
+	card_value value;
+	e_compare_operation operation;
+} condition_top_card_equal_data;
+
+bool condition_top_card_equal_check(condition *cond, move_action *action) {
+	condition_top_card_equal_data *data = cond->data;
+	card *card = card_last(action->source);
+	if(card == 0) {
+		return false;
+	}
+
+	if(data->operation & e_equal_value) {
+		if(card->value != data->value) {
+			return false;
+		}
+	}
+	if(data->operation & e_follow_suit) {
+		if(card->suit != data->suit) {
+			return false;
+		}
+	}
+	return true;
+}
+
+condition *condition_top_card_equal(
+	mem_context *context, card_suit suit,
+	card_value value, e_compare_operation operation) {
+	condition *c = mem_alloc(context, sizeof(condition));
+	condition_top_card_equal_data *data = mem_alloc(context, sizeof(condition_top_card_equal_data));
+	data->suit = suit;
+	data->value = value;
+	data->operation = operation;
+	c->data = data;
+	c->check = condition_top_card_equal_check;
+	return c;
+}
+
+/* ------------------------------------------------------------------------- */
 
 typedef struct {
 	pile *dest;
@@ -106,19 +146,26 @@ typedef struct {
 bool condition_top_card_compare_check(condition *cond, move_action *action) {
 	condition_top_card_compare_data *data = cond->data;
 	card *src_card, *dst_card;
+	pile *dest = data->dest == 0 ? action->destination : data->dest;
 
-	if(card_count(data->dest) == 0) {
+	if(card_count(dest) == 0) {
 		return false;
 	}
 	src_card = action->source->cards[action->source_index];
-	dst_card = card_last(data->dest);
+	dst_card = card_last(dest);
 	if(data->operation & e_follow_suit && dst_card->suit != src_card->suit) {
 		return false;
 	}
 	if(data->operation & e_dest_lower_value && dst_card->value >= src_card->value) {
 		return false;
 	}
+	if(data->operation & e_dest_1lower_value && dst_card->value != src_card->value - 1) {
+		return false;
+	}
 	if(data->operation & e_dest_higher_value && dst_card->value <= src_card->value) {
+		return false;
+	}
+	if(data->operation & e_dest_1higher_value && dst_card->value != src_card->value + 1) {
 		return false;
 	}
 	if(data->operation & e_equal_value && dst_card->value != src_card->value) {

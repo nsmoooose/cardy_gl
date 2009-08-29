@@ -31,13 +31,16 @@ typedef enum {
 	e_equal_value=1,
 	e_dest_lower_value=2,
 	e_dest_higher_value=4,
-	e_follow_suit=8
+	e_dest_1lower_value=8,
+	e_dest_1higher_value=16,
+	e_follow_suit=32
 } e_compare_operation;
 
 condition *condition_or(mem_context *context, condition *c1, condition *c2);
 condition *condition_source(mem_context *context, pile *pile);
 condition *condition_top_card(mem_context *context);
 condition *condition_top_card_compare(mem_context *context, pile *dest, e_compare_operation operation);
+condition *condition_top_card_equal(mem_context *context, card_suit suit, card_value value, e_compare_operation operation);
 condition *condition_destination(mem_context *context, pile *pile);
 condition *condition_destination_empty(mem_context *context);
 

@@ -13,6 +13,7 @@ const int true;
 const int false;
 
 typedef enum {
+	e_suit_none = -1,
 	e_suit_first = 0,
 	e_clubs = e_suit_first,
 	e_diamonds = 1,

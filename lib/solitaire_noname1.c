@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "rule.h"
 #include "solitaire_maltesercross.h"
 
 typedef struct {
@@ -20,6 +21,8 @@ typedef struct {
 	pile* pile6;
 	pile* pile7;
 	pile* pile8;
+
+	ruleset *ruleset;
 } internal;
 
 static void my_deal(solitaire* sol, visual_pile* pile) {
@@ -71,9 +74,27 @@ static void my_deal(solitaire* sol, visual_pile* pile) {
 	visual_sync(sol->visual);
 }
 
+static bool my_append_to_pile(solitaire *sol, visual_pile *dest, card_proxy *card) {
+	bool result;
+	move_action *action;
+	internal* i = sol->data;
+
+	action = get_move_action(sol->visual, card, dest);
+	result = ruleset_check(i->ruleset, action);
+	if(result) {
+		apply_move_action(sol->visual, action);
+	}
+	free(action);
+
+	visual_sync(sol->visual);
+	return result;
+}
+
 solitaire* solitaire_noname1(mem_context *context, visual_settings *settings) {
 	visual_pile *deck, *ace1, *ace2, *ace3, *ace4;
 	visual_pile *pile1, *pile2, *pile3, *pile4, *pile5, *pile6, *pile7, *pile8;
+	condition *ace1_4_cond;
+	rule *rule1, *rule2;
 
 	/* The one solitaire instance we have.*/
 	solitaire* s = mem_alloc(context, sizeof(solitaire));
@@ -169,6 +190,37 @@ solitaire* solitaire_noname1(mem_context *context, visual_settings *settings) {
 	create_deck(context, i->deck);
 
 	visual_sync(s->visual);
+
+	i->ruleset = create_ruleset(context);
+
+	/* Shared condition for the aces. */
+	ace1_4_cond =
+		condition_or(
+			context,
+			condition_or(
+				context,
+				condition_or(
+					context,
+					condition_destination(context, i->ace1),
+					condition_destination(context, i->ace2)),
+				condition_destination(context, i->ace3)),
+			condition_destination(context, i->ace4));
+
+	/* Allow move of ace to an empty pile among the ace piles. */
+	rule1 = create_rule(context);
+	rule_add_condition(context, rule1, ace1_4_cond);
+	rule_add_condition(context, rule1, condition_destination_empty(context));
+	rule_add_condition(context, rule1, condition_top_card(context));
+	rule_add_condition(context, rule1, condition_top_card_equal(context, e_suit_none, 1, e_equal_value));
+	ruleset_add_rule(context, i->ruleset, rule1);
+
+	/* Allow card to be placed on top of the ace
+	   piles following suit and ascending order. */
+	rule2 = create_rule(context);
+	rule_add_condition(context, rule2, ace1_4_cond);
+	rule_add_condition(context, rule2, condition_top_card_compare(context, 0, e_dest_1lower_value|e_follow_suit));
+	ruleset_add_rule(context, i->ruleset, rule2);
+	s->append_to_pile = my_append_to_pile;
 
 	return s;
 }
