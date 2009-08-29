@@ -151,6 +151,12 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 	rule_add_condition(context, rule1, condition_top_card(context));
 	ruleset_add_rule(context, i->ruleset, rule1);
 
+	rule2 = create_rule(context);
+	rule_add_condition(context, rule2, pile1_4_cond);
+	rule_add_condition(context, rule2, condition_top_card(context));
+	rule_add_condition(context, rule2, condition_destination_empty(context));
+	ruleset_add_rule(context, i->ruleset, rule2);
+
 	/* Add our implementation for the common functionality
 	 * shared by all solitaires. */
 	s->new_game = my_new_game;

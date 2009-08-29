@@ -50,17 +50,25 @@ void window_key_press(unsigned char key, int x, int y) {
 		update_camera_pos();
 		break;
 
-	case 'a':
+	case 'z':
 		theme_unload(g_theme);
 		g_theme = theme_load("themes", "anglo");
 		break;
-	case 'g':
+	case 'x':
 		theme_unload(g_theme);
 		g_theme = theme_load("themes", "gnome");
 		break;
-	case 'k':
+	case 'c':
 		theme_unload(g_theme);
 		g_theme = theme_load("themes", "kde");
+		break;
+	case 'v':
+		theme_unload(g_theme);
+		g_theme = theme_load("themes", "life_and_smoth");
+		break;
+	case 'b':
+		theme_unload(g_theme);
+		g_theme = theme_load("themes", "twigs");
 		break;
 	};
 	glutPostRedisplay();
