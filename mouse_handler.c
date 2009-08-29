@@ -43,17 +43,15 @@ static void process_selection(GLint hits, GLuint* selections) {
 				g_selected_card = selected_proxy;
 			}
 			else {
-				if(g_solitaire->append_to_pile(g_solitaire, selected_pile, g_selected_card)) {
-					g_selected_card = 0;
-				}
+				g_solitaire->append_to_pile(g_solitaire, selected_pile, g_selected_card);
+				g_selected_card = 0;
 			}
 		}
 	}
 	else {
 		if(g_selected_card) {
-			if(g_solitaire->append_to_pile(g_solitaire, selected_pile, g_selected_card)) {
-				g_selected_card = 0;
-			}
+			g_solitaire->append_to_pile(g_solitaire, selected_pile, g_selected_card);
+			g_selected_card = 0;
 		}
 	}
 }
