@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "rule.h"
 #include "solitaire_maltesercross.h"
 
 typedef struct {
@@ -36,6 +37,8 @@ typedef struct {
 	pile* pile3;
 	pile* pile4;
 	pile* pile5;
+
+	ruleset *ruleset;
 } internal;
 
 static void my_deal(solitaire* sol, visual_pile* pile) {
@@ -46,6 +49,11 @@ static void my_deal(solitaire* sol, visual_pile* pile) {
 		card_move_count(i->src2, i->deck, 13);
 		card_move_count(i->src3, i->deck, 13);
 		card_move_count(i->src4, i->deck, 13);
+
+		card_reveal(i->src1->cards[12]);
+		card_reveal(i->src2->cards[12]);
+		card_reveal(i->src3->cards[12]);
+		card_reveal(i->src4->cards[12]);
 		i->state++;
 	}
 
@@ -62,17 +70,18 @@ static void my_deal(solitaire* sol, visual_pile* pile) {
 	visual_sync(sol->visual);
 }
 
-/*
-static void my_move(solitaire* sol, card_proxy* card_proxy) {
-	visual_sync(sol->visual);
+static bool my_append_to_pile(solitaire *sol, visual_pile *dest, card_proxy *card) {
+	internal* i = sol->data;
+	return ruleset_move_card(i->ruleset, sol->visual, dest, card);
 }
-*/
 
 solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settings) {
 	visual_pile *deck, *done, *king1, *king2, *king3, *king4;
 	visual_pile *src1, *src2, *src3, *src4;
 	visual_pile *center, *build1, *build2, *build3, *build4;
 	visual_pile *pile1, *pile2, *pile3, *pile4, *pile5;
+	condition *build_pile_cond, *king_pile_cond;
+	rule *rule1, *rule2, *rule3, *rule4, *rule5, *rule6;
 
 	/* The one solitaire instance we have.*/
 	solitaire* s = mem_alloc(context, sizeof(solitaire));
@@ -177,32 +186,32 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 
 	i->pile1 = pile_create(context, 52);
 	pile1 = visual_pile_create(context, i->pile1);
-	pile1->origin[0] = 0;
-	pile1->origin[1] = 0;
+	pile1->origin[0] = 0 - (settings->card_spacing * 2 + settings->card_width * 2);
+	pile1->origin[1] = 0 - (settings->card_height / 2 + settings->card_spacing * 3 + settings->card_height + settings->card_width + settings->card_height / 2);
 	visual_add_pile(context, s->visual, pile1);
 
 	i->pile2 = pile_create(context, 52);
 	pile2 = visual_pile_create(context, i->pile2);
-	pile2->origin[0] = 0;
-	pile2->origin[1] = 0;
+	pile2->origin[0] = 0 - (settings->card_spacing + settings->card_width);
+	pile2->origin[1] = pile1->origin[1];
 	visual_add_pile(context, s->visual, pile2);
 
 	i->pile3 = pile_create(context, 52);
 	pile3 = visual_pile_create(context, i->pile3);
 	pile3->origin[0] = 0;
-	pile3->origin[1] = 0;
+	pile3->origin[1] = pile1->origin[1];
 	visual_add_pile(context, s->visual, pile3);
 
 	i->pile4 = pile_create(context, 52);
 	pile4 = visual_pile_create(context, i->pile4);
-	pile4->origin[0] = 0;
-	pile4->origin[1] = 0;
+	pile4->origin[0] = settings->card_spacing + settings->card_width;
+	pile4->origin[1] = pile1->origin[1];
 	visual_add_pile(context, s->visual, pile4);
 
 	i->pile5 = pile_create(context, 52);
 	pile5 = visual_pile_create(context, i->pile5);
-	pile5->origin[0] = 0;
-	pile5->origin[1] = 0;
+	pile5->origin[0] = settings->card_spacing * 2 + settings->card_width * 2;
+	pile5->origin[1] = pile1->origin[1];
 	visual_add_pile(context, s->visual, pile5);
 
 	create_deck(context, i->deck, 1);
@@ -212,8 +221,93 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 
 	visual_sync(s->visual);
 
+	i->ruleset = create_ruleset(context);
+
+	/* Shared condition of a build pile destination */
+	build_pile_cond = condition_or(
+		context,
+		condition_or(
+			context,
+			condition_or(
+				context,
+				condition_destination(context, i->build1),
+				condition_destination(context, i->build2)),
+			condition_destination(context, i->build3)),
+		condition_destination(context, i->build4));
+
+	king_pile_cond = condition_or(
+		context,
+		condition_or(
+			context,
+			condition_or(
+				context,
+				condition_destination(context, i->king1),
+				condition_destination(context, i->king2)),
+			condition_destination(context, i->king3)),
+		condition_destination(context, i->king4));
+
+	/* Allow moving any card to an empty pile outside of the four source cards. */
+	rule1 = create_rule(context);
+	rule_add_condition(context, rule1, condition_destination_empty(context));
+	rule_add_condition(context, rule1, condition_top_card(context));
+	rule_add_condition(context, rule1, build_pile_cond);
+	rule_add_action(context, rule1, action_reveal_source_top_card(context));
+	ruleset_add_rule(context, i->ruleset, rule1);
+
+	/* Allow building of cards following suit on build piles. */
+	rule2 = create_rule(context);
+	rule_add_condition(context, rule2, build_pile_cond);
+	rule_add_condition(context, rule2, condition_top_card(context));
+	rule_add_condition(
+		context, rule2, condition_top_card_compare(
+			context, 0, e_follow_suit|e_dest_1lower_value));
+	rule_add_action(context, rule2, action_reveal_source_top_card(context));
+	ruleset_add_rule(context, i->ruleset, rule2);
+
+	/* Allow a king to be moved to the king pile. */
+	rule3 = create_rule(context);
+	rule_add_condition(context, rule3, king_pile_cond);
+	rule_add_condition(context, rule3, condition_top_card(context));
+	rule_add_condition(context, rule3, condition_destination_empty(context));
+	rule_add_condition(
+		context, rule3,
+		condition_top_card_equal(context, e_suit_none, 13, e_equal_value));
+	rule_add_action(context, rule3, action_reveal_source_top_card(context));
+	ruleset_add_rule(context, i->ruleset, rule3);
+
+	/* Allow building of cards in descending order on king piles and
+	   following suit. */
+	rule4 = create_rule(context);
+	rule_add_condition(context, rule4, king_pile_cond);
+	rule_add_condition(context, rule4, condition_top_card(context));
+	rule_add_condition(
+		context, rule4, condition_top_card_compare(
+			context, 0, e_follow_suit|e_dest_1higher_value));
+	rule_add_action(context, rule4, action_reveal_source_top_card(context));
+	ruleset_add_rule(context, i->ruleset, rule4);
+
+	/* Allow an ace to be placed in the center pile if empty. */
+	rule5 = create_rule(context);
+	rule_add_condition(context, rule5, condition_destination_empty(context));
+	rule_add_condition(context, rule5, condition_destination(context, i->center));
+	rule_add_condition(context, rule5, condition_top_card(context));
+	rule_add_condition(
+		context, rule5,
+		condition_top_card_equal(context, e_suit_none, 1, e_equal_value));
+	rule_add_action(context, rule5, action_reveal_source_top_card(context));
+	ruleset_add_rule(context, i->ruleset, rule5);
+
+	/* Allow to build on the ace pile up to king in the same suit. */
+	rule6 = create_rule(context);
+	rule_add_condition(context, rule6, condition_destination(context, i->center));
+	rule_add_condition(context, rule6, condition_top_card(context));
+	rule_add_condition(
+		context, rule6, condition_top_card_compare(
+			context, 0, e_follow_suit|e_dest_1lower_value));
+	rule_add_action(context, rule6, action_reveal_source_top_card(context));
+
 	/* Add our implementation for the common functionality
 	 * shared by all solitaires. */
-	/* s->move = my_move; */
+	s->append_to_pile = my_append_to_pile;
 	return s;
 }
