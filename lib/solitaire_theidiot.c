@@ -13,20 +13,8 @@ static void my_new_game(solitaire* sol) {
 }
 
 static bool my_append_to_pile(solitaire *sol, visual_pile *dest, card_proxy *card) {
-	rule *matching_rule;
-	bool result;
-	move_action *action;
 	internal* i = sol->data;
-
-	action = get_move_action(sol->visual, card, dest);
-	result = ruleset_check(i->ruleset, action, &matching_rule);
-	if(result) {
-		apply_move_action(sol->visual, action);
-	}
-	free(action);
-
-	visual_sync(sol->visual);
-	return result;
+	return ruleset_move_card(i->ruleset, sol->visual, dest, card);
 }
 
 static void my_deal(solitaire* sol, visual_pile* pile) {
