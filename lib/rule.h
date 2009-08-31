@@ -12,6 +12,11 @@ typedef struct {
 	int destination_index;
 } move_action;
 
+typedef struct rule_action_St {
+	void *data;
+	void (*execute)(struct rule_action_St* action, move_action *move);
+} rule_action;
+
 typedef struct condition_St {
 	void *data;
 	bool (*check)(struct condition_St* condition, move_action *action);
@@ -19,7 +24,10 @@ typedef struct condition_St {
 
 typedef struct {
 	condition **conditions;
-	int size;
+	int condition_size;
+
+	rule_action **actions;
+	int action_size;
 } rule;
 
 typedef struct {
@@ -44,9 +52,13 @@ condition *condition_top_card_equal(mem_context *context, card_suit suit, card_v
 condition *condition_destination(mem_context *context, pile *pile);
 condition *condition_destination_empty(mem_context *context);
 
+rule_action *action_reveal_source_top_card(mem_context *context);
+
 rule *create_rule(mem_context *context);
 void rule_add_condition(mem_context *context, rule *rule, condition *condition);
+void rule_add_action(mem_context *context, rule *rule, rule_action *action);
 bool rule_check(rule *rule, move_action *action);
+void rule_execute_actions(rule *rule, move_action *move);
 
 ruleset *create_ruleset(mem_context *context);
 void ruleset_add_rule(mem_context *context, ruleset *ruleset, rule *rule);

@@ -26,8 +26,10 @@ START_TEST(test_create_rule) {
 	rule *rule = create_rule(context);
 
 	ck_assert_msg(rule != 0, "Failed to create rule.");
-	ck_assert_msg(rule->size == 0, "The size of the condition array should initially be 0");
+	ck_assert_msg(rule->condition_size == 0, "The size of the condition array should initially be 0");
 	ck_assert_msg(rule->conditions == 0, "Conditions array should be 0.");
+	ck_assert_msg(rule->action_size == 0, "The size of the action array should initially be 0");
+	ck_assert_msg(rule->actions == 0, "Action array should be 0.");
 }
 END_TEST
 
@@ -40,8 +42,25 @@ START_TEST(test_rule_add_condition) {
 	rule = create_rule(context);
 	rule_add_condition(context, rule, cond);
 
-	ck_assert_msg(rule->size == 1, "Size of rules array should be 1");
+	ck_assert_msg(rule->condition_size == 1, "Size of rules array should be 1");
 	ck_assert_msg(rule->conditions[0] == cond, "First item in array should be condition.");
+}
+END_TEST
+
+START_TEST(test_rule_add_action) {
+	rule_action *action1, *action2;
+	rule *rule;
+	mem_context *context = mem_context_create();
+
+	rule = create_rule(context);
+	action1 = action_reveal_source_top_card(context);
+	action2 = action_reveal_source_top_card(context);
+	rule_add_action(context, rule, action1);
+	rule_add_action(context, rule, action2);
+
+	ck_assert_msg(rule->action_size == 2, "Array should now be 2.");
+	ck_assert_msg(rule->actions[0] == action1, "First element should be the first action.");
+	ck_assert_msg(rule->actions[1] == action2, "Second element should be the second action.");
 }
 END_TEST
 
@@ -61,6 +80,24 @@ START_TEST(test_rule_check) {
 	rule_add_condition(context, rule, cond2);
 
 	ck_assert_msg(rule_check(rule, &action) == false, "Should have returned false");
+}
+END_TEST
+
+START_TEST(test_rule_execute_actions) {
+	pile *deck;
+	rule *rule;
+	move_action move;
+	mem_context *context = mem_context_create();
+
+	deck = pile_create(context, 52);
+	create_deck(context, deck, 1);
+	move.source = deck;
+	rule = create_rule(context);
+	rule_add_action(context, rule, action_reveal_source_top_card(context));
+
+	rule_execute_actions(rule, &move);
+
+	ck_assert_msg(deck->cards[51]->proxy->card != 0, "Card should have been revealed if action had been executed.");
 }
 END_TEST
 
@@ -357,6 +394,23 @@ START_TEST(test_apply_move_action) {
 }
 END_TEST
 
+START_TEST(test_action_reveal_source_top_card) {
+	pile *deck;
+	mem_context *context = mem_context_create();
+	rule_action *action;
+	move_action move;
+
+	deck = pile_create(context, 52);
+	create_deck(context, deck, 1);
+	move.source = deck;
+
+	action = action_reveal_source_top_card(context);
+	action->execute(action, &move);
+
+	ck_assert_msg(deck->cards[51]->proxy->card != 0, "Card should have been revealed");
+}
+END_TEST
+
 void add_rule_tests(Suite *suite) {
 	TCase *rule_case = tcase_create("Rules");
 	tcase_add_test(rule_case, test_condition_source);
@@ -368,11 +422,14 @@ void add_rule_tests(Suite *suite) {
 	tcase_add_test(rule_case, test_condition_top_card_compare);
 	tcase_add_test(rule_case, test_create_rule);
 	tcase_add_test(rule_case, test_rule_add_condition);
+	tcase_add_test(rule_case, test_rule_add_action);
 	tcase_add_test(rule_case, test_rule_check);
+	tcase_add_test(rule_case, test_rule_execute_actions);
 	tcase_add_test(rule_case, test_create_ruleset);
 	tcase_add_test(rule_case, test_ruleset_add_rule);
 	tcase_add_test(rule_case, test_ruleset_check);
 	tcase_add_test(rule_case, test_get_move_action);
 	tcase_add_test(rule_case, test_apply_move_action);
+	tcase_add_test(rule_case, test_action_reveal_source_top_card);
 	suite_add_tcase(suite, rule_case);
 }

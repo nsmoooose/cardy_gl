@@ -189,6 +189,21 @@ condition *condition_top_card_compare(mem_context *context, pile *dest, e_compar
 
 /* ------------------------------------------------------------------------- */
 
+void action_reveal_source_top_card_execute(rule_action* action, move_action *move) {
+	card *c = card_last(move->source);
+	if(c != 0) {
+		card_reveal(c);
+	}
+}
+
+rule_action *action_reveal_source_top_card(mem_context *context) {
+	rule_action *a = mem_alloc(context, sizeof(rule_action));
+	a->execute = action_reveal_source_top_card_execute;
+	return a;
+}
+
+/* ------------------------------------------------------------------------- */
+
 rule *create_rule(mem_context *context) {
 	return mem_alloc(context, sizeof(rule));
 }
@@ -196,27 +211,47 @@ rule *create_rule(mem_context *context) {
 void rule_add_condition(mem_context *context, rule *rule, condition *cond) {
 	condition **old_cond = rule->conditions;
 
-	rule->conditions = mem_alloc(context, (rule->size + 1) * sizeof(condition*));
-	rule->size++;
+	rule->conditions = mem_alloc(context, (rule->condition_size + 1) * sizeof(condition*));
+	rule->condition_size++;
 
 	if(old_cond) {
-		memcpy(rule->conditions, old_cond, sizeof(condition*) * (rule->size - 1));
+		memcpy(rule->conditions, old_cond, sizeof(condition*) * (rule->condition_size - 1));
 		mem_free(context, old_cond);
 	}
-	rule->conditions[rule->size - 1] = cond;
+	rule->conditions[rule->condition_size - 1] = cond;
+}
+
+void rule_add_action(mem_context *context, rule *rule, rule_action *action) {
+	rule_action **old = rule->actions;
+
+	rule->actions = mem_alloc(context, (rule->action_size + 1) * sizeof(rule_action*));
+	rule->action_size++;
+
+	if(old) {
+		memcpy(rule->actions, old, sizeof(rule_action*) * (rule->action_size - 1));
+		mem_free(context, old);
+	}
+	rule->actions[rule->action_size - 1] = action;
 }
 
 bool rule_check(rule *rule, move_action *action) {
 	int index;
 	condition *condition;
 
-	for(index=0;index<rule->size;++index) {
+	for(index=0;index<rule->condition_size;++index) {
 		condition = rule->conditions[index];
 		if(!condition->check(condition, action)) {
 			return false;
 		}
 	}
 	return true;
+}
+
+void rule_execute_actions(rule *rule, move_action *move) {
+	int index;
+	for(index=0;index<rule->action_size;++index) {
+		rule->actions[index]->execute(rule->actions[index], move);
+	}
 }
 
 ruleset *create_ruleset(mem_context *context) {
