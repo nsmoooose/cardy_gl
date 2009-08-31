@@ -64,6 +64,101 @@ static void my_deal(solitaire* sol, visual_pile* pile) {
 
 		if(card_count(i->deck) == 0) {
 			i->state = 2;
+			card_move_all(i->deck, i->pile1);
+			card_move_all(i->deck, i->pile2);
+			card_move_all(i->deck, i->pile3);
+			card_move_all(i->deck, i->pile4);
+			card_move_all(i->deck, i->pile5);
+			card_hide_all(i->deck);
+		}
+		else {
+			card_append(card_take_last(i->deck), i->pile1);
+			if(card_count(i->deck) > 0)
+				card_append(card_take_last(i->deck), i->pile2);
+			if(card_count(i->deck) > 0)
+				card_append(card_take_last(i->deck), i->pile3);
+			if(card_count(i->deck) > 0)
+				card_append(card_take_last(i->deck), i->pile4);
+			if(card_count(i->deck) > 0)
+				card_append(card_take_last(i->deck), i->pile5);
+
+			card_reveal_all(i->pile1);
+			card_reveal_all(i->pile2);
+			card_reveal_all(i->pile3);
+			card_reveal_all(i->pile4);
+			card_reveal_all(i->pile5);
+		}
+	}
+	else if(i->state == 2) {
+		if(card_count(i->deck) == 0) {
+			i->state = 3;
+			card_move_all(i->deck, i->pile1);
+			card_move_all(i->deck, i->pile2);
+			card_move_all(i->deck, i->pile3);
+			card_move_all(i->deck, i->pile4);
+			card_move_all(i->deck, i->pile5);
+			card_hide_all(i->deck);
+		}
+		else {
+			card_append(card_take_last(i->deck), i->pile1);
+			if(card_count(i->deck) > 0)
+				card_append(card_take_last(i->deck), i->pile2);
+			if(card_count(i->deck) > 0)
+				card_append(card_take_last(i->deck), i->pile3);
+			if(card_count(i->deck) > 0)
+				card_append(card_take_last(i->deck), i->pile4);
+
+			card_reveal_all(i->pile1);
+			card_reveal_all(i->pile2);
+			card_reveal_all(i->pile3);
+			card_reveal_all(i->pile4);
+		}
+	}
+	else if(i->state == 3) {
+		if(card_count(i->deck) == 0) {
+			i->state = 4;
+			card_move_all(i->deck, i->pile1);
+			card_move_all(i->deck, i->pile2);
+			card_move_all(i->deck, i->pile3);
+			card_move_all(i->deck, i->pile4);
+			card_hide_all(i->deck);
+		}
+		else {
+			card_append(card_take_last(i->deck), i->pile1);
+			if(card_count(i->deck) > 0)
+				card_append(card_take_last(i->deck), i->pile2);
+			if(card_count(i->deck) > 0)
+				card_append(card_take_last(i->deck), i->pile3);
+
+			card_reveal_all(i->pile1);
+			card_reveal_all(i->pile2);
+			card_reveal_all(i->pile3);
+		}
+	}
+	else if(i->state == 4) {
+		if(card_count(i->deck) == 0) {
+			i->state = 5;
+			card_move_all(i->deck, i->pile1);
+			card_move_all(i->deck, i->pile2);
+			card_move_all(i->deck, i->pile3);
+			card_hide_all(i->deck);
+		}
+		else {
+			card_append(card_take_last(i->deck), i->pile1);
+			if(card_count(i->deck) > 0)
+				card_append(card_take_last(i->deck), i->pile2);
+
+			card_reveal_all(i->pile1);
+			card_reveal_all(i->pile2);
+		}
+	}
+	else if(i->state == 5) {
+		if(card_count(i->deck) == 0) {
+			i->state = 6;
+		}
+		else {
+			card_append(card_take_last(i->deck), i->pile1);
+			card_reveal_all(i->pile1);
 		}
 	}
 
