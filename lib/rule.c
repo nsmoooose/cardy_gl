@@ -283,6 +283,23 @@ bool ruleset_check(ruleset *ruleset, move_action *action, rule **matching_rule) 
 	return false;
 }
 
+bool ruleset_move_card(ruleset *ruleset, visual *visual, visual_pile *destination, card_proxy *card) {
+	rule *matching_rule;
+	bool result;
+	move_action *action;
+
+	action = get_move_action(visual, card, destination);
+	result = ruleset_check(ruleset, action, &matching_rule);
+	if(result) {
+		apply_move_action(visual, action);
+		rule_execute_actions(matching_rule, action);
+	}
+	free(action);
+
+	visual_sync(visual);
+	return result;
+}
+
 move_action *get_move_action(visual *vis, card_proxy *card, visual_pile *destination_pile) {
 	int i, j;
 	move_action *a = calloc(1, sizeof(move_action));

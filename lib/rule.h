@@ -63,6 +63,7 @@ void rule_execute_actions(rule *rule, move_action *move);
 ruleset *create_ruleset(mem_context *context);
 void ruleset_add_rule(mem_context *context, ruleset *ruleset, rule *rule);
 bool ruleset_check(ruleset *ruleset, move_action *action, rule **matching_rule);
+bool ruleset_move_card(ruleset *ruleset, visual *visual, visual_pile *destination, card_proxy *card);
 
 move_action *get_move_action(visual *vis, card_proxy *card, visual_pile *destination_pile);
 void apply_move_action(visual *vis, move_action *action);

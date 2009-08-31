@@ -152,6 +152,50 @@ START_TEST(test_ruleset_check) {
 }
 END_TEST
 
+START_TEST(test_ruleset_move_card) {
+	mem_context *context = mem_context_create();
+	visual *vis;
+	pile *deck, *done;
+	visual_pile *vis_deck, *vis_done;
+	ruleset *ruleset;
+	rule *rule1;
+	bool result;
+
+	/* Arrange */
+	vis = visual_create(context, 0);
+
+	deck = pile_create(context, 52);
+	create_deck(context, deck, 1);
+	vis_deck = visual_pile_create(context, deck);
+	visual_add_pile(context, vis, vis_deck);
+
+	done = pile_create(context, 52);
+	vis_done = visual_pile_create(context, done);
+	visual_add_pile(context, vis, vis_done);
+	visual_sync(vis);
+
+	ruleset = create_ruleset(context);
+	rule1 = create_rule(context);
+	rule_add_condition(context, rule1, condition_succeed(context));
+	rule_add_action(context, rule1, action_reveal_source_top_card(context));
+	ruleset_add_rule(context, ruleset, rule1);
+
+	/* Act and assert */
+	result = ruleset_move_card(ruleset, vis, vis_done, vis->piles[0]->cards[51]);
+	ck_assert_msg(result == true, "Move should have been allowed.");
+	ck_assert_msg(vis->piles[0]->cards[51] == 0, "Card wasn't moved.");
+	ck_assert_msg(vis->piles[1]->cards[0] != 0, "Card wasn't moved.");
+	ck_assert_msg(vis->piles[0]->cards[50]->card != 0, "Card wasn't revealed.");
+
+	/* Act and assert */
+	rule_add_condition(context, rule1, condition_fail(context));
+	result = ruleset_move_card(ruleset, vis, vis_done, vis->piles[0]->cards[50]);
+	ck_assert_msg(result == false, "Move should not have been allowed.");
+	ck_assert_msg(vis->piles[0]->cards[50] != 0, "Card was moved.");
+	ck_assert_msg(vis->piles[1]->cards[1] == 0, "Card was moved.");
+}
+END_TEST
+
 START_TEST(test_condition_source) {
 	move_action action;
 	pile *p1, *p2;
@@ -428,6 +472,7 @@ void add_rule_tests(Suite *suite) {
 	tcase_add_test(rule_case, test_create_ruleset);
 	tcase_add_test(rule_case, test_ruleset_add_rule);
 	tcase_add_test(rule_case, test_ruleset_check);
+	tcase_add_test(rule_case, test_ruleset_move_card);
 	tcase_add_test(rule_case, test_get_move_action);
 	tcase_add_test(rule_case, test_apply_move_action);
 	tcase_add_test(rule_case, test_action_reveal_source_top_card);
