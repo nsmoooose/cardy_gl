@@ -78,9 +78,10 @@ static bool my_append_to_pile(solitaire *sol, visual_pile *dest, card_proxy *car
 	bool result;
 	move_action *action;
 	internal* i = sol->data;
+	rule *matching_rule;
 
 	action = get_move_action(sol->visual, card, dest);
-	result = ruleset_check(i->ruleset, action);
+	result = ruleset_check(i->ruleset, action, &matching_rule);
 	if(result) {
 		apply_move_action(sol->visual, action);
 	}

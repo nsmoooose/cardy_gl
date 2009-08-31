@@ -236,10 +236,12 @@ void ruleset_add_rule(mem_context *context, ruleset *ruleset, rule *new_rule) {
 	ruleset->rules[ruleset->size - 1] = new_rule;
 }
 
-bool ruleset_check(ruleset *ruleset, move_action *action) {
+bool ruleset_check(ruleset *ruleset, move_action *action, rule **matching_rule) {
 	int index;
+	*matching_rule = 0;
 	for(index = 0;index<ruleset->size;++index) {
 		if(rule_check(ruleset->rules[index], action)) {
+			*matching_rule = ruleset->rules[index];
 			return true;
 		}
 	}

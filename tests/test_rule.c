@@ -94,7 +94,7 @@ START_TEST(test_ruleset_add_rule) {
 END_TEST
 
 START_TEST(test_ruleset_check) {
-	rule *rule1, *rule2;
+	rule *rule1, *rule2, *matching_rule;
 	ruleset *ruleset;
 	move_action action;
 	mem_context *context = mem_context_create();
@@ -104,12 +104,14 @@ START_TEST(test_ruleset_check) {
 	rule_add_condition(context, rule1, condition_fail(context));
 	ruleset_add_rule(context, ruleset, rule1);
 
-	ck_assert_msg(ruleset_check(ruleset, &action) == false, "Check should fail");
+	ck_assert_msg(ruleset_check(ruleset, &action, &matching_rule) == false, "Check should fail");
+	ck_assert_msg(matching_rule == 0, "Matching rule should be set to 0 since no match was made.");
 
 	rule2 = create_rule(context);
 	rule_add_condition(context, rule2, condition_succeed(context));
 	ruleset_add_rule(context, ruleset, rule2);
-	ck_assert_msg(ruleset_check(ruleset, &action) == true, "Check should succeed");
+	ck_assert_msg(ruleset_check(ruleset, &action, &matching_rule) == true, "Check should succeed");
+	ck_assert_msg(matching_rule == rule2, "matching_rule should be equal to rule2");
 }
 END_TEST
 
