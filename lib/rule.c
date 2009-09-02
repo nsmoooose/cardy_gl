@@ -100,7 +100,7 @@ condition *condition_top_card(mem_context *context) {
 typedef struct {
 	card_suit suit;
 	card_value value;
-	e_compare_operation operation;
+	condition_compare_operation operation;
 } condition_top_card_equal_data;
 
 bool condition_top_card_equal_check(condition *cond, move_action *action) {
@@ -125,7 +125,7 @@ bool condition_top_card_equal_check(condition *cond, move_action *action) {
 
 condition *condition_top_card_equal(
 	mem_context *context, card_suit suit,
-	card_value value, e_compare_operation operation) {
+	card_value value, condition_compare_operation operation) {
 	condition *c = mem_alloc(context, sizeof(condition));
 	condition_top_card_equal_data *data = mem_alloc(context, sizeof(condition_top_card_equal_data));
 	data->suit = suit;
@@ -140,7 +140,7 @@ condition *condition_top_card_equal(
 
 typedef struct {
 	pile *dest;
-	e_compare_operation operation;
+	condition_compare_operation operation;
 } condition_top_card_compare_data;
 
 bool condition_top_card_compare_check(condition *cond, move_action *action) {
@@ -174,7 +174,7 @@ bool condition_top_card_compare_check(condition *cond, move_action *action) {
 	return true;
 }
 
-condition *condition_top_card_compare(mem_context *context, pile *dest, e_compare_operation operation) {
+condition *condition_top_card_compare(mem_context *context, pile *dest, condition_compare_operation operation) {
 	condition *c;
 	condition_top_card_compare_data *data;
 
@@ -288,10 +288,10 @@ bool ruleset_move_card(ruleset *ruleset, visual *visual, visual_pile *destinatio
 	bool result;
 	move_action *action;
 
-	action = get_move_action(visual, card, destination);
+	action = ruleset_get_move_action(visual, card, destination);
 	result = ruleset_check(ruleset, action, &matching_rule);
 	if(result) {
-		apply_move_action(visual, action);
+		ruleset_apply_move_action(visual, action);
 		rule_execute_actions(matching_rule, action);
 	}
 	free(action);
@@ -300,7 +300,7 @@ bool ruleset_move_card(ruleset *ruleset, visual *visual, visual_pile *destinatio
 	return result;
 }
 
-move_action *get_move_action(visual *vis, card_proxy *card, visual_pile *destination_pile) {
+move_action *ruleset_get_move_action(visual *vis, card_proxy *card, visual_pile *destination_pile) {
 	int i, j;
 	move_action *a = calloc(1, sizeof(move_action));
 	for(i=0;i<vis->pile_count && a->source == 0;++i) {
@@ -319,7 +319,7 @@ move_action *get_move_action(visual *vis, card_proxy *card, visual_pile *destina
 	return a;
 }
 
-void apply_move_action(visual *vis, move_action *action) {
+void ruleset_apply_move_action(visual *vis, move_action *action) {
 	action->destination->cards[card_first_free(action->destination)] = card_take(action->source, action->source_index);
 
 	/* TODO There is a lot more to handle here. Like:

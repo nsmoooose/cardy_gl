@@ -80,10 +80,10 @@ static bool my_append_to_pile(solitaire *sol, visual_pile *dest, card_proxy *car
 	internal* i = sol->data;
 	rule *matching_rule;
 
-	action = get_move_action(sol->visual, card, dest);
+	action = ruleset_get_move_action(sol->visual, card, dest);
 	result = ruleset_check(i->ruleset, action, &matching_rule);
 	if(result) {
-		apply_move_action(sol->visual, action);
+		ruleset_apply_move_action(sol->visual, action);
 	}
 	free(action);
 

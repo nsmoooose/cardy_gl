@@ -386,7 +386,7 @@ START_TEST(test_condition_top_card_compare) {
 }
 END_TEST
 
-START_TEST(test_get_move_action) {
+START_TEST(test_ruleset_get_move_action) {
 	pile *deck, *done;
 	visual *vis;
 	move_action *action;
@@ -401,7 +401,7 @@ START_TEST(test_get_move_action) {
 	visual_add_pile(context, vis, visual_pile_create(context, done));
 	visual_sync(vis);
 
-	action = get_move_action(vis, vis->piles[0]->cards[4], vis->piles[1]);
+	action = ruleset_get_move_action(vis, vis->piles[0]->cards[4], vis->piles[1]);
 
 	ck_assert_msg(action != 0, "No action returned.");
 	ck_assert_msg(action->source == deck, "Deck should be the source.");
@@ -412,7 +412,7 @@ START_TEST(test_get_move_action) {
 }
 END_TEST
 
-START_TEST(test_apply_move_action) {
+START_TEST(test_ruleset_apply_move_action) {
 	pile *deck, *done;
 	visual *vis;
 	move_action *action;
@@ -427,8 +427,8 @@ START_TEST(test_apply_move_action) {
 	visual_add_pile(context, vis, visual_pile_create(context, done));
 	visual_sync(vis);
 
-	action = get_move_action(vis, vis->piles[0]->cards[51], vis->piles[1]);
-	apply_move_action(vis, action);
+	action = ruleset_get_move_action(vis, vis->piles[0]->cards[51], vis->piles[1]);
+	ruleset_apply_move_action(vis, action);
 	visual_sync(vis);
 
 	ck_assert_msg(vis->piles[0]->card_count == 51, "Card count should be one less.");
@@ -473,8 +473,8 @@ void add_rule_tests(Suite *suite) {
 	tcase_add_test(rule_case, test_ruleset_add_rule);
 	tcase_add_test(rule_case, test_ruleset_check);
 	tcase_add_test(rule_case, test_ruleset_move_card);
-	tcase_add_test(rule_case, test_get_move_action);
-	tcase_add_test(rule_case, test_apply_move_action);
+	tcase_add_test(rule_case, test_ruleset_get_move_action);
+	tcase_add_test(rule_case, test_ruleset_apply_move_action);
 	tcase_add_test(rule_case, test_action_reveal_source_top_card);
 	suite_add_tcase(suite, rule_case);
 }
