@@ -95,7 +95,7 @@ solitaire* solitaire_noname1(mem_context *context, visual_settings *settings) {
 	visual_pile *deck, *ace1, *ace2, *ace3, *ace4;
 	visual_pile *pile1, *pile2, *pile3, *pile4, *pile5, *pile6, *pile7, *pile8;
 	condition *ace1_4_cond;
-	rule *rule1, *rule2;
+	rule *rule1, *rule2, *rule3;
 
 	/* The one solitaire instance we have.*/
 	solitaire* s = mem_alloc(context, sizeof(solitaire));
@@ -215,14 +215,22 @@ solitaire* solitaire_noname1(mem_context *context, visual_settings *settings) {
 	rule_add_condition(context, rule1, condition_destination_empty(context));
 	rule_add_condition(context, rule1, condition_top_card(context));
 	rule_add_condition(context, rule1, condition_top_card_equal(context, e_suit_none, 1, e_equal_value));
+	rule_add_action(context, rule1, action_reveal_source_top_card(context));
 	ruleset_add_rule(context, i->ruleset, rule1);
 
 	/* Allow card to be placed on top of the ace
 	   piles following suit and ascending order. */
 	rule2 = rule_create(context);
 	rule_add_condition(context, rule2, ace1_4_cond);
+	rule_add_condition(context, rule2, condition_top_card(context));
 	rule_add_condition(context, rule2, condition_top_card_compare(context, 0, e_dest_1lower_value|e_follow_suit));
 	ruleset_add_rule(context, i->ruleset, rule2);
+
+	/* Allow moving several cards to a top card of the opposite suit. */
+	rule3 = rule_create(context);
+	rule_add_condition(context, rule2, condition_top_card_compare(context, 0, e_dest_1higher_value|e_suit_opposite));
+	ruleset_add_rule(context, i->ruleset, rule3);
+
 	s->append_to_pile = my_append_to_pile;
 
 	return s;

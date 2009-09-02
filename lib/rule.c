@@ -171,6 +171,16 @@ bool condition_top_card_compare_check(condition *cond, move_action *action) {
 	if(data->operation & e_equal_value && dst_card->value != src_card->value) {
 		return false;
 	}
+	if(data->operation & e_suit_opposite) {
+		if((src_card->suit == e_spades || src_card->suit == e_clubs) &&
+		   (dst_card->suit == e_spades || dst_card->suit == e_clubs)) {
+			return false;
+		}
+		else if((src_card->suit == e_hearts || src_card->suit == e_diamonds) &&
+		   (dst_card->suit == e_hearts || dst_card->suit == e_diamonds)) {
+			return false;
+		}
+	}
 	return true;
 }
 

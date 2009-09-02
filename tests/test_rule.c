@@ -331,7 +331,30 @@ START_TEST(test_condition_top_card_compare) {
 	dest->cards[0] = card_create(context, e_clubs, 2);
 	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains other suit.");
 
+	/* e_suit_opposite */
+	cond = condition_top_card_compare(context, dest, e_suit_opposite);
+	dest->cards[0] = card_create(context, e_clubs, 2);
+	ck_assert_msg(cond->check(cond, &action) == false, "false when destination is black.");
+	dest->cards[0] = card_create(context, e_spades, 2);
+	ck_assert_msg(cond->check(cond, &action) == false, "false when destination is black.");
+	dest->cards[0] = card_create(context, e_hearts, 2);
+	ck_assert_msg(cond->check(cond, &action) == true, "true when source is red.");
+	dest->cards[0] = card_create(context, e_diamonds, 2);
+	ck_assert_msg(cond->check(cond, &action) == true, "true when source is red.");
+
+	deck->cards[0] = card_create(context, e_hearts, 3);
+	dest->cards[0] = card_create(context, e_clubs, 2);
+	ck_assert_msg(cond->check(cond, &action) == true, "true when destination is black.");
+	dest->cards[0] = card_create(context, e_spades, 2);
+	ck_assert_msg(cond->check(cond, &action) == true, "true when destination is black.");
+	dest->cards[0] = card_create(context, e_hearts, 2);
+	ck_assert_msg(cond->check(cond, &action) == false, "false when source is red.");
+	dest->cards[0] = card_create(context, e_diamonds, 2);
+	ck_assert_msg(cond->check(cond, &action) == false, "false when source is red.");
+
 	/* e_dest_higher */
+	cond = condition_top_card_compare(context, dest, e_dest_higher_value|e_follow_suit);
+	deck->cards[0] = card_create(context, e_spades, 3);
 	dest->cards[0] = card_create(context, e_spades, 2);
 	ck_assert_msg(cond->check(cond, &action) == false, "false when destination contains lower value.");
 

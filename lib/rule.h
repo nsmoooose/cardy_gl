@@ -41,7 +41,12 @@ typedef enum {
 	e_dest_higher_value=4,
 	e_dest_1lower_value=8,
 	e_dest_1higher_value=16,
-	e_follow_suit=32
+	e_follow_suit=32,
+
+	/** Used in condition when an opposite suit is used. Opposite
+	 *  uses the color as comparison. red is opposite to black.
+	 */
+	e_suit_opposite=64
 } condition_compare_operation;
 
 condition *condition_or(mem_context *context, condition *c1, condition *c2);
