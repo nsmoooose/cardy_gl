@@ -21,9 +21,9 @@ condition *condition_succeed(mem_context *context) {
 	return c;
 }
 
-START_TEST(test_create_rule) {
+START_TEST(test_rule_create) {
 	mem_context *context = mem_context_create();
-	rule *rule = create_rule(context);
+	rule *rule = rule_create(context);
 
 	ck_assert_msg(rule != 0, "Failed to create rule.");
 	ck_assert_msg(rule->condition_size == 0, "The size of the condition array should initially be 0");
@@ -39,7 +39,7 @@ START_TEST(test_rule_add_condition) {
 	mem_context *context = mem_context_create();
 
 	cond = condition_source(context, 0);
-	rule = create_rule(context);
+	rule = rule_create(context);
 	rule_add_condition(context, rule, cond);
 
 	ck_assert_msg(rule->condition_size == 1, "Size of rules array should be 1");
@@ -52,7 +52,7 @@ START_TEST(test_rule_add_action) {
 	rule *rule;
 	mem_context *context = mem_context_create();
 
-	rule = create_rule(context);
+	rule = rule_create(context);
 	action1 = action_reveal_source_top_card(context);
 	action2 = action_reveal_source_top_card(context);
 	rule_add_action(context, rule, action1);
@@ -70,7 +70,7 @@ START_TEST(test_rule_check) {
 	move_action action;
 	mem_context *context = mem_context_create();
 
-	rule = create_rule(context);
+	rule = rule_create(context);
 	cond1 = condition_succeed(context);
 	rule_add_condition(context, rule, cond1);
 
@@ -92,7 +92,7 @@ START_TEST(test_rule_execute_actions) {
 	deck = pile_create(context, 52);
 	create_deck(context, deck, 1);
 	move.source = deck;
-	rule = create_rule(context);
+	rule = rule_create(context);
 	rule_add_action(context, rule, action_reveal_source_top_card(context));
 
 	rule_execute_actions(rule, &move);
@@ -101,11 +101,11 @@ START_TEST(test_rule_execute_actions) {
 }
 END_TEST
 
-START_TEST(test_create_ruleset) {
+START_TEST(test_ruleset_create) {
 	ruleset *ruleset;
 	mem_context *context = mem_context_create();
 
-	ruleset = create_ruleset(context);
+	ruleset = ruleset_create(context);
 
 	ck_assert_msg(ruleset != 0, "Failed to create ruleset.");
 	ck_assert_msg(ruleset->rules == 0, "rules should initially be 0.");
@@ -118,9 +118,9 @@ START_TEST(test_ruleset_add_rule) {
 	ruleset *ruleset;
 	mem_context *context = mem_context_create();
 
-	ruleset = create_ruleset(context);
-	rule1 = create_rule(context);
-	rule2 = create_rule(context);
+	ruleset = ruleset_create(context);
+	rule1 = rule_create(context);
+	rule2 = rule_create(context);
 	ruleset_add_rule(context, ruleset, rule1);
 	ruleset_add_rule(context, ruleset, rule2);
 
@@ -136,15 +136,15 @@ START_TEST(test_ruleset_check) {
 	move_action action;
 	mem_context *context = mem_context_create();
 
-	ruleset = create_ruleset(context);
-	rule1 = create_rule(context);
+	ruleset = ruleset_create(context);
+	rule1 = rule_create(context);
 	rule_add_condition(context, rule1, condition_fail(context));
 	ruleset_add_rule(context, ruleset, rule1);
 
 	ck_assert_msg(ruleset_check(ruleset, &action, &matching_rule) == false, "Check should fail");
 	ck_assert_msg(matching_rule == 0, "Matching rule should be set to 0 since no match was made.");
 
-	rule2 = create_rule(context);
+	rule2 = rule_create(context);
 	rule_add_condition(context, rule2, condition_succeed(context));
 	ruleset_add_rule(context, ruleset, rule2);
 	ck_assert_msg(ruleset_check(ruleset, &action, &matching_rule) == true, "Check should succeed");
@@ -174,8 +174,8 @@ START_TEST(test_ruleset_move_card) {
 	visual_add_pile(context, vis, vis_done);
 	visual_sync(vis);
 
-	ruleset = create_ruleset(context);
-	rule1 = create_rule(context);
+	ruleset = ruleset_create(context);
+	rule1 = rule_create(context);
 	rule_add_condition(context, rule1, condition_succeed(context));
 	rule_add_action(context, rule1, action_reveal_source_top_card(context));
 	ruleset_add_rule(context, ruleset, rule1);
@@ -464,12 +464,12 @@ void add_rule_tests(Suite *suite) {
 	tcase_add_test(rule_case, test_condition_top_card);
 	tcase_add_test(rule_case, test_condition_top_card_equal);
 	tcase_add_test(rule_case, test_condition_top_card_compare);
-	tcase_add_test(rule_case, test_create_rule);
+	tcase_add_test(rule_case, test_rule_create);
 	tcase_add_test(rule_case, test_rule_add_condition);
 	tcase_add_test(rule_case, test_rule_add_action);
 	tcase_add_test(rule_case, test_rule_check);
 	tcase_add_test(rule_case, test_rule_execute_actions);
-	tcase_add_test(rule_case, test_create_ruleset);
+	tcase_add_test(rule_case, test_ruleset_create);
 	tcase_add_test(rule_case, test_ruleset_add_rule);
 	tcase_add_test(rule_case, test_ruleset_check);
 	tcase_add_test(rule_case, test_ruleset_move_card);

@@ -204,7 +204,7 @@ rule_action *action_reveal_source_top_card(mem_context *context) {
 
 /* ------------------------------------------------------------------------- */
 
-rule *create_rule(mem_context *context) {
+rule *rule_create(mem_context *context) {
 	return mem_alloc(context, sizeof(rule));
 }
 
@@ -254,7 +254,7 @@ void rule_execute_actions(rule *rule, move_action *move) {
 	}
 }
 
-ruleset *create_ruleset(mem_context *context) {
+ruleset *ruleset_create(mem_context *context) {
 	return mem_alloc(context, sizeof(ruleset));
 }
 

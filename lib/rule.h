@@ -54,13 +54,13 @@ condition *condition_destination_empty(mem_context *context);
 
 rule_action *action_reveal_source_top_card(mem_context *context);
 
-rule *create_rule(mem_context *context);
+rule *rule_create(mem_context *context);
 void rule_add_condition(mem_context *context, rule *rule, condition *condition);
 void rule_add_action(mem_context *context, rule *rule, rule_action *action);
 bool rule_check(rule *rule, move_action *action);
 void rule_execute_actions(rule *rule, move_action *move);
 
-ruleset *create_ruleset(mem_context *context);
+ruleset *ruleset_create(mem_context *context);
 void ruleset_add_rule(mem_context *context, ruleset *ruleset, rule *rule);
 bool ruleset_check(ruleset *ruleset, move_action *action, rule **matching_rule);
 bool ruleset_move_card(ruleset *ruleset, visual *visual, visual_pile *destination, card_proxy *card);

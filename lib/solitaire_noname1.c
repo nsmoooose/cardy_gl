@@ -194,7 +194,7 @@ solitaire* solitaire_noname1(mem_context *context, visual_settings *settings) {
 
 	visual_sync(s->visual);
 
-	i->ruleset = create_ruleset(context);
+	i->ruleset = ruleset_create(context);
 
 	/* Shared condition for the aces. */
 	ace1_4_cond =
@@ -210,7 +210,7 @@ solitaire* solitaire_noname1(mem_context *context, visual_settings *settings) {
 			condition_destination(context, i->ace4));
 
 	/* Allow move of ace to an empty pile among the ace piles. */
-	rule1 = create_rule(context);
+	rule1 = rule_create(context);
 	rule_add_condition(context, rule1, ace1_4_cond);
 	rule_add_condition(context, rule1, condition_destination_empty(context));
 	rule_add_condition(context, rule1, condition_top_card(context));
@@ -219,7 +219,7 @@ solitaire* solitaire_noname1(mem_context *context, visual_settings *settings) {
 
 	/* Allow card to be placed on top of the ace
 	   piles following suit and ascending order. */
-	rule2 = create_rule(context);
+	rule2 = rule_create(context);
 	rule_add_condition(context, rule2, ace1_4_cond);
 	rule_add_condition(context, rule2, condition_top_card_compare(context, 0, e_dest_1lower_value|e_follow_suit));
 	ruleset_add_rule(context, i->ruleset, rule2);

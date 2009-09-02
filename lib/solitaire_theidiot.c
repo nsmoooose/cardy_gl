@@ -104,7 +104,7 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 
 	visual_sync(s->visual);
 
-	i->ruleset = create_ruleset(context);
+	i->ruleset = ruleset_create(context);
 
 	/* Shared condition between several rules. */
 	pile1_4_cond =
@@ -121,7 +121,7 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 
 	/* Move card to done pile if source is pile1-pile4 and there is
 	   a higher card in same suit in those piles. */
-	rule1 = create_rule(context);
+	rule1 = rule_create(context);
 	rule_add_condition(context, rule1, pile1_4_cond);
 	rule_add_condition(context, rule1, condition_destination(context, i->done));
 	rule_add_condition(
@@ -141,7 +141,7 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 	rule_add_condition(context, rule1, condition_top_card(context));
 	ruleset_add_rule(context, i->ruleset, rule1);
 
-	rule2 = create_rule(context);
+	rule2 = rule_create(context);
 	rule_add_condition(context, rule2, pile1_4_cond);
 	rule_add_condition(context, rule2, condition_top_card(context));
 	rule_add_condition(context, rule2, condition_destination_empty(context));

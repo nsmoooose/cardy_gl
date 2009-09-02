@@ -316,7 +316,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 
 	visual_sync(s->visual);
 
-	i->ruleset = create_ruleset(context);
+	i->ruleset = ruleset_create(context);
 
 	/* Shared condition of a build pile destination */
 	build_pile_cond = condition_or(
@@ -342,7 +342,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 		condition_destination(context, i->king4));
 
 	/* Allow moving any card to an empty pile outside of the four source cards. */
-	rule1 = create_rule(context);
+	rule1 = rule_create(context);
 	rule_add_condition(context, rule1, condition_destination_empty(context));
 	rule_add_condition(context, rule1, condition_top_card(context));
 	rule_add_condition(context, rule1, build_pile_cond);
@@ -350,7 +350,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 	ruleset_add_rule(context, i->ruleset, rule1);
 
 	/* Allow building of cards following suit on build piles. */
-	rule2 = create_rule(context);
+	rule2 = rule_create(context);
 	rule_add_condition(context, rule2, build_pile_cond);
 	rule_add_condition(context, rule2, condition_top_card(context));
 	rule_add_condition(
@@ -360,7 +360,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 	ruleset_add_rule(context, i->ruleset, rule2);
 
 	/* Allow a king to be moved to the king pile. */
-	rule3 = create_rule(context);
+	rule3 = rule_create(context);
 	rule_add_condition(context, rule3, king_pile_cond);
 	rule_add_condition(context, rule3, condition_top_card(context));
 	rule_add_condition(context, rule3, condition_destination_empty(context));
@@ -372,7 +372,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 
 	/* Allow building of cards in descending order on king piles and
 	   following suit. */
-	rule4 = create_rule(context);
+	rule4 = rule_create(context);
 	rule_add_condition(context, rule4, king_pile_cond);
 	rule_add_condition(context, rule4, condition_top_card(context));
 	rule_add_condition(
@@ -382,7 +382,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 	ruleset_add_rule(context, i->ruleset, rule4);
 
 	/* Allow an ace to be placed in the center pile if empty. */
-	rule5 = create_rule(context);
+	rule5 = rule_create(context);
 	rule_add_condition(context, rule5, condition_destination_empty(context));
 	rule_add_condition(context, rule5, condition_destination(context, i->center));
 	rule_add_condition(context, rule5, condition_top_card(context));
@@ -393,7 +393,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 	ruleset_add_rule(context, i->ruleset, rule5);
 
 	/* Allow to build on the ace pile up to king in the same suit. */
-	rule6 = create_rule(context);
+	rule6 = rule_create(context);
 	rule_add_condition(context, rule6, condition_destination(context, i->center));
 	rule_add_condition(context, rule6, condition_top_card(context));
 	rule_add_condition(
