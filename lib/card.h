@@ -111,35 +111,6 @@ typedef struct {
 	visual_settings* settings;
 } visual;
 
-/** Interface with a solitaire game. All members of this
- *  struct is callbacks to the logic.
- */
-typedef struct solitaire_St {
-	/** Start a new game.
-	 */
-	void (*new_game)(struct solitaire_St *sol);
-
-	/** Move card between two positions.
-	 */
-	bool (*append_to_pile)(struct solitaire_St *sol, visual_pile *dest, card_proxy *card);
-
-	/** Event that is called when a card has been revealed
-	 *  or hidden beqause of user action.
-	 */
-	void (*card_revealed)(struct solitaire_St *sol);
-
-	/** The solitaire has been solved.
-	 */
-	void (*finished)(struct solitaire_St *sol);
-
-	visual *visual;
-
-	/** Internal representation of this game. Don't mess
-	 *  with this one.
-	 */
-	void *data;
-} solitaire;
-
 /** Creates a single card with the suit and value.
  */
 card* card_create(mem_context *context, card_suit suit, card_value value);
@@ -151,11 +122,6 @@ void card_free(mem_context *context, card* card);
 /** Creates a deck of cards with 52 cards if the array permits it.
  */
 void create_deck(mem_context *context, pile *pile, card_value ace);
-
-/** Print information about the solitaire. Usefull for debugging purposes
- *  when we need to know the content of the solitaire.
- */
-void print_solitaire_info(solitaire* sol);
 
 /** Counts the number of cards that exists within the array.
  */

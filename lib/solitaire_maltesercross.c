@@ -37,8 +37,6 @@ typedef struct {
 	pile* pile3;
 	pile* pile4;
 	pile* pile5;
-
-	ruleset *ruleset;
 } internal;
 
 typedef struct {
@@ -180,11 +178,6 @@ static visual_pile_action *action_deal(mem_context *context, solitaire *sol, int
 	deal_action->data = data;
 	deal_action->execute = action_deal_execute;
 	return deal_action;
-}
-
-static bool my_append_to_pile(solitaire *sol, visual_pile *dest, card_proxy *card) {
-	internal* i = sol->data;
-	return ruleset_move_card(i->ruleset, sol->visual, dest, card);
 }
 
 solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settings) {
@@ -337,7 +330,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 
 	visual_sync(s->visual);
 
-	i->ruleset = ruleset_create(context);
+	s->ruleset = ruleset_create(context);
 
 	/* Shared condition of a build pile destination */
 	build_pile_cond = condition_or(
@@ -368,7 +361,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 	rule_add_condition(context, rule1, condition_top_card(context));
 	rule_add_condition(context, rule1, build_pile_cond);
 	rule_add_action(context, rule1, action_reveal_source_top_card(context));
-	ruleset_add_rule(context, i->ruleset, rule1);
+	ruleset_add_rule(context, s->ruleset, rule1);
 
 	/* Allow building of cards following suit on build piles. */
 	rule2 = rule_create(context);
@@ -378,7 +371,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 		context, rule2, condition_top_card_compare(
 			context, 0, e_follow_suit|e_dest_1lower_value));
 	rule_add_action(context, rule2, action_reveal_source_top_card(context));
-	ruleset_add_rule(context, i->ruleset, rule2);
+	ruleset_add_rule(context, s->ruleset, rule2);
 
 	/* Allow a king to be moved to the king pile. */
 	rule3 = rule_create(context);
@@ -389,7 +382,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 		context, rule3,
 		condition_top_card_equal(context, e_suit_none, 13, e_equal_value));
 	rule_add_action(context, rule3, action_reveal_source_top_card(context));
-	ruleset_add_rule(context, i->ruleset, rule3);
+	ruleset_add_rule(context, s->ruleset, rule3);
 
 	/* Allow building of cards in descending order on king piles and
 	   following suit. */
@@ -400,7 +393,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 		context, rule4, condition_top_card_compare(
 			context, 0, e_follow_suit|e_dest_1higher_value));
 	rule_add_action(context, rule4, action_reveal_source_top_card(context));
-	ruleset_add_rule(context, i->ruleset, rule4);
+	ruleset_add_rule(context, s->ruleset, rule4);
 
 	/* Allow an ace to be placed in the center pile if empty. */
 	rule5 = rule_create(context);
@@ -411,7 +404,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 		context, rule5,
 		condition_top_card_equal(context, e_suit_none, 1, e_equal_value));
 	rule_add_action(context, rule5, action_reveal_source_top_card(context));
-	ruleset_add_rule(context, i->ruleset, rule5);
+	ruleset_add_rule(context, s->ruleset, rule5);
 
 	/* Allow to build on the ace pile up to king in the same suit. */
 	rule6 = rule_create(context);
@@ -421,9 +414,6 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 		context, rule6, condition_top_card_compare(
 			context, 0, e_follow_suit|e_dest_1lower_value));
 	rule_add_action(context, rule6, action_reveal_source_top_card(context));
-
-	/* Add our implementation for the common functionality
-	 * shared by all solitaires. */
-	s->append_to_pile = my_append_to_pile;
+	ruleset_add_rule(context, s->ruleset, rule6);
 	return s;
 }

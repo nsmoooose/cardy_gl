@@ -21,8 +21,6 @@ typedef struct {
 	pile* pile6;
 	pile* pile7;
 	pile* pile8;
-
-	ruleset *ruleset;
 } internal;
 
 typedef struct {
@@ -89,23 +87,6 @@ static visual_pile_action *action_deal(mem_context *context, solitaire *sol, int
 	deal_action->data = data;
 	deal_action->execute = action_deal_execute;
 	return deal_action;
-}
-
-static bool my_append_to_pile(solitaire *sol, visual_pile *dest, card_proxy *card) {
-	bool result;
-	move_action *action;
-	internal* i = sol->data;
-	rule *matching_rule;
-
-	action = ruleset_get_move_action(sol->visual, card, dest);
-	result = ruleset_check(i->ruleset, action, &matching_rule);
-	if(result) {
-		ruleset_apply_move_action(sol->visual, action);
-	}
-	free(action);
-
-	visual_sync(sol->visual);
-	return result;
 }
 
 solitaire* solitaire_noname1(mem_context *context, visual_settings *settings) {
@@ -211,7 +192,7 @@ solitaire* solitaire_noname1(mem_context *context, visual_settings *settings) {
 
 	visual_sync(s->visual);
 
-	i->ruleset = ruleset_create(context);
+	s->ruleset = ruleset_create(context);
 
 	/* Shared condition for the aces. */
 	ace1_4_cond =
@@ -233,7 +214,7 @@ solitaire* solitaire_noname1(mem_context *context, visual_settings *settings) {
 	rule_add_condition(context, rule1, condition_top_card(context));
 	rule_add_condition(context, rule1, condition_top_card_equal(context, e_suit_none, 1, e_equal_value));
 	rule_add_action(context, rule1, action_reveal_source_top_card(context));
-	ruleset_add_rule(context, i->ruleset, rule1);
+	ruleset_add_rule(context, s->ruleset, rule1);
 
 	/* Allow card to be placed on top of the ace
 	   piles following suit and ascending order. */
@@ -241,14 +222,11 @@ solitaire* solitaire_noname1(mem_context *context, visual_settings *settings) {
 	rule_add_condition(context, rule2, ace1_4_cond);
 	rule_add_condition(context, rule2, condition_top_card(context));
 	rule_add_condition(context, rule2, condition_top_card_compare(context, 0, e_dest_1lower_value|e_follow_suit));
-	ruleset_add_rule(context, i->ruleset, rule2);
+	ruleset_add_rule(context, s->ruleset, rule2);
 
 	/* Allow moving several cards to a top card of the opposite suit. */
 	rule3 = rule_create(context);
 	rule_add_condition(context, rule2, condition_top_card_compare(context, 0, e_dest_1higher_value|e_suit_opposite));
-	ruleset_add_rule(context, i->ruleset, rule3);
-
-	s->append_to_pile = my_append_to_pile;
-
+	ruleset_add_rule(context, s->ruleset, rule3);
 	return s;
 }

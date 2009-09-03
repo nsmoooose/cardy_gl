@@ -6,15 +6,9 @@ typedef struct {
 	pile *deck;
 	pile *pile1, *pile2, *pile3, *pile4;
 	pile *done;
-	ruleset *ruleset;
 } internal;
 
 static void my_new_game(solitaire* sol) {
-}
-
-static bool my_append_to_pile(solitaire *sol, visual_pile *dest, card_proxy *card) {
-	internal* i = sol->data;
-	return ruleset_move_card(i->ruleset, sol->visual, dest, card);
 }
 
 typedef struct {
@@ -121,7 +115,7 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 
 	visual_sync(s->visual);
 
-	i->ruleset = ruleset_create(context);
+	s->ruleset = ruleset_create(context);
 
 	/* Shared condition between several rules. */
 	pile1_4_cond =
@@ -156,7 +150,7 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 			condition_top_card_compare(context, i->pile4, e_dest_higher_value | e_follow_suit))
 		);
 	rule_add_condition(context, rule1, condition_top_card(context));
-	ruleset_add_rule(context, i->ruleset, rule1);
+	ruleset_add_rule(context, s->ruleset, rule1);
 
 	rule2 = rule_create(context);
 	rule_add_condition(context, rule2, pile1_4_cond);
@@ -175,11 +169,10 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 					condition_destination(context, i->pile2)),
 				condition_destination(context, i->pile3)),
 			condition_destination(context, i->pile4)));
-	ruleset_add_rule(context, i->ruleset, rule2);
+	ruleset_add_rule(context, s->ruleset, rule2);
 
 	/* Add our implementation for the common functionality
 	 * shared by all solitaires. */
 	s->new_game = my_new_game;
-	s->append_to_pile = my_append_to_pile;
 	return s;
 }

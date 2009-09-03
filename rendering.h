@@ -1,7 +1,7 @@
 #ifndef __RENDERING_H__
 #define __RENDERING_H__
 
-#include "lib/card.h"
+#include "lib/solitaire.h"
 #include "lib/theme.h"
 
 extern float g_camera_zoom;

@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "solitaire_theidiot.h"
+#include "solitaire_pyramid.h"
 
 typedef struct {
 	pile* deck;

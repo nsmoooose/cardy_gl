@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "lib/card.h"
+#include "lib/solitaire.h"
 
 void print_solitaire_info(solitaire* sol) {
 	int i, j;
