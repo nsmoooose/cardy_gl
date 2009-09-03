@@ -15,6 +15,7 @@ typedef struct {
 static void my_new_game(solitaire* sol) {
 }
 
+/*
 static void my_deal(solitaire* sol, visual_pile* pile) {
 	internal* i = sol->data;
 
@@ -37,6 +38,7 @@ static void my_deal(solitaire* sol, visual_pile* pile) {
 
 	visual_sync(sol->visual);
 }
+*/
 
 solitaire* solitaire_pyramid(mem_context *context, visual_settings *settings) {
 	card *ace;
@@ -64,7 +66,9 @@ solitaire* solitaire_pyramid(mem_context *context, visual_settings *settings) {
 	deck->origin[0] = 0 - (settings->card_width / 2 + settings->card_spacing / 2 + settings->card_width * 2 + settings->card_spacing * 2 + settings->card_width / 2);
 	deck->origin[1] = 40.0f;
 	deck->rotation = 45.0f;
+	/*
 	deck->pile_action = my_deal;
+	*/
 	visual_add_pile(context, s->visual, deck);
 
 	pile1 = visual_pile_create(context, i->pile1);

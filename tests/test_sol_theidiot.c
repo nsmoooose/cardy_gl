@@ -33,7 +33,7 @@ START_TEST(test_sol_theidiot_deal) {
 	solitaire* sol = solitaire_theidiot(context, settings);
 
 	deck = sol->visual->piles[0];
-	deck->pile_action(sol, deck);
+	deck->action->execute(deck->action);
 
 	pile1 = sol->visual->piles[1];
 	pile2 = sol->visual->piles[2];

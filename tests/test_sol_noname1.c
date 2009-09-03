@@ -20,8 +20,8 @@ START_TEST(test_sol_noname1_deal) {
 
 	deck = sol->visual->piles[0];
 
-	ck_assert_msg(deck->pile_action != 0, "No action set on pile.");
-	deck->pile_action(sol, deck);
+	ck_assert_msg(deck->action != 0, "No action set on pile.");
+	deck->action->execute(deck->action);
 
 	ck_assert_msg(sol->visual->piles[0]->card_count == 0, "No card should remain in deck.");
 
@@ -68,8 +68,8 @@ START_TEST(test_sol_noname1_deal2) {
 	int index;
 
 	deck = sol->visual->piles[0];
-	deck->pile_action(sol, deck);
-	deck->pile_action(sol, deck);
+	deck->action->execute(deck->action);
+	deck->action->execute(deck->action);
 
 	for(index=0;index<sol->visual->pile_count;++index) {
 		if(index==0) {

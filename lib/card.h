@@ -55,7 +55,10 @@ typedef struct card_proxy_St {
 	card* card;
 } card_proxy;
 
-struct solitaire_St;
+typedef struct visual_pile_action_St {
+	void *data;
+	void (*execute)(struct visual_pile_action_St *action);
+} visual_pile_action;
 
 /** Contains information about a pile. All this information
  *  is then used by the rendering engine to visualize the
@@ -79,8 +82,10 @@ typedef struct visual_pile_St {
 	float translateX;
 	float translateY;
 
-	void (*pile_action)(struct solitaire_St* sol, struct visual_pile_St* pile);
-	void (*card_action)(struct solitaire_St* sol, struct visual_pile_St* pile, card_proxy* proxy);
+	/** A default action that can be executed when you click on the
+	 *  pile.
+	 */
+	visual_pile_action *action;
 
 	void *data;
 } visual_pile;

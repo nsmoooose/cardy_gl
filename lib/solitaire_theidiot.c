@@ -17,8 +17,15 @@ static bool my_append_to_pile(solitaire *sol, visual_pile *dest, card_proxy *car
 	return ruleset_move_card(i->ruleset, sol->visual, dest, card);
 }
 
-static void my_deal(solitaire* sol, visual_pile* pile) {
-	internal* i = sol->data;
+typedef struct {
+	solitaire *sol;
+	internal *i;
+} action_deal_data;
+
+static void action_deal_execute(visual_pile_action *action) {
+	action_deal_data *data = action->data;
+	internal *i = data->i;
+	solitaire *sol = data->sol;
 
 	if(card_count(i->deck) >= 4) {
 		card* card1 = card_take_last(i->deck);
@@ -38,6 +45,16 @@ static void my_deal(solitaire* sol, visual_pile* pile) {
 	}
 
 	visual_sync(sol->visual);
+}
+
+static visual_pile_action *action_deal(mem_context *context, solitaire *sol, internal *i) {
+	visual_pile_action *deal_action = mem_alloc(context, sizeof(visual_pile_action));
+	action_deal_data *data = mem_alloc(context, sizeof(action_deal_data));
+	data->sol = sol;
+	data->i = i;
+	deal_action->data = data;
+	deal_action->execute = action_deal_execute;
+	return deal_action;
 }
 
 solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
@@ -61,7 +78,7 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 	deck->origin[0] = 0 - (settings->card_width / 2 + settings->card_spacing / 2 + settings->card_width * 2 + settings->card_spacing * 2 + settings->card_width / 2);
 	deck->origin[1] = 40.0f;
 	deck->rotation = 45.0f;
-	deck->pile_action = my_deal;
+	deck->action = action_deal(context, s, i);
 	visual_add_pile(context, s->visual, deck);
 
 	i->pile1 = pile_create(context, 13);

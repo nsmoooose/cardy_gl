@@ -15,10 +15,11 @@ START_TEST(test_sol_maltesercross_deal) {
 	mem_context *context = mem_context_create();
 	visual_settings *settings = mem_alloc(context, sizeof(visual_settings));
 	solitaire* sol = solitaire_maltesercross(context, settings);
+	visual_pile_action *action = sol->visual->piles[0]->action;
 
-	ck_assert_msg(sol->visual->piles[0]->pile_action != 0, "There should be a pile action to deal new cards.");
+	ck_assert_msg(action != 0, "There should be a pile action to deal new cards.");
 
-	sol->visual->piles[0]->pile_action(sol, sol->visual->piles[0]);
+	action->execute(action);
 	ck_assert_msg(sol->visual->piles[7]->card_count == 13, "Source pile 1 should have 13 cards.");
 	ck_assert_msg(sol->visual->piles[8]->card_count == 13, "Source pile 2 should have 13 cards.");
 	ck_assert_msg(sol->visual->piles[9]->card_count == 13, "Source pile 3 should have 13 cards.");

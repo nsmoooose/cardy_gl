@@ -28,11 +28,8 @@ static void process_selection(GLint hits, GLuint* selections) {
 		index += selections[index] + 3;
 	}
 
-	if(selected_pile && selected_proxy && selected_pile->card_action) {
-		selected_pile->card_action(g_solitaire, selected_pile, selected_proxy);
-	}
-	else if(selected_pile && selected_pile->pile_action) {
-		selected_pile->pile_action(g_solitaire, selected_pile);
+	if(selected_pile && selected_pile->action) {
+		selected_pile->action->execute(selected_pile->action);
 	}
 	else if(selected_pile && selected_proxy) {
 		if(g_selected_card == selected_proxy) {
