@@ -212,6 +212,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 	king1->origin[0] = settings->card_width / 2 + settings->card_spacing * 2 + settings->card_height / 2;
 	king1->origin[1] = settings->card_width / 2 + settings->card_spacing * 2 + settings->card_height / 2;
 	king1->rotation = -45.0f;
+	king1->translateY = settings->card_spacing;
 	visual_add_pile(context, s->visual, king1);
 
 	i->king2 = pile_create(context, 13);
@@ -219,6 +220,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 	king2->origin[0] = 0 - (settings->card_width / 2 + settings->card_spacing * 2 + settings->card_height / 2);
 	king2->origin[1] = settings->card_width / 2 + settings->card_spacing * 2 + settings->card_height / 2;
 	king2->rotation = 45.0f;
+	king2->translateY = settings->card_spacing;
 	visual_add_pile(context, s->visual, king2);
 
 	i->king3 = pile_create(context, 13);
@@ -226,6 +228,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 	king3->origin[0] = settings->card_width / 2 + settings->card_spacing * 2 + settings->card_height / 2;
 	king3->origin[1] = 0 - (settings->card_width / 2 + settings->card_spacing * 2 + settings->card_height / 2);
 	king3->rotation = 45.0f;
+	king3->translateY = 0 - settings->card_spacing;
 	visual_add_pile(context, s->visual, king3);
 
 	i->king4 = pile_create(context, 13);
@@ -233,6 +236,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 	king4->origin[0] = 0 - (settings->card_width / 2 + settings->card_spacing * 2 + settings->card_height / 2);
 	king4->origin[1] = 0 - (settings->card_width / 2 + settings->card_spacing * 2 + settings->card_height / 2);
 	king4->rotation = -45.0f;
+	king4->translateY = 0 - settings->card_spacing;
 	visual_add_pile(context, s->visual, king4);
 
 	i->src1 = pile_create(context, 13);
