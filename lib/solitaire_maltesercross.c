@@ -180,13 +180,83 @@ static visual_pile_action *action_deal(mem_context *context, solitaire *sol, int
 	return deal_action;
 }
 
+static void setup_rules(mem_context *context, solitaire *s, internal *i) {
+	condition *build_pile_cond, *king_pile_cond;
+	rule *rule1, *rule2, *rule3, *rule4, *rule5, *rule6;
+
+	s->ruleset = ruleset_create(context);
+
+	/* Shared condition of a build pile destination */
+	build_pile_cond = condition_destination_array(context, 4, i->build1, i->build2, i->build3, i->build4);
+	king_pile_cond = condition_destination_array(context, 4, i->king1, i->king2, i->king3, i->king4);
+
+	/* Allow moving any card to an empty pile outside of the four source cards. */
+	rule1 = rule_create(context);
+	rule_add_condition(context, rule1, condition_destination_empty(context));
+	rule_add_condition(context, rule1, condition_top_card(context));
+	rule_add_condition(context, rule1, build_pile_cond);
+	rule_add_action(context, rule1, action_reveal_source_top_card(context));
+	ruleset_add_rule(context, s->ruleset, rule1);
+
+	/* Allow building of cards following suit on build piles. */
+	rule2 = rule_create(context);
+	rule_add_condition(context, rule2, build_pile_cond);
+	rule_add_condition(context, rule2, condition_top_card(context));
+	rule_add_condition(
+		context, rule2, condition_top_card_compare(
+			context, 0, e_follow_suit|e_dest_1lower_value));
+	rule_add_action(context, rule2, action_reveal_source_top_card(context));
+	ruleset_add_rule(context, s->ruleset, rule2);
+
+	/* Allow a king to be moved to the king pile. */
+	rule3 = rule_create(context);
+	rule_add_condition(context, rule3, king_pile_cond);
+	rule_add_condition(context, rule3, condition_top_card(context));
+	rule_add_condition(context, rule3, condition_destination_empty(context));
+	rule_add_condition(
+		context, rule3,
+		condition_top_card_equal(context, e_suit_none, 13, e_equal_value));
+	rule_add_action(context, rule3, action_reveal_source_top_card(context));
+	ruleset_add_rule(context, s->ruleset, rule3);
+
+	/* Allow building of cards in descending order on king piles and
+	   following suit. */
+	rule4 = rule_create(context);
+	rule_add_condition(context, rule4, king_pile_cond);
+	rule_add_condition(context, rule4, condition_top_card(context));
+	rule_add_condition(
+		context, rule4, condition_top_card_compare(
+			context, 0, e_follow_suit|e_dest_1higher_value));
+	rule_add_action(context, rule4, action_reveal_source_top_card(context));
+	ruleset_add_rule(context, s->ruleset, rule4);
+
+	/* Allow an ace to be placed in the center pile if empty. */
+	rule5 = rule_create(context);
+	rule_add_condition(context, rule5, condition_destination_empty(context));
+	rule_add_condition(context, rule5, condition_destination(context, i->center));
+	rule_add_condition(context, rule5, condition_top_card(context));
+	rule_add_condition(
+		context, rule5,
+		condition_top_card_equal(context, e_suit_none, 1, e_equal_value));
+	rule_add_action(context, rule5, action_reveal_source_top_card(context));
+	ruleset_add_rule(context, s->ruleset, rule5);
+
+	/* Allow to build on the ace pile up to king in the same suit. */
+	rule6 = rule_create(context);
+	rule_add_condition(context, rule6, condition_destination(context, i->center));
+	rule_add_condition(context, rule6, condition_top_card(context));
+	rule_add_condition(
+		context, rule6, condition_top_card_compare(
+			context, 0, e_follow_suit|e_dest_1lower_value));
+	rule_add_action(context, rule6, action_reveal_source_top_card(context));
+	ruleset_add_rule(context, s->ruleset, rule6);
+}
+
 solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settings) {
 	visual_pile *deck, *done, *king1, *king2, *king3, *king4;
 	visual_pile *src1, *src2, *src3, *src4;
 	visual_pile *center, *build1, *build2, *build3, *build4;
 	visual_pile *pile1, *pile2, *pile3, *pile4, *pile5;
-	condition *build_pile_cond, *king_pile_cond;
-	rule *rule1, *rule2, *rule3, *rule4, *rule5, *rule6;
 
 	/* The one solitaire instance we have.*/
 	solitaire* s = mem_alloc(context, sizeof(solitaire));
@@ -330,90 +400,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 
 	visual_sync(s->visual);
 
-	s->ruleset = ruleset_create(context);
+	setup_rules(context, s, i);
 
-	/* Shared condition of a build pile destination */
-	build_pile_cond = condition_or(
-		context,
-		condition_or(
-			context,
-			condition_or(
-				context,
-				condition_destination(context, i->build1),
-				condition_destination(context, i->build2)),
-			condition_destination(context, i->build3)),
-		condition_destination(context, i->build4));
-
-	king_pile_cond = condition_or(
-		context,
-		condition_or(
-			context,
-			condition_or(
-				context,
-				condition_destination(context, i->king1),
-				condition_destination(context, i->king2)),
-			condition_destination(context, i->king3)),
-		condition_destination(context, i->king4));
-
-	/* Allow moving any card to an empty pile outside of the four source cards. */
-	rule1 = rule_create(context);
-	rule_add_condition(context, rule1, condition_destination_empty(context));
-	rule_add_condition(context, rule1, condition_top_card(context));
-	rule_add_condition(context, rule1, build_pile_cond);
-	rule_add_action(context, rule1, action_reveal_source_top_card(context));
-	ruleset_add_rule(context, s->ruleset, rule1);
-
-	/* Allow building of cards following suit on build piles. */
-	rule2 = rule_create(context);
-	rule_add_condition(context, rule2, build_pile_cond);
-	rule_add_condition(context, rule2, condition_top_card(context));
-	rule_add_condition(
-		context, rule2, condition_top_card_compare(
-			context, 0, e_follow_suit|e_dest_1lower_value));
-	rule_add_action(context, rule2, action_reveal_source_top_card(context));
-	ruleset_add_rule(context, s->ruleset, rule2);
-
-	/* Allow a king to be moved to the king pile. */
-	rule3 = rule_create(context);
-	rule_add_condition(context, rule3, king_pile_cond);
-	rule_add_condition(context, rule3, condition_top_card(context));
-	rule_add_condition(context, rule3, condition_destination_empty(context));
-	rule_add_condition(
-		context, rule3,
-		condition_top_card_equal(context, e_suit_none, 13, e_equal_value));
-	rule_add_action(context, rule3, action_reveal_source_top_card(context));
-	ruleset_add_rule(context, s->ruleset, rule3);
-
-	/* Allow building of cards in descending order on king piles and
-	   following suit. */
-	rule4 = rule_create(context);
-	rule_add_condition(context, rule4, king_pile_cond);
-	rule_add_condition(context, rule4, condition_top_card(context));
-	rule_add_condition(
-		context, rule4, condition_top_card_compare(
-			context, 0, e_follow_suit|e_dest_1higher_value));
-	rule_add_action(context, rule4, action_reveal_source_top_card(context));
-	ruleset_add_rule(context, s->ruleset, rule4);
-
-	/* Allow an ace to be placed in the center pile if empty. */
-	rule5 = rule_create(context);
-	rule_add_condition(context, rule5, condition_destination_empty(context));
-	rule_add_condition(context, rule5, condition_destination(context, i->center));
-	rule_add_condition(context, rule5, condition_top_card(context));
-	rule_add_condition(
-		context, rule5,
-		condition_top_card_equal(context, e_suit_none, 1, e_equal_value));
-	rule_add_action(context, rule5, action_reveal_source_top_card(context));
-	ruleset_add_rule(context, s->ruleset, rule5);
-
-	/* Allow to build on the ace pile up to king in the same suit. */
-	rule6 = rule_create(context);
-	rule_add_condition(context, rule6, condition_destination(context, i->center));
-	rule_add_condition(context, rule6, condition_top_card(context));
-	rule_add_condition(
-		context, rule6, condition_top_card_compare(
-			context, 0, e_follow_suit|e_dest_1lower_value));
-	rule_add_action(context, rule6, action_reveal_source_top_card(context));
-	ruleset_add_rule(context, s->ruleset, rule6);
 	return s;
 }

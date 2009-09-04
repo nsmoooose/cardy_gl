@@ -1,3 +1,4 @@
+#include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 #include "rule.h"
@@ -27,21 +28,40 @@ condition *condition_source(mem_context *context, pile *pile) {
 /* ------------------------------------------------------------------------- */
 
 typedef struct {
-	pile *pile;
+	pile **piles;
+	int size;
 } condition_destination_data;
 
 static bool condition_destination_check(condition *condition, move_action *action) {
+	int index;
 	condition_destination_data* data = (condition_destination_data*)condition->data;
-	return data->pile == action->destination;
+	for(index=0;index<data->size;++index) {
+		if(data->piles[index] == action->destination) {
+			return true;
+		}
+	}
+	return false;
 }
 
 condition *condition_destination(mem_context *context, pile *pile) {
+	return condition_destination_array(context, 1, pile);
+}
+
+condition *condition_destination_array(mem_context *context, int count, ...) {
+	int index;
 	condition* c;
 	condition_destination_data* data;
+	va_list vl;
 
 	c = mem_alloc(context, sizeof(condition));
 	data = mem_alloc(context, sizeof(condition_destination_data));
-	data->pile = pile;
+	data->size = count;
+	data->piles = mem_alloc(context, count * sizeof(pile*));
+	va_start(vl, count);
+	for(index=0;index<count;++index) {
+		data->piles[index] = va_arg(vl, pile*);
+	}
+	va_end(vl);
 	c->data = data;
 	c->check = condition_destination_check;
 	return c;

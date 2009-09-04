@@ -250,6 +250,29 @@ START_TEST(test_condition_destination) {
 }
 END_TEST
 
+START_TEST(test_condition_destination_array) {
+	move_action action;
+	pile *p1, *p2, *p3;
+	condition *cond;
+	mem_context *context = mem_context_create();
+
+	p1 = pile_create(context, 52);
+	p2 = pile_create(context, 52);
+	p3 = pile_create(context, 52);
+
+	cond = condition_destination_array(context, 2, p1, p2);
+	ck_assert_msg(cond->check != 0, "Check method not implemented.");
+
+	action.destination = p1;
+	ck_assert_msg(cond->check(cond, &action) == true, "Should have returned true");
+	action.destination = p2;
+	ck_assert_msg(cond->check(cond, &action) == true, "Should have returned true");
+
+	action.destination = p3;
+	ck_assert_msg(cond->check(cond, &action) == false, "Should have returned false");
+}
+END_TEST
+
 START_TEST(test_condition_destination_empty) {
 	pile *p1, *p2;
 	condition *cond;
@@ -479,25 +502,26 @@ START_TEST(test_action_reveal_source_top_card) {
 END_TEST
 
 void add_rule_tests(Suite *suite) {
-	TCase *rule_case = tcase_create("Rules");
-	tcase_add_test(rule_case, test_condition_source);
-	tcase_add_test(rule_case, test_condition_or);
-	tcase_add_test(rule_case, test_condition_destination);
-	tcase_add_test(rule_case, test_condition_destination_empty);
-	tcase_add_test(rule_case, test_condition_top_card);
-	tcase_add_test(rule_case, test_condition_top_card_equal);
-	tcase_add_test(rule_case, test_condition_top_card_compare);
-	tcase_add_test(rule_case, test_rule_create);
-	tcase_add_test(rule_case, test_rule_add_condition);
-	tcase_add_test(rule_case, test_rule_add_action);
-	tcase_add_test(rule_case, test_rule_check);
-	tcase_add_test(rule_case, test_rule_execute_actions);
-	tcase_add_test(rule_case, test_ruleset_create);
-	tcase_add_test(rule_case, test_ruleset_add_rule);
-	tcase_add_test(rule_case, test_ruleset_check);
-	tcase_add_test(rule_case, test_ruleset_move_card);
-	tcase_add_test(rule_case, test_ruleset_get_move_action);
-	tcase_add_test(rule_case, test_ruleset_apply_move_action);
-	tcase_add_test(rule_case, test_action_reveal_source_top_card);
-	suite_add_tcase(suite, rule_case);
+	TCase *c = tcase_create("Rules");
+	tcase_add_test(c, test_condition_source);
+	tcase_add_test(c, test_condition_or);
+	tcase_add_test(c, test_condition_destination);
+	tcase_add_test(c, test_condition_destination_array);
+	tcase_add_test(c, test_condition_destination_empty);
+	tcase_add_test(c, test_condition_top_card);
+	tcase_add_test(c, test_condition_top_card_equal);
+	tcase_add_test(c, test_condition_top_card_compare);
+	tcase_add_test(c, test_rule_create);
+	tcase_add_test(c, test_rule_add_condition);
+	tcase_add_test(c, test_rule_add_action);
+	tcase_add_test(c, test_rule_check);
+	tcase_add_test(c, test_rule_execute_actions);
+	tcase_add_test(c, test_ruleset_create);
+	tcase_add_test(c, test_ruleset_add_rule);
+	tcase_add_test(c, test_ruleset_check);
+	tcase_add_test(c, test_ruleset_move_card);
+	tcase_add_test(c, test_ruleset_get_move_action);
+	tcase_add_test(c, test_ruleset_apply_move_action);
+	tcase_add_test(c, test_action_reveal_source_top_card);
+	suite_add_tcase(suite, c);
 }
