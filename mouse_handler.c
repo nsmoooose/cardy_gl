@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "lib/mygl.h"
+#include "lib/render_solitaire.h"
 #include "mouse_handler.h"
 #include "rendering.h"
 

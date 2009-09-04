@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include "keyboard_handler.h"
+#include "program.h"
 #include "rendering.h"
 #include "lib/mygl.h"
+#include "lib/render_solitaire.h"
 #include "lib/solitaire_theidiot.h"
 #include "lib/solitaire_maltesercross.h"
 #include "lib/solitaire_noname1.h"

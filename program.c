@@ -4,16 +4,21 @@
 #include "lib/card.h"
 #include "lib/mygl.h"
 #include "lib/solitaire_theidiot.h"
+#include "lib/render_solitaire.h"
 #include "keyboard_handler.h"
 #include "mouse_handler.h"
 #include "rendering.h"
+
+mem_context *g_context = 0;
+mem_context *g_solcontext = 0;
 
 int main(int argc, char* argv[]) {
 	srand(time(NULL));
 	rsvg_init();
 
 	g_context = mem_context_create();
-	g_solitaire = solitaire_theidiot(g_context, visual_settings_create(g_context));
+	g_solcontext = mem_context_create();
+	g_solitaire = solitaire_theidiot(g_solcontext, visual_settings_create(g_context));
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);

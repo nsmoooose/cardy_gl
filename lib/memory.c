@@ -30,6 +30,15 @@ void mem_context_free(mem_context *context) {
 	free(context);
 }
 
+void mem_attach(mem_context *context, void *mem) {
+	int index = first_free(context);
+	if(index == -1) {
+		/* TODO */
+		exit(0);
+	}
+	context->blocks[index] = mem;
+}
+
 void* mem_alloc(mem_context *context, int size) {
 	int old_size, index;
 	void *old_blocks, *data = calloc(1, size);
