@@ -7,21 +7,7 @@
  *  struct is callbacks to the logic.
  */
 typedef struct solitaire_St {
-	/** Start a new game.
-	 */
-	void (*new_game)(struct solitaire_St *sol);
-
-	/** Event that is called when a card has been revealed
-	 *  or hidden beqause of user action.
-	 */
-	void (*card_revealed)(struct solitaire_St *sol);
-
-	/** The solitaire has been solved.
-	 */
-	void (*finished)(struct solitaire_St *sol);
-
 	visual *visual;
-
 	ruleset *ruleset;
 
 	/** Internal representation of this game. Don't mess

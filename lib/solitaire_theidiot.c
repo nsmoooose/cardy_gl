@@ -8,9 +8,6 @@ typedef struct {
 	pile *done;
 } internal;
 
-static void my_new_game(solitaire* sol) {
-}
-
 typedef struct {
 	solitaire *sol;
 	internal *i;
@@ -170,9 +167,5 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 				condition_destination(context, i->pile3)),
 			condition_destination(context, i->pile4)));
 	ruleset_add_rule(context, s->ruleset, rule2);
-
-	/* Add our implementation for the common functionality
-	 * shared by all solitaires. */
-	s->new_game = my_new_game;
 	return s;
 }

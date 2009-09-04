@@ -12,9 +12,6 @@ typedef struct {
 	pile* done;
 } internal;
 
-static void my_new_game(solitaire* sol) {
-}
-
 /*
 static void my_deal(solitaire* sol, visual_pile* pile) {
 	internal* i = sol->data;
@@ -108,9 +105,5 @@ solitaire* solitaire_pyramid(mem_context *context, visual_settings *settings) {
 	card_append(ace, i->pile1);
 
 	visual_sync(s->visual);
-
-	/* Add our implementation for the common functionality
-	 * shared by all solitaires. */
-	s->new_game = my_new_game;
 	return s;
 }

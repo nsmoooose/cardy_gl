@@ -9,9 +9,6 @@ START_TEST(test_sol_theidiot_init) {
 	visual_settings *settings = mem_alloc(context, sizeof(visual_settings));
 	solitaire* sol = solitaire_theidiot(context, settings);
 
-	ck_assert_msg(sol->new_game != 0, "New game isn't implemented.");
-	ck_assert_msg(sol->card_revealed == 0, "Card revealed callback is set.");
-	ck_assert_msg(sol->finished == 0, "Finished callback is set.");
 	ck_assert_msg(sol->data != 0, "Private implementation isn't set.");
 	ck_assert_msg(sol->visual != 0, "visual member should be set.");
 	ck_assert_msg(sol->visual->piles != 0, "piles member should be set.");
