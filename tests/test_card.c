@@ -112,6 +112,20 @@ START_TEST(test_card_reveal_all) {
 }
 END_TEST
 
+START_TEST(test_card_reveal_all_array) {
+	mem_context *context = mem_context_create();
+	pile *p1 = pile_create(context, 104);
+	pile *p2 = pile_create(context, 104);
+	p1->cards[0] = card_create(context, e_spades, 1);
+	p2->cards[0] = card_create(context, e_clubs, 1);
+
+	card_reveal_all_array(2, p1, p2);
+
+	ck_assert_msg(p1->cards[0]->proxy->card != 0, "Card should have been revealed.");
+	ck_assert_msg(p2->cards[0]->proxy->card != 0, "Card should have been revealed.");
+}
+END_TEST
+
 START_TEST(test_card_hide) {
 	mem_context *context = mem_context_create();
 	card *card = card_create(context, e_spades, 5);
@@ -335,6 +349,7 @@ void add_card_tests(Suite *suite) {
 	tcase_add_test(c, test_card_reveal);
 	tcase_add_test(c, test_card_reveal_count);
 	tcase_add_test(c, test_card_reveal_all);
+	tcase_add_test(c, test_card_reveal_all_array);
 	tcase_add_test(c, test_card_hide);
 	tcase_add_test(c, test_card_hide_count);
 	tcase_add_test(c, test_card_hide_all);

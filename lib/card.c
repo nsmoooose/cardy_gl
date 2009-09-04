@@ -163,6 +163,17 @@ void card_reveal_all(pile *pile) {
 	}
 }
 
+void card_reveal_all_array(int count, ...) {
+	int index;
+	va_list vl;
+
+	va_start(vl, count);
+	for(index=0;index<count;++index) {
+		card_reveal_all(va_arg(vl, pile*));
+	}
+	va_end(vl);
+}
+
 void card_hide(card *card) {
 	card->proxy->card = 0;
 }

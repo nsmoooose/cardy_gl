@@ -162,6 +162,7 @@ card *card_last(pile *pile);
 void card_reveal(card *card);
 void card_reveal_count(pile *pile, int start_index, int count);
 void card_reveal_all(pile *pile);
+void card_reveal_all_array(int count, ...);
 
 void card_hide(card *card);
 void card_hide_count(pile *pile, int start_index, int count);
