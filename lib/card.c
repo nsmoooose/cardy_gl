@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "card.h"
@@ -108,6 +109,17 @@ void card_move_all(pile *dest, pile *src) {
 		dest->cards[dest_index] = src->cards[index];
 		src->cards[index] = 0;
 	}
+}
+
+void card_move_all_array(pile *dest, int count, ...) {
+	int index;
+	va_list vl;
+
+	va_start(vl, count);
+	for(index=0;index<count;++index) {
+		card_move_all(dest, va_arg(vl, pile*));
+	}
+	va_end(vl);
 }
 
 void card_move_count(pile *dest, pile *src, int count) {

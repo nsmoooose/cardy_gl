@@ -233,6 +233,25 @@ START_TEST(test_card_move_all) {
 }
 END_TEST
 
+START_TEST(test_card_move_all_array) {
+	pile *src1, *src2;
+	pile *dst;
+	mem_context *context = mem_context_create();
+
+	src1 = pile_create(context, 52);
+	src2 = pile_create(context, 52);
+	dst = pile_create(context, 104);
+	create_deck(context, src1, 1);
+	create_deck(context, src2, 1);
+
+	card_move_all_array(dst, 2, src1, src2);
+
+	ck_assert_msg(card_count(src1) == 0, "Source 1 card count should be 0");
+	ck_assert_msg(card_count(src2) == 0, "Source 2 card count should be 0");
+	ck_assert_msg(card_count(dst) == 104, "Destination card count should be 104");
+}
+END_TEST
+
 START_TEST(test_visual_pile_create) {
 	pile *src;
 	visual_pile* pile;
@@ -297,26 +316,27 @@ START_TEST(test_visual_sync) {
 END_TEST
 
 void add_card_tests(Suite *suite) {
-	TCase *card_case = tcase_create("Card");
-	tcase_add_test(card_case, test_card_create);
-	tcase_add_test(card_case, test_card_free);
-	tcase_add_test(card_case, test_pile_create);
-	tcase_add_test(card_case, test_create_deck);
-	tcase_add_test(card_case, test_card_count);
-	tcase_add_test(card_case, test_card_take_last);
-	tcase_add_test(card_case, test_card_append);
-	tcase_add_test(card_case, test_card_last);
-	tcase_add_test(card_case, test_card_move_all);
-	tcase_add_test(card_case, test_card_first_free);
-	tcase_add_test(card_case, test_visual_pile_create);
-	tcase_add_test(card_case, test_visual_create);
-	tcase_add_test(card_case, test_visual_add_pile);
-	tcase_add_test(card_case, test_visual_sync);
-	tcase_add_test(card_case, test_card_reveal);
-	tcase_add_test(card_case, test_card_reveal_count);
-	tcase_add_test(card_case, test_card_reveal_all);
-	tcase_add_test(card_case, test_card_hide);
-	tcase_add_test(card_case, test_card_hide_count);
-	tcase_add_test(card_case, test_card_hide_all);
-	suite_add_tcase(suite, card_case);
+	TCase *c = tcase_create("Card");
+	tcase_add_test(c, test_card_create);
+	tcase_add_test(c, test_card_free);
+	tcase_add_test(c, test_pile_create);
+	tcase_add_test(c, test_create_deck);
+	tcase_add_test(c, test_card_count);
+	tcase_add_test(c, test_card_take_last);
+	tcase_add_test(c, test_card_append);
+	tcase_add_test(c, test_card_last);
+	tcase_add_test(c, test_card_move_all);
+	tcase_add_test(c, test_card_move_all_array);
+	tcase_add_test(c, test_card_first_free);
+	tcase_add_test(c, test_visual_pile_create);
+	tcase_add_test(c, test_visual_create);
+	tcase_add_test(c, test_visual_add_pile);
+	tcase_add_test(c, test_visual_sync);
+	tcase_add_test(c, test_card_reveal);
+	tcase_add_test(c, test_card_reveal_count);
+	tcase_add_test(c, test_card_reveal_all);
+	tcase_add_test(c, test_card_hide);
+	tcase_add_test(c, test_card_hide_count);
+	tcase_add_test(c, test_card_hide_all);
+	suite_add_tcase(suite, c);
 }

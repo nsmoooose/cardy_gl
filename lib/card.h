@@ -142,6 +142,7 @@ void card_append(card* card_to_append, pile *pile);
 /** Moves all cards from src array into the destination array.
  */
 void card_move_all(pile *dest, pile *src);
+void card_move_all_array(pile *dest, int count, ...);
 void card_move_count(pile *dest, pile *src, int count);
 
 /** Creates a pile with the specified fixed size.
