@@ -11,7 +11,7 @@ render_object *render_object_create(mem_context *context, char *id) {
 		o->id = strdup(id);
 		mem_attach(context, o->id);
 	}
-	return 0;
+	return o;
 }
 
 void render_object_add_child(mem_context *context, render_object *parent, render_object *child) {
