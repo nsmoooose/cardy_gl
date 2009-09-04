@@ -55,12 +55,28 @@ visual_settings *visual_settings_create(mem_context *context) {
 	return settings;
 }
 
-void setup_render_resources() {
-	rsvg_init();
+void render_setup() {
+	glClearColor(0.0f, 0.8f, 0.0f, 0.0f);
+	glEnableClientState(GL_VERTEX_ARRAY);
 	g_theme = theme_load("themes", "gnome");
 }
 
-void update_camera_pos() {
+void render_window_size_change(int width, int height) {
+	GLfloat aspect;
+	if(height == 0) {
+		height = 1;
+	}
+
+	glViewport(0, 0, width, height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	aspect = (float)width/(float)height;
+	gluPerspective(g_perspective_fov, aspect, g_perspective_near, g_perspective_far);
+
+	render_update_camera_pos();
+}
+
+void render_update_camera_pos() {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslatef(g_camera_translateX, g_camera_translateY, g_camera_zoom);
