@@ -50,6 +50,7 @@ static void action_deal_execute(visual_pile_action *action) {
 			i->build[4], i->build[5], i->build[6], i->build[7],
 			i->ace[0], i->ace[1], i->ace[2], i->ace[3]);
 		card_hide_all(i->deck);
+		card_shuffle(i->deck);
 	}
 
 	visual_sync(sol->visual);

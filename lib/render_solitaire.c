@@ -23,6 +23,7 @@ float g_perspective_far = 5000.0f;
 float g_perspective_fov = 45.0f;
 
 card_proxy *g_selected_card = 0;
+visual_settings *g_visual_settings = 0;
 
 /* Build a vector of coordinates for a card. */
 static GLfloat g_card_vertexes[8*3] = {
@@ -181,6 +182,13 @@ render_object *render_object_solitaire(mem_context *context) {
 	render_object *o = render_object_create(context, "solitaire");
 	o->render = render_object_solitaire_render;
 
+	if(g_visual_settings == 0) {
+		g_visual_settings = mem_alloc(context, sizeof(visual_settings));
+		g_visual_settings->card_width = 40.0f;
+		g_visual_settings->card_height = 60.0f;
+		g_visual_settings->card_spacing = 4.0f;
+		g_visual_settings->card_thickness = 0.4f;
+	}
 	if(g_theme == 0) {
 		g_theme = theme_load("themes", "gnome");
 	}

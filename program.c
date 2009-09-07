@@ -18,7 +18,6 @@ int main(int argc, char* argv[]) {
 
 	g_context = mem_context_create();
 	g_solcontext = mem_context_create();
-	g_solitaire = solitaire_theidiot(g_solcontext, visual_settings_create(g_context));
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);

@@ -14,6 +14,7 @@ extern float g_perspective_fov;
 extern card_proxy *g_selected_card;
 extern solitaire *g_solitaire;
 extern theme *g_theme;
+extern visual_settings *g_visual_settings;
 
 void render_update_camera_pos();
 render_object *render_object_solitaire(mem_context *context);
