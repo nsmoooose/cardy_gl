@@ -2,57 +2,10 @@
 #include "lib/mygl.h"
 #include "lib/render_solitaire.h"
 #include "mouse_handler.h"
+#include "program.h"
 #include "rendering.h"
 
 #define MAX_SELECTION 2000
-
-static void process_selection(GLint hits, GLuint* selections) {
-	int /*i, */ index, hit;
-	visual_pile* selected_pile = 0;
-	card_proxy* selected_proxy = 0;
-
-	/*
-	printf("Number of hits: %d\n", hits);
-	for(i=0;i<20;++i) {
-		printf("0x%x\n", selections[i]);
-	}
-	*/
-
-	for(index=0, hit=0;hit<hits;++hit) {
-		if(selections[index] == 1) {
-			selected_pile = (visual_pile*)selections[index+3];
-		}
-		else if(selections[index] == 2) {
-			selected_pile = (visual_pile*)selections[index+3];
-			selected_proxy = (card_proxy*)selections[index+4];
-		}
-		index += selections[index] + 3;
-	}
-
-	if(selected_pile && selected_pile->action) {
-		selected_pile->action->execute(selected_pile->action);
-	}
-	else if(selected_pile && selected_proxy) {
-		if(g_selected_card == selected_proxy) {
-			g_selected_card = 0;
-		}
-		else {
-			if(g_selected_card == 0) {
-				g_selected_card = selected_proxy;
-			}
-			else {
-				ruleset_move_card(g_solitaire->ruleset, g_solitaire->visual, selected_pile, g_selected_card);
-				g_selected_card = 0;
-			}
-		}
-	}
-	else {
-		if(g_selected_card) {
-			ruleset_move_card(g_solitaire->ruleset, g_solitaire->visual, selected_pile, g_selected_card);
-			g_selected_card = 0;
-		}
-	}
-}
 
 void window_mouse(int button, int state, int x, int y) {
 	GLuint selections[MAX_SELECTION];
@@ -78,7 +31,8 @@ void window_mouse(int button, int state, int x, int y) {
 	gluPickMatrix(x, viewport[3] - y + viewport[1], 1, 1, viewport);
 
 	aspect = (float)viewport[2] / (float)viewport[3];
-	gluPerspective(g_perspective_fov, aspect, g_perspective_near, g_perspective_far);
+	gluPerspective(g_perspective_fov, aspect, g_perspective_near,
+				   g_perspective_far);
 
 	check_gl_errors("window_mouse (selection setup)");
 
@@ -89,7 +43,7 @@ void window_mouse(int button, int state, int x, int y) {
 		fprintf(stderr, "-1 hits. Selection buffer not large enough.\n");
 	}
 	else if(hits > 0) {
-		process_selection(hits, selections);
+		render_process_selections(g_rcontext, hits, selections);
 	}
 
 	glMatrixMode(GL_PROJECTION);

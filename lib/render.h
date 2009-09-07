@@ -28,7 +28,7 @@ typedef struct render_object_St {
 typedef void (*render_selection_callback)(void *data);
 
 typedef struct {
-	render_selection_callback *callback;
+	render_selection_callback callback;
 	void *data;
 } render_selection;
 
@@ -57,7 +57,10 @@ void render_scene_object(
 void render_scene_context(render_context *rcontext, float delta);
 
 GLuint render_register_selection_callback(
-	render_context *context, render_selection_callback callback, void *data);
+	render_context *rcontext, render_selection_callback callback, void *data);
 
+void render_selection_reset(render_context *rcontext);
 
+void render_process_selections(
+	render_context *rcontext, GLint hits, GLuint* selections);
 #endif /* __RENDER_H__ */

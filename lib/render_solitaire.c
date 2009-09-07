@@ -46,13 +46,54 @@ static GLubyte g_card_indexes[] = {
 	4, 0, 3, 7 /* left */
 };
 
+static void process_click(visual_pile *pile, card_proxy *proxy) {
+	if(pile && pile->action) {
+		pile->action->execute(pile->action);
+	}
+	else if(pile && proxy) {
+		if(g_selected_card == proxy) {
+			g_selected_card = 0;
+		}
+		else {
+			if(g_selected_card == 0) {
+				g_selected_card = proxy;
+			}
+			else {
+				ruleset_move_card(g_solitaire->ruleset,
+								  g_solitaire->visual,
+								  pile,
+								  g_selected_card);
+				g_selected_card = 0;
+			}
+		}
+	}
+	else {
+		if(g_selected_card) {
+			ruleset_move_card(g_solitaire->ruleset,
+							  g_solitaire->visual,
+							  pile,
+							  g_selected_card);
+			g_selected_card = 0;
+		}
+	}
+}
+
+static void callback_pile(void *data) {
+	process_click(data, 0);
+}
+
+static void callback_card(void *data) {
+	visual_pile *pile = visual_find_pile_from_card(g_solitaire->visual, data);
+	process_click(pile, data);
+}
+
 void render_update_camera_pos() {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslatef(g_camera_translateX, g_camera_translateY, g_camera_zoom);
 }
 
-void render_card(visual_pile* pile, card_proxy* proxy) {
+void render_card(render_context *rcontext, visual_pile* pile, card_proxy* proxy) {
 	int index;
 
 	if(g_selected_card == proxy) {
@@ -62,7 +103,7 @@ void render_card(visual_pile* pile, card_proxy* proxy) {
 		glColor3f(1.0f, 1.0f, 1.0f);
 	}
 
-	glPushName((GLuint)proxy);
+	glPushName(render_register_selection_callback(rcontext, callback_card, proxy));
 
 	/* Test to see if we need to rotate the card around its axis
 	   to show the front face. */
@@ -123,14 +164,15 @@ void render_card(visual_pile* pile, card_proxy* proxy) {
 	check_gl_errors("render_card");
 }
 
-void render_pile(visual_pile* pile, visual_settings *settings) {
+void render_pile(render_context *rcontext,
+				 visual_pile* pile, visual_settings *settings) {
 	int card_index;
 
 	/* Do a translation of our position for the pile. */
 	glPushMatrix();
 	glTranslatef(pile->origin[0], pile->origin[1], pile->origin[2]);
 
-	glLoadName((GLuint)pile);
+	glLoadName(render_register_selection_callback(rcontext, callback_pile, pile));
 
 	if(pile->rotation != 0.0f) {
 		glRotatef(pile->rotation, 0.0f, 0.0f, 1.0f);
@@ -148,7 +190,7 @@ void render_pile(visual_pile* pile, visual_settings *settings) {
 
 	glPushMatrix();
 	for(card_index=0;card_index<pile->card_count;++card_index) {
-		render_card(pile, pile->cards[card_index]);
+		render_card(rcontext, pile, pile->cards[card_index]);
 	}
 	glPopMatrix();
 
@@ -165,7 +207,7 @@ void render_object_solitaire_render(
 		if(!pile) {
 			continue;
 		}
-		render_pile(pile, g_solitaire->visual->settings);
+		render_pile(rcontext, pile, g_solitaire->visual->settings);
 	}
 }
 

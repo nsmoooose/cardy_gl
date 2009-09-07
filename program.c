@@ -11,6 +11,7 @@
 
 mem_context *g_context = 0;
 mem_context *g_solcontext = 0;
+render_context *g_rcontext = 0;
 
 int main(int argc, char* argv[]) {
 	srand(time(NULL));

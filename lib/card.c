@@ -264,6 +264,18 @@ void visual_add_pile(mem_context *context, visual* vis, visual_pile* p) {
 	vis->piles[vis->pile_count - 1] = p;
 }
 
+visual_pile *visual_find_pile_from_card(visual *vis, card_proxy *proxy) {
+	int i, j;
+	for(i=0;i<vis->pile_count;++i) {
+		for(j=0;j<vis->piles[i]->card_count;++j) {
+			if(vis->piles[i]->cards[j] == proxy) {
+				return vis->piles[i];
+			}
+		}
+	}
+	return 0;
+}
+
 visual_pile* visual_pile_create(mem_context *context, pile *pile) {
 	visual_pile* p = mem_alloc(context, sizeof(visual_pile));
 	p->data = pile;

@@ -77,8 +77,9 @@ void window_key_press(unsigned char key, int x, int y) {
 }
 
 void window_special_key_press(int key, int x, int y) {
-	int key_modifiers = glutGetModifiers();
 	/*
+	int key_modifiers = glutGetModifiers();
+
 	printf("Keyboard pressed: ");
 	if(key_modifiers & GLUT_ACTIVE_SHIFT) {
 		printf("SHIFT+");

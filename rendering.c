@@ -4,8 +4,6 @@
 #include "program.h"
 #include "rendering.h"
 
-render_context *g_rcontext = 0;
-
 void render_setup() {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	g_rcontext = render_context_create(g_context);
