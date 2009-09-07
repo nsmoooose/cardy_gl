@@ -89,11 +89,21 @@ static void setup_rules(mem_context *context, solitaire *s, internal *i) {
 	rule_add_condition(context, rule2, ace1_4_cond);
 	rule_add_condition(context, rule2, condition_top_card(context));
 	rule_add_condition(context, rule2, condition_top_card_compare(context, 0, e_dest_1lower_value|e_follow_suit));
+	rule_add_action(context, rule2, action_reveal_source_top_card(context));
 	ruleset_add_rule(context, s->ruleset, rule2);
 
 	/* Allow moving several cards to a top card of the opposite suit. */
 	rule3 = rule_create(context);
-	rule_add_condition(context, rule2, condition_top_card_compare(context, 0, e_dest_1higher_value|e_suit_opposite));
+	rule_add_condition(context, rule3, condition_top_card_compare(context, 0, e_dest_1higher_value|e_suit_opposite));
+	rule_add_condition(context, rule3,
+					   condition_source_array(
+						   context, 8, i->build[0], i->build[1], i->build[2],
+						   i->build[3], i->build[4], i->build[5], i->build[6], i->build[7]));
+	rule_add_condition(context, rule3,
+					   condition_destination_array(
+						   context, 8, i->build[0], i->build[1], i->build[2],
+						   i->build[3], i->build[4], i->build[5], i->build[6], i->build[7]));
+	rule_add_action(context, rule3, action_reveal_source_top_card(context));
 	ruleset_add_rule(context, s->ruleset, rule3);
 }
 

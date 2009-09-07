@@ -51,6 +51,7 @@ typedef enum {
 
 condition *condition_or(mem_context *context, condition *c1, condition *c2);
 condition *condition_source(mem_context *context, pile *pile);
+condition *condition_source_array(mem_context *context, int count, ...);
 condition *condition_top_card(mem_context *context);
 condition *condition_top_card_compare(mem_context *context, pile *dest, condition_compare_operation operation);
 condition *condition_top_card_equal(mem_context *context, card_suit suit, card_value value, condition_compare_operation operation);

@@ -215,6 +215,29 @@ START_TEST(test_condition_source) {
 }
 END_TEST
 
+START_TEST(test_condition_source_array) {
+	move_action action;
+	pile *p1, *p2, *p3;
+	condition *cond;
+	mem_context *context = mem_context_create();
+
+	p1 = pile_create(context, 52);
+	p2 = pile_create(context, 52);
+	p3 = pile_create(context, 52);
+
+	cond = condition_source_array(context, 2, p1, p2);
+	ck_assert_msg(cond->check != 0, "Check method not implemented.");
+
+	action.source = p1;
+	ck_assert_msg(cond->check(cond, &action) == true, "Should have returned true");
+	action.source = p2;
+	ck_assert_msg(cond->check(cond, &action) == true, "Should have returned true");
+
+	action.source = p3;
+	ck_assert_msg(cond->check(cond, &action) == false, "Should have returned false");
+}
+END_TEST
+
 START_TEST(test_condition_or) {
 	move_action action;
 	condition *cond;
@@ -504,6 +527,7 @@ END_TEST
 void add_rule_tests(Suite *suite) {
 	TCase *c = tcase_create("Rules");
 	tcase_add_test(c, test_condition_source);
+	tcase_add_test(c, test_condition_source_array);
 	tcase_add_test(c, test_condition_or);
 	tcase_add_test(c, test_condition_destination);
 	tcase_add_test(c, test_condition_destination_array);
