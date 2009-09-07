@@ -46,21 +46,11 @@ static GLubyte g_card_indexes[] = {
 	4, 0, 3, 7 /* left */
 };
 
-visual_settings *visual_settings_create(mem_context *context) {
-	visual_settings *settings = mem_alloc(context, sizeof(visual_settings));
-	settings->card_width = 40.0f;
-	settings->card_height = 60.0f;
-	settings->card_spacing = 4.0f;
-	settings->card_thickness = 0.4f;
-	return settings;
-}
-
 void render_update_camera_pos() {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslatef(g_camera_translateX, g_camera_translateY, g_camera_zoom);
 }
-
 
 void render_card(visual_pile* pile, card_proxy* proxy) {
 	int index;
@@ -166,7 +156,8 @@ void render_pile(visual_pile* pile, visual_settings *settings) {
 	check_gl_errors("render_pile (2)");
 }
 
-void render_object_solitaire_render(render_object *object, float delta) {
+void render_object_solitaire_render(
+	render_context *rcontext, render_object *object, float delta) {
 	int pile_index;
 	int pile_count = g_solitaire->visual->pile_count;
 	for(pile_index=0;pile_index<pile_count;++pile_index) {

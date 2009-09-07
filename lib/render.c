@@ -27,23 +27,25 @@ void render_object_add_child(mem_context *context, render_object *parent, render
 	parent->children[parent->child_count - 1] = child;
 }
 
-void render_object_remove_child(mem_context *context, render_object *parent, render_object *child) {
+void render_object_remove_child(mem_context *context, render_object *parent,
+								render_object *child) {
 }
 
 render_object *render_object_find(render_object *root, char *id) {
 	return 0;
 }
 
-void render_scene_object(render_object *object, float delta) {
+void render_scene_object(render_context *rcontext, render_object *object,
+						 float delta) {
 	int i;
-	object->render(object, delta);
+	object->render(rcontext, object, delta);
 	for(i=0;i<object->child_count;++i) {
-		render_scene_object(object->children[i], delta);
+		render_scene_object(rcontext, object->children[i], delta);
 	}
 }
 
 void render_scene_context(render_context *rcontext, float delta) {
 	if(rcontext->object) {
-		render_scene_object(rcontext->object, delta);
+		render_scene_object(rcontext, rcontext->object, delta);
 	}
 }
