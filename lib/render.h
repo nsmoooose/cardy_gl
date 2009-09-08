@@ -1,6 +1,7 @@
 #ifndef __RENDER_H__
 #define __RENDER_H__
 
+#include <librsvg/rsvg.h>
 #include "memory.h"
 #include "mygl.h"
 
@@ -63,4 +64,10 @@ void render_selection_reset(render_context *rcontext);
 
 void render_process_selections(
 	render_context *rcontext, GLint hits, GLuint* selections);
+
+void render_svg_texture(RsvgHandle *h, GLuint texture,
+						char *node_name, int width, int height);
+
+void render_rect(float x1, float y1, float x2, float y2, GLuint texture);
+
 #endif /* __RENDER_H__ */

@@ -118,7 +118,8 @@ void render_card(render_context *rcontext, visual_pile* pile, card_proxy* proxy)
 		   card. */
 		if(index == 0 && proxy->card != 0) {
 			glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, theme_get_card_texture(g_theme, proxy->card->suit, proxy->card->value));
+			glBindTexture(GL_TEXTURE_2D, theme_get_card_texture(
+							  g_theme, proxy->card->suit, proxy->card->value));
 		}
 		if(index == 3) {
 			glEnable(GL_TEXTURE_2D);
@@ -172,7 +173,7 @@ void render_pile(render_context *rcontext,
 	glPushMatrix();
 	glTranslatef(pile->origin[0], pile->origin[1], pile->origin[2]);
 
-	glLoadName(render_register_selection_callback(rcontext, callback_pile, pile));
+	glPushName(render_register_selection_callback(rcontext, callback_pile, pile));
 
 	if(pile->rotation != 0.0f) {
 		glRotatef(pile->rotation, 0.0f, 0.0f, 1.0f);
@@ -196,6 +197,7 @@ void render_pile(render_context *rcontext,
 
 	glPopMatrix();
 	check_gl_errors("render_pile (2)");
+	glPopName();
 }
 
 void render_object_solitaire_render(
