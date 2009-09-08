@@ -17,6 +17,6 @@ extern theme *g_theme;
 extern visual_settings *g_visual_settings;
 
 void render_update_camera_pos();
-render_object *render_object_solitaire(mem_context *context);
+render_object *render_object_solitaire();
 
 #endif /* __RENDER_SOLITAIRE_H__ */

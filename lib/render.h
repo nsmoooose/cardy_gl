@@ -40,15 +40,13 @@ typedef struct render_context_St {
 	int selection_size;
 } render_context;
 
-render_context *render_context_create(mem_context *context);
+render_context *render_context_create();
 
-render_object *render_object_create(mem_context *context, char *id);
+render_object *render_object_create(char *id);
 
-void render_object_add_child(
-	mem_context *context, render_object *parent, render_object *child);
+void render_object_add_child(render_object *parent, render_object *child);
 
-void render_object_remove_child(
-	mem_context *context, render_object *parent, render_object *child);
+void render_object_remove_child(render_object *parent, render_object *child);
 
 render_object *render_object_find(render_object *root, char *id);
 

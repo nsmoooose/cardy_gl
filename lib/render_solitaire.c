@@ -213,12 +213,12 @@ void render_object_solitaire_render(
 	}
 }
 
-render_object *render_object_solitaire(mem_context *context) {
-	render_object *o = render_object_create(context, "solitaire");
+render_object *render_object_solitaire() {
+	render_object *o = render_object_create("solitaire");
 	o->render = render_object_solitaire_render;
 
 	if(g_visual_settings == 0) {
-		g_visual_settings = mem_alloc(context, sizeof(visual_settings));
+		g_visual_settings = calloc(1, sizeof(visual_settings));
 		g_visual_settings->card_width = 40.0f;
 		g_visual_settings->card_height = 60.0f;
 		g_visual_settings->card_spacing = 4.0f;

@@ -83,13 +83,12 @@ void render_object_mainmenu_render(
 	glDisable(GL_BLEND);
 }
 
-render_object *render_object_mainmenu(
-	mem_context *context, mem_context **solcontext) {
+render_object *render_object_mainmenu(mem_context **solcontext) {
 
 	GError* e = NULL;
 	RsvgHandle* h;
-	internal *i = mem_alloc(context, sizeof(internal));
-	render_object *o = render_object_create(context, "mainmenu");
+	internal *i = calloc(1, sizeof(internal));
+	render_object *o = render_object_create("mainmenu");
 	o->data = i;
 	o->render = render_object_mainmenu_render;
 

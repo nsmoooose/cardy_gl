@@ -9,10 +9,10 @@ void render_setup() {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	g_rcontext = render_context_create(g_context);
 	g_rcontext->object = render_object_desktop(g_context);
-	render_object_add_child(g_context, g_rcontext->object,
+	render_object_add_child(g_rcontext->object,
 							render_object_solitaire(g_context));
-	render_object_add_child(g_context, g_rcontext->object,
-							render_object_mainmenu(g_context, &g_solcontext));
+	render_object_add_child(g_rcontext->object,
+							render_object_mainmenu(&g_solcontext));
 
 	g_solitaire = solitaire_theidiot(g_solcontext, g_visual_settings);
 }

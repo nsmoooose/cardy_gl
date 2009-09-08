@@ -3,6 +3,6 @@
 
 #include "render.h"
 
-render_object *render_object_desktop(mem_context *context);
+render_object *render_object_desktop();
 
 #endif /* __RENDER_DESKTOP_H__ */

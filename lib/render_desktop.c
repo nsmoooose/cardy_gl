@@ -22,8 +22,8 @@ void render_object_desktop_render(
 	glDepthFunc(GL_LEQUAL);
 }
 
-render_object *render_object_desktop(mem_context *context) {
-	render_object *o = render_object_create(context, "desktop");
+render_object *render_object_desktop() {
+	render_object *o = render_object_create("desktop");
 	o->render = render_object_desktop_render;
 	return o;
 }

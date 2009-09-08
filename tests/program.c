@@ -5,6 +5,7 @@ void add_memory_tests(Suite *suite);
 void add_card_tests(Suite *suite);
 void add_rule_tests(Suite *suite);
 void add_theme_tests(Suite *suite);
+void add_render_tests(Suite *suite);
 void add_sol_theidiot_tests(Suite *suite);
 void add_sol_malteser_tests(Suite *suite);
 void add_sol_noname1_tests(Suite *suite);
@@ -18,6 +19,7 @@ int main(int argc, char* argv[]) {
 	add_card_tests(suite);
 	add_rule_tests(suite);
 	add_theme_tests(suite);
+	add_render_tests(suite);
 	add_sol_theidiot_tests(suite);
 	add_sol_malteser_tests(suite);
 	add_sol_noname1_tests(suite);
