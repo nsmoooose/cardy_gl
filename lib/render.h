@@ -18,17 +18,16 @@ typedef struct render_object_St {
 	void (*render)(struct render_context_St *rcontext,
 				   struct render_object_St *object, float delta);
 
-	/* Activate function when user clicks on this object. */
-	void (*activate)(struct render_context_St *rcontext,
-					 struct render_object_St *object);
+	struct render_object_St *parent;
 
 	struct render_object_St **children;
 	int child_count;
 } render_object;
 
-typedef void (*render_selection_callback)(void *data);
+typedef void (*render_selection_callback)(render_object *object, void *data);
 
 typedef struct {
+	render_object *object;
 	render_selection_callback callback;
 	void *data;
 } render_selection;
@@ -56,7 +55,7 @@ void render_scene_object(
 void render_scene_context(render_context *rcontext, float delta);
 
 GLuint render_register_selection_callback(
-	render_context *rcontext, render_selection_callback callback, void *data);
+	render_context *rcontext, render_object *object, render_selection_callback callback, void *data);
 
 void render_selection_reset(render_context *rcontext);
 

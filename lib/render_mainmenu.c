@@ -12,41 +12,28 @@ typedef struct {
 	mem_context **solcontext;
 } internal;
 
-void sol_theidiot_callback(void *data) {
-	render_object *o = data;
-	internal *i = o->data;
-
-	mem_context_free(*i->solcontext);
-	*i->solcontext = mem_context_create();
-	g_solitaire = solitaire_theidiot(*i->solcontext, g_visual_settings);
-
-/*	render_object *menu = data;
-	mem_context *context = mem_context_create();
-	solitaire *sol = solitaire_theidiot(context, g_visual_settings);
-	render_object_add_child(menu->parent, render_object_solitaire(sol));
+void sol_theidiot_callback(render_object *object, void *data) {
+	render_object *menu = data;
+	render_object_add_child(menu->parent,
+							render_object_solitaire(solitaire_theidiot));
 	render_object_remove_child(menu->parent, menu);
-*/
 }
 
-void sol_malteser_callback(void *data) {
-	render_object *o = data;
-	internal *i = o->data;
-
-	mem_context_free(*i->solcontext);
-	*i->solcontext = mem_context_create();
-	g_solitaire = solitaire_maltesercross(*i->solcontext, g_visual_settings);
+void sol_malteser_callback(render_object *object, void *data) {
+	render_object *menu = data;
+	render_object_add_child(menu->parent,
+							render_object_solitaire(solitaire_maltesercross));
+	render_object_remove_child(menu->parent, menu);
 }
 
-void sol_noname1_callback(void *data) {
-	render_object *o = data;
-	internal *i = o->data;
-
-	mem_context_free(*i->solcontext);
-	*i->solcontext = mem_context_create();
-	g_solitaire = solitaire_noname1(*i->solcontext, g_visual_settings);
+void sol_noname1_callback(render_object *object, void *data) {
+	render_object *menu = data;
+	render_object_add_child(menu->parent,
+							render_object_solitaire(solitaire_noname1));
+	render_object_remove_child(menu->parent, menu);
 }
 
-void sol_pyramid_callback(void *data) {
+void sol_pyramid_callback(render_object *object, void *data) {
 }
 
 void render_object_mainmenu_render(
@@ -61,22 +48,22 @@ void render_object_mainmenu_render(
 	render_rect(-150.0f, 150.0f, 150.0f, -150.0f, i->textures[0]);
 
 	glPushName(render_register_selection_callback(
-				   rcontext, sol_theidiot_callback, object));
+				   rcontext, object, sol_theidiot_callback, object));
 	render_rect(-120.0f, 85.0f, 40.0f, 55.0f, i->textures[1]);
 	glPopName();
 
 	glPushName(render_register_selection_callback(
-				   rcontext, sol_malteser_callback, object));
+				   rcontext, object, sol_malteser_callback, object));
 	render_rect(-120.0f, 50.0f, 40.0f, 20.0f, i->textures[2]);
 	glPopName();
 
 	glPushName(render_register_selection_callback(
-				   rcontext, sol_noname1_callback, object));
+				   rcontext, object, sol_noname1_callback, object));
 	render_rect(-120.0f, 15.0f, 40.0f, -15.0f, i->textures[3]);
 	glPopName();
 
 	glPushName(render_register_selection_callback(
-				   rcontext, sol_pyramid_callback, object));
+				   rcontext, object, sol_pyramid_callback, object));
 	render_rect(-120.0f, -20.0f, 40.0f, -50.0f, i->textures[4]);
 	glPopName();
 

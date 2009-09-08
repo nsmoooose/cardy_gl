@@ -10,11 +10,7 @@ void render_setup() {
 	g_rcontext = render_context_create(g_context);
 	g_rcontext->object = render_object_desktop(g_context);
 	render_object_add_child(g_rcontext->object,
-							render_object_solitaire(g_context));
-	render_object_add_child(g_rcontext->object,
 							render_object_mainmenu(&g_solcontext));
-
-	g_solitaire = solitaire_theidiot(g_solcontext, g_visual_settings);
 }
 
 void render_window_size_change(int width, int height) {

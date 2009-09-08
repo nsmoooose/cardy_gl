@@ -9,10 +9,12 @@
 #include "render_solitaire.h"
 #include "theme.h"
 
-/** Global instance of the one and only solitaire that is currently
- *  running.
- */
-solitaire* g_solitaire = 0;
+typedef struct {
+	mem_context *context;
+	solitaire *sol;
+	visual_settings *settings;
+} render_solitaire_data;
+
 theme *g_theme = 0;
 
 float g_camera_zoom = -500.0f;
@@ -23,7 +25,6 @@ float g_perspective_far = 5000.0f;
 float g_perspective_fov = 45.0f;
 
 card_proxy *g_selected_card = 0;
-visual_settings *g_visual_settings = 0;
 
 /* Build a vector of coordinates for a card. */
 static GLfloat g_card_vertexes[8*3] = {
@@ -46,7 +47,7 @@ static GLubyte g_card_indexes[] = {
 	4, 0, 3, 7 /* left */
 };
 
-static void process_click(visual_pile *pile, card_proxy *proxy) {
+static void process_click(render_solitaire_data *data, visual_pile *pile, card_proxy *proxy) {
 	if(pile && pile->action) {
 		pile->action->execute(pile->action);
 	}
@@ -59,8 +60,8 @@ static void process_click(visual_pile *pile, card_proxy *proxy) {
 				g_selected_card = proxy;
 			}
 			else {
-				ruleset_move_card(g_solitaire->ruleset,
-								  g_solitaire->visual,
+				ruleset_move_card(data->sol->ruleset,
+								  data->sol->visual,
 								  pile,
 								  g_selected_card);
 				g_selected_card = 0;
@@ -69,8 +70,8 @@ static void process_click(visual_pile *pile, card_proxy *proxy) {
 	}
 	else {
 		if(g_selected_card) {
-			ruleset_move_card(g_solitaire->ruleset,
-							  g_solitaire->visual,
+			ruleset_move_card(data->sol->ruleset,
+							  data->sol->visual,
 							  pile,
 							  g_selected_card);
 			g_selected_card = 0;
@@ -78,13 +79,14 @@ static void process_click(visual_pile *pile, card_proxy *proxy) {
 	}
 }
 
-static void callback_pile(void *data) {
-	process_click(data, 0);
+static void callback_pile(render_object *object, void *data) {
+	process_click(object->data, data, 0);
 }
 
-static void callback_card(void *data) {
-	visual_pile *pile = visual_find_pile_from_card(g_solitaire->visual, data);
-	process_click(pile, data);
+static void callback_card(render_object *object, void *data) {
+	render_solitaire_data *sol_data = object->data;
+	visual_pile *pile = visual_find_pile_from_card(sol_data->sol->visual, data);
+	process_click(object->data, pile, data);
 }
 
 void render_update_camera_pos() {
@@ -93,7 +95,7 @@ void render_update_camera_pos() {
 	glTranslatef(g_camera_translateX, g_camera_translateY, g_camera_zoom);
 }
 
-void render_card(render_context *rcontext, visual_pile* pile, card_proxy* proxy) {
+void render_card(render_context *rcontext, render_object *object, visual_pile* pile, card_proxy* proxy) {
 	int index;
 
 	if(g_selected_card == proxy) {
@@ -103,7 +105,7 @@ void render_card(render_context *rcontext, visual_pile* pile, card_proxy* proxy)
 		glColor3f(1.0f, 1.0f, 1.0f);
 	}
 
-	glPushName(render_register_selection_callback(rcontext, callback_card, proxy));
+	glPushName(render_register_selection_callback(rcontext, object, callback_card, proxy));
 
 	/* Test to see if we need to rotate the card around its axis
 	   to show the front face. */
@@ -166,6 +168,7 @@ void render_card(render_context *rcontext, visual_pile* pile, card_proxy* proxy)
 }
 
 void render_pile(render_context *rcontext,
+				 render_object *object,
 				 visual_pile* pile, visual_settings *settings) {
 	int card_index;
 
@@ -173,7 +176,7 @@ void render_pile(render_context *rcontext,
 	glPushMatrix();
 	glTranslatef(pile->origin[0], pile->origin[1], pile->origin[2]);
 
-	glPushName(render_register_selection_callback(rcontext, callback_pile, pile));
+	glPushName(render_register_selection_callback(rcontext, object, callback_pile, pile));
 
 	if(pile->rotation != 0.0f) {
 		glRotatef(pile->rotation, 0.0f, 0.0f, 1.0f);
@@ -191,7 +194,7 @@ void render_pile(render_context *rcontext,
 
 	glPushMatrix();
 	for(card_index=0;card_index<pile->card_count;++card_index) {
-		render_card(rcontext, pile, pile->cards[card_index]);
+		render_card(rcontext, object, pile, pile->cards[card_index]);
 	}
 	glPopMatrix();
 
@@ -202,31 +205,37 @@ void render_pile(render_context *rcontext,
 
 void render_object_solitaire_render(
 	render_context *rcontext, render_object *object, float delta) {
+	render_solitaire_data *i = object->data;
+
 	int pile_index;
-	int pile_count = g_solitaire->visual->pile_count;
+	int pile_count = i->sol->visual->pile_count;
 	for(pile_index=0;pile_index<pile_count;++pile_index) {
-		visual_pile* pile = g_solitaire->visual->piles[pile_index];
+		visual_pile* pile = i->sol->visual->piles[pile_index];
 		if(!pile) {
 			continue;
 		}
-		render_pile(rcontext, pile, g_solitaire->visual->settings);
+		render_pile(rcontext, object, pile, i->sol->visual->settings);
 	}
 }
 
-render_object *render_object_solitaire() {
+render_object *render_object_solitaire(solitaire_create callback) {
+	render_solitaire_data *i = calloc(1, sizeof(render_solitaire_data));
 	render_object *o = render_object_create("solitaire");
+	o->data = i;
 	o->render = render_object_solitaire_render;
 
-	if(g_visual_settings == 0) {
-		g_visual_settings = calloc(1, sizeof(visual_settings));
-		g_visual_settings->card_width = 40.0f;
-		g_visual_settings->card_height = 60.0f;
-		g_visual_settings->card_spacing = 4.0f;
-		g_visual_settings->card_thickness = 0.4f;
-	}
+	i->context = mem_context_create();
+	i->settings = mem_alloc(i->context, sizeof(visual_settings));
+	i->settings->card_width = 40.0f;
+	i->settings->card_height = 60.0f;
+	i->settings->card_spacing = 4.0f;
+	i->settings->card_thickness = 0.4f;
+
 	if(g_theme == 0) {
 		g_theme = theme_load("themes", "gnome");
 	}
+
+	i->sol = callback(i->context, i->settings);
 
 	return o;
 }

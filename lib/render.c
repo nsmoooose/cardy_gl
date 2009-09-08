@@ -31,9 +31,33 @@ void render_object_add_child(render_object *parent, render_object *child) {
 		free(old);
 	}
 	parent->children[parent->child_count - 1] = child;
+	child->parent = parent;
 }
 
 void render_object_remove_child(render_object *parent, render_object *child) {
+	render_object **old = parent->children;
+	int index;
+	for(index=0;index<parent->child_count;++index) {
+		if(parent->children[index] == child) {
+			break;
+		}
+	}
+
+	if(index<parent->child_count) {
+		child->parent = 0;
+		memmove(&parent->children[index],
+				&parent->children[index+1],
+				(parent->child_count - index - 1) * sizeof(render_object*));
+		parent->child_count--;
+		if(parent->child_count == 0) {
+			parent->children = 0;
+		}
+		else {
+			parent->children = calloc(parent->child_count, sizeof(render_object*));
+			memcpy(parent->children, old, parent->child_count * sizeof(render_object*));
+		}
+		free(old);
+	}
 }
 
 render_object *render_object_find(render_object *root, char *id) {
@@ -57,8 +81,11 @@ void render_scene_context(render_context *rcontext, float delta) {
 }
 
 GLuint render_register_selection_callback(
-	render_context *rcontext, render_selection_callback callback, void *data) {
+	render_context *rcontext, render_object *object,
+	render_selection_callback callback, void *data) {
+
 	GLuint i = rcontext->selection_size;
+	rcontext->selections[i].object = object;
 	rcontext->selections[i].callback = callback;
 	rcontext->selections[i].data = data;
 	rcontext->selection_size++;
@@ -87,6 +114,7 @@ void render_process_selections(
 
 	if(hit_found) {
 		rcontext->selections[last_hit].callback(
+			rcontext->selections[last_hit].object,
 			rcontext->selections[last_hit].data);
 	}
 }

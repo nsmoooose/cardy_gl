@@ -4,9 +4,6 @@
 #include "rendering.h"
 #include "lib/mygl.h"
 #include "lib/render_solitaire.h"
-#include "lib/solitaire_theidiot.h"
-#include "lib/solitaire_maltesercross.h"
-#include "lib/solitaire_noname1.h"
 
 void window_key_press(unsigned char key, int x, int y) {
 	/*
@@ -27,21 +24,6 @@ void window_key_press(unsigned char key, int x, int y) {
 	*/
 
 	switch(key) {
-	case '1':
-		mem_context_free(g_solcontext);
-		g_solcontext = mem_context_create();
-		g_solitaire = solitaire_theidiot(g_solcontext, g_visual_settings);
-		break;
-	case '2':
-		mem_context_free(g_solcontext);
-		g_solcontext = mem_context_create();
-		g_solitaire = solitaire_maltesercross(g_solcontext, g_visual_settings);
-		break;
-	case '3':
-		mem_context_free(g_solcontext);
-		g_solcontext = mem_context_create();
-		g_solitaire = solitaire_noname1(g_solcontext, g_visual_settings);
-		break;
 	case '-':
 		g_camera_zoom -= 10.0f;
 		render_update_camera_pos();
