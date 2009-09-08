@@ -2,10 +2,52 @@
 #include <stdlib.h>
 #include "mygl.h"
 #include "render_mainmenu.h"
+#include "render_solitaire.h"
+#include "solitaire_theidiot.h"
+#include "solitaire_maltesercross.h"
+#include "solitaire_noname1.h"
 
 typedef struct {
-	GLuint textures[1];
+	GLuint textures[5];
+	mem_context **solcontext;
 } internal;
+
+void sol_theidiot_callback(void *data) {
+	render_object *o = data;
+	internal *i = o->data;
+
+	mem_context_free(*i->solcontext);
+	*i->solcontext = mem_context_create();
+	g_solitaire = solitaire_theidiot(*i->solcontext, g_visual_settings);
+
+/*	render_object *menu = data;
+	mem_context *context = mem_context_create();
+	solitaire *sol = solitaire_theidiot(context, g_visual_settings);
+	render_object_add_child(menu->parent, render_object_solitaire(sol));
+	render_object_remove_child(menu->parent, menu);
+*/
+}
+
+void sol_malteser_callback(void *data) {
+	render_object *o = data;
+	internal *i = o->data;
+
+	mem_context_free(*i->solcontext);
+	*i->solcontext = mem_context_create();
+	g_solitaire = solitaire_maltesercross(*i->solcontext, g_visual_settings);
+}
+
+void sol_noname1_callback(void *data) {
+	render_object *o = data;
+	internal *i = o->data;
+
+	mem_context_free(*i->solcontext);
+	*i->solcontext = mem_context_create();
+	g_solitaire = solitaire_noname1(*i->solcontext, g_visual_settings);
+}
+
+void sol_pyramid_callback(void *data) {
+}
 
 void render_object_mainmenu_render(
 	render_context *rcontext, render_object *object, float delta) {
@@ -18,15 +60,32 @@ void render_object_mainmenu_render(
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	render_rect(-150.0f, 150.0f, 150.0f, -150.0f, i->textures[0]);
 
+	glPushName(render_register_selection_callback(
+				   rcontext, sol_theidiot_callback, object));
 	render_rect(-120.0f, 85.0f, 40.0f, 55.0f, i->textures[1]);
+	glPopName();
+
+	glPushName(render_register_selection_callback(
+				   rcontext, sol_malteser_callback, object));
 	render_rect(-120.0f, 50.0f, 40.0f, 20.0f, i->textures[2]);
+	glPopName();
+
+	glPushName(render_register_selection_callback(
+				   rcontext, sol_noname1_callback, object));
 	render_rect(-120.0f, 15.0f, 40.0f, -15.0f, i->textures[3]);
+	glPopName();
+
+	glPushName(render_register_selection_callback(
+				   rcontext, sol_pyramid_callback, object));
 	render_rect(-120.0f, -20.0f, 40.0f, -50.0f, i->textures[4]);
+	glPopName();
 
 	glDisable(GL_BLEND);
 }
 
-render_object *render_object_mainmenu(mem_context *context) {
+render_object *render_object_mainmenu(
+	mem_context *context, mem_context **solcontext) {
+
 	GError* e = NULL;
 	RsvgHandle* h;
 	internal *i = mem_alloc(context, sizeof(internal));
@@ -41,8 +100,9 @@ render_object *render_object_mainmenu(mem_context *context) {
 		exit(1);
 	}
 
-	glGenTextures(5, i->textures);
+	i->solcontext = solcontext;
 
+	glGenTextures(5, i->textures);
 	render_svg_texture(h, i->textures[0], "#mainmenu", 512, 512);
 	render_svg_texture(h, i->textures[1], "#sol_idiot", 512, 64);
 	render_svg_texture(h, i->textures[2], "#sol_maltesercross", 512, 64);

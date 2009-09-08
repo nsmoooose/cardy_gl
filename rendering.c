@@ -12,7 +12,7 @@ void render_setup() {
 	render_object_add_child(g_context, g_rcontext->object,
 							render_object_solitaire(g_context));
 	render_object_add_child(g_context, g_rcontext->object,
-							render_object_mainmenu(g_context));
+							render_object_mainmenu(g_context, &g_solcontext));
 
 	g_solitaire = solitaire_theidiot(g_solcontext, g_visual_settings);
 }
