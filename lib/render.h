@@ -49,6 +49,8 @@ void render_object_remove_child(render_object *parent, render_object *child);
 
 render_object *render_object_find(render_object *parent, const char *id);
 
+render_object *render_object_find_root(render_object *object);
+
 void render_scene_object(
 	render_context *rcontext, render_object *object, float delta);
 

@@ -26,6 +26,8 @@ float g_perspective_fov = 45.0f;
 
 card_proxy *g_selected_card = 0;
 
+const char *render_object_solitaire_id = "solitaire";
+
 /* Build a vector of coordinates for a card. */
 static GLfloat g_card_vertexes[8*3] = {
 	0 - CARD_WIDTH/2.0f, 0 + CARD_HEIGHT/2.0f, 0 + CARD_THICKNESS/2.0f, /* 0, top left, front */
@@ -220,7 +222,7 @@ void render_object_solitaire_render(
 
 render_object *render_object_solitaire(solitaire_create callback) {
 	render_solitaire_data *i = calloc(1, sizeof(render_solitaire_data));
-	render_object *o = render_object_create("solitaire");
+	render_object *o = render_object_create(render_object_solitaire_id);
 	o->data = i;
 	o->render = render_object_solitaire_render;
 

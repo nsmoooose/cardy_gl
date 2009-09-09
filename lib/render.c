@@ -85,6 +85,14 @@ render_object *render_object_find(render_object *parent, const char *id) {
 	return 0;
 }
 
+render_object *render_object_find_root(render_object *object) {
+	if(object->parent == 0) {
+		return object;
+	}
+
+	return render_object_find_root(object->parent);
+}
+
 void render_scene_object(
 	render_context *rcontext, render_object *object, float delta) {
 	int i;

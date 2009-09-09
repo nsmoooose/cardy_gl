@@ -81,6 +81,24 @@ START_TEST(test_render_object_find) {
 }
 END_TEST
 
+START_TEST(test_render_object_find_root) {
+	render_object *root = render_object_create("root");
+	render_object *child1 = render_object_create("child1");
+	render_object *child2 = render_object_create("child2");
+	render_object *subchild1 = render_object_create("subchild1");
+	render_object *subchild2 = render_object_create("subchild2");
+	render_object *noid = render_object_create(0);
+
+	render_object_add_child(root, noid);
+	render_object_add_child(root, child1);
+	render_object_add_child(root, child2);
+	render_object_add_child(child1, subchild1);
+	render_object_add_child(child2, subchild2);
+
+	ck_assert_msg(render_object_find_root(subchild2) == root, "Root not found.");
+}
+END_TEST
+
 void add_render_tests(Suite *suite) {
 	TCase *c = tcase_create("Render");
 	tcase_add_test(c, test_render_context_create);
@@ -88,5 +106,6 @@ void add_render_tests(Suite *suite) {
 	tcase_add_test(c, test_render_object_add_child);
 	tcase_add_test(c, test_render_object_remove_child);
 	tcase_add_test(c, test_render_object_find);
+	tcase_add_test(c, test_render_object_find_root);
 	suite_add_tcase(suite, c);
 }
