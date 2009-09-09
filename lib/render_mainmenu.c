@@ -7,9 +7,10 @@
 #include "solitaire_maltesercross.h"
 #include "solitaire_noname1.h"
 
+const char* render_object_mainmenu_id = "mainmenu";
+
 typedef struct {
 	GLuint textures[5];
-	mem_context **solcontext;
 } internal;
 
 void sol_theidiot_callback(render_object *object, void *data) {
@@ -70,12 +71,12 @@ void render_object_mainmenu_render(
 	glDisable(GL_BLEND);
 }
 
-render_object *render_object_mainmenu(mem_context **solcontext) {
+render_object *render_object_mainmenu() {
 
 	GError* e = NULL;
 	RsvgHandle* h;
 	internal *i = calloc(1, sizeof(internal));
-	render_object *o = render_object_create("mainmenu");
+	render_object *o = render_object_create(render_object_mainmenu_id);
 	o->data = i;
 	o->render = render_object_mainmenu_render;
 
@@ -85,8 +86,6 @@ render_object *render_object_mainmenu(mem_context **solcontext) {
 		fprintf(stderr, "Failed to load mainmenu.svg\n");
 		exit(1);
 	}
-
-	i->solcontext = solcontext;
 
 	glGenTextures(5, i->textures);
 	render_svg_texture(h, i->textures[0], "#mainmenu", 512, 512);

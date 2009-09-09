@@ -10,7 +10,7 @@ render_context *render_context_create(mem_context *context) {
 	return calloc(1, sizeof(render_context));
 }
 
-render_object *render_object_create(char *id) {
+render_object *render_object_create(const char *id) {
 	render_object *o = calloc(1, sizeof(render_object));
 	if(id != 0) {
 		o->id = strdup(id);
@@ -54,13 +54,34 @@ void render_object_remove_child(render_object *parent, render_object *child) {
 		}
 		else {
 			parent->children = calloc(parent->child_count, sizeof(render_object*));
-			memcpy(parent->children, old, parent->child_count * sizeof(render_object*));
+			memcpy(parent->children, old, parent->child_count *
+				   sizeof(render_object*));
 		}
 		free(old);
 	}
 }
 
-render_object *render_object_find(render_object *root, char *id) {
+render_object *render_object_find(render_object *parent, const char *id) {
+	int index;
+	render_object *object;
+	if(parent->id != 0) {
+		if(strcmp(parent->id, id) == 0) {
+			return parent;
+		}
+	}
+
+	for(index=0;index<parent->child_count;++index) {
+		if(parent->children[index]->id != 0) {
+			if(strcmp(parent->children[index]->id, id) == 0) {
+				return parent->children[index];
+			}
+
+			object = render_object_find(parent->children[index], id);
+			if(object != 0) {
+				return object;
+			}
+		}
+	}
 	return 0;
 }
 

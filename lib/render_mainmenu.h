@@ -4,6 +4,7 @@
 #include "memory.h"
 #include "render.h"
 
-render_object *render_object_mainmenu(mem_context **solcontext);
+extern const char* render_object_mainmenu_id;
+render_object *render_object_mainmenu();
 
 #endif /* __RENDER_MAINMENU_H__ */

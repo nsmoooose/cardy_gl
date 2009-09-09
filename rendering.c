@@ -9,8 +9,7 @@ void render_setup() {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	g_rcontext = render_context_create(g_context);
 	g_rcontext->object = render_object_desktop(g_context);
-	render_object_add_child(g_rcontext->object,
-							render_object_mainmenu(&g_solcontext));
+	render_object_add_child(g_rcontext->object,	render_object_mainmenu());
 }
 
 void render_window_size_change(int width, int height) {

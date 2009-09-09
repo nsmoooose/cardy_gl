@@ -10,7 +10,6 @@
 #include "rendering.h"
 
 mem_context *g_context = 0;
-mem_context *g_solcontext = 0;
 render_context *g_rcontext = 0;
 
 int main(int argc, char* argv[]) {
@@ -18,7 +17,6 @@ int main(int argc, char* argv[]) {
 	rsvg_init();
 
 	g_context = mem_context_create();
-	g_solcontext = mem_context_create();
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);

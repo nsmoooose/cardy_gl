@@ -41,13 +41,13 @@ typedef struct render_context_St {
 
 render_context *render_context_create();
 
-render_object *render_object_create(char *id);
+render_object *render_object_create(const char *id);
 
 void render_object_add_child(render_object *parent, render_object *child);
 
 void render_object_remove_child(render_object *parent, render_object *child);
 
-render_object *render_object_find(render_object *root, char *id);
+render_object *render_object_find(render_object *parent, const char *id);
 
 void render_scene_object(
 	render_context *rcontext, render_object *object, float delta);
@@ -55,7 +55,8 @@ void render_scene_object(
 void render_scene_context(render_context *rcontext, float delta);
 
 GLuint render_register_selection_callback(
-	render_context *rcontext, render_object *object, render_selection_callback callback, void *data);
+	render_context *rcontext, render_object *object,
+	render_selection_callback callback, void *data);
 
 void render_selection_reset(render_context *rcontext);
 

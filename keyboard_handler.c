@@ -3,9 +3,12 @@
 #include "program.h"
 #include "rendering.h"
 #include "lib/mygl.h"
+#include "lib/render_mainmenu.h"
 #include "lib/render_solitaire.h"
 
 void window_key_press(unsigned char key, int x, int y) {
+	render_object *object;
+
 	/*
 	int key_modifiers;
 
@@ -24,6 +27,15 @@ void window_key_press(unsigned char key, int x, int y) {
 	*/
 
 	switch(key) {
+	case 27:
+		object = render_object_find(g_rcontext->object, render_object_mainmenu_id);
+		if(object == 0) {
+			render_object_add_child(g_rcontext->object, render_object_mainmenu());
+		}
+		else {
+			render_object_remove_child(object->parent, object);
+		}
+		break;
 	case '-':
 		g_camera_zoom -= 10.0f;
 		render_update_camera_pos();
