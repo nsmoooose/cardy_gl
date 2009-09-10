@@ -50,8 +50,13 @@ int card_count(pile *pile) {
 }
 
 card *card_take(pile *pile, int index) {
+	int i;
 	card *c = pile->cards[index];
 	pile->cards[index] = 0;
+	for(i=index+1;i<pile->size;++i) {
+		pile->cards[i-1] = pile->cards[i];
+		pile->cards[i] = 0;
+	}
 	return c;
 }
 

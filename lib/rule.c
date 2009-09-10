@@ -353,12 +353,13 @@ bool ruleset_check(ruleset *ruleset, move_action *action, rule **matching_rule) 
 	return false;
 }
 
-bool ruleset_move_card(ruleset *ruleset, visual *visual, visual_pile *destination, card_proxy *card) {
+bool ruleset_move_card(ruleset *ruleset, visual *visual, visual_pile *destination,
+					   card_proxy *card, int count) {
 	rule *matching_rule;
 	bool result;
 	move_action *action;
 
-	action = ruleset_get_move_action(visual, card, destination);
+	action = ruleset_get_move_action(visual, card, count, destination);
 	result = ruleset_check(ruleset, action, &matching_rule);
 	if(result) {
 		ruleset_apply_move_action(visual, action);
@@ -370,7 +371,8 @@ bool ruleset_move_card(ruleset *ruleset, visual *visual, visual_pile *destinatio
 	return result;
 }
 
-move_action *ruleset_get_move_action(visual *vis, card_proxy *card, visual_pile *destination_pile) {
+move_action *ruleset_get_move_action(
+	visual *vis, card_proxy *card, int count, visual_pile *destination_pile) {
 	int i, j;
 	move_action *a = calloc(1, sizeof(move_action));
 	for(i=0;i<vis->pile_count && a->source == 0;++i) {
@@ -383,17 +385,22 @@ move_action *ruleset_get_move_action(visual *vis, card_proxy *card, visual_pile 
 		}
 	}
 
-	a->source_count = 1;
+	a->source_count = count;
 	a->destination = (pile*)destination_pile->data;
 	a->destination_index = card_first_free(a->destination);
 	return a;
 }
 
 void ruleset_apply_move_action(visual *vis, move_action *action) {
-	action->destination->cards[card_first_free(action->destination)] = card_take(action->source, action->source_index);
+	int index;
+	for(index=0;index<action->source_count;++index) {
+		action->destination->cards[card_first_free(action->destination)] =
+			card_take(action->source, action->source_index);
+	}
 
 	/* TODO There is a lot more to handle here. Like:
 	 * source_count,
 	 * inserting card instead of overwriting.
 	 */
 }
+

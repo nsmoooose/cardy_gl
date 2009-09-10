@@ -69,7 +69,8 @@ static void process_click(
 				ruleset_move_card(data->sol->ruleset,
 								  data->sol->visual,
 								  pile,
-								  g_selected_card);
+								  g_selected_card,
+								  1);
 				g_selected_card = 0;
 			}
 		}
@@ -79,7 +80,8 @@ static void process_click(
 			ruleset_move_card(data->sol->ruleset,
 							  data->sol->visual,
 							  pile,
-							  g_selected_card);
+							  g_selected_card,
+							  1);
 			g_selected_card = 0;
 		}
 	}

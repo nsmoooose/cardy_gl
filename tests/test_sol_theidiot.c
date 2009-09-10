@@ -75,12 +75,28 @@ START_TEST(test_sol_theidiot_moving_card) {
 
 	visual_sync(sol->visual);
 
-	ck_assert_msg(ruleset_move_card(sol->ruleset, sol->visual, sol->visual->piles[0], sol->visual->piles[1]->cards[0]) == false, "Card shouldn't be movable to the deck.");
-	ck_assert_msg(ruleset_move_card(sol->ruleset, sol->visual, sol->visual->piles[5], sol->visual->piles[3]->cards[0]) == false, "King shouldn't be movable to the done pile.");
-	ck_assert_msg(ruleset_move_card(sol->ruleset, sol->visual, sol->visual->piles[5], sol->visual->piles[2]->cards[0]) == false, "Only top card should be movable");
-	ck_assert_msg(ruleset_move_card(sol->ruleset, sol->visual, sol->visual->piles[5], sol->visual->piles[1]->cards[0]) == true, "Card should be movable to done.");
-	ck_assert_msg(sol->visual->piles[5]->card_count == 1, "Card should have been moved.");
-	ck_assert_msg(sol->visual->piles[5]->cards[0] != 0, "Card index should have been set.");
+	ck_assert_msg(
+		ruleset_move_card(sol->ruleset, sol->visual, sol->visual->piles[0],
+						  sol->visual->piles[1]->cards[0], 1) == false,
+		"Card shouldn't be movable to the deck.");
+	ck_assert_msg(
+		ruleset_move_card(sol->ruleset, sol->visual, sol->visual->piles[5],
+						  sol->visual->piles[3]->cards[0], 1) == false,
+		"King shouldn't be movable to the done pile.");
+	ck_assert_msg(
+		ruleset_move_card(sol->ruleset, sol->visual,
+						  sol->visual->piles[5],
+						  sol->visual->piles[2]->cards[0], 1) == false,
+		"Only top card should be movable");
+	ck_assert_msg(
+		ruleset_move_card(sol->ruleset, sol->visual,
+						  sol->visual->piles[5],
+						  sol->visual->piles[1]->cards[0], 1) == true,
+		"Card should be movable to done.");
+	ck_assert_msg(sol->visual->piles[5]->card_count == 1,
+				  "Card should have been moved.");
+	ck_assert_msg(sol->visual->piles[5]->cards[0] != 0,
+				  "Card index should have been set.");
 }
 END_TEST
 
