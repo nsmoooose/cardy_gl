@@ -244,13 +244,32 @@ START_TEST(test_condition_or) {
 	mem_context *context = mem_context_create();
 
 	cond = condition_or(context, condition_fail(context), condition_fail(context));
-	ck_assert_msg(cond->check(cond, &action) == false, "Or operation should be false.");
+	ck_assert_msg(cond->check(cond, &action) == false,
+				  "Or operation should be false.");
 
-	cond = condition_or(context, condition_fail(context), condition_succeed(context));
-	ck_assert_msg(cond->check(cond, &action) == true, "Or operation should be true.");
+	cond = condition_or(context, condition_fail(context),
+						condition_succeed(context));
+	ck_assert_msg(cond->check(cond, &action) == true,
+				  "Or operation should be true.");
 
-	cond = condition_or(context, condition_succeed(context), condition_fail(context));
-	ck_assert_msg(cond->check(cond, &action) == true, "Or operation should be true.");
+	cond = condition_or(context, condition_succeed(context),
+						condition_fail(context));
+	ck_assert_msg(cond->check(cond, &action) == true,
+				  "Or operation should be true.");
+}
+END_TEST
+
+START_TEST(test_condition_or_array) {
+	mem_context *context = mem_context_create();
+	condition *cond, *or1, *or2, *or3, *or4;
+
+	or1 = condition_fail(context);
+	or2 = condition_fail(context);
+	or3 = condition_fail(context);
+	or4 = condition_succeed(context);
+
+	cond = condition_or_array(context, 4, or1, or2, or3, or4);
+	ck_assert_msg(cond->check(cond, 0) == true, "Should have returned true.");
 }
 END_TEST
 
@@ -269,7 +288,8 @@ START_TEST(test_condition_destination) {
 	ck_assert_msg(cond->check(cond, &action) == true, "Should have returned true");
 
 	action.destination = p2;
-	ck_assert_msg(cond->check(cond, &action) == false, "Should have returned false");
+	ck_assert_msg(cond->check(cond, &action) == false,
+				  "Should have returned false");
 }
 END_TEST
 
@@ -292,7 +312,8 @@ START_TEST(test_condition_destination_array) {
 	ck_assert_msg(cond->check(cond, &action) == true, "Should have returned true");
 
 	action.destination = p3;
-	ck_assert_msg(cond->check(cond, &action) == false, "Should have returned false");
+	ck_assert_msg(cond->check(cond, &action) == false,
+				  "Should have returned false");
 }
 END_TEST
 
@@ -345,14 +366,23 @@ START_TEST(test_condition_top_card_equal) {
 	deck->cards[0] = card_create(context, e_spades, 2);
 	action.source = deck;
 
-	cond = condition_top_card_equal(context, e_suit_none, 3, e_equal_value);
-	ck_assert_msg(cond->check(cond, &action) == false, "Should fail since card isn't the right value.");
+	cond = condition_top_card_equal(context, e_suit_none, 3, e_equal_value, 0);
+	ck_assert_msg(cond->check(cond, &action) == false,
+				  "Should fail since card isn't the right value.");
 
 	deck->cards[1] = card_create(context, e_spades, 3);
-	ck_assert_msg(cond->check(cond, &action) == true, "Should be movable since top card value is equal.");
+	ck_assert_msg(cond->check(cond, &action) == true,
+				  "Should be movable since top card value is equal.");
 
-	cond = condition_top_card_equal(context, e_clubs, 3, e_equal_value|e_follow_suit);
-	ck_assert_msg(cond->check(cond, &action) == false, "Should fail since card suit isn't the right value.");
+	cond = condition_top_card_equal(
+		context, e_clubs, 3, e_equal_value|e_follow_suit, 0);
+	ck_assert_msg(cond->check(cond, &action) == false,
+				  "Should fail since card suit isn't the right value.");
+
+	cond = condition_top_card_equal(
+		context, e_clubs, 2, e_equal_value|e_follow_suit, deck);
+	ck_assert_msg(cond->check(cond, 0) == false,
+				  "Should succeed since card is the right value.");
 }
 END_TEST
 
@@ -529,6 +559,7 @@ void add_rule_tests(Suite *suite) {
 	tcase_add_test(c, test_condition_source);
 	tcase_add_test(c, test_condition_source_array);
 	tcase_add_test(c, test_condition_or);
+	tcase_add_test(c, test_condition_or_array);
 	tcase_add_test(c, test_condition_destination);
 	tcase_add_test(c, test_condition_destination_array);
 	tcase_add_test(c, test_condition_destination_empty);

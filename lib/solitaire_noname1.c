@@ -80,7 +80,7 @@ static void setup_rules(mem_context *context, solitaire *s, internal *i) {
 	rule_add_condition(context, rule1, ace1_4_cond);
 	rule_add_condition(context, rule1, condition_destination_empty(context));
 	rule_add_condition(context, rule1, condition_top_card(context));
-	rule_add_condition(context, rule1, condition_top_card_equal(context, e_suit_none, 1, e_equal_value));
+	rule_add_condition(context, rule1, condition_top_card_equal(context, e_suit_none, 1, e_equal_value, 0));
 	rule_add_action(context, rule1, action_reveal_source_top_card(context));
 	ruleset_add_rule(context, s->ruleset, rule1);
 

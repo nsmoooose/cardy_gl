@@ -89,23 +89,40 @@ condition *condition_destination_array(mem_context *context, int count, ...) {
 /* ------------------------------------------------------------------------- */
 
 typedef struct {
-	condition *c1;
-	condition *c2;
+	condition **conditions;
+	int size;
 } condition_or_data;
 
 static bool condition_or_check(condition *cond, move_action *action) {
+	int index;
 	condition_or_data *data = (condition_or_data*)cond->data;
-	return data->c1->check(data->c1, action) || data->c2->check(data->c2, action);
+	for(index=0;index<data->size;++index) {
+		if(data->conditions[index]->check(data->conditions[index], action)) {
+			return true;
+		}
+	}
+	return false;
 }
 
 condition *condition_or(mem_context *context, condition *c1, condition *c2) {
+	return condition_or_array(context, 2, c1, c2);
+}
+
+condition *condition_or_array(mem_context *context, int count, ...) {
+	int index;
 	condition *c;
 	condition_or_data *data;
+	va_list vl;
 
 	c = mem_alloc(context, sizeof(condition));
 	data = mem_alloc(context, sizeof(condition_or_data));
-	data->c1 = c1;
-	data->c2 = c2;
+	data->conditions = mem_alloc(context, count * sizeof(condition*));
+	data->size = count;
+	va_start(vl, count);
+	for(index=0;index<count;++index) {
+		data->conditions[index] = va_arg(vl, condition*);
+	}
+	va_end(vl);
 	c->data = data;
 	c->check = condition_or_check;
 	return c;
@@ -137,14 +154,17 @@ condition *condition_top_card(mem_context *context) {
 
 /* ------------------------------------------------------------------------- */
 typedef struct {
+	pile *pile;
 	card_suit suit;
 	card_value value;
 	condition_compare_operation operation;
 } condition_top_card_equal_data;
 
-bool condition_top_card_equal_check(condition *cond, move_action *action) {
+bool condition_top_card_equal_check(
+	condition *cond, move_action *action) {
+
 	condition_top_card_equal_data *data = cond->data;
-	card *card = card_last(action->source);
+	card *card = card_last(data->pile ? data->pile : action->source);
 	if(card == 0) {
 		return false;
 	}
@@ -164,9 +184,10 @@ bool condition_top_card_equal_check(condition *cond, move_action *action) {
 
 condition *condition_top_card_equal(
 	mem_context *context, card_suit suit,
-	card_value value, condition_compare_operation operation) {
+	card_value value, condition_compare_operation operation, pile *pile) {
 	condition *c = mem_alloc(context, sizeof(condition));
 	condition_top_card_equal_data *data = mem_alloc(context, sizeof(condition_top_card_equal_data));
+	data->pile = pile;
 	data->suit = suit;
 	data->value = value;
 	data->operation = operation;

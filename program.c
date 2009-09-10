@@ -22,14 +22,15 @@ int main(int argc, char* argv[]) {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(800, 600);
 	glutCreateWindow("Cardy 4");
-	glutReshapeFunc(render_window_size_change);
+	glutReshapeFunc(rendering_window_size_change);
 	glutKeyboardFunc(window_key_press);
 	glutSpecialFunc(window_special_key_press);
 	glutMouseFunc(window_mouse);
 	glutMotionFunc(window_mouse_move);
-	glutDisplayFunc(render_scene);
+	glutIdleFunc(rendering_idle);
+	glutDisplayFunc(rendering_scene);
 
-	render_setup();
+	rendering_setup();
 
 	glutMainLoop();
 

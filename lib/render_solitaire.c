@@ -7,6 +7,7 @@
 #include "image.h"
 #include "mygl.h"
 #include "render_solitaire.h"
+#include "render_solved.h"
 #include "theme.h"
 
 typedef struct {
@@ -49,7 +50,10 @@ static GLubyte g_card_indexes[] = {
 	4, 0, 3, 7 /* left */
 };
 
-static void process_click(render_solitaire_data *data, visual_pile *pile, card_proxy *proxy) {
+static void process_click(
+	render_object *object, render_solitaire_data *data,
+	visual_pile *pile, card_proxy *proxy) {
+
 	if(pile && pile->action) {
 		pile->action->execute(pile->action);
 	}
@@ -79,16 +83,21 @@ static void process_click(render_solitaire_data *data, visual_pile *pile, card_p
 			g_selected_card = 0;
 		}
 	}
+
+	if(data->sol->ruleset->solved && rule_check(data->sol->ruleset->solved, 0)) {
+		render_object_add_child(object->parent, render_object_solved());
+		render_object_remove_child(object->parent, object);
+	}
 }
 
 static void callback_pile(render_object *object, void *data) {
-	process_click(object->data, data, 0);
+	process_click(object, object->data, data, 0);
 }
 
 static void callback_card(render_object *object, void *data) {
 	render_solitaire_data *sol_data = object->data;
 	visual_pile *pile = visual_find_pile_from_card(sol_data->sol->visual, data);
-	process_click(object->data, pile, data);
+	process_click(object, object->data, pile, data);
 }
 
 void render_update_camera_pos() {
@@ -107,7 +116,8 @@ void render_card(render_context *rcontext, render_object *object, visual_pile* p
 		glColor3f(1.0f, 1.0f, 1.0f);
 	}
 
-	glPushName(render_register_selection_callback(rcontext, object, callback_card, proxy));
+	glPushName(render_register_selection_callback(
+				   rcontext, object, callback_card, proxy));
 
 	/* Test to see if we need to rotate the card around its axis
 	   to show the front face. */
@@ -178,7 +188,8 @@ void render_pile(render_context *rcontext,
 	glPushMatrix();
 	glTranslatef(pile->origin[0], pile->origin[1], pile->origin[2]);
 
-	glPushName(render_register_selection_callback(rcontext, object, callback_pile, pile));
+	glPushName(render_register_selection_callback(
+				   rcontext, object, callback_pile, pile));
 
 	if(pile->rotation != 0.0f) {
 		glRotatef(pile->rotation, 0.0f, 0.0f, 1.0f);

@@ -115,17 +115,8 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 	s->ruleset = ruleset_create(context);
 
 	/* Shared condition between several rules. */
-	pile1_4_cond =
-		condition_or(
-			context,
-			condition_or(
-				context,
-				condition_or(
-					context,
-					condition_source(context, i->pile1),
-					condition_source(context, i->pile2)),
-				condition_source(context, i->pile3)),
-			condition_source(context, i->pile4));
+	pile1_4_cond = condition_source_array(
+		context, 4, i->pile1, i->pile2, i->pile3, i->pile4);
 
 	/* Move card to done pile if source is pile1-pile4 and there is
 	   a higher card in same suit in those piles. */
@@ -135,37 +126,43 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 	rule_add_condition(
 		context,
 		rule1,
-		condition_or(
-			context,
-			condition_or(
-				context,
-				condition_or(
-					context,
-					condition_top_card_compare(context, i->pile1, e_dest_higher_value | e_follow_suit),
-					condition_top_card_compare(context, i->pile2, e_dest_higher_value | e_follow_suit)),
-				condition_top_card_compare(context, i->pile3, e_dest_higher_value | e_follow_suit)),
-			condition_top_card_compare(context, i->pile4, e_dest_higher_value | e_follow_suit))
-		);
+		condition_or_array(
+			context, 4,
+			condition_top_card_compare(context, i->pile1,
+									   e_dest_higher_value | e_follow_suit),
+			condition_top_card_compare(context, i->pile2,
+									   e_dest_higher_value | e_follow_suit),
+			condition_top_card_compare(context, i->pile3,
+									   e_dest_higher_value | e_follow_suit),
+			condition_top_card_compare(context, i->pile4,
+									   e_dest_higher_value | e_follow_suit)));
 	rule_add_condition(context, rule1, condition_top_card(context));
 	ruleset_add_rule(context, s->ruleset, rule1);
 
+	/* Allow move to a top card to an empty pile. */
 	rule2 = rule_create(context);
 	rule_add_condition(context, rule2, pile1_4_cond);
 	rule_add_condition(context, rule2, condition_top_card(context));
 	rule_add_condition(context, rule2, condition_destination_empty(context));
 	rule_add_condition(
-		context,
-		rule2,
-		condition_or(
-			context,
-			condition_or(
-				context,
-				condition_or(
-					context,
-					condition_destination(context, i->pile1),
-					condition_destination(context, i->pile2)),
-				condition_destination(context, i->pile3)),
-			condition_destination(context, i->pile4)));
+		context, rule2,
+		condition_destination_array(
+			context, 4, i->pile1, i->pile2, i->pile3, i->pile4));
 	ruleset_add_rule(context, s->ruleset, rule2);
+
+	s->ruleset->solved = rule_create(context);
+
+	rule_add_condition(
+		context, s->ruleset->solved,
+		condition_top_card_equal(context, e_suit_none, 14, e_equal_value, i->pile1));
+	rule_add_condition(
+		context, s->ruleset->solved,
+		condition_top_card_equal(context, e_suit_none, 14, e_equal_value, i->pile2));
+	rule_add_condition(
+		context, s->ruleset->solved,
+		condition_top_card_equal(context, e_suit_none, 14, e_equal_value, i->pile3));
+	rule_add_condition(
+		context, s->ruleset->solved,
+		condition_top_card_equal(context, e_suit_none, 14, e_equal_value, i->pile4));
 	return s;
 }

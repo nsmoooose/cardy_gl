@@ -84,10 +84,38 @@ START_TEST(test_sol_theidiot_moving_card) {
 }
 END_TEST
 
+START_TEST(test_sol_theidiot_solved) {
+	mem_context *context = mem_context_create();
+	visual_settings *settings = mem_alloc(context, sizeof(visual_settings));
+	solitaire* sol = solitaire_theidiot(context, settings);
+	pile *piles[4];
+
+	ck_assert_msg(sol->ruleset->solved != 0, "No solved rule assigned.");
+	ck_assert_msg(rule_check(sol->ruleset->solved, 0) == false,
+				  "Should have returned false");
+
+	piles[0] = (pile*)sol->visual->piles[1]->data;
+	piles[1] = (pile*)sol->visual->piles[2]->data;
+	piles[2] = (pile*)sol->visual->piles[3]->data;
+	piles[3] = (pile*)sol->visual->piles[4]->data;
+
+	piles[0]->cards[0] = card_create(context, e_clubs, 14);
+	piles[1]->cards[0] = card_create(context, e_spades, 14);
+	piles[2]->cards[0] = card_create(context, e_hearts, 14);
+	piles[3]->cards[0] = card_create(context, e_diamonds, 14);
+
+	visual_sync(sol->visual);
+
+	ck_assert_msg(rule_check(sol->ruleset->solved, 0) == true,
+				  "Should have returned true");
+}
+END_TEST
+
 void add_sol_theidiot_tests(Suite *suite) {
-	TCase *sol_theidiot = tcase_create("Sol-TheIdiot");
-	tcase_add_test(sol_theidiot, test_sol_theidiot_init);
-	tcase_add_test(sol_theidiot, test_sol_theidiot_deal);
-	tcase_add_test(sol_theidiot, test_sol_theidiot_moving_card);
-	suite_add_tcase(suite, sol_theidiot);
+	TCase *c = tcase_create("Sol-TheIdiot");
+	tcase_add_test(c, test_sol_theidiot_init);
+	tcase_add_test(c, test_sol_theidiot_deal);
+	tcase_add_test(c, test_sol_theidiot_moving_card);
+	tcase_add_test(c, test_sol_theidiot_solved);
+	suite_add_tcase(suite, c);
 }

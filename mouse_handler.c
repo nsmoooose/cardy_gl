@@ -36,7 +36,7 @@ void window_mouse(int button, int state, int x, int y) {
 
 	check_gl_errors("window_mouse (selection setup)");
 
-	render_scene();
+	rendering_scene();
 
 	hits = glRenderMode(GL_RENDER);
 	if(hits == -1) {
