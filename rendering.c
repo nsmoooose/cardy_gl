@@ -57,8 +57,8 @@ void rendering_idle() {
 	frames++;
 
 	if ((currentTime - lastUpdate) >= 1000) {
-		sprintf( buf, "FPS: %d", frames );
-		glutSetWindowTitle( buf );
+		sprintf( buf, "Cardy 4.0 (fps: %d)", frames );
+		glutSetWindowTitle(buf);
 		frames = 0;
 		lastUpdate = currentTime;
 	}
