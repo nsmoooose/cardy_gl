@@ -11,6 +11,7 @@ const char* render_object_mainmenu_id = "mainmenu";
 
 typedef struct {
 	GLuint textures[5];
+	float time_elapsed;
 } internal;
 
 static void remove_existing_solitaire(render_object *object) {
@@ -48,12 +49,16 @@ void sol_pyramid_callback(render_object *object, void *data) {
 void render_object_mainmenu_render(
 	render_context *rcontext, render_object *object, float delta) {
 	internal *i = object->data;
+	float opacity;
+
+	i->time_elapsed += delta;
+	opacity = i->time_elapsed * 2 > 1.0 ? 1.0 : i->time_elapsed * 2;
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glBlendColor(1.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glColor4f(1.0f, 1.0f, 1.0f, opacity);
 	render_rect(-150.0f, 150.0f, 150.0f, -150.0f, i->textures[0]);
 
 	glPushName(render_register_selection_callback(
