@@ -114,10 +114,11 @@ void render_update_camera_pos() {
 	glTranslatef(g_camera_translateX, g_camera_translateY, g_camera_zoom);
 }
 
-void render_card(render_context *rcontext, render_object *object, visual_pile* pile, card_proxy* proxy) {
+void render_card(render_context *rcontext, render_object *object,
+				 visual_pile* pile, card_proxy* proxy, bool selected) {
 	int index;
 
-	if(g_selected_card == proxy) {
+	if(selected) {
 		glColor3f(1.0f, 0.7f, 0.7f);
 	}
 	else {
@@ -191,6 +192,7 @@ void render_pile(render_context *rcontext,
 				 render_object *object,
 				 visual_pile* pile, visual_settings *settings) {
 	int card_index;
+	bool selected = false;
 
 	/* Do a translation of our position for the pile. */
 	glPushMatrix();
@@ -215,7 +217,10 @@ void render_pile(render_context *rcontext,
 
 	glPushMatrix();
 	for(card_index=0;card_index<pile->card_count;++card_index) {
-		render_card(rcontext, object, pile, pile->cards[card_index]);
+		if(pile->cards[card_index] == g_selected_card) {
+			selected = true;
+		}
+		render_card(rcontext, object, pile, pile->cards[card_index], selected);
 	}
 	glPopMatrix();
 
