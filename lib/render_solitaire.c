@@ -54,6 +54,8 @@ static void process_click(
 	render_object *object, render_solitaire_data *data,
 	visual_pile *pile, card_proxy *proxy) {
 
+	int card_count;
+
 	if(pile && pile->action) {
 		pile->action->execute(pile->action);
 	}
@@ -66,22 +68,26 @@ static void process_click(
 				g_selected_card = proxy;
 			}
 			else {
+				card_count = visual_get_rest_of_pile(
+					data->sol->visual, g_selected_card);
 				ruleset_move_card(data->sol->ruleset,
 								  data->sol->visual,
 								  pile,
 								  g_selected_card,
-								  1);
+								  card_count);
 				g_selected_card = 0;
 			}
 		}
 	}
 	else {
 		if(g_selected_card) {
+			card_count = visual_get_rest_of_pile(
+				data->sol->visual, g_selected_card);
 			ruleset_move_card(data->sol->ruleset,
 							  data->sol->visual,
 							  pile,
 							  g_selected_card,
-							  1);
+							  card_count);
 			g_selected_card = 0;
 		}
 	}

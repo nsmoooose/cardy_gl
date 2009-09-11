@@ -150,19 +150,27 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 			context, 4, i->pile1, i->pile2, i->pile3, i->pile4));
 	ruleset_add_rule(context, s->ruleset, rule2);
 
+	/* Solved rule */
 	s->ruleset->solved = rule_create(context);
-
 	rule_add_condition(
 		context, s->ruleset->solved,
-		condition_top_card_equal(context, e_suit_none, 14, e_equal_value, i->pile1));
+		condition_card_equal(
+			context, e_suit_none, 14, e_equal_value, i->pile1));
 	rule_add_condition(
 		context, s->ruleset->solved,
-		condition_top_card_equal(context, e_suit_none, 14, e_equal_value, i->pile2));
+		condition_card_equal(
+			context, e_suit_none, 14, e_equal_value, i->pile2));
 	rule_add_condition(
 		context, s->ruleset->solved,
-		condition_top_card_equal(context, e_suit_none, 14, e_equal_value, i->pile3));
+		condition_card_equal(
+			context, e_suit_none, 14, e_equal_value, i->pile3));
 	rule_add_condition(
 		context, s->ruleset->solved,
-		condition_top_card_equal(context, e_suit_none, 14, e_equal_value, i->pile4));
+		condition_card_equal(
+			context, e_suit_none, 14, e_equal_value, i->pile4));
+	rule_add_condition(
+		context, s->ruleset->solved,
+		condition_card_count_array(
+			context, 1, 4, i->pile1, i->pile2, i->pile3, i->pile4));
 	return s;
 }

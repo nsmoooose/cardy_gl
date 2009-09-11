@@ -192,7 +192,7 @@ static void setup_rules(mem_context *context, solitaire *s, internal *i) {
 	rule_add_condition(context, rule3, condition_destination_empty(context));
 	rule_add_condition(
 		context, rule3,
-		condition_top_card_equal(context, e_suit_none, 13, e_equal_value, 0));
+		condition_card_equal(context, e_suit_none, 13, e_equal_value, 0));
 	rule_add_action(context, rule3, action_reveal_source_top_card(context));
 	ruleset_add_rule(context, s->ruleset, rule3);
 
@@ -214,7 +214,7 @@ static void setup_rules(mem_context *context, solitaire *s, internal *i) {
 	rule_add_condition(context, rule5, condition_top_card(context));
 	rule_add_condition(
 		context, rule5,
-		condition_top_card_equal(context, e_suit_none, 1, e_equal_value, 0));
+		condition_card_equal(context, e_suit_none, 1, e_equal_value, 0));
 	rule_add_action(context, rule5, action_reveal_source_top_card(context));
 	ruleset_add_rule(context, s->ruleset, rule5);
 

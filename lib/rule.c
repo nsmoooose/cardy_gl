@@ -5,6 +5,45 @@
 
 /* ------------------------------------------------------------------------- */
 typedef struct {
+	int card_count;
+	pile **piles;
+	int size;
+} condition_card_count_data;
+
+static bool condition_card_count_array_check(condition *cond, move_action *action) {
+	int index;
+	condition_card_count_data *d = cond->data;
+	for(index=0;index<d->size;++index) {
+		if(card_count(d->piles[index]) != d->card_count) {
+			return false;
+		}
+	}
+	return true;
+}
+
+condition *condition_card_count_array(
+	mem_context *context, int count, int pile_count, ...) {
+	int index;
+	va_list vl;
+	condition_card_count_data *d =
+		mem_alloc(context, sizeof(condition_card_count_data));
+	condition *c = mem_alloc(context, sizeof(condition));
+	c->data = d;
+	c->check = condition_card_count_array_check;
+
+	d->card_count = count;
+	d->piles = mem_alloc(context, pile_count * sizeof(pile*));
+	d->size = pile_count;
+	va_start(vl, pile_count);
+	for(index = 0;index<pile_count;++index) {
+		d->piles[index] = va_arg(vl, pile*);
+	}
+	va_end(vl);
+	return c;
+}
+
+/* ------------------------------------------------------------------------- */
+typedef struct {
 	pile **piles;
 	int size;
 } condition_source_data;
@@ -41,6 +80,35 @@ condition *condition_source_array(mem_context *context, int count, ...) {
 	va_end(vl);
 	c->data = data;
 	c->check = condition_source_check;
+	return c;
+}
+
+/* ------------------------------------------------------------------------- */
+
+bool condition_source_card_revealed_check(
+	condition *condition, move_action *action) {
+	if(action->source->cards[action->source_index]->proxy->card == 0) {
+		return false;
+	}
+	return true;
+}
+
+condition *condition_source_card_revealed(mem_context *context) {
+	condition *c = mem_alloc(context, sizeof(condition));
+	c->check = condition_source_card_revealed_check;
+	return c;
+}
+
+/* ------------------------------------------------------------------------- */
+
+bool condition_source_not_equal_destination_check(
+	condition *cond, move_action *action) {
+	return action->source != action->destination;
+}
+
+condition *condition_source_not_equal_destination(mem_context *context) {
+	condition *c = mem_alloc(context, sizeof(condition));
+	c->check = condition_source_not_equal_destination_check;
 	return c;
 }
 
@@ -142,6 +210,19 @@ condition *condition_destination_empty(mem_context *context) {
 
 /* ------------------------------------------------------------------------- */
 
+bool condition_rest_of_pile_check(condition *cond, move_action *action) {
+	return (card_count(action->source) - action->source_count) ==
+		action->source_index;
+}
+
+condition *condition_rest_of_pile(mem_context *context) {
+	condition *c = mem_alloc(context, sizeof(condition));
+	c->check = condition_rest_of_pile_check;
+	return c;
+}
+
+/* ------------------------------------------------------------------------- */
+
 bool condition_top_card_check(condition *cond, move_action *action) {
 	return action->source->cards[action->source_index] == card_last(action->source);
 }
@@ -158,13 +239,23 @@ typedef struct {
 	card_suit suit;
 	card_value value;
 	condition_compare_operation operation;
-} condition_top_card_equal_data;
+} condition_card_equal_data;
 
-bool condition_top_card_equal_check(
+bool condition_card_equal_check(
 	condition *cond, move_action *action) {
+	card *card;
+	condition_card_equal_data *data = cond->data;
 
-	condition_top_card_equal_data *data = cond->data;
-	card *card = card_last(data->pile ? data->pile : action->source);
+	/* If there has been a pile manually assigned this condition will use
+	   the top card. This might be a good idea to send as a parameter as
+	   well.
+	   Otherwise we will use the card specified with the action. */
+	if(data->pile) {
+		card = card_last(data->pile);
+	}
+	else {
+		card = action->source->cards[action->source_index];
+	}
 	if(card == 0) {
 		return false;
 	}
@@ -182,17 +273,18 @@ bool condition_top_card_equal_check(
 	return true;
 }
 
-condition *condition_top_card_equal(
+condition *condition_card_equal(
 	mem_context *context, card_suit suit,
 	card_value value, condition_compare_operation operation, pile *pile) {
 	condition *c = mem_alloc(context, sizeof(condition));
-	condition_top_card_equal_data *data = mem_alloc(context, sizeof(condition_top_card_equal_data));
+	condition_card_equal_data *data =
+		mem_alloc(context, sizeof(condition_card_equal_data));
 	data->pile = pile;
 	data->suit = suit;
 	data->value = value;
 	data->operation = operation;
 	c->data = data;
-	c->check = condition_top_card_equal_check;
+	c->check = condition_card_equal_check;
 	return c;
 }
 

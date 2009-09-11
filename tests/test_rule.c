@@ -26,9 +26,11 @@ START_TEST(test_rule_create) {
 	rule *rule = rule_create(context);
 
 	ck_assert_msg(rule != 0, "Failed to create rule.");
-	ck_assert_msg(rule->condition_size == 0, "The size of the condition array should initially be 0");
+	ck_assert_msg(rule->condition_size == 0,
+				  "The size of the condition array should initially be 0");
 	ck_assert_msg(rule->conditions == 0, "Conditions array should be 0.");
-	ck_assert_msg(rule->action_size == 0, "The size of the action array should initially be 0");
+	ck_assert_msg(rule->action_size == 0,
+				  "The size of the action array should initially be 0");
 	ck_assert_msg(rule->actions == 0, "Action array should be 0.");
 }
 END_TEST
@@ -43,7 +45,8 @@ START_TEST(test_rule_add_condition) {
 	rule_add_condition(context, rule, cond);
 
 	ck_assert_msg(rule->condition_size == 1, "Size of rules array should be 1");
-	ck_assert_msg(rule->conditions[0] == cond, "First item in array should be condition.");
+	ck_assert_msg(rule->conditions[0] == cond,
+				  "First item in array should be condition.");
 }
 END_TEST
 
@@ -59,8 +62,10 @@ START_TEST(test_rule_add_action) {
 	rule_add_action(context, rule, action2);
 
 	ck_assert_msg(rule->action_size == 2, "Array should now be 2.");
-	ck_assert_msg(rule->actions[0] == action1, "First element should be the first action.");
-	ck_assert_msg(rule->actions[1] == action2, "Second element should be the second action.");
+	ck_assert_msg(rule->actions[0] == action1,
+				  "First element should be the first action.");
+	ck_assert_msg(rule->actions[1] == action2,
+				  "Second element should be the second action.");
 }
 END_TEST
 
@@ -74,12 +79,14 @@ START_TEST(test_rule_check) {
 	cond1 = condition_succeed(context);
 	rule_add_condition(context, rule, cond1);
 
-	ck_assert_msg(rule_check(rule, &action) == true, "Should have returned true");
+	ck_assert_msg(rule_check(rule, &action) == true,
+				  "Should have returned true");
 
 	cond2 = condition_fail(context);
 	rule_add_condition(context, rule, cond2);
 
-	ck_assert_msg(rule_check(rule, &action) == false, "Should have returned false");
+	ck_assert_msg(rule_check(rule, &action) == false,
+				  "Should have returned false");
 }
 END_TEST
 
@@ -97,7 +104,8 @@ START_TEST(test_rule_execute_actions) {
 
 	rule_execute_actions(rule, &move);
 
-	ck_assert_msg(deck->cards[51]->proxy->card != 0, "Card should have been revealed if action had been executed.");
+	ck_assert_msg(deck->cards[51]->proxy->card != 0,
+				  "Card should have been revealed if action had been executed.");
 }
 END_TEST
 
@@ -141,13 +149,18 @@ START_TEST(test_ruleset_check) {
 	rule_add_condition(context, rule1, condition_fail(context));
 	ruleset_add_rule(context, ruleset, rule1);
 
-	ck_assert_msg(ruleset_check(ruleset, &action, &matching_rule) == false, "Check should fail");
-	ck_assert_msg(matching_rule == 0, "Matching rule should be set to 0 since no match was made.");
+	ck_assert_msg(
+		ruleset_check(ruleset, &action, &matching_rule) == false,
+		"Check should fail");
+	ck_assert_msg(matching_rule == 0, "Matching rule should be set to 0 "
+				  "since no match was made.");
 
 	rule2 = rule_create(context);
 	rule_add_condition(context, rule2, condition_succeed(context));
 	ruleset_add_rule(context, ruleset, rule2);
-	ck_assert_msg(ruleset_check(ruleset, &action, &matching_rule) == true, "Check should succeed");
+	ck_assert_msg(
+		ruleset_check(ruleset, &action, &matching_rule) == true,
+		"Check should succeed");
 	ck_assert_msg(matching_rule == rule2, "matching_rule should be equal to rule2");
 }
 END_TEST
@@ -196,6 +209,24 @@ START_TEST(test_ruleset_move_card) {
 }
 END_TEST
 
+START_TEST(test_condition_card_count_array) {
+	pile *p1, *p2;
+	condition *cond;
+	mem_context *context = mem_context_create();
+
+	p1 = pile_create(context, 52);
+	p2 = pile_create(context, 52);
+
+	cond = condition_card_count_array(context, 52, 2, p1, p2);
+
+	create_deck(context, p1, 1);
+	ck_assert_msg(cond->check(cond, 0) == false, "Should be false.");
+
+	create_deck(context, p2, 1);
+	ck_assert_msg(cond->check(cond, 0) == true, "Should be true.");
+}
+END_TEST
+
 START_TEST(test_condition_source) {
 	move_action action;
 	pile *p1, *p2;
@@ -235,6 +266,48 @@ START_TEST(test_condition_source_array) {
 
 	action.source = p3;
 	ck_assert_msg(cond->check(cond, &action) == false, "Should have returned false");
+}
+END_TEST
+
+START_TEST(test_condition_source_card_revealed) {
+	move_action action;
+	pile *p1;
+	condition *cond;
+	mem_context *context = mem_context_create();
+
+	p1 = pile_create(context, 52);
+	p1->cards[0] = card_create(context, e_clubs, 1);
+
+	cond = condition_source_card_revealed(context);
+	ck_assert_msg(cond->check != 0, "Check method not implemented.");
+
+	action.source = p1;
+	action.source_index = 0;
+	ck_assert_msg(cond->check(cond, &action) == false, "Should have returned "
+				  "false when card hasn't been revealed yet.");
+
+	card_reveal(p1->cards[0]);
+	ck_assert_msg(cond->check(cond, &action) == true, "Should have returned "
+				  "false when card hasn't been revealed yet.");
+}
+END_TEST
+
+START_TEST(test_condition_source_not_equal_destination) {
+	move_action action;
+	condition *cond;
+	mem_context *context = mem_context_create();
+	pile *p1, *p2;
+
+	p1 = pile_create(context, 52);
+	p2 = pile_create(context, 52);
+	cond = condition_source_not_equal_destination(context);
+
+	action.source = p1;
+	action.destination = p2;
+	ck_assert(cond->check(cond, &action) == true);
+
+	action.destination = p1;
+	ck_assert(cond->check(cond, &action) == false);
 }
 END_TEST
 
@@ -337,6 +410,27 @@ START_TEST(test_condition_destination_empty) {
 }
 END_TEST
 
+START_TEST(test_condition_rest_of_pile) {
+	pile *p1;
+	condition *cond;
+	move_action action;
+	mem_context *context = mem_context_create();
+
+	p1 = pile_create(context, 52);
+	create_deck(context, p1, 1);
+
+	cond = condition_rest_of_pile(context);
+
+	action.source = p1;
+	action.source_index = 1;
+	action.source_count = 51;
+	ck_assert_msg(cond->check(cond, &action) == true, "Should return true.");
+
+	action.source_index = 0;
+	ck_assert_msg(cond->check(cond, &action) == false, "Should return false.");
+}
+END_TEST
+
 START_TEST(test_condition_top_card) {
 	pile *deck;
 	condition *cond;
@@ -356,7 +450,7 @@ START_TEST(test_condition_top_card) {
 }
 END_TEST
 
-START_TEST(test_condition_top_card_equal) {
+START_TEST(test_condition_card_equal) {
 	move_action action;
 	pile *deck;
 	condition *cond;
@@ -365,21 +459,23 @@ START_TEST(test_condition_top_card_equal) {
 	deck = pile_create(context, 52);
 	deck->cards[0] = card_create(context, e_spades, 2);
 	action.source = deck;
+	action.source_index = 0;
 
-	cond = condition_top_card_equal(context, e_suit_none, 3, e_equal_value, 0);
+	cond = condition_card_equal(context, e_suit_none, 3, e_equal_value, 0);
 	ck_assert_msg(cond->check(cond, &action) == false,
 				  "Should fail since card isn't the right value.");
 
+	action.source_index = 1;
 	deck->cards[1] = card_create(context, e_spades, 3);
 	ck_assert_msg(cond->check(cond, &action) == true,
 				  "Should be movable since top card value is equal.");
 
-	cond = condition_top_card_equal(
+	cond = condition_card_equal(
 		context, e_clubs, 3, e_equal_value|e_follow_suit, 0);
 	ck_assert_msg(cond->check(cond, &action) == false,
 				  "Should fail since card suit isn't the right value.");
 
-	cond = condition_top_card_equal(
+	cond = condition_card_equal(
 		context, e_clubs, 2, e_equal_value|e_follow_suit, deck);
 	ck_assert_msg(cond->check(cond, 0) == false,
 				  "Should succeed since card is the right value.");
@@ -628,15 +724,19 @@ END_TEST
 
 void add_rule_tests(Suite *suite) {
 	TCase *c = tcase_create("Rules");
+	tcase_add_test(c, test_condition_card_count_array);
 	tcase_add_test(c, test_condition_source);
 	tcase_add_test(c, test_condition_source_array);
+	tcase_add_test(c, test_condition_source_card_revealed);
+	tcase_add_test(c, test_condition_source_not_equal_destination);
 	tcase_add_test(c, test_condition_or);
 	tcase_add_test(c, test_condition_or_array);
 	tcase_add_test(c, test_condition_destination);
 	tcase_add_test(c, test_condition_destination_array);
 	tcase_add_test(c, test_condition_destination_empty);
+	tcase_add_test(c, test_condition_rest_of_pile);
 	tcase_add_test(c, test_condition_top_card);
-	tcase_add_test(c, test_condition_top_card_equal);
+	tcase_add_test(c, test_condition_card_equal);
 	tcase_add_test(c, test_condition_top_card_compare);
 	tcase_add_test(c, test_rule_create);
 	tcase_add_test(c, test_rule_add_condition);

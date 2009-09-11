@@ -281,6 +281,22 @@ visual_pile *visual_find_pile_from_card(visual *vis, card_proxy *proxy) {
 	return 0;
 }
 
+int visual_get_card_index(visual_pile *pile, card_proxy *card) {
+	int i;
+	for(i=0;i<pile->card_count;++i) {
+		if(pile->cards[i] == card) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+int visual_get_rest_of_pile(visual *vis, card_proxy *card) {
+	visual_pile *pile = visual_find_pile_from_card(vis, card);
+	int index = visual_get_card_index(pile, card);
+	return pile->card_count - index;
+}
+
 visual_pile* visual_pile_create(mem_context *context, pile *pile) {
 	visual_pile* p = mem_alloc(context, sizeof(visual_pile));
 	p->data = pile;

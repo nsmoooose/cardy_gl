@@ -51,14 +51,19 @@ typedef enum {
 	e_suit_opposite=64
 } condition_compare_operation;
 
+condition *condition_card_count_array(
+	mem_context *context, int count, int pile_count, ...);
 condition *condition_or(mem_context *context, condition *c1, condition *c2);
 condition *condition_or_array(mem_context *context, int count, ...);
 condition *condition_source(mem_context *context, pile *pile);
 condition *condition_source_array(mem_context *context, int count, ...);
+condition *condition_source_card_revealed(mem_context *context);
+condition *condition_source_not_equal_destination(mem_context *context);
+condition *condition_rest_of_pile(mem_context *context);
 condition *condition_top_card(mem_context *context);
 condition *condition_top_card_compare(
 	mem_context *context, pile *dest, condition_compare_operation operation);
-condition *condition_top_card_equal(
+condition *condition_card_equal(
 	mem_context *context, card_suit suit, card_value value,
 	condition_compare_operation operation, pile *pile);
 condition *condition_destination(mem_context *context, pile *pile);

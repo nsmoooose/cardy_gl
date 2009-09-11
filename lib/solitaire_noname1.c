@@ -56,7 +56,8 @@ static void action_deal_execute(visual_pile_action *action) {
 	visual_sync(sol->visual);
 }
 
-static visual_pile_action *action_deal(mem_context *context, solitaire *sol, internal *i) {
+static visual_pile_action *action_deal(
+	mem_context *context, solitaire *sol, internal *i) {
 	visual_pile_action *deal_action = mem_alloc(context, sizeof(visual_pile_action));
 	action_deal_data *data = mem_alloc(context, sizeof(action_deal_data));
 	data->sol = sol;
@@ -68,19 +69,23 @@ static visual_pile_action *action_deal(mem_context *context, solitaire *sol, int
 
 static void setup_rules(mem_context *context, solitaire *s, internal *i) {
 	condition *ace1_4_cond;
-	rule *rule1, *rule2, *rule3;
+	rule *rule1, *rule2, *rule3, *rule4, *rule5;
 
 	s->ruleset = ruleset_create(context);
 
 	/* Shared condition for the aces. */
-	ace1_4_cond = condition_destination_array(context, 4, i->ace[0], i->ace[1], i->ace[2], i->ace[3]);
+	ace1_4_cond = condition_destination_array(
+		context, 4, i->ace[0], i->ace[1], i->ace[2], i->ace[3]);
 
 	/* Allow move of ace to an empty pile among the ace piles. */
 	rule1 = rule_create(context);
 	rule_add_condition(context, rule1, ace1_4_cond);
 	rule_add_condition(context, rule1, condition_destination_empty(context));
 	rule_add_condition(context, rule1, condition_top_card(context));
-	rule_add_condition(context, rule1, condition_top_card_equal(context, e_suit_none, 1, e_equal_value, 0));
+	rule_add_condition(
+		context, rule1,
+		condition_card_equal(context, e_suit_none,
+								 1, e_equal_value, 0));
 	rule_add_action(context, rule1, action_reveal_source_top_card(context));
 	ruleset_add_rule(context, s->ruleset, rule1);
 
@@ -89,23 +94,75 @@ static void setup_rules(mem_context *context, solitaire *s, internal *i) {
 	rule2 = rule_create(context);
 	rule_add_condition(context, rule2, ace1_4_cond);
 	rule_add_condition(context, rule2, condition_top_card(context));
-	rule_add_condition(context, rule2, condition_top_card_compare(context, 0, e_dest_1lower_value|e_follow_suit));
+	rule_add_condition(context, rule2,
+					   condition_top_card_compare(
+						   context, 0, e_dest_1lower_value|e_follow_suit));
 	rule_add_action(context, rule2, action_reveal_source_top_card(context));
 	ruleset_add_rule(context, s->ruleset, rule2);
 
 	/* Allow moving several cards to a top card of the opposite suit. */
 	rule3 = rule_create(context);
-	rule_add_condition(context, rule3, condition_top_card_compare(context, 0, e_dest_1higher_value|e_suit_opposite));
+	rule_add_condition(
+		context, rule3,
+		condition_top_card_compare(
+			context, 0, e_dest_1higher_value|e_suit_opposite));
 	rule_add_condition(context, rule3,
 					   condition_source_array(
 						   context, 8, i->build[0], i->build[1], i->build[2],
-						   i->build[3], i->build[4], i->build[5], i->build[6], i->build[7]));
+						   i->build[3], i->build[4], i->build[5], i->build[6],
+						   i->build[7]));
 	rule_add_condition(context, rule3,
 					   condition_destination_array(
 						   context, 8, i->build[0], i->build[1], i->build[2],
-						   i->build[3], i->build[4], i->build[5], i->build[6], i->build[7]));
+						   i->build[3], i->build[4], i->build[5], i->build[6],
+						   i->build[7]));
+	rule_add_condition(context, rule3, condition_source_card_revealed(context));
+	rule_add_condition(context, rule3, condition_rest_of_pile(context));
+	rule_add_condition(
+		context, rule3, condition_source_not_equal_destination(context));
 	rule_add_action(context, rule3, action_reveal_source_top_card(context));
 	ruleset_add_rule(context, s->ruleset, rule3);
+
+	/* Allow moving of kings to an empty pile. */
+	rule4 = rule_create(context);
+	rule_add_condition(context,
+					   rule4,
+					   condition_destination_array(
+						   context, 8, i->build[0], i->build[1], i->build[2],
+						   i->build[3], i->build[4], i->build[5], i->build[6],
+						   i->build[7]));
+	rule_add_condition(context, rule4, condition_destination_empty(context));
+	rule_add_condition(context, rule4,
+					   condition_card_equal(
+						   context, e_suit_none, 13, e_equal_value, 0));
+	rule_add_condition(context, rule4, condition_rest_of_pile(context));
+	rule_add_action(context, rule4, action_reveal_source_top_card(context));
+	ruleset_add_rule(context, s->ruleset, rule4);
+
+	/* Allow moving a single card to the build piles from the ace piles. */
+	rule5 = rule_create(context);
+	rule_add_condition(context, rule5, condition_top_card(context));
+	rule_add_condition(
+		context, rule5, condition_source_array(context, 4, i->ace[0],
+											   i->ace[1], i->ace[2], i->ace[3]));
+	rule_add_condition(context,
+					   rule5,
+					   condition_destination_array(
+						   context, 8, i->build[0], i->build[1], i->build[2],
+						   i->build[3], i->build[4], i->build[5], i->build[6],
+						   i->build[7]));
+	rule_add_condition(
+		context, rule5,
+		condition_top_card_compare(
+			context, 0, e_dest_1higher_value|e_suit_opposite));
+	ruleset_add_rule(context, s->ruleset, rule5);
+
+	/* Solved rule */
+	s->ruleset->solved = rule_create(context);
+	rule_add_condition(
+		context, s->ruleset->solved,
+		condition_card_count_array(
+			context, 13, 4, i->ace[0], i->ace[1], i->ace[2], i->ace[3]));
 }
 
 solitaire* solitaire_noname1(mem_context *context, visual_settings *settings) {
