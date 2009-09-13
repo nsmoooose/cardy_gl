@@ -227,6 +227,12 @@ static void setup_rules(mem_context *context, solitaire *s, internal *i) {
 			context, 0, e_follow_suit|e_dest_1lower_value));
 	rule_add_action(context, rule6, action_reveal_source_top_card(context));
 	ruleset_add_rule(context, s->ruleset, rule6);
+
+	/* Solved rule */
+	s->ruleset->solved = rule_create(context);
+	rule_add_condition(
+		context, s->ruleset->solved,
+		condition_card_count_array(context, 104, 1, i->done));
 }
 
 solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settings) {
