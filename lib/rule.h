@@ -53,6 +53,7 @@ typedef enum {
 
 condition *condition_card_count_array(
 	mem_context *context, int count, int pile_count, ...);
+condition *condition_move_count(mem_context *context, int count);
 condition *condition_or(mem_context *context, condition *c1, condition *c2);
 condition *condition_or_array(mem_context *context, int count, ...);
 condition *condition_source(mem_context *context, pile *pile);

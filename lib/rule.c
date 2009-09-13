@@ -157,6 +157,28 @@ condition *condition_destination_array(mem_context *context, int count, ...) {
 /* ------------------------------------------------------------------------- */
 
 typedef struct {
+	int count;
+} condition_move_count_data;
+
+static bool condition_move_count_check(condition *condition, move_action *action) {
+	condition_move_count_data *d = condition->data;
+	return action->source_count == d->count;
+}
+
+condition *condition_move_count(mem_context *context, int count) {
+	condition_move_count_data *d =
+		mem_alloc(context, sizeof(condition_move_count_data));
+	condition *c = mem_alloc(context, sizeof(condition));
+	c->check = condition_move_count_check;
+	c->data = d;
+
+	d->count = count;
+	return c;
+}
+
+/* ------------------------------------------------------------------------- */
+
+typedef struct {
 	condition **conditions;
 	int size;
 } condition_or_data;

@@ -311,6 +311,20 @@ START_TEST(test_condition_source_not_equal_destination) {
 }
 END_TEST
 
+START_TEST(test_condition_move_count) {
+	move_action action;
+	condition *cond;
+	mem_context *context = mem_context_create();
+	cond = condition_move_count(context, 3);
+
+	action.source_count = 3;
+	ck_assert(cond->check(cond, &action) == true);
+
+	action.source_count = 4;
+	ck_assert(cond->check(cond, &action) == false);
+}
+END_TEST
+
 START_TEST(test_condition_or) {
 	move_action action;
 	condition *cond;
@@ -729,6 +743,7 @@ void add_rule_tests(Suite *suite) {
 	tcase_add_test(c, test_condition_source_array);
 	tcase_add_test(c, test_condition_source_card_revealed);
 	tcase_add_test(c, test_condition_source_not_equal_destination);
+	tcase_add_test(c, test_condition_move_count);
 	tcase_add_test(c, test_condition_or);
 	tcase_add_test(c, test_condition_or_array);
 	tcase_add_test(c, test_condition_destination);
