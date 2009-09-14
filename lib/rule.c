@@ -507,9 +507,10 @@ move_action *ruleset_get_move_action(
 
 void ruleset_apply_move_action(visual *vis, move_action *action) {
 	int index;
+	card *c;
 	for(index=0;index<action->source_count;++index) {
-		action->destination->cards[card_first_free(action->destination)] =
-			card_take(action->source, action->source_index);
+		c = card_take(action->source, action->source_index);
+		action->destination->cards[card_first_free(action->destination)] = c;
 	}
 
 	/* TODO There is a lot more to handle here. Like:
