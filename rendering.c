@@ -25,23 +25,14 @@ void rendering_window_size_change(int width, int height) {
 	aspect = (float)width/(float)height;
 	gluPerspective(g_perspective_fov, aspect, g_perspective_near,
 				   g_perspective_far);
-
-	render_update_camera_pos();
 }
 
 void rendering_scene() {
-	static int lastUpdate = 0;
-	float delta;
-	int currentTime = glutGet(GLUT_ELAPSED_TIME);;
-
-	delta = ((float)(currentTime - lastUpdate)) / 1000.0f;
 	glMatrixMode(GL_MODELVIEW);
 	glInitNames();
-	render_scene_context(g_rcontext, delta);
+	render_scene_context(g_rcontext);
 	check_gl_errors("render_scene");
 	glutSwapBuffers();
-
-	lastUpdate = currentTime;
 }
 
 void rendering_idle() {

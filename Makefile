@@ -7,17 +7,18 @@ ifdef COVERAGE
 endif
 
 ifeq ($(PLATFORM), Linux)
-LIBS=-lglut -lGL -lGLU -lm -lcardy
+export LIBS=-lglut -lGL -lGLU -lm -lcardy
 endif
 
 ifeq ($(PLATFORM), MINGW32_NT-5.1)
-LIBS=-lglut32 -lGLU32 -lm -lcardy -lopengl32
+export LIBS=-lglut32 -lGLU32 -lm -lcardy -lopengl32
 endif
 
 OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 
 all: cardy_gl
 	@echo Building $@
+	@make -C examples $@
 
 clean:
 	@echo Cleaning cardy_gl
@@ -27,6 +28,7 @@ clean:
 	@rm *.gcda *.gcno -f
 	@make -C tests $@
 	@make -C lib $@
+	@make -C examples $@
 
 cardy_lib:
 	@make -C lib

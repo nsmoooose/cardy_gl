@@ -35,6 +35,8 @@ typedef struct {
 typedef struct render_context_St {
 	render_object *object;
 
+	int last_render;
+
 	render_selection selections[1024];
 	int selection_size;
 } render_context;
@@ -54,7 +56,7 @@ render_object *render_object_find_root(render_object *object);
 void render_scene_object(
 	render_context *rcontext, render_object *object, float delta);
 
-void render_scene_context(render_context *rcontext, float delta);
+void render_scene_context(render_context *rcontext);
 
 GLuint render_register_selection_callback(
 	render_context *rcontext, render_object *object,

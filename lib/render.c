@@ -102,11 +102,18 @@ void render_scene_object(
 	}
 }
 
-void render_scene_context(render_context *rcontext, float delta) {
+void render_scene_context(render_context *rcontext) {
+	float delta;
+	int current_time = glutGet(GLUT_ELAPSED_TIME);;
+
+	delta = ((float)(current_time - rcontext->last_render)) / 1000.0f;
+
 	render_selection_reset(rcontext);
 	if(rcontext->object) {
 		render_scene_object(rcontext, rcontext->object, delta);
 	}
+
+	rcontext->last_render = current_time;
 }
 
 GLuint render_register_selection_callback(

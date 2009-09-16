@@ -51,6 +51,9 @@ void render_object_mainmenu_render(
 	internal *i = object->data;
 	float opacity;
 
+	glLoadIdentity();
+	glTranslatef(0.0f, 0.0f, -500.0f);
+
 	i->time_elapsed += delta;
 	opacity = i->time_elapsed * 2 > 1.0 ? 1.0 : i->time_elapsed * 2;
 

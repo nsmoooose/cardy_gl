@@ -108,12 +108,6 @@ static void callback_card(render_object *object, void *data) {
 	process_click(object, object->data, pile, data);
 }
 
-void render_update_camera_pos() {
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glTranslatef(g_camera_translateX, g_camera_translateY, g_camera_zoom);
-}
-
 void render_card(render_context *rcontext, render_object *object,
 				 visual_pile* pile, card_proxy* proxy, bool selected) {
 	int index;
@@ -231,10 +225,14 @@ void render_pile(render_context *rcontext,
 
 void render_object_solitaire_render(
 	render_context *rcontext, render_object *object, float delta) {
+	int pile_index;
+	int pile_count;
 	render_solitaire_data *i = object->data;
 
-	int pile_index;
-	int pile_count = i->sol->visual->pile_count;
+	glLoadIdentity();
+	glTranslatef(g_camera_translateX, g_camera_translateY, g_camera_zoom);
+
+	pile_count = i->sol->visual->pile_count;
 	for(pile_index=0;pile_index<pile_count;++pile_index) {
 		visual_pile* pile = i->sol->visual->piles[pile_index];
 		if(!pile) {
