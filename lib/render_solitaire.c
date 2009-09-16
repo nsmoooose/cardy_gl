@@ -229,6 +229,7 @@ void render_object_solitaire_render(
 	int pile_count;
 	render_solitaire_data *i = object->data;
 
+	glClear(GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	glTranslatef(g_camera_translateX, g_camera_translateY, g_camera_zoom);
 
