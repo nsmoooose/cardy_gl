@@ -2,7 +2,7 @@ OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 
 all: example-solved
 
-example-solved: $(OBJECTS)
+example-solved: $(OBJECTS) ../../lib/libcardy.a
 	@gcc $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -L../../lib
 
 clean:
