@@ -1,3 +1,5 @@
+#include <math.h>
+#include <stdlib.h>
 #include "mygl.h"
 #include "render.h"
 
@@ -19,7 +21,7 @@ typedef struct {
 } internal;
 
 void render_triangle(internal *i) {
-	glRotatef(i->total_time * 10.0f, 0.0f, 0.0f, 1.0f);
+	glRotatef(i->total_time * 10.0, 0.0f, 0.0f, 1.0f);
 	glBegin(GL_TRIANGLES);
 	glVertex2f(0.0f, -3.0f);
 	glVertex2f(3.0, 3.0);
