@@ -33,7 +33,7 @@ void window_key_press(unsigned char key, int x, int y) {
 			render_object_add_child(g_rcontext->object, render_object_mainmenu());
 		}
 		else {
-			render_object_remove_child(object->parent, object);
+			render_object_free(g_rcontext, object);
 		}
 		break;
 	case '-':

@@ -46,12 +46,12 @@ START_TEST(test_render_object_remove_child) {
 	render_object_add_child(parent, child1);
 	render_object_add_child(parent, child2);
 
-	render_object_remove_child(parent, child1);
+	render_object_remove_child(child1);
 	ck_assert_msg(parent->child_count == 1, "Child count incorrect.");
 	ck_assert_msg(parent->children[0] == child2, "Incorrect child.");
 	ck_assert_msg(child1->parent == 0, "Parent not reset when removed.");
 
-	render_object_remove_child(parent, child2);
+	render_object_remove_child(child2);
 	ck_assert_msg(parent->child_count == 0, "Child count should be 0");
 	ck_assert_msg(parent->children == 0, "Child vector should have been freed.");
 }

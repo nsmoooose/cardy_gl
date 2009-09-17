@@ -20,7 +20,7 @@ typedef struct {
 	float total_time;
 } internal;
 
-void render_triangle(internal *i) {
+static void render_triangle(internal *i) {
 	glRotatef(i->total_time * 10.0, 0.0f, 0.0f, 1.0f);
 	glBegin(GL_TRIANGLES);
 	glVertex2f(0.0f, -3.0f);
@@ -29,9 +29,8 @@ void render_triangle(internal *i) {
 	glEnd();
 }
 
-void render_object_desktop_render(
-	render_context *rcontext, render_object *object, float delta) {
-	internal *i = object->data;
+static void render_object_desktop_render(render_event_args *event, float delta) {
+	internal *i = event->object->data;
 	int x, y;
 	float distance;
 
@@ -58,9 +57,14 @@ void render_object_desktop_render(
 	i->total_time += delta;
 }
 
+static void render_object_desktop_free(render_event_args *event) {
+	free(event->object->data);
+}
+
 render_object *render_object_desktop() {
 	render_object *o = render_object_create("desktop");
 	o->data = calloc(1, sizeof(internal));
 	o->render = render_object_desktop_render;
+	o->free = render_object_desktop_free;
 	return o;
 }

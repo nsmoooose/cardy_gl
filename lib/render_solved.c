@@ -2,8 +2,7 @@
 
 const char *render_object_solved_id = "solitaire_solved";
 
-void render_object_solved_render(
-	render_context *rcontext, render_object *object, float delta) {
+void render_object_solved_render(render_event_args *event, float delta) {
 }
 
 render_object *render_object_solved() {
