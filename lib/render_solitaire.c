@@ -50,6 +50,13 @@ static GLubyte g_card_indexes[] = {
 	4, 0, 3, 7 /* left */
 };
 
+static void do_card_move(solitaire *sol, visual_pile *pile,
+					card_proxy *card, int count) {
+	if(!ruleset_move_card(sol->ruleset, sol->visual, pile, card, count)) {
+		ruleset_move_individual_card(sol->ruleset, sol->visual, pile, card, count);
+	}
+}
+
 static void process_click(
 	render_context *rcontext,
 	render_object *object, render_solitaire_data *data,
@@ -71,11 +78,7 @@ static void process_click(
 			else {
 				card_count = visual_get_rest_of_pile(
 					data->sol->visual, g_selected_card);
-				ruleset_move_card(data->sol->ruleset,
-								  data->sol->visual,
-								  pile,
-								  g_selected_card,
-								  card_count);
+				do_card_move(data->sol, pile, g_selected_card, card_count);
 				g_selected_card = 0;
 			}
 		}
@@ -84,11 +87,7 @@ static void process_click(
 		if(g_selected_card) {
 			card_count = visual_get_rest_of_pile(
 				data->sol->visual, g_selected_card);
-			ruleset_move_card(data->sol->ruleset,
-							  data->sol->visual,
-							  pile,
-							  g_selected_card,
-							  card_count);
+			do_card_move(data->sol, pile, g_selected_card, card_count);
 			g_selected_card = 0;
 		}
 	}

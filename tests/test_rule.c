@@ -209,6 +209,39 @@ START_TEST(test_ruleset_move_card) {
 }
 END_TEST
 
+START_TEST(test_ruleset_move_individual_card) {
+	mem_context *context = mem_context_create();
+	visual *vis;
+	pile *deck, *done;
+	ruleset *ruleset;
+	rule *rule1;
+
+	/* Arrange */
+	vis = visual_create(context, 0);
+
+	deck = pile_create(context, 52);
+	deck->cards[0] = card_create(context, e_spades, 1);
+	deck->cards[1] = card_create(context, e_spades, 2);
+	visual_add_pile(context, vis, visual_pile_create(context, deck));
+
+	done = pile_create(context, 52);
+	visual_add_pile(context, vis, visual_pile_create(context, done));
+	visual_sync(vis);
+
+	ruleset = ruleset_create(context);
+	rule1 = rule_create(context);
+	rule_add_condition(context, rule1, condition_succeed(context));
+	ruleset_add_rule(context, ruleset, rule1);
+
+	ck_assert(
+		ruleset_move_individual_card(
+			ruleset, vis, vis->piles[1], vis->piles[0]->cards[0], 2) == true);
+	ck_assert(card_count(done) == 2);
+	ck_assert(done->cards[0]->value == 2);
+	ck_assert(done->cards[1]->value == 1);
+}
+END_TEST
+
 START_TEST(test_condition_card_count_array) {
 	pile *p1, *p2;
 	condition *cond;
@@ -790,6 +823,7 @@ void add_rule_tests(Suite *suite) {
 	tcase_add_test(c, test_ruleset_add_rule);
 	tcase_add_test(c, test_ruleset_check);
 	tcase_add_test(c, test_ruleset_move_card);
+	tcase_add_test(c, test_ruleset_move_individual_card);
 	tcase_add_test(c, test_ruleset_get_move_action);
 	tcase_add_test(c, test_ruleset_apply_move_action);
 	tcase_add_test(c, test_ruleset_apply_move_action2);

@@ -485,6 +485,22 @@ bool ruleset_move_card(ruleset *ruleset, visual *visual, visual_pile *destinatio
 	return result;
 }
 
+bool ruleset_move_individual_card(
+	ruleset *ruleset, visual *visual, visual_pile *destination,
+	card_proxy *card, int count) {
+
+	visual_pile *pile = visual_find_pile_from_card(visual, card);
+	int card_index = visual_get_card_index(pile, card);
+
+	int i;
+	for(i = count-1 + card_index;i >= (0 + card_index);--i) {
+		if(!ruleset_move_card(ruleset, visual, destination, pile->cards[i], 1)) {
+			return false;
+		}
+	}
+	return true;
+}
+
 move_action *ruleset_get_move_action(
 	visual *vis, card_proxy *card, int count, visual_pile *destination_pile) {
 	int i, j;

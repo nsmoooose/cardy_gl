@@ -213,6 +213,8 @@ void card_shuffle(pile *pile) {
 		return;
 	}
 
+	srand(time(0));
+
 	for(i=0;i<count*4;++i) {
 		i1 = rand() % count;
 		i2 = rand() % count;

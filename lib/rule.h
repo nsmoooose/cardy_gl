@@ -88,5 +88,8 @@ void ruleset_apply_move_action(visual *vis, move_action *action);
 bool ruleset_move_card(
 	ruleset *ruleset, visual *visual, visual_pile *destination,
 	card_proxy *card, int count);
+bool ruleset_move_individual_card(
+	ruleset *ruleset, visual *visual, visual_pile *destination,
+	card_proxy *card, int count);
 
 #endif /* __RULE_H__ */
