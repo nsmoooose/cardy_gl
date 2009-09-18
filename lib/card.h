@@ -9,8 +9,8 @@
 #define CARD_THICKNESS 0.4
 
 typedef int bool;
-const int true;
-const int false;
+extern const unsigned char true;
+extern const unsigned char false;
 
 typedef enum {
 	e_suit_none = -1,
