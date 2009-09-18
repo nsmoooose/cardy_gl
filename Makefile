@@ -42,6 +42,35 @@ cardy_gl: cardy_lib cardy_tests $(OBJECTS)
 	@gcc $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -Llib
 	@make -C tests
 
+deploy:	
+	@mkdir dist/win32 -p
+	@cp resources dist/win32/ -r
+	@cp themes dist/win32/ -r
+	@cp cardy_gl.exe dist/win32/
+	@cp /c/devlibs/bin/libcairo-2.dll dist/win32/
+	@cp /c/devlibs/bin/libfontconfig-1.dll dist/win32/
+	@cp /c/devlibs/bin/freetype6.dll dist/win32/
+	@cp /c/devlibs/bin/libexpat.dll dist/win32/
+	@cp /c/devlibs/bin/libpng12-0.dll dist/win32/
+	@cp /c/devlibs/bin/zlib1.dll dist/win32/
+	@cp /mingw/bin/glee.dll dist/win32/
+	@cp /mingw/bin/glut32.dll dist/win32/
+	@cp /mingw/bin/librsvg-2-2.dll dist/win32/
+	@cp /c/devlibs/bin/libcroco-0.6-3.dll dist/win32/
+	@cp /c/devlibs/bin/libglib-2.0-0.dll dist/win32/
+	@cp /c/devlibs/bin/libxml2.dll dist/win32/
+	@cp /c/devlibs/bin/iconv.dll dist/win32/
+	@cp /c/devlibs/bin/libgdk_pixbuf-2.0-0.dll dist/win32/
+	@cp /c/devlibs/bin/libgio-2.0-0.dll dist/win32/
+	@cp /c/devlibs/bin/libgmodule-2.0-0.dll dist/win32/
+	@cp /c/devlibs/bin/libgobject-2.0-0.dll dist/win32/
+	@cp /c/devlibs/bin/libpango-1.0-0.dll dist/win32/
+	@cp /c/devlibs/bin/libpangocairo-1.0-0.dll dist/win32/
+	@cp /c/devlibs/bin/libpangowin32-1.0-0.dll dist/win32/
+	@cp /c/devlibs/bin/libpangoft2-1.0-0.dll dist/win32/
+	@cp /c/devlibs/bin/libgmodule-2.0-0.dll dist/win32/
+	@cp /c/devlibs/bin/libgmodule-2.0-0.dll dist/win32/
+	
 %.o: %.c
 	@echo $<
 	@gcc -c $(CFLAGS) $<
