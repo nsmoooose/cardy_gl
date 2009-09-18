@@ -33,17 +33,15 @@ void window_key_press(unsigned char key, int x, int y) {
 			render_object_add_child(g_rcontext->object, render_object_mainmenu());
 		}
 		else {
-			render_object_remove_child(object->parent, object);
+			render_object_free(g_rcontext, object);
 		}
 		break;
 	case '-':
 		g_camera_zoom -= 10.0f;
-		render_update_camera_pos();
 		break;
 
 	case '+':
 		g_camera_zoom += 10.0f;
-		render_update_camera_pos();
 		break;
 
 	case 'z':
@@ -91,22 +89,18 @@ void window_special_key_press(int key, int x, int y) {
 	case 100:
 		/* Left */
 		g_camera_translateX -= 10.0f;
-		render_update_camera_pos();
 		break;
 	case 101:
 		/* Up */
 		g_camera_translateY += 10.0f;
-		render_update_camera_pos();
 		break;
 	case 102:
 		/* Right */
 		g_camera_translateX += 10.0f;
-		render_update_camera_pos();
 		break;
 	case 103:
 		/* Down */
 		g_camera_translateY -= 10.0f;
-		render_update_camera_pos();
 		break;
 	}
 	glutPostRedisplay();

@@ -11,9 +11,9 @@ clean:
 	@rm cardy_tests -f
 
 ifeq ($(PLATFORM), Linux)
-cardy_tests:  $(OBJECTS)
+cardy_tests:  $(OBJECTS) ../lib/libcardy.a
 	@echo Building $@
-	@gcc $(CFLAGS) -o $@ $(OBJECTS) -lglut -lGL -lGLU -lm -lcheck -lcardy -L../lib
+	@gcc $(CFLAGS) -o $@ $(OBJECTS) -L../lib $(LIBS) -lcheck
 endif
 
 ifeq ($(PLATFORM), MINGW32_NT-5.1)

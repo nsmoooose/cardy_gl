@@ -10,12 +10,44 @@ render_context *render_context_create(mem_context *context) {
 	return calloc(1, sizeof(render_context));
 }
 
+void render_context_free(render_context *rcontext) {
+	if(rcontext != 0) {
+		if(rcontext->object != 0) {
+			render_object_free(rcontext, rcontext->object);
+		}
+		free(rcontext);
+	}
+}
+
 render_object *render_object_create(const char *id) {
 	render_object *o = calloc(1, sizeof(render_object));
 	if(id != 0) {
 		o->id = strdup(id);
 	}
 	return o;
+}
+
+void render_object_free(render_context *rcontext, render_object *object) {
+	int index;
+	render_event_args event;
+
+	event.rcontext = rcontext;
+
+	if(object != 0) {
+		if(object->parent != 0) {
+			render_object_remove_child(object);
+		}
+
+		for(index=0;index<object->child_count;++index) {
+			render_object_free(rcontext, object->children[index]);
+		}
+
+		event.object = object;
+		if(object->free != 0) {
+			object->free(&event);
+		}
+		free(object);
+	}
 }
 
 void render_object_add_child(render_object *parent, render_object *child) {
@@ -34,7 +66,8 @@ void render_object_add_child(render_object *parent, render_object *child) {
 	child->parent = parent;
 }
 
-void render_object_remove_child(render_object *parent, render_object *child) {
+void render_object_remove_child(render_object *child) {
+	render_object *parent = child->parent;
 	render_object **old = parent->children;
 	int index;
 	for(index=0;index<parent->child_count;++index) {
@@ -96,17 +129,27 @@ render_object *render_object_find_root(render_object *object) {
 void render_scene_object(
 	render_context *rcontext, render_object *object, float delta) {
 	int i;
-	object->render(rcontext, object, delta);
+	render_event_args event;
+	event.rcontext = rcontext;
+	event.object = object;
+	object->render(&event, delta);
 	for(i=0;i<object->child_count;++i) {
 		render_scene_object(rcontext, object->children[i], delta);
 	}
 }
 
-void render_scene_context(render_context *rcontext, float delta) {
+void render_scene_context(render_context *rcontext) {
+	float delta;
+	int current_time = glutGet(GLUT_ELAPSED_TIME);
+
+	delta = ((float)(current_time - rcontext->last_render)) / 1000.0f;
+
 	render_selection_reset(rcontext);
 	if(rcontext->object) {
 		render_scene_object(rcontext, rcontext->object, delta);
 	}
+
+	rcontext->last_render = current_time;
 }
 
 GLuint render_register_selection_callback(
@@ -131,6 +174,7 @@ void render_process_selections(
 	int index, hit, records;
 	bool hit_found = false;
 	GLuint last_hit=0;
+	render_event_args event;
 
 	for(index=0, hit=0;hit<hits;++hit) {
 		records = selections[index];
@@ -142,8 +186,9 @@ void render_process_selections(
 	}
 
 	if(hit_found) {
-		rcontext->selections[last_hit].callback(
-			rcontext->selections[last_hit].object,
+		event.rcontext = rcontext;
+		event.object = rcontext->selections[last_hit].object;
+		rcontext->selections[last_hit].callback(&event,
 			rcontext->selections[last_hit].data);
 	}
 }

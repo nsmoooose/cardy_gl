@@ -6,6 +6,12 @@
 #include "mygl.h"
 
 struct render_context_St;
+struct render_object_St;
+
+typedef struct {
+	struct render_context_St *rcontext;
+	struct render_object_St *object;
+} render_event_args;
 
 typedef struct render_object_St {
 	/** An id that describes this object. */
@@ -15,8 +21,9 @@ typedef struct render_object_St {
 	void *data;
 
 	/* Render function. */
-	void (*render)(struct render_context_St *rcontext,
-				   struct render_object_St *object, float delta);
+	void (*render)(render_event_args *event, float delta);
+
+	void (*free)(render_event_args *event);
 
 	struct render_object_St *parent;
 
@@ -24,7 +31,7 @@ typedef struct render_object_St {
 	int child_count;
 } render_object;
 
-typedef void (*render_selection_callback)(render_object *object, void *data);
+typedef void (*render_selection_callback)(render_event_args *event, void *data);
 
 typedef struct {
 	render_object *object;
@@ -35,17 +42,23 @@ typedef struct {
 typedef struct render_context_St {
 	render_object *object;
 
+	int last_render;
+
 	render_selection selections[1024];
 	int selection_size;
 } render_context;
 
 render_context *render_context_create();
 
+void render_context_free(render_context *rcontext);
+
 render_object *render_object_create(const char *id);
+
+void render_object_free(render_context *rcontext, render_object *object);
 
 void render_object_add_child(render_object *parent, render_object *child);
 
-void render_object_remove_child(render_object *parent, render_object *child);
+void render_object_remove_child(render_object *child);
 
 render_object *render_object_find(render_object *parent, const char *id);
 
@@ -54,7 +67,7 @@ render_object *render_object_find_root(render_object *object);
 void render_scene_object(
 	render_context *rcontext, render_object *object, float delta);
 
-void render_scene_context(render_context *rcontext, float delta);
+void render_scene_context(render_context *rcontext);
 
 GLuint render_register_selection_callback(
 	render_context *rcontext, render_object *object,

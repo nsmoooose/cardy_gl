@@ -53,6 +53,7 @@ typedef enum {
 
 condition *condition_card_count_array(
 	mem_context *context, int count, int pile_count, ...);
+condition *condition_move_count(mem_context *context, int count);
 condition *condition_or(mem_context *context, condition *c1, condition *c2);
 condition *condition_or_array(mem_context *context, int count, ...);
 condition *condition_source(mem_context *context, pile *pile);
@@ -85,6 +86,9 @@ move_action *ruleset_get_move_action(
 	visual *vis, card_proxy *card, int count, visual_pile *destination_pile);
 void ruleset_apply_move_action(visual *vis, move_action *action);
 bool ruleset_move_card(
+	ruleset *ruleset, visual *visual, visual_pile *destination,
+	card_proxy *card, int count);
+bool ruleset_move_individual_card(
 	ruleset *ruleset, visual *visual, visual_pile *destination,
 	card_proxy *card, int count);
 

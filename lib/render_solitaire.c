@@ -50,7 +50,15 @@ static GLubyte g_card_indexes[] = {
 	4, 0, 3, 7 /* left */
 };
 
+static void do_card_move(solitaire *sol, visual_pile *pile,
+					card_proxy *card, int count) {
+	if(!ruleset_move_card(sol->ruleset, sol->visual, pile, card, count)) {
+		ruleset_move_individual_card(sol->ruleset, sol->visual, pile, card, count);
+	}
+}
+
 static void process_click(
+	render_context *rcontext,
 	render_object *object, render_solitaire_data *data,
 	visual_pile *pile, card_proxy *proxy) {
 
@@ -70,11 +78,7 @@ static void process_click(
 			else {
 				card_count = visual_get_rest_of_pile(
 					data->sol->visual, g_selected_card);
-				ruleset_move_card(data->sol->ruleset,
-								  data->sol->visual,
-								  pile,
-								  g_selected_card,
-								  card_count);
+				do_card_move(data->sol, pile, g_selected_card, card_count);
 				g_selected_card = 0;
 			}
 		}
@@ -83,39 +87,29 @@ static void process_click(
 		if(g_selected_card) {
 			card_count = visual_get_rest_of_pile(
 				data->sol->visual, g_selected_card);
-			ruleset_move_card(data->sol->ruleset,
-							  data->sol->visual,
-							  pile,
-							  g_selected_card,
-							  card_count);
+			do_card_move(data->sol, pile, g_selected_card, card_count);
 			g_selected_card = 0;
 		}
 	}
 
 	if(data->sol->ruleset->solved && rule_check(data->sol->ruleset->solved, 0)) {
 		render_object_add_child(object->parent, render_object_solved());
-		render_object_remove_child(object->parent, object);
+		render_object_free(rcontext, object);
 	}
 }
 
-static void callback_pile(render_object *object, void *data) {
-	process_click(object, object->data, data, 0);
+static void callback_pile(render_event_args *event, void *data) {
+	process_click(event->rcontext, event->object, event->object->data, data, 0);
 }
 
-static void callback_card(render_object *object, void *data) {
-	render_solitaire_data *sol_data = object->data;
+static void callback_card(render_event_args *event, void *data) {
+	render_solitaire_data *sol_data = event->object->data;
 	visual_pile *pile = visual_find_pile_from_card(sol_data->sol->visual, data);
-	process_click(object, object->data, pile, data);
+	process_click(event->rcontext, event->object, event->object->data, pile, data);
 }
 
-void render_update_camera_pos() {
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glTranslatef(g_camera_translateX, g_camera_translateY, g_camera_zoom);
-}
-
-void render_card(render_context *rcontext, render_object *object,
-				 visual_pile* pile, card_proxy* proxy, bool selected) {
+void render_card(render_event_args *event, visual_pile* pile,
+				 card_proxy* proxy, bool selected) {
 	int index;
 
 	if(selected) {
@@ -126,7 +120,7 @@ void render_card(render_context *rcontext, render_object *object,
 	}
 
 	glPushName(render_register_selection_callback(
-				   rcontext, object, callback_card, proxy));
+				   event->rcontext, event->object, callback_card, proxy));
 
 	/* Test to see if we need to rotate the card around its axis
 	   to show the front face. */
@@ -188,8 +182,7 @@ void render_card(render_context *rcontext, render_object *object,
 	check_gl_errors("render_card");
 }
 
-void render_pile(render_context *rcontext,
-				 render_object *object,
+void render_pile(render_event_args *event,
 				 visual_pile* pile, visual_settings *settings) {
 	int card_index;
 	bool selected = false;
@@ -199,7 +192,7 @@ void render_pile(render_context *rcontext,
 	glTranslatef(pile->origin[0], pile->origin[1], pile->origin[2]);
 
 	glPushName(render_register_selection_callback(
-				   rcontext, object, callback_pile, pile));
+				   event->rcontext, event->object, callback_pile, pile));
 
 	if(pile->rotation != 0.0f) {
 		glRotatef(pile->rotation, 0.0f, 0.0f, 1.0f);
@@ -220,7 +213,7 @@ void render_pile(render_context *rcontext,
 		if(pile->cards[card_index] == g_selected_card) {
 			selected = true;
 		}
-		render_card(rcontext, object, pile, pile->cards[card_index], selected);
+		render_card(event, pile, pile->cards[card_index], selected);
 	}
 	glPopMatrix();
 
@@ -229,19 +222,29 @@ void render_pile(render_context *rcontext,
 	glPopName();
 }
 
-void render_object_solitaire_render(
-	render_context *rcontext, render_object *object, float delta) {
-	render_solitaire_data *i = object->data;
-
+void render_object_solitaire_render(render_event_args *event, float delta) {
 	int pile_index;
-	int pile_count = i->sol->visual->pile_count;
+	int pile_count;
+	render_solitaire_data *i = event->object->data;
+
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+	glTranslatef(g_camera_translateX, g_camera_translateY, g_camera_zoom);
+
+	pile_count = i->sol->visual->pile_count;
 	for(pile_index=0;pile_index<pile_count;++pile_index) {
 		visual_pile* pile = i->sol->visual->piles[pile_index];
 		if(!pile) {
 			continue;
 		}
-		render_pile(rcontext, object, pile, i->sol->visual->settings);
+		render_pile(event, pile, i->sol->visual->settings);
 	}
+}
+
+void render_object_solitaire_free(render_event_args *event) {
+	render_solitaire_data *i = event->object->data;
+	mem_context_free(i->context);
+	free(i);
 }
 
 render_object *render_object_solitaire(solitaire_create callback) {
@@ -249,6 +252,7 @@ render_object *render_object_solitaire(solitaire_create callback) {
 	render_object *o = render_object_create(render_object_solitaire_id);
 	o->data = i;
 	o->render = render_object_solitaire_render;
+	o->free = render_object_solitaire_free;
 
 	i->context = mem_context_create();
 	i->settings = mem_alloc(i->context, sizeof(visual_settings));

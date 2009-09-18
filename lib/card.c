@@ -2,6 +2,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include "card.h"
 
 const int true = 1;
@@ -212,6 +213,8 @@ void card_shuffle(pile *pile) {
 	if(count == 0) {
 		return;
 	}
+
+	srand(time(0));
 
 	for(i=0;i<count*4;++i) {
 		i1 = rand() % count;

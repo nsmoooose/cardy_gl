@@ -157,6 +157,28 @@ condition *condition_destination_array(mem_context *context, int count, ...) {
 /* ------------------------------------------------------------------------- */
 
 typedef struct {
+	int count;
+} condition_move_count_data;
+
+static bool condition_move_count_check(condition *condition, move_action *action) {
+	condition_move_count_data *d = condition->data;
+	return action->source_count == d->count;
+}
+
+condition *condition_move_count(mem_context *context, int count) {
+	condition_move_count_data *d =
+		mem_alloc(context, sizeof(condition_move_count_data));
+	condition *c = mem_alloc(context, sizeof(condition));
+	c->check = condition_move_count_check;
+	c->data = d;
+
+	d->count = count;
+	return c;
+}
+
+/* ------------------------------------------------------------------------- */
+
+typedef struct {
 	condition **conditions;
 	int size;
 } condition_or_data;
@@ -463,6 +485,22 @@ bool ruleset_move_card(ruleset *ruleset, visual *visual, visual_pile *destinatio
 	return result;
 }
 
+bool ruleset_move_individual_card(
+	ruleset *ruleset, visual *visual, visual_pile *destination,
+	card_proxy *card, int count) {
+
+	visual_pile *pile = visual_find_pile_from_card(visual, card);
+	int card_index = visual_get_card_index(pile, card);
+
+	int i;
+	for(i = count-1 + card_index;i >= (0 + card_index);--i) {
+		if(!ruleset_move_card(ruleset, visual, destination, pile->cards[i], 1)) {
+			return false;
+		}
+	}
+	return true;
+}
+
 move_action *ruleset_get_move_action(
 	visual *vis, card_proxy *card, int count, visual_pile *destination_pile) {
 	int i, j;
@@ -485,9 +523,10 @@ move_action *ruleset_get_move_action(
 
 void ruleset_apply_move_action(visual *vis, move_action *action) {
 	int index;
+	card *c;
 	for(index=0;index<action->source_count;++index) {
-		action->destination->cards[card_first_free(action->destination)] =
-			card_take(action->source, action->source_index);
+		c = card_take(action->source, action->source_index);
+		action->destination->cards[card_first_free(action->destination)] = c;
 	}
 
 	/* TODO There is a lot more to handle here. Like:

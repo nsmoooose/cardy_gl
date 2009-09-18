@@ -35,5 +35,6 @@ int main(int argc, char* argv[]) {
 	glutMainLoop();
 
 	mem_context_free(g_context);
+	render_context_free(g_rcontext);
 	return 0;
 }

@@ -209,6 +209,39 @@ START_TEST(test_ruleset_move_card) {
 }
 END_TEST
 
+START_TEST(test_ruleset_move_individual_card) {
+	mem_context *context = mem_context_create();
+	visual *vis;
+	pile *deck, *done;
+	ruleset *ruleset;
+	rule *rule1;
+
+	/* Arrange */
+	vis = visual_create(context, 0);
+
+	deck = pile_create(context, 52);
+	deck->cards[0] = card_create(context, e_spades, 1);
+	deck->cards[1] = card_create(context, e_spades, 2);
+	visual_add_pile(context, vis, visual_pile_create(context, deck));
+
+	done = pile_create(context, 52);
+	visual_add_pile(context, vis, visual_pile_create(context, done));
+	visual_sync(vis);
+
+	ruleset = ruleset_create(context);
+	rule1 = rule_create(context);
+	rule_add_condition(context, rule1, condition_succeed(context));
+	ruleset_add_rule(context, ruleset, rule1);
+
+	ck_assert(
+		ruleset_move_individual_card(
+			ruleset, vis, vis->piles[1], vis->piles[0]->cards[0], 2) == true);
+	ck_assert(card_count(done) == 2);
+	ck_assert(done->cards[0]->value == 2);
+	ck_assert(done->cards[1]->value == 1);
+}
+END_TEST
+
 START_TEST(test_condition_card_count_array) {
 	pile *p1, *p2;
 	condition *cond;
@@ -307,6 +340,20 @@ START_TEST(test_condition_source_not_equal_destination) {
 	ck_assert(cond->check(cond, &action) == true);
 
 	action.destination = p1;
+	ck_assert(cond->check(cond, &action) == false);
+}
+END_TEST
+
+START_TEST(test_condition_move_count) {
+	move_action action;
+	condition *cond;
+	mem_context *context = mem_context_create();
+	cond = condition_move_count(context, 3);
+
+	action.source_count = 3;
+	ck_assert(cond->check(cond, &action) == true);
+
+	action.source_count = 4;
 	ck_assert(cond->check(cond, &action) == false);
 }
 END_TEST
@@ -705,6 +752,34 @@ START_TEST(test_ruleset_apply_move_action2) {
 }
 END_TEST
 
+START_TEST(test_ruleset_apply_move_action3) {
+	pile *deck;
+	visual *vis;
+	move_action action;
+	mem_context *context = mem_context_create();
+
+	deck = pile_create(context, 52);
+	deck->cards[0] = card_create(context, e_clubs, 1);
+	deck->cards[1] = card_create(context, e_clubs, 2);
+
+	vis = visual_create(context, 0);
+	visual_add_pile(context, vis, visual_pile_create(context, deck));
+	visual_sync(vis);
+
+	action.source = deck;
+	action.source_index = 1;
+	action.source_count = 1;
+	action.destination = deck;
+	action.destination_index = 2;
+
+	ruleset_apply_move_action(vis, &action);
+	ck_assert(deck->cards[0] != 0);
+	ck_assert(deck->cards[1] != 0);
+	ck_assert(deck->cards[0]->value == 1);
+	ck_assert(deck->cards[1]->value == 2);
+}
+END_TEST
+
 START_TEST(test_action_reveal_source_top_card) {
 	pile *deck;
 	mem_context *context = mem_context_create();
@@ -729,6 +804,7 @@ void add_rule_tests(Suite *suite) {
 	tcase_add_test(c, test_condition_source_array);
 	tcase_add_test(c, test_condition_source_card_revealed);
 	tcase_add_test(c, test_condition_source_not_equal_destination);
+	tcase_add_test(c, test_condition_move_count);
 	tcase_add_test(c, test_condition_or);
 	tcase_add_test(c, test_condition_or_array);
 	tcase_add_test(c, test_condition_destination);
@@ -747,9 +823,11 @@ void add_rule_tests(Suite *suite) {
 	tcase_add_test(c, test_ruleset_add_rule);
 	tcase_add_test(c, test_ruleset_check);
 	tcase_add_test(c, test_ruleset_move_card);
+	tcase_add_test(c, test_ruleset_move_individual_card);
 	tcase_add_test(c, test_ruleset_get_move_action);
 	tcase_add_test(c, test_ruleset_apply_move_action);
 	tcase_add_test(c, test_ruleset_apply_move_action2);
+	tcase_add_test(c, test_ruleset_apply_move_action3);
 	tcase_add_test(c, test_action_reveal_source_top_card);
 	suite_add_tcase(suite, c);
 }
