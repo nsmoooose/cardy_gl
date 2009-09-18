@@ -11,7 +11,7 @@ LIBS=-lglut -lGL -lGLU -lm -lcardy $(shell pkg-config --libs glib-2.0 gdk-pixbuf
 endif
 
 ifeq ($(PLATFORM), MINGW32_NT-5.1)
-LIBS=-lcardy -lglu32 -lglut32 -lm -lopengl32 $(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
+LIBS=-lcardy -lglu32 -lglut32 -lm -lopengl32 -lglee $(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
 endif
 
 OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
