@@ -1,17 +1,17 @@
 PLATFORM := $(shell uname)
 
-export CFLAGS=-g -Os -Wall -pedantic $(shell pkg-config --cflags --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
+export CFLAGS=-g -Os -Wall -pedantic $(shell pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
 
 ifdef COVERAGE
 	export CFLAGS+=--coverage
 endif
 
 ifeq ($(PLATFORM), Linux)
-LIBS=-lglut -lGL -lGLU -lm -lcardy
+LIBS=-lglut -lGL -lGLU -lm -lcardy $(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
 endif
 
 ifeq ($(PLATFORM), MINGW32_NT-5.1)
-LIBS=-lglut32 -lGLU32 -lm -lcardy -lopengl32
+LIBS=-lcardy -lglu32 -lglut32 -lm -lopengl32 $(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
 endif
 
 OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))

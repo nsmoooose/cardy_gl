@@ -1,9 +1,9 @@
-#include <cairo/cairo.h>
+#include <cairo.h>
 #include <librsvg/rsvg.h>
 #include <librsvg/rsvg-cairo.h>
 #include <stdlib.h>
+#include <string.h>
 #include "card.h"
-#include "string.h"
 #include "render.h"
 
 render_context *render_context_create(mem_context *context) {
