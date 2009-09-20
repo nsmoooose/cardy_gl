@@ -12,6 +12,7 @@ const char* render_object_mainmenu_id = "mainmenu";
 
 typedef struct {
 	GLuint textures[g_mainmenu_texture_count];
+	float time_start;
 	float time_elapsed;
 } internal;
 
@@ -24,39 +25,50 @@ static void remove_existing_solitaire(render_context *rcontext,
 	}
 }
 
-void sol_theidiot_callback(render_event_args *event, void *data) {
+static void sol_theidiot_callback(render_event_args *event, void *data) {
 	remove_existing_solitaire(event->rcontext, event->object);
 	render_object_add_child(event->object->parent,
 							render_object_solitaire(solitaire_theidiot));
 	render_object_free(event->rcontext, event->object);
 }
 
-void sol_malteser_callback(render_event_args *event, void *data) {
+static void sol_malteser_callback(render_event_args *event, void *data) {
 	remove_existing_solitaire(event->rcontext, event->object);
 	render_object_add_child(event->object->parent,
 							render_object_solitaire(solitaire_maltesercross));
 	render_object_free(event->rcontext, event->object);
 }
 
-void sol_noname1_callback(render_event_args *event, void *data) {
+static void sol_noname1_callback(render_event_args *event, void *data) {
 	remove_existing_solitaire(event->rcontext, event->object);
 	render_object_add_child(event->object->parent,
 							render_object_solitaire(solitaire_noname1));
 	render_object_free(event->rcontext, event->object);
 }
 
-void sol_pyramid_callback(render_event_args *event, void *data) {
+static void sol_pyramid_callback(render_event_args *event, void *data) {
 }
 
-void render_object_mainmenu_render(render_event_args *event, float delta) {
+static void render_object_mainmenu_render(render_event_args *event, float delta) {
 	internal *i = event->object->data;
 	float opacity;
+	float time;
+
+	if(i->time_start == 0.0f) {
+		/* This is the first render of the main menu. Since it took some time
+		   to generate the main menu image from the svg file we will not calculate
+		   any rendering from here. */
+		i->time_start = delta;
+		i->time_elapsed = delta;
+		return;
+	}
 
 	glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, -500.0f);
 
 	i->time_elapsed += delta;
-	opacity = i->time_elapsed * 2 > 1.0 ? 1.0 : i->time_elapsed * 2;
+	time = i->time_elapsed - i->time_start;
+	opacity = time * 2 > 1.0 ? 1.0 : time * 2;
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -88,7 +100,7 @@ void render_object_mainmenu_render(render_event_args *event, float delta) {
 	glDisable(GL_BLEND);
 }
 
-void render_object_mainmenu_free(render_event_args *event) {
+static void render_object_mainmenu_free(render_event_args *event) {
 	internal *i = event->object->data;
 	glDeleteTextures(g_mainmenu_texture_count, i->textures);
 	free(event->object->data);

@@ -2,6 +2,7 @@
 #include "lib/render_desktop.h"
 #include "lib/render_mainmenu.h"
 #include "lib/render_solitaire.h"
+#include "lib/render_topmenu.h"
 #include "lib/solitaire_theidiot.h"
 #include "program.h"
 #include "rendering.h"
@@ -11,6 +12,7 @@ void rendering_setup() {
 	g_rcontext = render_context_create(g_context);
 	g_rcontext->object = render_object_desktop(g_context);
 	render_object_add_child(g_rcontext->object,	render_object_mainmenu());
+	render_object_add_child(g_rcontext->object, render_object_topmenu());
 }
 
 void rendering_window_size_change(int width, int height) {

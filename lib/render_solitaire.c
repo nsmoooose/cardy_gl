@@ -227,6 +227,8 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 	int pile_count;
 	render_solitaire_data *i = event->object->data;
 
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	glTranslatef(g_camera_translateX, g_camera_translateY, g_camera_zoom);
@@ -239,6 +241,7 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 		}
 		render_pile(event, pile, i->sol->visual->settings);
 	}
+	glDisable(GL_DEPTH_TEST);
 }
 
 void render_object_solitaire_free(render_event_args *event) {

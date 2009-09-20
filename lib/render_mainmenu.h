@@ -1,7 +1,6 @@
 #ifndef __RENDER_MAINMENU_H__
 #define __RENDER_MAINMENU_H__
 
-#include "memory.h"
 #include "render.h"
 
 extern const char* render_object_mainmenu_id;

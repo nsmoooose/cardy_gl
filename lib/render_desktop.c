@@ -18,10 +18,10 @@ for every one there after.
 
 typedef struct {
 	float total_time;
-} internal;
+	GLuint triangle;
+} render_object_desktop_data;
 
-static void render_triangle(internal *i) {
-	glRotatef(i->total_time * 10.0, 0.0f, 0.0f, 1.0f);
+static void render_triangle() {
 	glBegin(GL_TRIANGLES);
 	glVertex2f(0.0f, -3.0f);
 	glVertex2f(3.0, 3.0);
@@ -30,14 +30,13 @@ static void render_triangle(internal *i) {
 }
 
 static void render_object_desktop_render(render_event_args *event, float delta) {
-	internal *i = event->object->data;
+	render_object_desktop_data *i = event->object->data;
 	int x, y;
 	float distance;
 
 	glClearColor(0.0f, 0.8f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
+	glShadeModel(GL_FLAT);
 
 	glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, -200.0f);
@@ -49,7 +48,8 @@ static void render_object_desktop_render(render_event_args *event, float delta) 
 			glColor3f(0.0f, 0.8f + distance, 0.0f);
 			glPushMatrix();
 			glTranslatef(x * 10.0f, y * 10.0f, 0.0f);
-			render_triangle(i);
+			glRotatef(i->total_time * 10.0, 0.0f, 0.0f, 1.0f);
+			glCallList(i->triangle);
 			glPopMatrix();
 		}
 	}
@@ -58,13 +58,21 @@ static void render_object_desktop_render(render_event_args *event, float delta) 
 }
 
 static void render_object_desktop_free(render_event_args *event) {
+	render_object_desktop_data *i = event->object->data;
+	glDeleteLists(i->triangle, 1);
 	free(event->object->data);
 }
 
 render_object *render_object_desktop() {
 	render_object *o = render_object_create("desktop");
-	o->data = calloc(1, sizeof(internal));
+	render_object_desktop_data *d = calloc(1, sizeof(render_object_desktop_data));
+	o->data = d;
 	o->render = render_object_desktop_render;
 	o->free = render_object_desktop_free;
+
+	d->triangle = glGenLists(1);
+	glNewList(d->triangle, GL_COMPILE);
+	render_triangle();
+	glEndList();
 	return o;
 }
