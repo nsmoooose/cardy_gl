@@ -19,7 +19,8 @@ render_object *widget_desktop(char *id) {
 }
 
 render_object *widget_window(char *id) {
-	return 0;
+	render_object *o = render_object_create(id);
+	return o;
 }
 
 render_object *widget_button(char *id, char *text) {

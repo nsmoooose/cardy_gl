@@ -293,20 +293,129 @@ void render_rect(float x1, float y1, float x2, float y2, GLuint texture) {
 	glDisable(GL_TEXTURE_2D);
 }
 
+bool render_process_keyboard_down_iterator(
+	render_context *rcontext, render_object *object, unsigned char key,
+	int modifiers, int x, int y)
+{
+	render_event_args event;
+	int i;
+	bool result;
+
+	for(i=0;i<object->child_count;++i) {
+		result = render_process_keyboard_down_iterator(
+			rcontext, object->children[i], key, modifiers, x, y);
+
+		if(result) {
+			return true;
+		}
+	}
+
+	if(object->keyboard_down) {
+		event.rcontext = rcontext;
+		event.object = object;
+		return object->keyboard_down(&event, key, modifiers, x, y);
+	}
+	return false;
+}
+
 void render_process_keyboard_down(
 	render_context *rcontext, unsigned char key, int modifiers,
-	int x, int y) {
+	int x, int y)
+{
+	render_process_keyboard_down_iterator(
+		rcontext, rcontext->object, key, modifiers, x, y);
+}
+
+bool render_process_keyboard_up_iterator(
+	render_context *rcontext, render_object *object, unsigned char key,
+	int modifiers, int x, int y)
+{
+	render_event_args event;
+	int i;
+	bool result;
+
+	for(i=0;i<object->child_count;++i) {
+		result = render_process_keyboard_up_iterator(
+			rcontext, object->children[i], key, modifiers, x, y);
+
+		if(result) {
+			return true;
+		}
+	}
+
+	if(object->keyboard_up) {
+		event.rcontext = rcontext;
+		event.object = object;
+		return object->keyboard_up(&event, key, modifiers, x, y);
+	}
+	return false;
 }
 
 void render_process_keyboard_up(
 	render_context *rcontext, unsigned char key, int modifiers,
 	int x, int y) {
+	render_process_keyboard_up_iterator(
+		rcontext, rcontext->object, key, modifiers, x, y);
+}
+
+bool render_process_keyboard_special_down_iterator(
+	render_context *rcontext, render_object *object, int key,
+	int modifiers, int x, int y)
+{
+	render_event_args event;
+	int i;
+	bool result;
+
+	for(i=0;i<object->child_count;++i) {
+		result = render_process_keyboard_special_down_iterator(
+			rcontext, object->children[i], key, modifiers, x, y);
+
+		if(result) {
+			return true;
+		}
+	}
+
+	if(object->keyboard_special_down) {
+		event.rcontext = rcontext;
+		event.object = object;
+		return object->keyboard_special_down(&event, key, modifiers, x, y);
+	}
+	return false;
 }
 
 void render_process_keyboard_special_down(
 	render_context *rcontext, int key, int modifiers, int x, int y) {
+	render_process_keyboard_special_down_iterator(
+		rcontext, rcontext->object, key, modifiers, x, y);
+}
+
+bool render_process_keyboard_special_up_iterator(
+	render_context *rcontext, render_object *object, int key,
+	int modifiers, int x, int y)
+{
+	render_event_args event;
+	int i;
+	bool result;
+
+	for(i=0;i<object->child_count;++i) {
+		result = render_process_keyboard_special_up_iterator(
+			rcontext, object->children[i], key, modifiers, x, y);
+
+		if(result) {
+			return true;
+		}
+	}
+
+	if(object->keyboard_special_up) {
+		event.rcontext = rcontext;
+		event.object = object;
+		return object->keyboard_special_up(&event, key, modifiers, x, y);
+	}
+	return false;
 }
 
 void render_process_keyboard_special_up(
 	render_context *rcontext, int key, int modifiers, int x, int y) {
+	render_process_keyboard_special_up_iterator(
+		rcontext, rcontext->object, key, modifiers, x, y);
 }

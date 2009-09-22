@@ -2,15 +2,12 @@
 #define __CARD_H__
 
 #include "memory.h"
+#include "types.h"
 
 #define CARD_WIDTH 40.0
 #define CARD_HEIGHT 60.0
 #define CARD_SPACING 4.0
 #define CARD_THICKNESS 0.4
-
-typedef int bool;
-extern const unsigned char true;
-extern const unsigned char false;
 
 typedef enum {
 	e_suit_none = -1,

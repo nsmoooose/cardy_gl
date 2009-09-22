@@ -4,6 +4,7 @@
 #include <librsvg/rsvg.h>
 #include "memory.h"
 #include "mygl.h"
+#include "types.h"
 
 struct render_context_St;
 struct render_object_St;
@@ -25,14 +26,14 @@ typedef struct render_object_St {
 
 	void (*free)(render_event_args *event);
 
-	void (*keyboard_down)(render_event_args *event, unsigned char key,
+	bool (*keyboard_down)(render_event_args *event, unsigned char key,
 						  int modifiers, int x, int y);
-	void (*keyboard_up)(render_event_args *event, unsigned char key,
+	bool (*keyboard_up)(render_event_args *event, unsigned char key,
 						int modifiers, int x, int y);
 
-	void (*keyboard_special_down)(render_event_args *event, int key,
+	bool (*keyboard_special_down)(render_event_args *event, int key,
 								  int modifiers, int x, int y);
-	void (*keyboard_special_up)(render_event_args *event, int key,
+	bool (*keyboard_special_up)(render_event_args *event, int key,
 								int modifiers, int x, int y);
 
 	struct render_object_St *parent;
