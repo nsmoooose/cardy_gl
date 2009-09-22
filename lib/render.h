@@ -25,6 +25,16 @@ typedef struct render_object_St {
 
 	void (*free)(render_event_args *event);
 
+	void (*keyboard_down)(render_event_args *event, unsigned char key,
+						  int modifiers, int x, int y);
+	void (*keyboard_up)(render_event_args *event, unsigned char key,
+						int modifiers, int x, int y);
+
+	void (*keyboard_special_down)(render_event_args *event, int key,
+								  int modifiers, int x, int y);
+	void (*keyboard_special_up)(render_event_args *event, int key,
+								int modifiers, int x, int y);
+
 	struct render_object_St *parent;
 
 	struct render_object_St **children;
@@ -77,6 +87,18 @@ void render_selection_reset(render_context *rcontext);
 
 void render_process_selections(
 	render_context *rcontext, GLint hits, GLuint* selections);
+
+void render_process_keyboard_down(
+	render_context *rcontext, unsigned char key, int modifiers,
+	int x, int y);
+void render_process_keyboard_up(
+	render_context *rcontext, unsigned char key, int modifiers,
+	int x, int y);
+
+void render_process_keyboard_special_down(
+	render_context *rcontext, int key, int modifiers, int x, int y);
+void render_process_keyboard_special_up(
+	render_context *rcontext, int key, int modifiers, int x, int y);
 
 void render_svg_texture(RsvgHandle *h, GLuint texture,
 						char *node_name, int width, int height);

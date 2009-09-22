@@ -292,3 +292,21 @@ void render_rect(float x1, float y1, float x2, float y2, GLuint texture) {
 	glEnd();
 	glDisable(GL_TEXTURE_2D);
 }
+
+void render_process_keyboard_down(
+	render_context *rcontext, unsigned char key, int modifiers,
+	int x, int y) {
+}
+
+void render_process_keyboard_up(
+	render_context *rcontext, unsigned char key, int modifiers,
+	int x, int y) {
+}
+
+void render_process_keyboard_special_down(
+	render_context *rcontext, int key, int modifiers, int x, int y) {
+}
+
+void render_process_keyboard_special_up(
+	render_context *rcontext, int key, int modifiers, int x, int y) {
+}
