@@ -1,6 +1,8 @@
+#include <getopt.h>
 #include <librsvg/rsvg.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "lib/card.h"
 #include "lib/mygl.h"
 #include "lib/solitaire_theidiot.h"
@@ -22,6 +24,29 @@ void window_special_key_press(int key, int x, int y) {
 }
 
 int main(int argc, char* argv[]) {
+	int opt, width = 800, height = 600;
+	char *separator;
+
+	while ((opt = getopt(argc, argv, "hg:")) != -1) {
+		switch (opt) {
+		case 'h':
+			fprintf(stderr, "Usage: %s [-h] [-g] 300x200\n",
+					argv[0]);
+			return 0;
+		case 'g':
+			separator = strstr(optarg, "x");
+			if(separator) {
+				width = atoi(optarg);
+				height = atoi(separator + 1);
+			}
+			break;
+		default: /* '?' */
+			fprintf(stderr, "Usage: %s [-h] [-g] 300x200\n",
+					argv[0]);
+			exit(EXIT_FAILURE);
+		}
+	}
+
 	srand(time(NULL));
 	rsvg_init();
 
@@ -29,7 +54,7 @@ int main(int argc, char* argv[]) {
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	glutInitWindowSize(800, 600);
+	glutInitWindowSize(width, height);
 	glutCreateWindow("Cardy 4");
 	glutReshapeFunc(rendering_window_size_change);
 	glutKeyboardFunc(window_key_press);

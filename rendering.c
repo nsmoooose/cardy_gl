@@ -8,7 +8,6 @@
 #include "rendering.h"
 
 void rendering_setup() {
-	glEnableClientState(GL_VERTEX_ARRAY);
 	g_rcontext = render_context_create(g_context);
 	g_rcontext->object = render_object_desktop(g_context);
 	render_object_add_child(g_rcontext->object,	render_object_mainmenu());
