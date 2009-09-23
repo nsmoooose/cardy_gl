@@ -38,11 +38,10 @@ cardy_tests:
 
 cardy_gl: cardy_lib cardy_tests $(OBJECTS)
 	@echo Building $@
-	@echo gcc $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -Llib
 	@gcc $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -Llib
 	@make -C tests
 
-deploy:	
+deploy:
 	@mkdir dist/win32 -p
 	@cp resources dist/win32/ -r
 	@cp themes dist/win32/ -r
@@ -70,7 +69,7 @@ deploy:
 	@cp /c/devlibs/bin/libpangoft2-1.0-0.dll dist/win32/
 	@cp /c/devlibs/bin/libgmodule-2.0-0.dll dist/win32/
 	@cp /c/devlibs/bin/libgmodule-2.0-0.dll dist/win32/
-	
+
 %.o: %.c
 	@echo $<
 	@gcc -c $(CFLAGS) $<
