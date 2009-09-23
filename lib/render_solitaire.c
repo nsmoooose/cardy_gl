@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "image.h"
 #include "mygl.h"
+#include "render_mainmenu.h"
 #include "render_solitaire.h"
 #include "render_solved.h"
 #include "theme.h"
@@ -244,6 +245,95 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 	glDisable(GL_DEPTH_TEST);
 }
 
+static bool render_object_solitaire_keyboard_down(
+	render_event_args *event, unsigned char key, int modifiers, int x, int y) {
+	render_object *object;
+
+	/*
+	int key_modifiers;
+
+	printf("Keyboard pressed: ");
+	key_modifiers = glutGetModifiers();
+	if(key_modifiers & GLUT_ACTIVE_SHIFT) {
+		printf("SHIFT+");
+	}
+	if(key_modifiers & GLUT_ACTIVE_CTRL) {
+		printf("CTRL+");
+	}
+	if(key_modifiers & GLUT_ACTIVE_ALT) {
+		printf("ALT+");
+	}
+	printf("%d\n", key);
+	*/
+
+	switch(key) {
+	case 27:
+		object = render_object_find(event->rcontext->object, render_object_mainmenu_id);
+		if(object == 0) {
+			render_object_add_child(event->rcontext->object, render_object_mainmenu());
+		}
+		else {
+			render_object_free(event->rcontext, object);
+		}
+		return true;
+	case '-':
+		g_camera_zoom -= 10.0f;
+		return true;
+
+	case '+':
+		g_camera_zoom += 10.0f;
+		return true;
+
+	case 'z':
+		theme_unload(g_theme);
+		g_theme = theme_load("themes", "anglo");
+		return true;
+	case 'x':
+		theme_unload(g_theme);
+		g_theme = theme_load("themes", "gnome");
+		return true;
+	case 'c':
+		theme_unload(g_theme);
+		g_theme = theme_load("themes", "kde");
+		return true;
+	case 'v':
+		theme_unload(g_theme);
+		g_theme = theme_load("themes", "life_and_smoth");
+		return true;
+	case 'b':
+		theme_unload(g_theme);
+		g_theme = theme_load("themes", "twigs");
+		return true;
+	default:
+		return false;
+	};
+}
+
+bool render_object_solitaire_special_down(
+	render_event_args *event, int key, int modifiers, int x, int y) {
+
+	switch(key) {
+	case 100:
+		/* Left */
+		g_camera_translateX -= 10.0f;
+		return true;
+	case 101:
+		/* Up */
+		g_camera_translateY += 10.0f;
+		return true;
+	case 102:
+		/* Right */
+		g_camera_translateX += 10.0f;
+		return true;
+	case 103:
+		/* Down */
+		g_camera_translateY -= 10.0f;
+		return true;
+	default:
+		return false;
+	}
+}
+
 void render_object_solitaire_free(render_event_args *event) {
 	render_solitaire_data *i = event->object->data;
 	mem_context_free(i->context);
@@ -255,6 +345,8 @@ render_object *render_object_solitaire(solitaire_create callback) {
 	render_object *o = render_object_create(render_object_solitaire_id);
 	o->data = i;
 	o->render = render_object_solitaire_render;
+	o->keyboard_down = render_object_solitaire_keyboard_down;
+	o->keyboard_special_down = render_object_solitaire_special_down;
 	o->free = render_object_solitaire_free;
 
 	i->context = mem_context_create();

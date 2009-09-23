@@ -5,12 +5,21 @@
 #include "lib/mygl.h"
 #include "lib/solitaire_theidiot.h"
 #include "lib/render_solitaire.h"
-#include "keyboard_handler.h"
 #include "mouse_handler.h"
 #include "rendering.h"
 
 mem_context *g_context = 0;
 render_context *g_rcontext = 0;
+
+void window_key_press(unsigned char key, int x, int y) {
+	render_process_keyboard_down(g_rcontext, key, glutGetModifiers(), x, y);
+	glutPostRedisplay();
+}
+
+void window_special_key_press(int key, int x, int y) {
+	render_process_keyboard_special_down(g_rcontext, key, glutGetModifiers(), x, y);
+	glutPostRedisplay();
+}
 
 int main(int argc, char* argv[]) {
 	srand(time(NULL));
