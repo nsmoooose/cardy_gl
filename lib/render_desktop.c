@@ -33,11 +33,24 @@ static void render_object_desktop_render(render_event_args *event, float delta) 
 	render_object_desktop_data *i = event->object->data;
 	int x, y;
 	float distance;
+	GLint viewport[4];
+	GLfloat aspect;
+
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	if(viewport[3] == 0) {
+		viewport[3] = 1;
+	}
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	aspect = (float)viewport[2]/(float)viewport[3];
+	gluPerspective(45.0f, aspect, 1.0f, 400.0f);
 
 	glClearColor(0.0f, 0.8f, 0.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glShadeModel(GL_FLAT);
 
+	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, -200.0f);
 

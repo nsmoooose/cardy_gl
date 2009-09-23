@@ -63,6 +63,7 @@ static void render_object_mainmenu_render(render_event_args *event, float delta)
 		return;
 	}
 
+	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, -500.0f);
 

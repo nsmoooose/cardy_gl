@@ -10,6 +10,15 @@ void widget_style_set_image(render_object *object, RsvgHandle *h, char *svg_id) 
 }
 
 static void widget_desktop_render(render_event_args *event, float delta) {
+	GLint viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+    glOrtho(0.0f, viewport[2], viewport[3], 0.0f, -200.0f, 200.0f);
+
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glRectf(10.0f, 10.0f, 40.0f, 40.0f);
 }
 
 render_object *widget_desktop(char *id) {

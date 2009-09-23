@@ -227,10 +227,24 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 	int pile_index;
 	int pile_count;
 	render_solitaire_data *i = event->object->data;
+	GLint viewport[4];
+	GLfloat aspect;
+
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	if(viewport[3] == 0) {
+		viewport[3] = 1;
+	}
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	aspect = (float)viewport[2]/(float)viewport[3];
+	gluPerspective(g_perspective_fov, aspect, g_perspective_near,
+				   g_perspective_far);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glClear(GL_DEPTH_BUFFER_BIT);
+	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslatef(g_camera_translateX, g_camera_translateY, g_camera_zoom);
 

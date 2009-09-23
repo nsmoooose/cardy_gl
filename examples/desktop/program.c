@@ -35,8 +35,6 @@ void rendering_idle() {
 
 int main(int argc, char** argv) {
 	g_rcontext = render_context_create();
-	g_rcontext->object = render_object_desktop();
-
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
@@ -48,6 +46,8 @@ int main(int argc, char** argv) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(45.0f, 1.0f, 1.0f, 5000.0f);
+
+	g_rcontext->object = render_object_desktop();
 
 	glutMainLoop();
 
