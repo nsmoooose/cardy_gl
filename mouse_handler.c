@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "lib/mygl.h"
-#include "lib/render_solitaire.h"
+#include "api/mygl.h"
+#include "game/render_solitaire.h"
 #include "mouse_handler.h"
 #include "program.h"
 #include "rendering.h"

@@ -1,7 +1,7 @@
 #include <math.h>
 #include <stdlib.h>
-#include "mygl.h"
-#include "render.h"
+#include "../api/mygl.h"
+#include "../api/render.h"
 
 /* Fun algorithms:
 

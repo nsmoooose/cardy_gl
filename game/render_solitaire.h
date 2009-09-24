@@ -1,9 +1,9 @@
 #ifndef __RENDER_SOLITAIRE_H__
 #define __RENDER_SOLITAIRE_H__
 
-#include "render.h"
-#include "solitaire.h"
-#include "theme.h"
+#include "../api/render.h"
+#include "../api/solitaire.h"
+#include "../api/theme.h"
 
 extern float g_camera_zoom;
 extern float g_camera_translateX;

@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "rule.h"
+#include "../api/rule.h"
 #include "solitaire_maltesercross.h"
 
 typedef struct {

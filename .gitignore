@@ -7,6 +7,7 @@ examples/widget-window/widget-window*
 *.gcda
 *.gcno
 *.o
-lib/libcardy.a
+api/libcardy-api.a
+game/libcardy-game.a
 tests/cardy_tests
 TAGS

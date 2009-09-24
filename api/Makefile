@@ -1,15 +1,15 @@
 OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 
-all: libcardy.a
+all: libcardy-api.a
 
 clean:
-	@echo Cleaning libcardy
+	@echo Cleaning libcardy-api
 
 	@rm *.o -f
-	@rm libcardy.a -f
+	@rm libcardy-api.a -f
 	@rm *.gcda *.gcno -f
 
-libcardy.a: $(OBJECTS)
+libcardy-api.a: $(OBJECTS)
 	@echo Creating library $@
 	@ar rcs $@ $(OBJECTS)
 

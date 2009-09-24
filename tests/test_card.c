@@ -1,6 +1,6 @@
 #include <check.h>
 #include <stdlib.h>
-#include "../lib/card.h"
+#include "../api/card.h"
 
 START_TEST(test_create_deck) {
 	pile* deck;

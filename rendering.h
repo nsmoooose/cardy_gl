@@ -1,8 +1,8 @@
 #ifndef __RENDERING_H__
 #define __RENDERING_H__
 
-#include "lib/solitaire.h"
-#include "lib/theme.h"
+#include "api/solitaire.h"
+#include "api/theme.h"
 
 void rendering_setup();
 void rendering_window_size_change(int width, int height);

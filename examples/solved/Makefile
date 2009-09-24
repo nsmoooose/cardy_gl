@@ -2,8 +2,8 @@ OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 
 all: example-solved
 
-example-solved: $(OBJECTS) ../../lib/libcardy.a
-	@gcc $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -L../../lib
+example-solved: $(OBJECTS) ../../api/libcardy-api.a ../../game/libcardy-game.a
+	@gcc $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -L../../api -L../../game
 
 clean:
 	@rm example-desktop *.o *.gcda *.gcno -rf

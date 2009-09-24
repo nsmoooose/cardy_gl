@@ -1,5 +1,5 @@
 #include <check.h>
-#include "../lib/theme.h"
+#include "../api/theme.h"
 
 START_TEST(test_theme_list) {
 	int i;

@@ -1,8 +1,8 @@
 #include <librsvg/rsvg.h>
 #include <stdlib.h>
-#include "mygl.h"
-#include "render_mainmenu.h"
+#include "../api/mygl.h"
 #include "render_solitaire.h"
+#include "render_mainmenu.h"
 #include "solitaire_theidiot.h"
 #include "solitaire_maltesercross.h"
 #include "solitaire_noname1.h"

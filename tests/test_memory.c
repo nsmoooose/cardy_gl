@@ -1,5 +1,5 @@
 #include <check.h>
-#include "../lib/memory.h"
+#include "../api/memory.h"
 
 START_TEST(test_context_create) {
 	int index;

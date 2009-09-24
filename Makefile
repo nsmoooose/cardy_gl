@@ -7,11 +7,11 @@ ifdef COVERAGE
 endif
 
 ifeq ($(PLATFORM), Linux)
-export LIBS=-lglut -lGL -lGLU -lm -lcardy $(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
+export LIBS=-lcardy-game -lcardy-api -lglut -lGL -lGLU -lm $(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
 endif
 
 ifeq ($(PLATFORM), MINGW32_NT-5.1)
-export LIBS=-lcardy -lglu32 -lglut32 -lm -lopengl32 -lglee $(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
+export LIBS=-lcardy-game -lcardy-api -lglu32 -lglut32 -lm -lopengl32 -lglee $(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
 endif
 
 OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
@@ -23,22 +23,26 @@ all: cardy_gl
 clean:
 	@echo Cleaning cardy_gl
 	@rm *.o -f
-	@rm cardy_gl -f
+	@rm cardy_gl* -f
 	@rm coverage -rf
 	@rm *.gcda *.gcno -f
 	@make -C tests $@
-	@make -C lib $@
+	@make -C api $@
+	@make -C game $@
 	@make -C examples $@
 
-cardy_lib:
-	@make -C lib
+cardy_api:
+	@make -C api
+
+cardy_game:
+	@make -C game
 
 cardy_tests:
 	@make -C tests
 
-cardy_gl: cardy_lib cardy_tests $(OBJECTS)
+cardy_gl: cardy_api cardy_game cardy_tests $(OBJECTS)
 	@echo Building $@
-	@gcc $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -Llib
+	@gcc $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -Lapi -Lgame
 	@make -C tests
 
 deploy:

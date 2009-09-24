@@ -1,8 +1,8 @@
 #include <unistd.h>
-#include "../../lib/mygl.h"
-#include "../../lib/render.h"
-#include "../../lib/render_background.h"
-#include "../../lib/render_widget.h"
+#include "../../api/mygl.h"
+#include "../../api/render.h"
+#include "../../api/render_widget.h"
+#include "../../game/render_background.h"
 
 render_context *g_rcontext = 0;
 

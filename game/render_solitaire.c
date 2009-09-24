@@ -4,12 +4,12 @@
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "image.h"
-#include "mygl.h"
+#include "../api/image.h"
+#include "../api/mygl.h"
+#include "../api/theme.h"
 #include "render_mainmenu.h"
 #include "render_solitaire.h"
 #include "render_solved.h"
-#include "theme.h"
 
 typedef struct {
 	mem_context *context;

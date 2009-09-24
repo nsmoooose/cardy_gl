@@ -1,7 +1,7 @@
 #ifndef __RENDER_DESKTOP_H__
 #define __RENDER_DESKTOP_H__
 
-#include "render.h"
+#include "../api/render.h"
 
 render_object *render_object_background();
 

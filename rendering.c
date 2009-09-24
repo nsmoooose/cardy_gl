@@ -1,10 +1,10 @@
 #include <unistd.h>
-#include "lib/render_background.h"
-#include "lib/render_mainmenu.h"
-#include "lib/render_solitaire.h"
-#include "lib/render_topmenu.h"
-#include "lib/render_widget.h"
-#include "lib/solitaire_theidiot.h"
+#include "api/render_widget.h"
+#include "game/render_background.h"
+#include "game/render_mainmenu.h"
+#include "game/render_solitaire.h"
+#include "game/render_topmenu.h"
+#include "game/solitaire_theidiot.h"
 #include "program.h"
 #include "rendering.h"
 
