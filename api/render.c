@@ -132,9 +132,17 @@ void render_scene_object(
 	render_event_args event;
 	event.rcontext = rcontext;
 	event.object = object;
-	object->render(&event, delta);
+
+	if(object->render) {
+		object->render(&event, delta);
+	}
+
 	for(i=0;i<object->child_count;++i) {
 		render_scene_object(rcontext, object->children[i], delta);
+	}
+
+	if(object->post_render) {
+		object->post_render(&event, delta);
 	}
 }
 

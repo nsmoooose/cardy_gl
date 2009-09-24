@@ -14,12 +14,9 @@ void rendering_setup() {
 	g_rcontext = render_context_create(g_context);
 	g_rcontext->object = render_object_background(g_context);
 
-	/*
-	render_object_add_child(g_rcontext->object,	render_object_mainmenu());
-	render_object_add_child(g_rcontext->object, render_object_topmenu());
-	*/
 	desktop = widget_desktop(0);
 	render_object_add_child(g_rcontext->object, desktop);
+	render_object_topmenu2(desktop);
 }
 
 void rendering_window_size_change(int width, int height) {

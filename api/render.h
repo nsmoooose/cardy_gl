@@ -23,6 +23,7 @@ typedef struct render_object_St {
 
 	/* Render function. */
 	void (*render)(render_event_args *event, float delta);
+	void (*post_render)(render_event_args *event, float delta);
 
 	void (*free)(render_event_args *event);
 
