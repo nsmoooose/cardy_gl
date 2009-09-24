@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include "../../lib/mygl.h"
 #include "../../lib/render.h"
-#include "../../lib/render_desktop.h"
+#include "../../lib/render_background.h"
 #include "../../lib/render_widget.h"
 
 render_context *g_rcontext = 0;
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 	glutIdleFunc(rendering_idle);
 	glutDisplayFunc(rendering_scene);
 
-	g_rcontext->object = render_object_desktop("background");
+	g_rcontext->object = render_object_background();
 	render_object_add_child(g_rcontext->object, widget_desktop("id"));
 
 	glutMainLoop();

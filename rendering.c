@@ -1,17 +1,25 @@
 #include <unistd.h>
-#include "lib/render_desktop.h"
+#include "lib/render_background.h"
 #include "lib/render_mainmenu.h"
 #include "lib/render_solitaire.h"
 #include "lib/render_topmenu.h"
+#include "lib/render_widget.h"
 #include "lib/solitaire_theidiot.h"
 #include "program.h"
 #include "rendering.h"
 
 void rendering_setup() {
+	render_object *desktop;
+
 	g_rcontext = render_context_create(g_context);
-	g_rcontext->object = render_object_desktop(g_context);
+	g_rcontext->object = render_object_background(g_context);
+
+	/*
 	render_object_add_child(g_rcontext->object,	render_object_mainmenu());
 	render_object_add_child(g_rcontext->object, render_object_topmenu());
+	*/
+	desktop = widget_desktop(0);
+	render_object_add_child(g_rcontext->object, desktop);
 }
 
 void rendering_window_size_change(int width, int height) {

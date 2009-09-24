@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include "../../lib/mygl.h"
 #include "../../lib/render.h"
-#include "../../lib/render_desktop.h"
+#include "../../lib/render_background.h"
 
 render_context *g_rcontext = 0;
 
@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 	glLoadIdentity();
 	gluPerspective(45.0f, 1.0f, 1.0f, 5000.0f);
 
-	g_rcontext->object = render_object_desktop();
+	g_rcontext->object = render_object_background();
 
 	glutMainLoop();
 

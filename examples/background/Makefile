@@ -1,12 +1,12 @@
 OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 
-all: example-desktop
+all: example-background
 
-example-desktop: $(OBJECTS) ../../lib/libcardy.a
+example-background: $(OBJECTS) ../../lib/libcardy.a
 	@gcc $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -L../../lib
 
 clean:
-	@rm example-desktop *.o *.gcda *.gcno -rf
+	@rm example-background* *.o *.gcda *.gcno -rf
 
 %.o: %.c
 	@echo $<

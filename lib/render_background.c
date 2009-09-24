@@ -19,7 +19,7 @@ for every one there after.
 typedef struct {
 	float total_time;
 	GLuint triangle;
-} render_object_desktop_data;
+} render_object_background_data;
 
 static void render_triangle() {
 	glBegin(GL_TRIANGLES);
@@ -29,8 +29,8 @@ static void render_triangle() {
 	glEnd();
 }
 
-static void render_object_desktop_render(render_event_args *event, float delta) {
-	render_object_desktop_data *i = event->object->data;
+static void render_object_background_render(render_event_args *event, float delta) {
+	render_object_background_data *i = event->object->data;
 	int x, y;
 	float distance;
 	GLint viewport[4];
@@ -70,18 +70,18 @@ static void render_object_desktop_render(render_event_args *event, float delta) 
 	i->total_time += delta;
 }
 
-static void render_object_desktop_free(render_event_args *event) {
-	render_object_desktop_data *i = event->object->data;
+static void render_object_background_free(render_event_args *event) {
+	render_object_background_data *i = event->object->data;
 	glDeleteLists(i->triangle, 1);
 	free(event->object->data);
 }
 
-render_object *render_object_desktop() {
-	render_object *o = render_object_create("desktop");
-	render_object_desktop_data *d = calloc(1, sizeof(render_object_desktop_data));
+render_object *render_object_background() {
+	render_object *o = render_object_create("background");
+	render_object_background_data *d = calloc(1, sizeof(render_object_background_data));
 	o->data = d;
-	o->render = render_object_desktop_render;
-	o->free = render_object_desktop_free;
+	o->render = render_object_background_render;
+	o->free = render_object_background_free;
 
 	d->triangle = glGenLists(1);
 	glNewList(d->triangle, GL_COMPILE);

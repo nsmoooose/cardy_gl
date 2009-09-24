@@ -1,7 +1,7 @@
 .doxygen
 cardy_gl*
 coverage
-examples/desktop/example-desktop*
+examples/background/example-background*
 examples/solved/example-solved*
 examples/widget-window/widget-window*
 *.gcda
