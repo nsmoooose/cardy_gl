@@ -229,6 +229,7 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 	render_solitaire_data *i = event->object->data;
 	GLint viewport[4];
 	GLfloat aspect;
+	render_pick *pick;
 
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	if(viewport[3] == 0) {
@@ -237,6 +238,10 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
+	if(event->rcontext->pick) {
+		pick = event->rcontext->pick;
+		gluPickMatrix(pick->x, pick->y, pick->width, pick->height, pick->viewport);
+	}
 	aspect = (float)viewport[2]/(float)viewport[3];
 	gluPerspective(g_perspective_fov, aspect, g_perspective_near,
 				   g_perspective_far);
@@ -245,6 +250,8 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 	glDepthFunc(GL_LEQUAL);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
+
+	glPushMatrix();
 	glLoadIdentity();
 	glTranslatef(g_camera_translateX, g_camera_translateY, g_camera_zoom);
 
@@ -257,6 +264,7 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 		render_pile(event, pile, i->sol->visual->settings);
 	}
 	glDisable(GL_DEPTH_TEST);
+	glPopMatrix();
 }
 
 static bool render_object_solitaire_keyboard_down(
@@ -284,7 +292,8 @@ static bool render_object_solitaire_keyboard_down(
 	case 27:
 		object = render_object_find(event->rcontext->object, render_object_mainmenu_id);
 		if(object == 0) {
-			render_object_add_child(event->rcontext->object, render_object_mainmenu());
+			object = render_object_find(event->rcontext->object, "desktop");
+			render_object_mainmenu(object);
 		}
 		else {
 			render_object_free(event->rcontext, object);

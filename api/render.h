@@ -51,10 +51,19 @@ typedef struct {
 	void *data;
 } render_selection;
 
+typedef struct {
+	int x, y;
+	int width, height;
+
+	GLint viewport[4];
+} render_pick;
+
 typedef struct render_context_St {
 	render_object *object;
 
 	int last_render;
+
+	render_pick *pick;
 
 	render_selection selections[1024];
 	int selection_size;

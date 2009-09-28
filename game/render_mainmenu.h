@@ -4,6 +4,6 @@
 #include "../api/render.h"
 
 extern const char* render_object_mainmenu_id;
-render_object *render_object_mainmenu();
+void render_object_mainmenu(render_object *parent);
 
 #endif /* __RENDER_MAINMENU_H__ */

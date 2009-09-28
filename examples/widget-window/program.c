@@ -34,7 +34,16 @@ void rendering_idle() {
 	usleep(50000);
 }
 
+void button1_callback(render_event_args *event, void *data) {
+	printf("button1\n");
+}
+
+void button2_callback(render_event_args *event, void *data) {
+	printf("button2\n");
+}
+
 int main(int argc, char** argv) {
+	render_object *desktop, *window, *button1, *button2;
 	g_rcontext = render_context_create();
 
 	glutInit(&argc, argv);
@@ -45,7 +54,26 @@ int main(int argc, char** argv) {
 	glutDisplayFunc(rendering_scene);
 
 	g_rcontext->object = render_object_background();
-	render_object_add_child(g_rcontext->object, widget_desktop("id"));
+
+	desktop = widget_desktop("id");
+	render_object_add_child(g_rcontext->object, desktop);
+
+	window = widget_window(0);
+	widget_style_set_pos(window, 300, 100);
+	widget_style_set_size(window, 100, 100);
+	render_object_add_child(desktop, window);
+
+	button1 = widget_button(0);
+	widget_style_set_pos(button1, 5, 5);
+	widget_style_set_size(button1, 90, 40);
+	widget_button_set_callback(button1, button1_callback);
+	render_object_add_child(window, button1);
+
+	button2 = widget_button(0);
+	widget_style_set_pos(button2, 5, 55);
+	widget_style_set_size(button2, 90, 40);
+	widget_button_set_callback(button2, button2_callback);
+	render_object_add_child(window, button2);
 
 	glutMainLoop();
 

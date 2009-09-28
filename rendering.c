@@ -2,9 +2,7 @@
 #include "api/render_widget.h"
 #include "game/render_background.h"
 #include "game/render_mainmenu.h"
-#include "game/render_solitaire.h"
 #include "game/render_topmenu.h"
-#include "game/solitaire_theidiot.h"
 #include "program.h"
 #include "rendering.h"
 
@@ -14,23 +12,17 @@ void rendering_setup() {
 	g_rcontext = render_context_create(g_context);
 	g_rcontext->object = render_object_background(g_context);
 
-	desktop = widget_desktop(0);
+	render_object_add_child(g_rcontext->object, render_object_create("placeholder"));
+
+	desktop = widget_desktop("desktop");
 	render_object_add_child(g_rcontext->object, desktop);
-	render_object_topmenu2(desktop);
+	render_object_topmenu(desktop);
+
+	render_object_mainmenu(desktop);
 }
 
 void rendering_window_size_change(int width, int height) {
-	GLfloat aspect;
-	if(height == 0) {
-		height = 1;
-	}
-
 	glViewport(0, 0, width, height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	aspect = (float)width/(float)height;
-	gluPerspective(g_perspective_fov, aspect, g_perspective_near,
-				   g_perspective_far);
 }
 
 void rendering_scene() {

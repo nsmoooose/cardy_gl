@@ -9,8 +9,9 @@
 
 void window_mouse(int button, int state, int x, int y) {
 	GLuint selections[MAX_SELECTION];
-	GLint viewport[4], hits;
+	GLint hits;
 	GLfloat aspect;
+	render_pick pick;
 
 	/* printf("Button: %d, state: %d, position (%d,%d)\n", button, state, x, y); */
 
@@ -22,21 +23,22 @@ void window_mouse(int button, int state, int x, int y) {
 	}
 
 	glSelectBuffer(MAX_SELECTION, selections);
-	glGetIntegerv(GL_VIEWPORT, viewport);
+	glGetIntegerv(GL_VIEWPORT, pick.viewport);
 
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glRenderMode(GL_SELECT);
 	glLoadIdentity();
-	gluPickMatrix(x, viewport[3] - y + viewport[1], 1, 1, viewport);
-
-	aspect = (float)viewport[2] / (float)viewport[3];
-	gluPerspective(g_perspective_fov, aspect, g_perspective_near,
-				   g_perspective_far);
-
+	pick.x = x;
+	pick.y = pick.viewport[3] - y + pick.viewport[1];
+	pick.width = 1.0f;
+	pick.height = 1.0f;
+	g_rcontext->pick = &pick;
 	check_gl_errors("window_mouse (selection setup)");
 
 	rendering_scene();
+
+	g_rcontext->pick = 0;
 
 	hits = glRenderMode(GL_RENDER);
 	if(hits == -1) {
