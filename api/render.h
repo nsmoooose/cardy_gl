@@ -111,6 +111,10 @@ void render_process_keyboard_special_down(
 void render_process_keyboard_special_up(
 	render_context *rcontext, int key, int modifiers, int x, int y);
 
+RsvgHandle *render_svg_open(const char* path);
+
+void render_svg_close(RsvgHandle *h);
+
 void render_svg_texture(RsvgHandle *h, GLuint texture,
 						char *node_name, int width, int height);
 

@@ -10,6 +10,7 @@ typedef struct {
 	float width, height;
 
 	widget_color back_color;
+	GLuint back_texture;
 	render_selection_callback click;
 } widget_style;
 
@@ -39,7 +40,11 @@ void widget_style_set_size(render_object *object, float width, float height) {
 	d->style->height = height;
 }
 
-void widget_style_set_image(render_object *object, RsvgHandle *h, char *svg_id) {
+void widget_style_set_image(
+	render_object *object, RsvgHandle *h, char *svg_id, int width, int height) {
+	widget_data *d = object->data;
+	glGenTextures(1, &d->style->back_texture);
+	render_svg_texture(h, d->style->back_texture, svg_id, width, height);
 }
 
 void widget_style_set_click_callback(
@@ -98,9 +103,23 @@ static void widget_generic_render(render_event_args *event, float delta) {
 		glPushName(render_register_selection_callback(
 					   event->rcontext, event->object, d->style->click, 0));
 	}
-	glRectf(d->style->left, d->style->top,
-			d->style->left + d->style->width, d->style->top + d->style->height);
-
+	if(d->style->back_texture) {
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, d->style->back_texture);
+	}
+	glBegin(GL_POLYGON);
+	glTexCoord2f(0.0f, 0.0f);
+	glVertex2f(d->style->left, d->style->top);
+	glTexCoord2f(1.0f, 0.0f);
+	glVertex2f(d->style->left + d->style->width, d->style->top);
+	glTexCoord2f(1.0f, 1.0f);
+	glVertex2f(d->style->left + d->style->width, d->style->top + d->style->height);
+	glTexCoord2f(0.0f, 1.0f);
+	glVertex2f(d->style->left, d->style->top + d->style->height);
+	glEnd();
+	if(d->style->back_texture) {
+		glDisable(GL_TEXTURE_2D);
+	}
 	if(d->style->click) {
 		glPopName();
 	}
