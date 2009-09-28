@@ -58,21 +58,21 @@ int main(int argc, char** argv) {
 	desktop = widget_desktop("id");
 	render_object_add_child(g_rcontext->object, desktop);
 
-	window = widget_window(0);
+	window = widget_generic(0);
 	widget_style_set_pos(window, 300, 100);
 	widget_style_set_size(window, 100, 100);
 	render_object_add_child(desktop, window);
 
-	button1 = widget_button(0);
+	button1 = widget_generic(0);
 	widget_style_set_pos(button1, 5, 5);
 	widget_style_set_size(button1, 90, 40);
-	widget_button_set_callback(button1, button1_callback);
+	widget_style_set_click_callback(button1, button1_callback);
 	render_object_add_child(window, button1);
 
-	button2 = widget_button(0);
+	button2 = widget_generic(0);
 	widget_style_set_pos(button2, 5, 55);
 	widget_style_set_size(button2, 90, 40);
-	widget_button_set_callback(button2, button2_callback);
+	widget_style_set_click_callback(button2, button2_callback);
 	render_object_add_child(window, button2);
 
 	glutMainLoop();

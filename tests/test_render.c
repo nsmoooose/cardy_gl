@@ -120,7 +120,7 @@ bool callback_keydown(
 START_TEST(test_render_process_keyboard_down) {
 	render_context *rc = render_context_create();
 	render_object *desktop = widget_desktop("desktop");
-	render_object *window = widget_window("menu");
+	render_object *window = widget_generic("menu");
 
 	rc->object = desktop;
 	render_object_add_child(desktop, window);
@@ -158,7 +158,7 @@ bool callback_keyup(
 START_TEST(test_render_process_keyboard_up) {
 	render_context *rc = render_context_create();
 	render_object *desktop = widget_desktop("desktop");
-	render_object *window = widget_window("menu");
+	render_object *window = widget_generic("menu");
 
 	rc->object = desktop;
 	render_object_add_child(desktop, window);
@@ -196,7 +196,7 @@ bool callback_special_keydown(
 START_TEST(test_render_process_keyboard_special_down) {
 	render_context *rc = render_context_create();
 	render_object *desktop = widget_desktop("desktop");
-	render_object *window = widget_window("menu");
+	render_object *window = widget_generic("menu");
 
 	rc->object = desktop;
 	render_object_add_child(desktop, window);
@@ -234,7 +234,7 @@ bool callback_special_keyup(
 START_TEST(test_render_process_keyboard_special_up) {
 	render_context *rc = render_context_create();
 	render_object *desktop = widget_desktop("desktop");
-	render_object *window = widget_window("menu");
+	render_object *window = widget_generic("menu");
 
 	rc->object = desktop;
 	render_object_add_child(desktop, window);

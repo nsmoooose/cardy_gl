@@ -2,14 +2,30 @@
 #include "render_widget.h"
 
 typedef struct {
+	float red, green, blue, alpha;
+} widget_color;
+
+typedef struct {
 	float top, left;
 	float width, height;
+
+	widget_color back_color;
+	render_selection_callback click;
 } widget_style;
 
 typedef struct {
 	widget_style* style;
-	render_selection_callback click;
 } widget_data;
+
+void widget_style_set_backcolor(
+	render_object *object, float red, float green, float blue, float alpha) {
+	widget_data *d = object->data;
+
+	d->style->back_color.red = red;
+	d->style->back_color.green = green;
+	d->style->back_color.blue = blue;
+	d->style->back_color.alpha = alpha;
+}
 
 void widget_style_set_pos(render_object *object, float left, float top) {
 	widget_data *d = object->data;
@@ -24,6 +40,12 @@ void widget_style_set_size(render_object *object, float width, float height) {
 }
 
 void widget_style_set_image(render_object *object, RsvgHandle *h, char *svg_id) {
+}
+
+void widget_style_set_click_callback(
+	render_object *object, render_selection_callback callback) {
+	widget_data *d = object->data;
+	d->style->click = callback;
 }
 
 static void widget_free(render_event_args *event) {
@@ -67,58 +89,37 @@ render_object *widget_desktop(const char *id) {
 
 /* ----------------------------------------------------------------------------*/
 
-static void widget_window_render(render_event_args *event, float delta) {
+static void widget_generic_render(render_event_args *event, float delta) {
 	widget_data *d = event->object->data;
+	widget_color *bc = &d->style->back_color;
 
-	glColor3f(1.0f, 1.0f, 1.0f);
+	glColor4f(bc->red, bc->green, bc->blue, bc->alpha);
+	if(d->style->click) {
+		glPushName(render_register_selection_callback(
+					   event->rcontext, event->object, d->style->click, 0));
+	}
 	glRectf(d->style->left, d->style->top,
 			d->style->left + d->style->width, d->style->top + d->style->height);
 
+	if(d->style->click) {
+		glPopName();
+	}
 	glPushMatrix();
 	glTranslatef(d->style->left, d->style->top, 0.0f);
 }
 
-static void widget_window_post_render(render_event_args *event, float delta) {
+static void widget_generic_post_render(render_event_args *event, float delta) {
 	glPopMatrix();
 }
 
-render_object *widget_window(const char *id) {
+render_object *widget_generic(const char *id) {
 	render_object *o = widget_create(id);
-	o->render = widget_window_render;
-	o->post_render = widget_window_post_render;
+	o->render = widget_generic_render;
+	o->post_render = widget_generic_post_render;
 	return o;
 }
 
 /* ----------------------------------------------------------------------------*/
 
-static void widget_button_render(render_event_args *event, float delta) {
-	widget_data *d = event->object->data;
-
-	if(d->click) {
-		glPushName(render_register_selection_callback(
-					   event->rcontext, event->object, d->click, 0));
-	}
-	glColor3f(0.8f, 0.8f, 0.8f);
-	glRectf(d->style->left, d->style->top,
-			d->style->left + d->style->width,
-			d->style->top + d->style->height);
-
-	if(d->click) {
-		glPopName();
-	}
-}
-
-render_object *widget_button(const char *id) {
-	render_object *o = widget_create(id);
-	o->render = widget_button_render;
-	return o;
-}
-
 void widget_button_set_text(render_object *object, char *text) {
-}
-
-void widget_button_set_callback(
-	render_object *object, render_selection_callback callback) {
-	widget_data *d = object->data;
-	d->click = callback;
 }
