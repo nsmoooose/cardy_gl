@@ -89,7 +89,6 @@ GLuint theme_get_card_back_texture(theme *theme) {
 }
 
 void theme_render_card_textures(theme *theme) {
-	GError* e = NULL;
 	RsvgHandle* h;
 	card_suit suit;
 	card_value value;
@@ -101,8 +100,8 @@ void theme_render_card_textures(theme *theme) {
 	glGenTextures(53, theme->card_textures);
 
 	snprintf(file_buffer, 1000, "%s/%s", theme->theme_directory, "cards.svg");
-	h = rsvg_handle_new_from_file(file_buffer, &e);
-	if(e != NULL) {
+	h = render_svg_open(file_buffer);
+	if(h == 0) {
 		exit(1);
 	}
 
@@ -118,5 +117,6 @@ void theme_render_card_textures(theme *theme) {
 	}
 	render_svg_texture(h, theme_get_card_back_texture(theme), "#back",
 					   card_texture_width, card_texture_height);
+	render_svg_close(h);
 	check_gl_errors("setup_render_resources");
 }

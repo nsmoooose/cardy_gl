@@ -10,7 +10,6 @@
 void window_mouse(int button, int state, int x, int y) {
 	GLuint selections[MAX_SELECTION];
 	GLint hits;
-	GLfloat aspect;
 	render_pick pick;
 
 	/* printf("Button: %d, state: %d, position (%d,%d)\n", button, state, x, y); */

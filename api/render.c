@@ -202,12 +202,12 @@ void render_process_selections(
 }
 
 RsvgHandle *render_svg_open(const char* path) {
-	GError* e = NULL;
-	RsvgHandle* h;
+	GError *e = 0;
+	RsvgHandle *h;
 
 	h = rsvg_handle_new_from_file(path, &e);
-	if(e != NULL) {
-		fprintf(stderr, "Failed to open file: %s", path);
+	if(e != 0) {
+		fprintf(stderr, "Failed to open file: %s\n", path);
 		return 0;
 	}
 
@@ -215,6 +215,12 @@ RsvgHandle *render_svg_open(const char* path) {
 }
 
 void render_svg_close(RsvgHandle *h) {
+	GError *e = 0;
+	rsvg_handle_close(h, &e);
+
+	if(e != 0) {
+		fprintf(stderr, "Failed to close svg handle.\n");
+	}
 }
 
 void render_svg_texture(RsvgHandle *h, GLuint texture, char *node_name,
