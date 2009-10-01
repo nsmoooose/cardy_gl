@@ -4,6 +4,7 @@ How to transition between different states?
 -- hover
 -- focus
 -- selected
+-- closing
 * Each set property in state style can have three transition expressions set.
 -- One for changing to the state.
 -- Continous state (an animated button for example)
@@ -12,8 +13,11 @@ How to transition between different states?
 -- entering state
 -- looping
 -- leaving state
-
-
+* Events when state reaches different operation.
+-- Window is removed when fading out effect has been completed. User clicks
+   close. We then changes state to "closing". When that state has finished
+   its entering state (fade out). We then close the window.
+-- Events called after the main loop rendering.
 
 
 typedef struct {
