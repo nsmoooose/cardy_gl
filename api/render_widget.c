@@ -133,6 +133,11 @@ static void widget_generic_post_render(render_event_args *event, float delta) {
 
 render_object *widget_generic(const char *id) {
 	render_object *o = widget_create(id);
+	widget_data *d = o->data;
+	d->style->back_color.red = 1.0f;
+	d->style->back_color.green = 1.0f;
+	d->style->back_color.blue = 1.0f;
+	d->style->back_color.alpha = 1.0f;
 	o->render = widget_generic_render;
 	o->post_render = widget_generic_post_render;
 	return o;

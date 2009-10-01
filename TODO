@@ -1,3 +1,20 @@
+How to transition between different states?
+* Base style that defines a widget without any state set.
+* Style for a state. A state can be something like:
+-- hover
+-- focus
+-- selected
+* Each set property in state style can have three transition expressions set.
+-- One for changing to the state.
+-- Continous state (an animated button for example)
+-- One for leaving the state.
+* Each property has a option telling what operation it is in.
+-- entering state
+-- looping
+-- leaving state
+
+
+
 
 typedef struct {
 	hashtable variables;
