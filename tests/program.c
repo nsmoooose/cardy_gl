@@ -9,6 +9,7 @@ void add_render_tests(Suite *suite);
 void add_sol_theidiot_tests(Suite *suite);
 void add_sol_malteser_tests(Suite *suite);
 void add_sol_noname1_tests(Suite *suite);
+void add_ease_tests(Suite *suite);
 
 int main(int argc, char* argv[]) {
 	int failed;
@@ -23,6 +24,7 @@ int main(int argc, char* argv[]) {
 	add_sol_theidiot_tests(suite);
 	add_sol_malteser_tests(suite);
 	add_sol_noname1_tests(suite);
+	add_ease_tests(suite);
 
 	runner = srunner_create(suite);
 	srunner_run_all(runner, CK_VERBOSE);

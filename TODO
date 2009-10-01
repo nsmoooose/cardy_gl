@@ -13,8 +13,6 @@ void expression_context_add_variable(const char *key, float value);
 void expression_context_remove_variable(const char *key);
 expression *expression_parse(const char *exp);
 
-
-
 /*
    Containers:
 
@@ -39,6 +37,10 @@ expression *expression_parse(const char *exp);
 
 /*
    Ease between values....
+   t = Current time.
+   b = From?
+   c = To?
+   d = Total time the animation should take.
 */
 
 class com.robertpenner.easing.Quad {
@@ -153,5 +155,80 @@ class com.robertpenner.easing.Bounce {
 	static function easeInOut (t:Number, b:Number, c:Number, d:Number):Number {
 		if (t < d/2) return com.robertpenner.easing.Bounce.easeIn (t*2, 0, c, d) * .5 + b;
 		else return com.robertpenner.easing.Bounce.easeOut (t*2-d, 0, c, d) * .5 + c*.5 + b;
+	}
+}
+
+class com.robertpenner.easing.Back {
+	static function easeIn (t:Number, b:Number, c:Number, d:Number, s:Number):Number {
+		if (s == undefined) s = 1.70158;
+		return c*(t/=d)*t*((s+1)*t - s) + b;
+	}
+
+	static function easeOut (t:Number, b:Number, c:Number, d:Number, s:Number):Number {
+		if (s == undefined) s = 1.70158;
+		return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
+	}
+
+	static function easeInOut (t:Number, b:Number, c:Number, d:Number, s:Number):Number {
+		if (s == undefined) s = 1.70158;
+		if ((t/=d/2) < 1) return c/2*(t*t*(((s*=(1.525))+1)*t - s)) + b;
+		return c/2*((t-=2)*t*(((s*=(1.525))+1)*t + s) + 2) + b;
+	}
+}
+
+class com.robertpenner.easing.Circ {
+	static function easeIn (t:Number, b:Number, c:Number, d:Number):Number {
+		return -c * (Math.sqrt(1 - (t/=d)*t) - 1) + b;
+	}
+
+	static function easeOut (t:Number, b:Number, c:Number, d:Number):Number {
+		return c * Math.sqrt(1 - (t=t/d-1)*t) + b;
+	}
+
+	static function easeInOut (t:Number, b:Number, c:Number, d:Number):Number {
+		if ((t/=d/2) < 1) return -c/2 * (Math.sqrt(1 - t*t) - 1) + b;
+		return c/2 * (Math.sqrt(1 - (t-=2)*t) + 1) + b;
+	}
+}
+
+class com.robertpenner.easing.Elastic {
+	static function easeIn (t:Number, b:Number, c:Number, d:Number, a:Number, p:Number):Number {
+		if (t==0) return b;  if ((t/=d)==1) return b+c;  if (!p) p=d*.3;
+		if (!a || a < Math.abs(c)) { a=c; var s=p/4; }
+		else var s = p/(2*Math.PI) * Math.asin (c/a);
+		return -(a*Math.pow(2,10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )) + b;
+	}
+
+	static function easeOut (t:Number, b:Number, c:Number, d:Number, a:Number, p:Number):Number {
+		if (t==0) return b;  if ((t/=d)==1) return b+c;  if (!p) p=d*.3;
+		if (!a || a < Math.abs(c)) { a=c; var s=p/4; }
+		else var s = p/(2*Math.PI) * Math.asin (c/a);
+		return (a*Math.pow(2,-10*t) * Math.sin( (t*d-s)*(2*Math.PI)/p ) + c + b);
+	}
+
+	static function easeInOut (t:Number, b:Number, c:Number, d:Number, a:Number, p:Number):Number {
+		if (t==0) return b;  if ((t/=d/2)==2) return b+c;  if (!p) p=d*(.3*1.5);
+		if (!a || a < Math.abs(c)) { a=c; var s=p/4; }
+		else var s = p/(2*Math.PI) * Math.asin (c/a);
+		if (t < 1) return -.5*(a*Math.pow(2,10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )) + b;
+		return a*Math.pow(2,-10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )*.5 + c + b;
+	}
+}
+
+class com.robertpenner.easing.Linear {
+	static function easeNone (t:Number, b:Number, c:Number, d:Number):Number {
+		return c*t/d + b;
+	}
+
+	static function easeIn (t:Number, b:Number, c:Number, d:Number):Number {
+		return c*t/d + b;
+	}
+
+	static function easeOut (t:Number, b:Number, c:Number, d:Number):Number {
+		return c*t/d + b;
+	}
+
+	static function easeInOut (t:Number, b:Number, c:Number, d:Number):Number {
+		return c*t/d + b;
 	}
 }
