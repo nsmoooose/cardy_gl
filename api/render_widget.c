@@ -2,14 +2,14 @@
 #include "expression.h"
 #include "render_widget.h"
 
-char *style_key_width = "width";
-char *style_key_height = "height";
-char *style_key_top = "top";
-char *style_key_left = "left";
-char *style_key_backcolor_red = "backcolor_red";
-char *style_key_backcolor_green = "backcolor_green";
-char *style_key_backcolor_blue = "backcolor_blue";
-char *style_key_backcolor_alpha = "backcolor_alpha";
+#define style_key_width "width"
+#define style_key_height "height"
+#define style_key_top "top"
+#define style_key_left "left"
+#define style_key_backcolor_red "backcolor_red"
+#define style_key_backcolor_green "backcolor_green"
+#define style_key_backcolor_blue "backcolor_blue"
+#define style_key_backcolor_alpha "backcolor_alpha"
 
 typedef struct {
 	float red, green, blue, alpha;
