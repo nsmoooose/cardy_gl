@@ -20,6 +20,26 @@ How to transition between different states?
 -- Events called after the main loop rendering.
 
 
+
+/* Simple expression that always returns the same value. */
+expression* width = expression_const(400);
+expression* height = expression_const(400);
+style_set_size(style, width, height);
+
+/* (viewport_width / 2) - (width / 2) */
+expression* left =
+	expression_subtract(
+		expression_division(expression_variable("viewport_width"), expression_const(2)),
+		expression_division(width, expression_const(2)));
+
+expression *left = expression_parse("(viewport_width/2)-(width/2)");
+style_set_left(style, left);
+
+
+
+
+
+
 typedef struct {
 	hashtable variables;
 	hashtable functions;
