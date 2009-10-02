@@ -44,6 +44,7 @@ void button2_callback(render_event_args *event, void *data) {
 
 int main(int argc, char** argv) {
 	render_object *desktop, *window, *button1, *button2;
+	widget_style *style;
 	g_rcontext = render_context_create();
 
 	glutInit(&argc, argv);
@@ -59,20 +60,23 @@ int main(int argc, char** argv) {
 	render_object_add_child(g_rcontext->object, desktop);
 
 	window = widget_generic(0);
-	widget_style_set_pos(window, 300, 100);
-	widget_style_set_size(window, 100, 100);
+	style = widget_get_default_style(window);
+	widget_style_set_pos(style, 300, 100);
+	widget_style_set_size(style, 100, 100);
 	render_object_add_child(desktop, window);
 
 	button1 = widget_generic(0);
-	widget_style_set_pos(button1, 5, 5);
-	widget_style_set_size(button1, 90, 40);
-	widget_style_set_click_callback(button1, button1_callback);
+	style = widget_get_default_style(button1);
+	widget_style_set_pos(style, 5, 5);
+	widget_style_set_size(style, 90, 40);
+	widget_style_set_click_callback(style, button1_callback);
 	render_object_add_child(window, button1);
 
 	button2 = widget_generic(0);
-	widget_style_set_pos(button2, 5, 55);
-	widget_style_set_size(button2, 90, 40);
-	widget_style_set_click_callback(button2, button2_callback);
+	style = widget_get_default_style(button2);
+	widget_style_set_pos(style, 5, 55);
+	widget_style_set_size(style, 90, 40);
+	widget_style_set_click_callback(style, button2_callback);
 	render_object_add_child(window, button2);
 
 	glutMainLoop();

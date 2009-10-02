@@ -3,14 +3,19 @@
 
 #include "render.h"
 
+struct widget_style_St;
+typedef struct widget_style_St widget_style;
+
+widget_style *widget_get_default_style(render_object *object);
+
 void widget_style_set_backcolor(
-	render_object *object, float red, float green, float blue, float alpha);
-void widget_style_set_pos(render_object *object, float left, float top);
-void widget_style_set_size(render_object *object, float width, float height);
+	widget_style *style, float red, float green, float blue, float alpha);
+void widget_style_set_pos(widget_style *style, float left, float top);
+void widget_style_set_size(widget_style *style, float width, float height);
 void widget_style_set_image(
-	render_object *object, RsvgHandle *h, char *svg_id, int width, int height);
+	widget_style *style, RsvgHandle *h, char *svg_id, int width, int height);
 void widget_style_set_click_callback(
-	render_object *object, render_selection_callback callback);
+	widget_style *style, render_selection_callback callback);
 
 render_object *widget_desktop(const char *id);
 

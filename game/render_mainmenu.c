@@ -41,36 +41,41 @@ static void sol_pyramid_callback(render_event_args *event, void *data) {
 
 void render_object_mainmenu(render_object *parent) {
 	render_object *window, *idiot, *malt, *noname1;
+	widget_style *style;
 	RsvgHandle *h;
 	float bw = 200.0f, bh = 64.0f;
 
 	h = render_svg_open("resources/images/mainmenu.svg");
 
 	window = widget_generic(render_object_mainmenu_id);
-	widget_style_set_pos(window, 100.0f, 100.0f);
-	widget_style_set_size(window, 500.0f, 412.0f);
-	widget_style_set_image(window, h, "#mainmenu", 512, 512);
+	style = widget_get_default_style(window);
+	widget_style_set_pos(style, 100.0f, 100.0f);
+	widget_style_set_size(style, 500.0f, 412.0f);
+	widget_style_set_image(style, h, "#mainmenu", 512, 512);
 	render_object_add_child(parent, window);
 
 	idiot = widget_generic(0);
-	widget_style_set_pos(idiot, 45.0f, 85.0f);
-	widget_style_set_size(idiot, bw, bh);
-	widget_style_set_click_callback(idiot, sol_theidiot_callback);
-	widget_style_set_image(idiot, h, "#sol_idiot", 256, 64);
+	style = widget_get_default_style(idiot);
+	widget_style_set_pos(style, 45.0f, 85.0f);
+	widget_style_set_size(style, bw, bh);
+	widget_style_set_click_callback(style, sol_theidiot_callback);
+	widget_style_set_image(style, h, "#sol_idiot", 256, 64);
 	render_object_add_child(window, idiot);
 
 	malt = widget_generic(0);
-	widget_style_set_pos(malt, 45.0f, 154.0f);
-	widget_style_set_size(malt, bw, bh);
-	widget_style_set_click_callback(malt, sol_malteser_callback);
-	widget_style_set_image(malt, h, "#sol_maltesercross", 256, 64);
+	style = widget_get_default_style(malt);
+	widget_style_set_pos(style, 45.0f, 154.0f);
+	widget_style_set_size(style, bw, bh);
+	widget_style_set_click_callback(style, sol_malteser_callback);
+	widget_style_set_image(style, h, "#sol_maltesercross", 256, 64);
 	render_object_add_child(window, malt);
 
 	noname1 = widget_generic(0);
-	widget_style_set_pos(noname1, 45.0f, 223.0f);
-	widget_style_set_size(noname1, bw, bh);
-	widget_style_set_click_callback(noname1, sol_noname1_callback);
-	widget_style_set_image(noname1, h, "#sol_noname1", 256, 64);
+	style = widget_get_default_style(noname1);
+	widget_style_set_pos(style, 45.0f, 223.0f);
+	widget_style_set_size(style, bw, bh);
+	widget_style_set_click_callback(style, sol_noname1_callback);
+	widget_style_set_image(style, h, "#sol_noname1", 256, 64);
 	render_object_add_child(window, noname1);
 
 	render_svg_close(h);

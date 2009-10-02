@@ -5,52 +5,51 @@ typedef struct {
 	float red, green, blue, alpha;
 } widget_color;
 
-typedef struct {
+struct widget_style_St {
 	float top, left;
 	float width, height;
 
 	widget_color back_color;
 	GLuint back_texture;
 	render_selection_callback click;
-} widget_style;
+};
 
 typedef struct {
 	widget_style* style;
 } widget_data;
 
+widget_style *widget_get_default_style(render_object *object) {
+	widget_data *d = object->data;
+	return d->style;
+}
+
 void widget_style_set_backcolor(
-	render_object *object, float red, float green, float blue, float alpha) {
-	widget_data *d = object->data;
-
-	d->style->back_color.red = red;
-	d->style->back_color.green = green;
-	d->style->back_color.blue = blue;
-	d->style->back_color.alpha = alpha;
+	widget_style *style, float red, float green, float blue, float alpha) {
+	style->back_color.red = red;
+	style->back_color.green = green;
+	style->back_color.blue = blue;
+	style->back_color.alpha = alpha;
 }
 
-void widget_style_set_pos(render_object *object, float left, float top) {
-	widget_data *d = object->data;
-	d->style->left = left;
-	d->style->top = top;
+void widget_style_set_pos(widget_style *style, float left, float top) {
+	style->left = left;
+	style->top = top;
 }
 
-void widget_style_set_size(render_object *object, float width, float height) {
-	widget_data *d = object->data;
-	d->style->width = width;
-	d->style->height = height;
+void widget_style_set_size(widget_style *style, float width, float height) {
+	style->width = width;
+	style->height = height;
 }
 
 void widget_style_set_image(
-	render_object *object, RsvgHandle *h, char *svg_id, int width, int height) {
-	widget_data *d = object->data;
-	glGenTextures(1, &d->style->back_texture);
-	render_svg_texture(h, d->style->back_texture, svg_id, width, height);
+	widget_style *style, RsvgHandle *h, char *svg_id, int width, int height) {
+	glGenTextures(1, &style->back_texture);
+	render_svg_texture(h, style->back_texture, svg_id, width, height);
 }
 
 void widget_style_set_click_callback(
-	render_object *object, render_selection_callback callback) {
-	widget_data *d = object->data;
-	d->style->click = callback;
+	widget_style *style, render_selection_callback callback) {
+	style->click = callback;
 }
 
 static void widget_free(render_event_args *event) {
