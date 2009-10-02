@@ -1,15 +1,24 @@
 #include <stdlib.h>
+#include "expression.h"
 #include "render_widget.h"
+
+char *style_key_width = "width";
+char *style_key_height = "height";
+char *style_key_top = "top";
+char *style_key_left = "left";
+char *style_key_backcolor_red = "backcolor_red";
+char *style_key_backcolor_green = "backcolor_green";
+char *style_key_backcolor_blue = "backcolor_blue";
+char *style_key_backcolor_alpha = "backcolor_alpha";
 
 typedef struct {
 	float red, green, blue, alpha;
 } widget_color;
 
 struct widget_style_St {
-	float top, left;
-	float width, height;
+	mem_context *mc;
+	GHashTable *expressions;
 
-	widget_color back_color;
 	GLuint back_texture;
 	render_selection_callback click;
 };
@@ -23,22 +32,38 @@ widget_style *widget_get_default_style(render_object *object) {
 	return d->style;
 }
 
+static float widget_get_style_value(widget_style *style, const char *key, float def) {
+	expression *exp = g_hash_table_lookup(style->expressions, key);
+	if(exp) {
+		return expression_execute(0, exp);
+	}
+	return def;
+}
+
 void widget_style_set_backcolor(
 	widget_style *style, float red, float green, float blue, float alpha) {
-	style->back_color.red = red;
-	style->back_color.green = green;
-	style->back_color.blue = blue;
-	style->back_color.alpha = alpha;
+	expression *red_exp = expression_const(style->mc, red);
+	expression *green_exp = expression_const(style->mc, green);
+	expression *blue_exp = expression_const(style->mc, blue);
+	expression *alpha_exp = expression_const(style->mc, alpha);
+	g_hash_table_insert(style->expressions, style_key_backcolor_red, red_exp);
+	g_hash_table_insert(style->expressions, style_key_backcolor_blue, green_exp);
+	g_hash_table_insert(style->expressions, style_key_backcolor_green, blue_exp);
+	g_hash_table_insert(style->expressions, style_key_backcolor_alpha, alpha_exp);
 }
 
 void widget_style_set_pos(widget_style *style, float left, float top) {
-	style->left = left;
-	style->top = top;
+	expression *left_exp = expression_const(style->mc, left);
+	expression *top_exp = expression_const(style->mc, top);
+	g_hash_table_insert(style->expressions, style_key_left, left_exp);
+	g_hash_table_insert(style->expressions, style_key_top, top_exp);
 }
 
 void widget_style_set_size(widget_style *style, float width, float height) {
-	style->width = width;
-	style->height = height;
+	expression *width_exp = expression_const(style->mc, width);
+	expression *height_exp = expression_const(style->mc, height);
+	g_hash_table_insert(style->expressions, style_key_width, width_exp);
+	g_hash_table_insert(style->expressions, style_key_height, height_exp);
 }
 
 void widget_style_set_image(
@@ -54,6 +79,8 @@ void widget_style_set_click_callback(
 
 static void widget_free(render_event_args *event) {
 	widget_data *d = event->object->data;
+	g_hash_table_unref(d->style->expressions);
+	mem_context_free(d->style->mc);
 	free(d->style);
 	free(d);
 }
@@ -64,6 +91,9 @@ static render_object *widget_create(const char *id) {
 	d->style = calloc(1, sizeof(widget_style));
 	o->data = d;
 	o->free = widget_free;
+
+	d->style->expressions = g_hash_table_new(g_str_hash, g_str_equal);
+	d->style->mc = mem_context_create();
 	return o;
 }
 
@@ -95,9 +125,18 @@ render_object *widget_desktop(const char *id) {
 
 static void widget_generic_render(render_event_args *event, float delta) {
 	widget_data *d = event->object->data;
-	widget_color *bc = &d->style->back_color;
+	widget_color bc;
 
-	glColor4f(bc->red, bc->green, bc->blue, bc->alpha);
+	float left = widget_get_style_value(d->style, style_key_left, 0.0f);
+	float top = widget_get_style_value(d->style, style_key_top, 0.0f);
+	float width = widget_get_style_value(d->style, style_key_width, 0.0f);
+	float height = widget_get_style_value(d->style, style_key_height, 0.0f);
+	bc.red = widget_get_style_value(d->style, style_key_backcolor_red, 1.0f);
+	bc.green = widget_get_style_value(d->style, style_key_backcolor_green, 1.0f);
+	bc.blue = widget_get_style_value(d->style, style_key_backcolor_blue, 1.0f);
+	bc.alpha = widget_get_style_value(d->style, style_key_backcolor_alpha, 1.0f);
+
+	glColor4f(bc.red, bc.green, bc.blue, bc.alpha);
 	if(d->style->click) {
 		glPushName(render_register_selection_callback(
 					   event->rcontext, event->object, d->style->click, 0));
@@ -108,13 +147,13 @@ static void widget_generic_render(render_event_args *event, float delta) {
 	}
 	glBegin(GL_POLYGON);
 	glTexCoord2f(0.0f, 0.0f);
-	glVertex2f(d->style->left, d->style->top);
+	glVertex2f(left, top);
 	glTexCoord2f(1.0f, 0.0f);
-	glVertex2f(d->style->left + d->style->width, d->style->top);
+	glVertex2f(left + width, top);
 	glTexCoord2f(1.0f, 1.0f);
-	glVertex2f(d->style->left + d->style->width, d->style->top + d->style->height);
+	glVertex2f(left + width, top + height);
 	glTexCoord2f(0.0f, 1.0f);
-	glVertex2f(d->style->left, d->style->top + d->style->height);
+	glVertex2f(left, top + height);
 	glEnd();
 	if(d->style->back_texture) {
 		glDisable(GL_TEXTURE_2D);
@@ -123,7 +162,7 @@ static void widget_generic_render(render_event_args *event, float delta) {
 		glPopName();
 	}
 	glPushMatrix();
-	glTranslatef(d->style->left, d->style->top, 0.0f);
+	glTranslatef(left, top, 0.0f);
 }
 
 static void widget_generic_post_render(render_event_args *event, float delta) {
@@ -132,11 +171,6 @@ static void widget_generic_post_render(render_event_args *event, float delta) {
 
 render_object *widget_generic(const char *id) {
 	render_object *o = widget_create(id);
-	widget_data *d = o->data;
-	d->style->back_color.red = 1.0f;
-	d->style->back_color.green = 1.0f;
-	d->style->back_color.blue = 1.0f;
-	d->style->back_color.alpha = 1.0f;
 	o->render = widget_generic_render;
 	o->post_render = widget_generic_post_render;
 	return o;
