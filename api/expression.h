@@ -11,10 +11,15 @@ struct expression_St;
 typedef struct expression_St expression;
 
 expression_context *expression_context_create(mem_context *mc);
+void expression_context_free(mem_context *mc, expression_context *ec);
+void expression_context_set(
+	expression_context *ec, const char *key, expression *value);
+expression *expression_context_get(expression_context *ec, const char *key);
 
+void expression_free(mem_context *mc, expression *e);
 expression *expression_const(mem_context *mc, float value);
 
-expression *expression_var(mem_context *mc, GHashTable *table, const char *name);
+expression *expression_var(mem_context *mc, const char *name);
 
 expression *expression_div(mem_context *mc, expression *e1, expression *e2);
 expression *expression_mult(mem_context *mc, expression *e1, expression *e2);

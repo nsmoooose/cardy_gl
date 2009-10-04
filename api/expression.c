@@ -1,7 +1,9 @@
+#include <stdio.h>
+#include <string.h>
 #include "expression.h"
 
 struct expression_context_St {
-	int dummy;
+	GHashTable *expressions;
 };
 
 struct expression_St {
@@ -10,7 +12,32 @@ struct expression_St {
 };
 
 expression_context *expression_context_create(mem_context *mc) {
-	return 0;
+	expression_context *ec = mem_alloc(mc, sizeof(expression_context));
+	ec->expressions = g_hash_table_new(g_str_hash, g_str_equal);
+	return ec;
+}
+
+void expression_context_free(mem_context *mc, expression_context *ec) {
+	g_hash_table_unref(ec->expressions);
+}
+
+void expression_context_set(
+	expression_context *ec, const char *key, expression *value) {
+	expression *old = expression_context_get(ec, key);
+	if(old) {
+		expression_free(0, old);
+	}
+
+	g_hash_table_insert(ec->expressions, (char*)key, value);
+}
+
+expression *expression_context_get(expression_context *ec, const char *key) {
+	return g_hash_table_lookup(ec->expressions, key);
+}
+
+/* ----------------------------------------------------------------------- */
+
+void expression_free(mem_context *mc, expression *e) {
 }
 
 /* ----------------------------------------------------------------------- */
@@ -35,9 +62,20 @@ expression *expression_const(mem_context *mc, float value) {
 
 /* ----------------------------------------------------------------------- */
 
-expression *expression_var(
-	mem_context *mc, GHashTable *table, const char *name) {
-	return 0;
+static float expression_var_execute(expression_context *ec, expression *e) {
+	expression *var = expression_context_get(ec, e->data);
+	if(var) {
+		return expression_execute(ec, var);
+	}
+	fprintf(stderr, "Invalid expression. Variable: %s not found.", (char*)e->data);
+}
+
+expression *expression_var(mem_context *mc, const char *name) {
+	expression *e = mem_alloc(mc, sizeof(expression));
+	e->data = strdup(name);
+	e->execute = expression_var_execute;
+	mem_attach(mc, e->data);
+	return e;
 }
 
 /* ----------------------------------------------------------------------- */
