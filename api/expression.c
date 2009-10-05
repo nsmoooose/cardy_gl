@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "expression.h"
 
@@ -67,7 +68,12 @@ static float expression_var_execute(expression_context *ec, expression *e) {
 	if(var) {
 		return expression_execute(ec, var);
 	}
+
+	/* TODO
+	   Better error handling when there are expression errors.
+	**/
 	fprintf(stderr, "Invalid expression. Variable: %s not found.", (char*)e->data);
+	exit(1);
 }
 
 expression *expression_var(mem_context *mc, const char *name) {
