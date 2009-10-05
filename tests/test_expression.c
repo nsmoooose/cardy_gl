@@ -83,13 +83,25 @@ START_TEST(test_expression_parse) {
 	expression *e = expression_parse("3.0");
 
 	ck_assert(e != 0);
-	ck_assert(expression_execute(ec, e) == 3.0);
+	ck_assert(expression_execute(ec, e) == 3.0f);
+
+	e = expression_parse("3+4");
+	ck_assert(expression_execute(ec, e) == 7.0f);
+
+	e = expression_parse("3-4");
+	ck_assert(expression_execute(ec, e) == -1.0f);
+
+	e = expression_parse("3*4");
+	ck_assert(expression_execute(ec, e) == 12.0f);
+
+	e = expression_parse("3/4");
+	ck_assert(expression_execute(ec, e) == 0.75f);
 }
 END_TEST
 
 START_TEST(test_expression_parse_invalid_chars) {
 	ck_assert(expression_parse("") == 0);
-	ck_assert(expression_parse("3.3!\"#¤%&") == 0);
+	ck_assert(expression_parse("3.3!\"#¤ %&") == 0);
 }
 END_TEST
 

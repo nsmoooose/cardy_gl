@@ -163,25 +163,134 @@ expression *expression_add(expression *e1, expression *e2) {
 
 /* ----------------------------------------------------------------------- */
 
+expression *token_parser(char *tokens[], int current) {
+	char c = tokens[current][0];
+	expression *lhs=0, *rhs=0;
+
+	/* Left hand side. */
+	if(c>='0' && c <= '9') {
+		lhs = expression_const(atof(tokens[current]));
+		if(tokens[current+1] == 0) {
+			return lhs;
+		}
+	}
+	else {
+		fprintf(stderr, "Unexpected token: %s\n", tokens[current]);
+		return 0;
+	}
+
+	/* Right hand side */
+	current += 2;
+	if(tokens[current] == 0) {
+		fprintf(stderr, "No RHS token.");
+		exit(1);
+	}
+	c = tokens[current][0];
+	if(c>='0' && c <= '9') {
+		rhs = expression_const(atof(tokens[current]));
+	}
+	else {
+		fprintf(stderr, "Unexpected operation: %c\n", c);
+		expression_free(lhs);
+		return 0;
+	}
+
+	/* Operation */
+	current--;
+	c = tokens[current][0];
+	if(c == '+') {
+		return expression_add(lhs, rhs);
+	}
+	else if(c == '-') {
+		return expression_sub(lhs, rhs);
+	}
+	else if(c == '*') {
+		return expression_mult(lhs, rhs);
+	}
+	else if(c == '/') {
+		return expression_div(lhs, rhs);
+	}
+	else {
+		fprintf(stderr, "Unexpected token: %s\n", tokens[current]);
+		expression_free(lhs);
+		expression_free(rhs);
+		return 0;
+	}
+}
+
 expression *expression_parse(const char *exp) {
 	char *tokens[1000];
-	int token_start = -1, tokens_created=0;
-	int index, len = strlen(exp);
-	for(index=0;index<len;++index) {
-		if(token_start == -1) {
-			token_start = index;
-		}
+	int token=0, i,j, len = strlen(exp);
+	char c;
+	expression *e = 0;
 
-		if(exp[index] == '*') {
-			/*
-			tokens[tokens_created] = strndup(&exp[index], 1);
-			*/
-			tokens_created++;
-			token_start = -1;
+	memset(tokens, 0, 1000 * sizeof(char*));
+
+	printf("--------------------\nParsing: %s\n", exp);
+
+	if(len == 0) {
+		return 0;
+	}
+
+	/* Special considerations:
+	 * Remove all whitespace.
+	 * Count number of paranthesis and mismatching of them.
+	 */
+
+	for(i=0;i<len;++i) {
+		c = exp[i];
+		if(!(c == '*' || c == '/' || c == '-' || c == '+' ||
+		   ((c >= '0' && c <= '9') || c == '.') ||
+			((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))) {
+			return 0;
 		}
 	}
 
-	return 0;
+	for(i=0;i<len;) {
+		if(token >= 1000) {
+			fprintf(stderr, "Too many tokens in expression.\n");
+			goto cleanup;
+		}
+
+		c = exp[i];
+		if(c == '*' || c == '/' || c == '-' || c == '+') {
+			printf("Found token: %c\n", c);
+			tokens[token] = calloc(2, sizeof(char));
+			tokens[token][0] = c;
+			tokens[token][1] = 0;
+			token++;
+			i++;
+		}
+		else if((c >= '0' && c <= '9') || c == '.') {
+			for(j=i+1;j<len;++j) {
+				c = exp[j];
+				if(!((c >= '0' && c <= '9') || c == '.')) {
+					break;
+				}
+			}
+			tokens[token] = calloc(1, j-i + 1);
+			strncpy(tokens[token], &exp[i], j-i);
+			printf("Found token: %s\n", tokens[token]);
+			token++;
+			i += (j-i);
+		}
+		else if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+		}
+	}
+
+	for(i=0;i<1000;++i) {
+		if(tokens[i] == 0)
+			break;
+		printf("Token: %s\n", tokens[i]);
+	}
+
+	e = token_parser(tokens, 0);
+
+cleanup:
+	for(i=0;i<token;++i) {
+		free(tokens[i]);
+	}
+	return e;
 }
 
 /* ----------------------------------------------------------------------- */
