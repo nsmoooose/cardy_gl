@@ -12,13 +12,13 @@ struct expression_St {
 	float (*execute)(expression_context *context, expression *exp);
 };
 
-expression_context *expression_context_create(mem_context *mc) {
-	expression_context *ec = mem_alloc(mc, sizeof(expression_context));
+expression_context *expression_context_create() {
+	expression_context *ec = calloc(1, sizeof(expression_context));
 	ec->expressions = g_hash_table_new(g_str_hash, g_str_equal);
 	return ec;
 }
 
-void expression_context_free(mem_context *mc, expression_context *ec) {
+void expression_context_free(expression_context *ec) {
 	g_hash_table_unref(ec->expressions);
 }
 
@@ -26,7 +26,7 @@ void expression_context_set(
 	expression_context *ec, const char *key, expression *value) {
 	expression *old = expression_context_get(ec, key);
 	if(old) {
-		expression_free(0, old);
+		expression_free(old);
 	}
 
 	g_hash_table_insert(ec->expressions, (char*)key, value);
@@ -38,7 +38,7 @@ expression *expression_context_get(expression_context *ec, const char *key) {
 
 /* ----------------------------------------------------------------------- */
 
-void expression_free(mem_context *mc, expression *e) {
+void expression_free(expression *e) {
 }
 
 /* ----------------------------------------------------------------------- */
@@ -52,9 +52,9 @@ static float expression_const_execute(expression_context *ec, expression *e) {
 	return d->value;
 }
 
-expression *expression_const(mem_context *mc, float value) {
-	expression *e = mem_alloc(mc, sizeof(expression));
-	expression_const_data *d = mem_alloc(mc, sizeof(expression_const_data));
+expression *expression_const(float value) {
+	expression *e = calloc(1, sizeof(expression));
+	expression_const_data *d = calloc(1, sizeof(expression_const_data));
 	d->value = value;
 	e->data = d;
 	e->execute = expression_const_execute;
@@ -76,11 +76,10 @@ static float expression_var_execute(expression_context *ec, expression *e) {
 	exit(1);
 }
 
-expression *expression_var(mem_context *mc, const char *name) {
-	expression *e = mem_alloc(mc, sizeof(expression));
+expression *expression_var(const char *name) {
+	expression *e = calloc(1, sizeof(expression));
 	e->data = strdup(name);
 	e->execute = expression_var_execute;
-	mem_attach(mc, e->data);
 	return e;
 }
 
@@ -90,9 +89,9 @@ typedef struct {
 	expression *e1, *e2;
 } expression_op_data;
 
-expression *expression_op(mem_context *mc, expression *e1, expression *e2) {
-	expression *e = mem_alloc(mc, sizeof(expression));
-	expression_op_data *d = mem_alloc(mc, sizeof(expression_op_data));
+expression *expression_op(expression *e1, expression *e2) {
+	expression *e = calloc(1, sizeof(expression));
+	expression_op_data *d = calloc(1, sizeof(expression_op_data));
 	d->e1 = e1;
 	d->e2 = e2;
 	e->data = d;
@@ -106,8 +105,8 @@ static float expression_div_execute(expression_context *ec, expression *e) {
 	return expression_execute(ec, d->e1) / expression_execute(ec, d->e2);
 }
 
-expression *expression_div(mem_context *mc, expression *e1, expression *e2) {
-	expression *e = expression_op(mc, e1, e2);
+expression *expression_div(expression *e1, expression *e2) {
+	expression *e = expression_op(e1, e2);
 	e->execute = expression_div_execute;
 	return e;
 }
@@ -119,8 +118,8 @@ static float expression_mult_execute(expression_context *ec, expression *e) {
 	return expression_execute(ec, d->e1) * expression_execute(ec, d->e2);
 }
 
-expression *expression_mult(mem_context *mc, expression *e1, expression *e2) {
-	expression *e = expression_op(mc, e1, e2);
+expression *expression_mult(expression *e1, expression *e2) {
+	expression *e = expression_op(e1, e2);
 	e->execute = expression_mult_execute;
 	return e;
 }
@@ -132,8 +131,8 @@ static float expression_sub_execute(expression_context *ec, expression *e) {
 	return expression_execute(ec, d->e1) - expression_execute(ec, d->e2);
 }
 
-expression *expression_sub(mem_context *mc, expression *e1, expression *e2) {
-	expression *e = expression_op(mc, e1, e2);
+expression *expression_sub(expression *e1, expression *e2) {
+	expression *e = expression_op(e1, e2);
 	e->execute = expression_sub_execute;
 	return e;
 }
@@ -145,15 +144,15 @@ static float expression_add_execute(expression_context *ec, expression *e) {
 	return expression_execute(ec, d->e1) + expression_execute(ec, d->e2);
 }
 
-expression *expression_add(mem_context *mc, expression *e1, expression *e2) {
-	expression *e = expression_op(mc, e1, e2);
+expression *expression_add(expression *e1, expression *e2) {
+	expression *e = expression_op(e1, e2);
 	e->execute = expression_add_execute;
 	return e;
 }
 
 /* ----------------------------------------------------------------------- */
 
-expression *expression_parse(mem_context *mc, const char *exp) {
+expression *expression_parse(const char *exp) {
 	return 0;
 }
 

@@ -11,6 +11,7 @@ void add_sol_malteser_tests(Suite *suite);
 void add_sol_noname1_tests(Suite *suite);
 void add_ease_tests(Suite *suite);
 void add_expression_tests(Suite *suite);
+void add_render_widget_tests(Suite *suite);
 
 int main(int argc, char* argv[]) {
 	int failed;
@@ -27,6 +28,7 @@ int main(int argc, char* argv[]) {
 	add_sol_noname1_tests(suite);
 	add_ease_tests(suite);
 	add_expression_tests(suite);
+	add_render_widget_tests(suite);
 
 	runner = srunner_create(suite);
 	srunner_run_all(runner, CK_VERBOSE);

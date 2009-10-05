@@ -16,8 +16,7 @@ typedef struct {
 } widget_color;
 
 struct widget_style_St {
-	mem_context *mc;
-	GHashTable *expressions;
+	expression_context *ec;
 
 	GLuint back_texture;
 	render_selection_callback click;
@@ -32,8 +31,12 @@ widget_style *widget_get_default_style(render_object *object) {
 	return d->style;
 }
 
+expression_context *widget_style_get_expression_context(widget_style *style) {
+	return style->ec;
+}
+
 static float widget_get_style_value(widget_style *style, const char *key, float def) {
-	expression *exp = g_hash_table_lookup(style->expressions, key);
+	expression *exp = expression_context_get(style->ec, key);
 	if(exp) {
 		return expression_execute(0, exp);
 	}
@@ -42,28 +45,44 @@ static float widget_get_style_value(widget_style *style, const char *key, float 
 
 void widget_style_set_backcolor(
 	widget_style *style, float red, float green, float blue, float alpha) {
-	expression *red_exp = expression_const(style->mc, red);
-	expression *green_exp = expression_const(style->mc, green);
-	expression *blue_exp = expression_const(style->mc, blue);
-	expression *alpha_exp = expression_const(style->mc, alpha);
-	g_hash_table_insert(style->expressions, style_key_backcolor_red, red_exp);
-	g_hash_table_insert(style->expressions, style_key_backcolor_blue, green_exp);
-	g_hash_table_insert(style->expressions, style_key_backcolor_green, blue_exp);
-	g_hash_table_insert(style->expressions, style_key_backcolor_alpha, alpha_exp);
+	expression *red_exp = expression_const(red);
+	expression *green_exp = expression_const(green);
+	expression *blue_exp = expression_const(blue);
+	expression *alpha_exp = expression_const(alpha);
+	expression_context_set(style->ec, style_key_backcolor_red, red_exp);
+	expression_context_set(style->ec, style_key_backcolor_blue, green_exp);
+	expression_context_set(style->ec, style_key_backcolor_green, blue_exp);
+	expression_context_set(style->ec, style_key_backcolor_alpha, alpha_exp);
 }
 
 void widget_style_set_pos(widget_style *style, float left, float top) {
-	expression *left_exp = expression_const(style->mc, left);
-	expression *top_exp = expression_const(style->mc, top);
-	g_hash_table_insert(style->expressions, style_key_left, left_exp);
-	g_hash_table_insert(style->expressions, style_key_top, top_exp);
+	expression *left_exp = expression_const(left);
+	expression *top_exp = expression_const(top);
+	expression_context_set(style->ec, style_key_left, left_exp);
+	expression_context_set(style->ec, style_key_top, top_exp);
+}
+
+expression *widget_style_get_top_expression(widget_style *style) {
+	return expression_context_get(style->ec, style_key_top);
+}
+
+expression *widget_style_get_left_expression(widget_style *style) {
+	return expression_context_get(style->ec, style_key_left);
 }
 
 void widget_style_set_size(widget_style *style, float width, float height) {
-	expression *width_exp = expression_const(style->mc, width);
-	expression *height_exp = expression_const(style->mc, height);
-	g_hash_table_insert(style->expressions, style_key_width, width_exp);
-	g_hash_table_insert(style->expressions, style_key_height, height_exp);
+	expression *width_exp = expression_const(width);
+	expression *height_exp = expression_const(height);
+	expression_context_set(style->ec, style_key_width, width_exp);
+	expression_context_set(style->ec, style_key_height, height_exp);
+}
+
+expression *widget_style_get_width_expression(widget_style *style) {
+	return expression_context_get(style->ec, style_key_width);
+}
+
+expression *widget_style_get_height_expression(widget_style *style) {
+	return expression_context_get(style->ec, style_key_height);
 }
 
 void widget_style_set_image(
@@ -79,8 +98,7 @@ void widget_style_set_click_callback(
 
 static void widget_free(render_event_args *event) {
 	widget_data *d = event->object->data;
-	g_hash_table_unref(d->style->expressions);
-	mem_context_free(d->style->mc);
+	expression_context_free(d->style->ec);
 	free(d->style);
 	free(d);
 }
@@ -89,11 +107,9 @@ static render_object *widget_create(const char *id) {
 	render_object *o = render_object_create(id);
 	widget_data *d = calloc(1, sizeof(widget_data));
 	d->style = calloc(1, sizeof(widget_style));
+	d->style->ec = expression_context_create();
 	o->data = d;
 	o->free = widget_free;
-
-	d->style->expressions = g_hash_table_new(g_str_hash, g_str_equal);
-	d->style->mc = mem_context_create();
 	return o;
 }
 
