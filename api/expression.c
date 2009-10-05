@@ -170,13 +170,16 @@ expression *token_parser(char *tokens[], int current) {
 	/* Left hand side. */
 	if(c>='0' && c <= '9') {
 		lhs = expression_const(atof(tokens[current]));
-		if(tokens[current+1] == 0) {
-			return lhs;
-		}
+	}
+	else if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+		lhs = expression_var(tokens[current]);
 	}
 	else {
 		fprintf(stderr, "Unexpected token: %s\n", tokens[current]);
 		return 0;
+	}
+	if(tokens[current+1] == 0) {
+		return lhs;
 	}
 
 	/* Right hand side */
@@ -188,6 +191,9 @@ expression *token_parser(char *tokens[], int current) {
 	c = tokens[current][0];
 	if(c>='0' && c <= '9') {
 		rhs = expression_const(atof(tokens[current]));
+	}
+	else if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+		rhs = expression_var(tokens[current]);
 	}
 	else {
 		fprintf(stderr, "Unexpected operation: %c\n", c);
@@ -226,8 +232,6 @@ expression *expression_parse(const char *exp) {
 
 	memset(tokens, 0, 1000 * sizeof(char*));
 
-	printf("--------------------\nParsing: %s\n", exp);
-
 	if(len == 0) {
 		return 0;
 	}
@@ -254,7 +258,6 @@ expression *expression_parse(const char *exp) {
 
 		c = exp[i];
 		if(c == '*' || c == '/' || c == '-' || c == '+') {
-			printf("Found token: %c\n", c);
 			tokens[token] = calloc(2, sizeof(char));
 			tokens[token][0] = c;
 			tokens[token][1] = 0;
@@ -270,18 +273,24 @@ expression *expression_parse(const char *exp) {
 			}
 			tokens[token] = calloc(1, j-i + 1);
 			strncpy(tokens[token], &exp[i], j-i);
-			printf("Found token: %s\n", tokens[token]);
 			token++;
 			i += (j-i);
 		}
 		else if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+			for(j=i+1;j<len;++j) {
+				c = exp[j];
+				if(!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) {
+					break;
+				}
+			}
+			tokens[token] = calloc(1, j-i + 1);
+			strncpy(tokens[token], &exp[i], j-i);
+			token++;
+			i += (j-i);
 		}
-	}
-
-	for(i=0;i<1000;++i) {
-		if(tokens[i] == 0)
-			break;
-		printf("Token: %s\n", tokens[i]);
+		else {
+			goto cleanup;
+		}
 	}
 
 	e = token_parser(tokens, 0);

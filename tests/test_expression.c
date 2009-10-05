@@ -99,6 +99,18 @@ START_TEST(test_expression_parse) {
 }
 END_TEST
 
+START_TEST(test_expression_parse2) {
+	expression_context *ec = expression_context_create();
+	expression *e;
+
+	expression_context_set(ec, "width", expression_const(3.0));
+
+	e = expression_parse("width*4");
+	ck_assert(e != 0);
+	ck_assert(expression_execute(ec, e) == 12.0f);
+}
+END_TEST
+
 START_TEST(test_expression_parse_invalid_chars) {
 	ck_assert(expression_parse("") == 0);
 	ck_assert(expression_parse("3.3!\"#¤ %&") == 0);
@@ -115,6 +127,7 @@ void add_expression_tests(Suite *suite) {
 	tcase_add_test(c, test_expression_var);
 	tcase_add_test(c, test_expression_context_set);
 	tcase_add_test(c, test_expression_parse);
+	tcase_add_test(c, test_expression_parse2);
 	tcase_add_test(c, test_expression_parse_invalid_chars);
 	suite_add_tcase(suite, c);
 }
