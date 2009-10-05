@@ -1,3 +1,4 @@
+#include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,6 +20,9 @@ expression_context *expression_context_create() {
 }
 
 void expression_context_free(expression_context *ec) {
+	/* TODO
+	   Iterate through all expressions and free them.
+	*/
 	g_hash_table_unref(ec->expressions);
 }
 
@@ -39,6 +43,13 @@ expression *expression_context_get(expression_context *ec, const char *key) {
 /* ----------------------------------------------------------------------- */
 
 void expression_free(expression *e) {
+	/* TODO
+	   This expression can have subexpressions that also needs freeing. */
+
+	if(e->data) {
+		free(e->data);
+	}
+	free(e);
 }
 
 /* ----------------------------------------------------------------------- */
@@ -153,6 +164,23 @@ expression *expression_add(expression *e1, expression *e2) {
 /* ----------------------------------------------------------------------- */
 
 expression *expression_parse(const char *exp) {
+	char *tokens[1000];
+	int token_start = -1, tokens_created=0;
+	int index, len = strlen(exp);
+	for(index=0;index<len;++index) {
+		if(token_start == -1) {
+			token_start = index;
+		}
+
+		if(exp[index] == '*') {
+			/*
+			tokens[tokens_created] = strndup(&exp[index], 1);
+			*/
+			tokens_created++;
+			token_start = -1;
+		}
+	}
+
 	return 0;
 }
 

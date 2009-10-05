@@ -4,6 +4,17 @@
 #include "expression.h"
 #include "render.h"
 
+#define style_key_width "width"
+#define style_key_height "height"
+#define style_key_top "top"
+#define style_key_left "left"
+#define style_key_backcolor_red "backcolor_red"
+#define style_key_backcolor_green "backcolor_green"
+#define style_key_backcolor_blue "backcolor_blue"
+#define style_key_backcolor_alpha "backcolor_alpha"
+#define style_key_viewport_width "viewport_width"
+#define style_key_viewport_height "viewport_height"
+
 struct widget_style_St;
 typedef struct widget_style_St widget_style;
 

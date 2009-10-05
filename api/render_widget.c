@@ -2,15 +2,6 @@
 #include "expression.h"
 #include "render_widget.h"
 
-#define style_key_width "width"
-#define style_key_height "height"
-#define style_key_top "top"
-#define style_key_left "left"
-#define style_key_backcolor_red "backcolor_red"
-#define style_key_backcolor_green "backcolor_green"
-#define style_key_backcolor_blue "backcolor_blue"
-#define style_key_backcolor_alpha "backcolor_alpha"
-
 typedef struct {
 	float red, green, blue, alpha;
 } widget_color;
@@ -116,9 +107,13 @@ static render_object *widget_create(const char *id) {
 /* ----------------------------------------------------------------------------*/
 
 static void widget_desktop_render(render_event_args *event, float delta) {
+	widget_style *style = widget_get_default_style(event->object);
 	GLint viewport[4];
 	render_pick *pick;
 	glGetIntegerv(GL_VIEWPORT, viewport);
+
+	expression_context_set(style->ec, style_key_viewport_width, expression_const(viewport[2]));
+	expression_context_set(style->ec, style_key_viewport_height, expression_const(viewport[3]));
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);

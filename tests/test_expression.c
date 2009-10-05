@@ -78,6 +78,21 @@ START_TEST(test_expression_context_set) {
 }
 END_TEST
 
+START_TEST(test_expression_parse) {
+	expression_context *ec = expression_context_create();
+	expression *e = expression_parse("3.0");
+
+	ck_assert(e != 0);
+	ck_assert(expression_execute(ec, e) == 3.0);
+}
+END_TEST
+
+START_TEST(test_expression_parse_invalid_chars) {
+	ck_assert(expression_parse("") == 0);
+	ck_assert(expression_parse("3.3!\"#¤%&") == 0);
+}
+END_TEST
+
 void add_expression_tests(Suite *suite) {
 	TCase *c = tcase_create("Expression");
 	tcase_add_test(c, test_expression_const);
@@ -87,5 +102,7 @@ void add_expression_tests(Suite *suite) {
 	tcase_add_test(c, test_expression_add);
 	tcase_add_test(c, test_expression_var);
 	tcase_add_test(c, test_expression_context_set);
+	tcase_add_test(c, test_expression_parse);
+	tcase_add_test(c, test_expression_parse_invalid_chars);
 	suite_add_tcase(suite, c);
 }
