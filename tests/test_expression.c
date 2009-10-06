@@ -108,6 +108,28 @@ START_TEST(test_expression_parse2) {
 	e = expression_parse("width*4");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 12.0f);
+
+	e = expression_parse("3+3*4");
+	ck_assert(e != 0);
+	ck_assert(expression_execute(ec, e) == 15.0f);
+
+	e = expression_parse("3+3/4");
+	ck_assert(e != 0);
+	ck_assert(expression_execute(ec, e) == 3.75f);
+
+	e = expression_parse("3+3-2");
+	ck_assert(e != 0);
+	ck_assert(expression_execute(ec, e) == 4.0f);
+}
+END_TEST
+
+START_TEST(test_expression_parse3) {
+	expression_context *ec = expression_context_create();
+	expression *e;
+
+	e = expression_parse("(3+3)*4");
+	ck_assert(e != 0);
+	ck_assert(expression_execute(ec, e) == 24.0f);
 }
 END_TEST
 
@@ -128,6 +150,7 @@ void add_expression_tests(Suite *suite) {
 	tcase_add_test(c, test_expression_context_set);
 	tcase_add_test(c, test_expression_parse);
 	tcase_add_test(c, test_expression_parse2);
+	tcase_add_test(c, test_expression_parse3);
 	tcase_add_test(c, test_expression_parse_invalid_chars);
 	suite_add_tcase(suite, c);
 }
