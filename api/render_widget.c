@@ -107,13 +107,9 @@ static render_object *widget_create(const char *id) {
 /* ----------------------------------------------------------------------------*/
 
 static void widget_desktop_render(render_event_args *event, float delta) {
-	widget_style *style = widget_get_default_style(event->object);
 	GLint viewport[4];
 	render_pick *pick;
 	glGetIntegerv(GL_VIEWPORT, viewport);
-
-	expression_context_set(style->ec, style_key_viewport_width, expression_const(viewport[2]));
-	expression_context_set(style->ec, style_key_viewport_height, expression_const(viewport[3]));
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);
@@ -135,13 +131,20 @@ render_object *widget_desktop(const char *id) {
 /* ----------------------------------------------------------------------------*/
 
 static void widget_generic_render(render_event_args *event, float delta) {
+	GLint viewport[4];
+	float left, top, width, height;
 	widget_data *d = event->object->data;
 	widget_color bc;
+	widget_style *style = widget_get_default_style(event->object);
 
-	float left = widget_get_style_value(d->style, style_key_left, 0.0f);
-	float top = widget_get_style_value(d->style, style_key_top, 0.0f);
-	float width = widget_get_style_value(d->style, style_key_width, 0.0f);
-	float height = widget_get_style_value(d->style, style_key_height, 0.0f);
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	expression_context_set(style->ec, style_key_viewport_width, expression_const(viewport[2]));
+	expression_context_set(style->ec, style_key_viewport_height, expression_const(viewport[3]));
+
+	left = widget_get_style_value(d->style, style_key_left, 0.0f);
+	top = widget_get_style_value(d->style, style_key_top, 0.0f);
+	width = widget_get_style_value(d->style, style_key_width, 0.0f);
+	height = widget_get_style_value(d->style, style_key_height, 0.0f);
 	bc.red = widget_get_style_value(d->style, style_key_backcolor_red, 1.0f);
 	bc.green = widget_get_style_value(d->style, style_key_backcolor_green, 1.0f);
 	bc.blue = widget_get_style_value(d->style, style_key_backcolor_blue, 1.0f);
