@@ -186,7 +186,8 @@ expression *token_parser(char *tokens[], int current) {
 	current += 2;
 	if(tokens[current] == 0) {
 		fprintf(stderr, "No RHS token.");
-		exit(1);
+		expression_free(lhs);
+		return 0;
 	}
 	c = tokens[current][0];
 	if(c>='0' && c <= '9') {

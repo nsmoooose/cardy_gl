@@ -136,6 +136,7 @@ END_TEST
 START_TEST(test_expression_parse_invalid_chars) {
 	ck_assert(expression_parse("") == 0);
 	ck_assert(expression_parse("3.3!\"#¤ %&") == 0);
+	ck_assert(expression_parse("3+") == 0);
 }
 END_TEST
 
