@@ -163,6 +163,24 @@ expression *expression_add(expression *e1, expression *e2) {
 
 /* ----------------------------------------------------------------------- */
 
+static void expression_free_token(expression_token *token) {
+}
+
+static expression_token *expression_create_token(expression_token_type type, char *str, int length) {
+	return 0;
+}
+
+expression_token* expresion_tokenize(const char *exp) {
+	return 0;
+}
+
+void expression_free_tokens(expression_token *tokens[]) {
+}
+
+expression* expression_parse_tokens(expression_token *tokens[]) {
+	return 0;
+}
+
 expression *token_parser(char *tokens[], int current) {
 	char c = tokens[current][0];
 	expression *lhs=0, *rhs=0;
