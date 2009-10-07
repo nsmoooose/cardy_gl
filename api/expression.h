@@ -35,7 +35,8 @@ typedef enum {
 	e_type_leftp = 1 << 5,
 	e_type_rightp = 1 << 6,
 
-	e_type_var = 1 << 7
+	e_type_var = 1 << 7,
+	e_type_const = 1 << 8
 } expression_token_type;
 
 typedef struct {
@@ -43,9 +44,12 @@ typedef struct {
 	char content[100];
 } expression_token;
 
-expression_token* expresion_tokenize(const char *exp);
+void expression_free_token(expression_token *token);
+expression_token *expression_create_token(expression_token_type type, const char *str, int length);
+expression_token** expression_tokenize(const char *exp);
 void expression_free_tokens(expression_token *tokens[]);
 expression* expression_parse_tokens(expression_token *tokens[]);
+int expression_token_count(expression_token *tokens[]);
 
 expression *expression_parse(const char *exp);
 

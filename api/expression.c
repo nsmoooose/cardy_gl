@@ -163,18 +163,133 @@ expression *expression_add(expression *e1, expression *e2) {
 
 /* ----------------------------------------------------------------------- */
 
-static void expression_free_token(expression_token *token) {
+void expression_free_token(expression_token *token) {
+	free(token);
 }
 
-static expression_token *expression_create_token(expression_token_type type, char *str, int length) {
+expression_token *expression_create_token(expression_token_type type, const char *str, int length) {
+	expression_token *token = 0;
+	if(length >= 100) {
+		return 0;
+	}
+
+	token = calloc(1, sizeof(expression_token));
+	token->type = type;
+	strncpy(token->content, str, length);
+	token->content[length] = 0;
+	return token;
+}
+
+expression_token** expression_tokenize(const char *exp) {
+	expression_token *tokens[1000], **tokens_to_return;
+	int token=0, i,j, len = strlen(exp);
+	char c;
+
+	memset(tokens, 0, 1000 * sizeof(expression_token*));
+
+	if(len == 0) {
+		return 0;
+	}
+
+	/* Special considerations:
+	 * Remove all whitespace.
+	 * Count number of paranthesis and mismatching of them.
+	 */
+
+	for(i=0;i<len;++i) {
+		c = exp[i];
+		if(!(c == '*' || c == '/' || c == '-' || c == '+' ||
+		   ((c >= '0' && c <= '9') || c == '.') ||
+			((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))) {
+			return 0;
+		}
+	}
+
+	for(i=0;i<len;) {
+		if(token >= 1000) {
+			fprintf(stderr, "Too many tokens in expression.\n");
+			goto error;
+		}
+
+		c = exp[i];
+		if(c == '*' || c == '/' || c == '-' || c == '+') {
+			switch(c) {
+			case '*':
+				tokens[token] = expression_create_token(e_type_op|e_type_mul, 0, 0);
+				break;
+			case '/':
+				tokens[token] = expression_create_token(e_type_op|e_type_div, 0, 0);
+				break;
+			case '+':
+				tokens[token] = expression_create_token(e_type_op|e_type_add, 0, 0);
+				break;
+			case '-':
+				tokens[token] = expression_create_token(e_type_op|e_type_sub, 0, 0);
+				break;
+			default:
+				goto error;
+			}
+			token++;
+			i++;
+		}
+		else if((c >= '0' && c <= '9') || c == '.') {
+			for(j=i+1;j<len;++j) {
+				c = exp[j];
+				if(!((c >= '0' && c <= '9') || c == '.')) {
+					break;
+				}
+			}
+			tokens[token] = expression_create_token(e_type_const, &exp[i], j-i);
+			token++;
+			i += (j-i);
+		}
+		else if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+			for(j=i+1;j<len;++j) {
+				c = exp[j];
+				if(!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) {
+					break;
+				}
+			}
+			tokens[token] = expression_create_token(e_type_var, &exp[i], j-i);
+			token++;
+			token++;
+			i += (j-i);
+		}
+		else {
+			goto error;
+		}
+	}
+
+	tokens_to_return = calloc(token+1, sizeof(expression_token*));
+	memcpy(tokens_to_return, tokens, sizeof(expression_token*) * token);
+	return tokens_to_return;
+
+error:
+	token = 0;
+	for(token=0;tokens[token];++token) {
+		expression_free_token(tokens[token]);
+	}
 	return 0;
 }
 
-expression_token* expresion_tokenize(const char *exp) {
-	return 0;
+int expression_token_count(expression_token *tokens[]) {
+	int count = 0;
+	for(;;) {
+		if(tokens[count]) {
+			count++;
+		}
+		else {
+			return count;
+		}
+	}
 }
 
 void expression_free_tokens(expression_token *tokens[]) {
+	int index, count = expression_token_count(tokens);
+	for(index=0, index<count;++index) {
+		expression_free_token(tokens[index]);
+	}
+	free(tokens);
 }
 
 expression* expression_parse_tokens(expression_token *tokens[]) {

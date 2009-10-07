@@ -78,6 +78,32 @@ START_TEST(test_expression_context_set) {
 }
 END_TEST
 
+START_TEST(test_expression_create_token) {
+	expression_token *token = expression_create_token(e_type_var, "abcdefg*123", 7);
+
+	ck_assert(token->type == e_type_var);
+	ck_assert(strcmp(token->content, "abcdefg") == 0);
+}
+END_TEST
+
+START_TEST(test_expression_tokenize) {
+	expression_token **tokens = expression_tokenize("3+4");
+
+	ck_assert(tokens != 0);
+	ck_assert(expression_token_count(tokens));
+
+	ck_assert(tokens[0] != 0);
+	ck_assert(tokens[0]->type == e_type_const);
+	ck_assert(strcmp(tokens[0]->content, "3") == 0);
+
+	ck_assert(tokens[1] != 0);
+	ck_assert(tokens[1]->type == (e_type_op|e_type_add));
+
+	ck_assert(tokens[2] != 0);
+	ck_assert(strcmp(tokens[2]->content, "4") == 0);
+}
+END_TEST
+
 START_TEST(test_expression_parse) {
 	expression_context *ec = expression_context_create();
 	expression *e = expression_parse("3.0");
@@ -149,6 +175,8 @@ void add_expression_tests(Suite *suite) {
 	tcase_add_test(c, test_expression_add);
 	tcase_add_test(c, test_expression_var);
 	tcase_add_test(c, test_expression_context_set);
+	tcase_add_test(c, test_expression_create_token);
+	tcase_add_test(c, test_expression_tokenize);
 	tcase_add_test(c, test_expression_parse);
 	tcase_add_test(c, test_expression_parse2);
 	tcase_add_test(c, test_expression_parse3);
