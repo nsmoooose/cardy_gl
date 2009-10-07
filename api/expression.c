@@ -252,7 +252,6 @@ expression_token** expression_tokenize(const char *exp) {
 			}
 			tokens[token] = expression_create_token(e_type_var, &exp[i], j-i);
 			token++;
-			token++;
 			i += (j-i);
 		}
 		else {
@@ -286,7 +285,7 @@ int expression_token_count(expression_token *tokens[]) {
 
 void expression_free_tokens(expression_token *tokens[]) {
 	int index, count = expression_token_count(tokens);
-	for(index=0, index<count;++index) {
+	for(index=0;index<count;++index) {
 		expression_free_token(tokens[index]);
 	}
 	free(tokens);
@@ -296,62 +295,60 @@ expression* expression_parse_tokens(expression_token *tokens[]) {
 	return 0;
 }
 
-expression *token_parser(char *tokens[], int current) {
-	char c = tokens[current][0];
+expression *token_parser(expression_token *tokens[], int current) {
 	expression *lhs=0, *rhs=0;
+	int token_count = expression_token_count(tokens);
 
 	/* Left hand side. */
-	if(c>='0' && c <= '9') {
-		lhs = expression_const(atof(tokens[current]));
+	if(tokens[current]->type == e_type_const) {
+		lhs = expression_const(atof(tokens[current]->content));
 	}
-	else if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
-		lhs = expression_var(tokens[current]);
+	else if(tokens[current]->type == e_type_var) {
+		lhs = expression_var(tokens[current]->content);
 	}
 	else {
-		fprintf(stderr, "Unexpected token: %s\n", tokens[current]);
+		fprintf(stderr, "Unexpected token (type): %d\n", tokens[current]->type);
 		return 0;
 	}
-	if(tokens[current+1] == 0) {
+	if(current == token_count - 1) {
 		return lhs;
 	}
 
 	/* Right hand side */
 	current += 2;
-	if(tokens[current] == 0) {
+	if(current >= token_count) {
 		fprintf(stderr, "No RHS token.");
 		expression_free(lhs);
 		return 0;
 	}
-	c = tokens[current][0];
-	if(c>='0' && c <= '9') {
-		rhs = expression_const(atof(tokens[current]));
+	if(tokens[current]->type == e_type_const) {
+		rhs = expression_const(atof(tokens[current]->content));
 	}
-	else if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
-		rhs = expression_var(tokens[current]);
+	else if(tokens[current]->type == e_type_var) {
+		rhs = expression_var(tokens[current]->content);
 	}
 	else {
-		fprintf(stderr, "Unexpected operation: %c\n", c);
+		fprintf(stderr, "Unexpected operation (type): %d\n", tokens[current]->type);
 		expression_free(lhs);
 		return 0;
 	}
 
 	/* Operation */
 	current--;
-	c = tokens[current][0];
-	if(c == '+') {
+	if(tokens[current]->type & e_type_add) {
 		return expression_add(lhs, rhs);
 	}
-	else if(c == '-') {
+	else if(tokens[current]->type & e_type_sub) {
 		return expression_sub(lhs, rhs);
 	}
-	else if(c == '*') {
+	else if(tokens[current]->type & e_type_mul) {
 		return expression_mult(lhs, rhs);
 	}
-	else if(c == '/') {
+	else if(tokens[current]->type & e_type_div) {
 		return expression_div(lhs, rhs);
 	}
 	else {
-		fprintf(stderr, "Unexpected token: %s\n", tokens[current]);
+		fprintf(stderr, "Unexpected token (type): %d\n", tokens[current]->type);
 		expression_free(lhs);
 		expression_free(rhs);
 		return 0;
@@ -359,79 +356,11 @@ expression *token_parser(char *tokens[], int current) {
 }
 
 expression *expression_parse(const char *exp) {
-	char *tokens[1000];
-	int token=0, i,j, len = strlen(exp);
-	char c;
 	expression *e = 0;
-
-	memset(tokens, 0, 1000 * sizeof(char*));
-
-	if(len == 0) {
-		return 0;
-	}
-
-	/* Special considerations:
-	 * Remove all whitespace.
-	 * Count number of paranthesis and mismatching of them.
-	 */
-
-	for(i=0;i<len;++i) {
-		c = exp[i];
-		if(!(c == '*' || c == '/' || c == '-' || c == '+' ||
-		   ((c >= '0' && c <= '9') || c == '.') ||
-			((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))) {
-			return 0;
-		}
-	}
-
-	for(i=0;i<len;) {
-		if(token >= 1000) {
-			fprintf(stderr, "Too many tokens in expression.\n");
-			goto cleanup;
-		}
-
-		c = exp[i];
-		if(c == '*' || c == '/' || c == '-' || c == '+') {
-			tokens[token] = calloc(2, sizeof(char));
-			tokens[token][0] = c;
-			tokens[token][1] = 0;
-			token++;
-			i++;
-		}
-		else if((c >= '0' && c <= '9') || c == '.') {
-			for(j=i+1;j<len;++j) {
-				c = exp[j];
-				if(!((c >= '0' && c <= '9') || c == '.')) {
-					break;
-				}
-			}
-			tokens[token] = calloc(1, j-i + 1);
-			strncpy(tokens[token], &exp[i], j-i);
-			token++;
-			i += (j-i);
-		}
-		else if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
-			for(j=i+1;j<len;++j) {
-				c = exp[j];
-				if(!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) {
-					break;
-				}
-			}
-			tokens[token] = calloc(1, j-i + 1);
-			strncpy(tokens[token], &exp[i], j-i);
-			token++;
-			i += (j-i);
-		}
-		else {
-			goto cleanup;
-		}
-	}
-
-	e = token_parser(tokens, 0);
-
-cleanup:
-	for(i=0;i<token;++i) {
-		free(tokens[i]);
+	expression_token **tokens = expression_tokenize(exp);
+	if(tokens) {
+		e = token_parser(tokens, 0);
+		expression_free_tokens(tokens);
 	}
 	return e;
 }

@@ -90,7 +90,7 @@ START_TEST(test_expression_tokenize) {
 	expression_token **tokens = expression_tokenize("3+4");
 
 	ck_assert(tokens != 0);
-	ck_assert(expression_token_count(tokens));
+	ck_assert(expression_token_count(tokens) == 3);
 
 	ck_assert(tokens[0] != 0);
 	ck_assert(tokens[0]->type == e_type_const);
@@ -100,6 +100,24 @@ START_TEST(test_expression_tokenize) {
 	ck_assert(tokens[1]->type == (e_type_op|e_type_add));
 
 	ck_assert(tokens[2] != 0);
+	ck_assert(strcmp(tokens[2]->content, "4") == 0);
+
+	tokens = expression_tokenize("3.0");
+	ck_assert(expression_token_count(tokens) == 1);
+	ck_assert(tokens[0]->type == e_type_const);
+
+	tokens = expression_tokenize("apa");
+	ck_assert(expression_token_count(tokens) == 1);
+	ck_assert(tokens[0]->type == e_type_var);
+	ck_assert(strcmp(tokens[0]->content, "apa") == 0);
+
+
+	tokens = expression_tokenize("width*4");
+	ck_assert(expression_token_count(tokens) == 3);
+	ck_assert(tokens[0]->type == e_type_var);
+	ck_assert(strcmp(tokens[0]->content, "width") == 0);
+	ck_assert(tokens[1]->type == (e_type_op|e_type_mul));
+	ck_assert(tokens[2]->type == e_type_const);
 	ck_assert(strcmp(tokens[2]->content, "4") == 0);
 }
 END_TEST
