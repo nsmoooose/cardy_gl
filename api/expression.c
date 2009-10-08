@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "expression.h"
+#include "types.h"
 
 struct expression_context_St {
 	GHashTable *expressions;
@@ -295,57 +296,78 @@ expression* expression_parse_tokens(expression_token *tokens[]) {
 	return 0;
 }
 
-expression *token_parser(expression_token *tokens[], int current) {
-	expression *lhs=0, *rhs=0;
+expression *token_parser(expression_token *tokens[], int current, expression *lhs_in) {
+	expression *lhs=0, *rhs=0, *op=0;
 	int token_count = expression_token_count(tokens);
+	bool look_further=true;
 
 	/* Left hand side. */
-	if(tokens[current]->type == e_type_const) {
-		lhs = expression_const(atof(tokens[current]->content));
-	}
-	else if(tokens[current]->type == e_type_var) {
-		lhs = expression_var(tokens[current]->content);
+	if(lhs_in) {
+		lhs = lhs_in;
 	}
 	else {
-		fprintf(stderr, "Unexpected token (type): %d\n", tokens[current]->type);
-		return 0;
-	}
-	if(current == token_count - 1) {
-		return lhs;
+		if(tokens[current]->type == e_type_const) {
+			lhs = expression_const(atof(tokens[current]->content));
+		}
+		else if(tokens[current]->type == e_type_var) {
+			lhs = expression_var(tokens[current]->content);
+		}
+		else {
+			fprintf(stderr, "Unexpected token (type): %d\n", tokens[current]->type);
+			return 0;
+		}
+		if(current == token_count - 1) {
+			return lhs;
+		}
+		current++;
 	}
 
-	/* Right hand side */
-	current += 2;
-	if(current >= token_count) {
-		fprintf(stderr, "No RHS token.");
-		expression_free(lhs);
-		return 0;
-	}
-	if(tokens[current]->type == e_type_const) {
-		rhs = expression_const(atof(tokens[current]->content));
-	}
-	else if(tokens[current]->type == e_type_var) {
-		rhs = expression_var(tokens[current]->content);
+	/* Check if next operation has priority over this one. */
+	if((tokens[current]->type & e_type_add || tokens[current]->type & e_type_sub) &&
+	   current + 2 < token_count &&
+	   (tokens[current+2]->type & e_type_mul || tokens[current+2]->type & e_type_div)) {
+
+		printf("Found a prioritized token\n");
+		look_further = false;
+		rhs = token_parser(tokens, current + 1, 0);
+		if(!rhs) {
+			expression_free(lhs);
+			return 0;
+		}
 	}
 	else {
-		fprintf(stderr, "Unexpected operation (type): %d\n", tokens[current]->type);
-		expression_free(lhs);
-		return 0;
+		current++;
+		if(current >= token_count) {
+			fprintf(stderr, "No RHS token.");
+			expression_free(lhs);
+			return 0;
+		}
+		if(tokens[current]->type == e_type_const) {
+			rhs = expression_const(atof(tokens[current]->content));
+		}
+		else if(tokens[current]->type == e_type_var) {
+			rhs = expression_var(tokens[current]->content);
+		}
+		else {
+			fprintf(stderr, "Unexpected operation (type): %d\n", tokens[current]->type);
+			expression_free(lhs);
+			return 0;
+		}
+		current--;
 	}
 
 	/* Operation */
-	current--;
 	if(tokens[current]->type & e_type_add) {
-		return expression_add(lhs, rhs);
+		op = expression_add(lhs, rhs);
 	}
 	else if(tokens[current]->type & e_type_sub) {
-		return expression_sub(lhs, rhs);
+		op = expression_sub(lhs, rhs);
 	}
 	else if(tokens[current]->type & e_type_mul) {
-		return expression_mult(lhs, rhs);
+		op = expression_mult(lhs, rhs);
 	}
 	else if(tokens[current]->type & e_type_div) {
-		return expression_div(lhs, rhs);
+		op = expression_div(lhs, rhs);
 	}
 	else {
 		fprintf(stderr, "Unexpected token (type): %d\n", tokens[current]->type);
@@ -353,13 +375,28 @@ expression *token_parser(expression_token *tokens[], int current) {
 		expression_free(rhs);
 		return 0;
 	}
+
+	/* Set current to the next operation */
+	if(look_further) {
+		current+=2;
+		if(current < token_count ) {
+			/* The above expression has priority. It is the lhs of the next expression. */
+			expression *sub = token_parser(tokens, current, op);
+			if(!sub) {
+				expression_free(op);
+			}
+			op = sub;
+		}
+	}
+	return op;
 }
 
 expression *expression_parse(const char *exp) {
 	expression *e = 0;
+	printf("exp: %s\n", exp);
 	expression_token **tokens = expression_tokenize(exp);
 	if(tokens) {
-		e = token_parser(tokens, 0);
+		e = token_parser(tokens, 0, 0);
 		expression_free_tokens(tokens);
 	}
 	return e;

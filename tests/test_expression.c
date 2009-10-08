@@ -119,6 +119,9 @@ START_TEST(test_expression_tokenize) {
 	ck_assert(tokens[1]->type == (e_type_op|e_type_mul));
 	ck_assert(tokens[2]->type == e_type_const);
 	ck_assert(strcmp(tokens[2]->content, "4") == 0);
+
+	tokens = expression_tokenize("3+3*4");
+	ck_assert(expression_token_count(tokens) == 5);
 }
 END_TEST
 
@@ -126,15 +129,19 @@ START_TEST(test_expression_parse) {
 	expression_context *ec = expression_context_create();
 	expression *e = expression_parse("3.0");
 
+	mark_point();
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 3.0f);
 
+	mark_point();
 	e = expression_parse("3+4");
 	ck_assert(expression_execute(ec, e) == 7.0f);
 
+	mark_point();
 	e = expression_parse("3-4");
 	ck_assert(expression_execute(ec, e) == -1.0f);
 
+	mark_point();
 	e = expression_parse("3*4");
 	ck_assert(expression_execute(ec, e) == 12.0f);
 
@@ -143,7 +150,7 @@ START_TEST(test_expression_parse) {
 }
 END_TEST
 
-START_TEST(test_expression_parse2) {
+START_TEST(test_expression_parse_var) {
 	expression_context *ec = expression_context_create();
 	expression *e;
 
@@ -152,6 +159,26 @@ START_TEST(test_expression_parse2) {
 	e = expression_parse("width*4");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 12.0f);
+}
+END_TEST
+
+START_TEST(test_expression_parse_prio1) {
+	expression_context *ec = expression_context_create();
+	expression *e;
+
+	e = expression_parse("3+3+4");
+	ck_assert(e != 0);
+	ck_assert(expression_execute(ec, e) == 10.0f);
+
+	e = expression_parse("3+3-2");
+	ck_assert(e != 0);
+	ck_assert(expression_execute(ec, e) == 4.0f);
+}
+END_TEST
+
+START_TEST(test_expression_parse_prio2) {
+	expression_context *ec = expression_context_create();
+	expression *e;
 
 	e = expression_parse("3+3*4");
 	ck_assert(e != 0);
@@ -161,9 +188,9 @@ START_TEST(test_expression_parse2) {
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 3.75f);
 
-	e = expression_parse("3+3-2");
+	e = expression_parse("3*3*9");
 	ck_assert(e != 0);
-	ck_assert(expression_execute(ec, e) == 4.0f);
+	ck_assert(expression_execute(ec, e) == 81.0f);
 }
 END_TEST
 
@@ -196,7 +223,9 @@ void add_expression_tests(Suite *suite) {
 	tcase_add_test(c, test_expression_create_token);
 	tcase_add_test(c, test_expression_tokenize);
 	tcase_add_test(c, test_expression_parse);
-	tcase_add_test(c, test_expression_parse2);
+	tcase_add_test(c, test_expression_parse_var);
+	tcase_add_test(c, test_expression_parse_prio1);
+	tcase_add_test(c, test_expression_parse_prio2);
 	tcase_add_test(c, test_expression_parse3);
 	tcase_add_test(c, test_expression_parse_invalid_chars);
 	suite_add_tcase(suite, c);
