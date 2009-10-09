@@ -333,7 +333,6 @@ expression *token_parser(expression_token *tokens[], int current, expression *lh
 	   current + 2 < token_count &&
 	   (tokens[current+2]->type & e_type_mul || tokens[current+2]->type & e_type_div)) {
 
-		printf("Found a prioritized token\n");
 		look_further = false;
 		rhs = token_parser(tokens, current + 1, 0);
 		if(!rhs) {

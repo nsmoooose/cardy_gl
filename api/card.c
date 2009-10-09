@@ -209,19 +209,18 @@ void card_hide_all(pile *pile) {
 
 void card_shuffle(pile *pile) {
 	card *tmp;
-	int i1, i2, i = 0, count = card_count(pile);
+	int i1, i = 0, count = card_count(pile);
 	if(count == 0) {
 		return;
 	}
 
 	srand(time(0));
 
-	for(i=0;i<count*4;++i) {
+	for(i=0;i<count;++i) {
 		i1 = rand() % count;
-		i2 = rand() % count;
-		tmp = pile->cards[i1];
-		pile->cards[i1] = pile->cards[i2];
-		pile->cards[i2] = tmp;
+		tmp = pile->cards[i];
+		pile->cards[i] = pile->cards[i1];
+		pile->cards[i1] = tmp;
 	}
 }
 
