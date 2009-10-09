@@ -29,7 +29,7 @@ expression_context *widget_style_get_expression_context(widget_style *style) {
 static float widget_get_style_value(widget_style *style, const char *key, float def) {
 	expression *exp = expression_context_get(style->ec, key);
 	if(exp) {
-		return expression_execute(0, exp);
+		return expression_execute(style->ec, exp);
 	}
 	return def;
 }
@@ -51,6 +51,14 @@ void widget_style_set_pos(widget_style *style, float left, float top) {
 	expression *top_exp = expression_const(top);
 	expression_context_set(style->ec, style_key_left, left_exp);
 	expression_context_set(style->ec, style_key_top, top_exp);
+}
+
+void widget_style_set_left(widget_style *style, const char *expr) {
+	expression_context_set(style->ec, style_key_left, expression_parse(expr));
+}
+
+void widget_style_set_top(widget_style *style, const char *expr) {
+	expression_context_set(style->ec, style_key_top, expression_parse(expr));
 }
 
 expression *widget_style_get_top_expression(widget_style *style) {

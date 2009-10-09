@@ -49,7 +49,8 @@ void render_object_mainmenu(render_object *parent) {
 
 	window = widget_generic(render_object_mainmenu_id);
 	style = widget_get_default_style(window);
-	widget_style_set_pos(style, 100.0f, 100.0f);
+	widget_style_set_left(style, "viewport_width/2-width/2");
+	widget_style_set_top(style, "viewport_height/2-height/2");
 	widget_style_set_size(style, 500.0f, 412.0f);
 	widget_style_set_image(style, h, "#mainmenu", 512, 512);
 	render_object_add_child(parent, window);

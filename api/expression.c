@@ -199,9 +199,15 @@ expression_token** expression_tokenize(const char *exp) {
 
 	for(i=0;i<len;++i) {
 		c = exp[i];
-		if(!(c == '*' || c == '/' || c == '-' || c == '+' ||
-		   ((c >= '0' && c <= '9') || c == '.') ||
-			((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')))) {
+		if(!(
+			   c == '*' || c == '/' ||
+			   c == '-' || c == '+' ||
+			   (c >= '0' && c <= '9') || c == '.' ||
+			   (c >= 'a' && c <= 'z') ||
+			   (c >= 'A' && c <= 'Z') ||
+			   c == '_')
+			)
+		{
 			return 0;
 		}
 	}
@@ -244,10 +250,10 @@ expression_token** expression_tokenize(const char *exp) {
 			token++;
 			i += (j-i);
 		}
-		else if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+		else if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
 			for(j=i+1;j<len;++j) {
 				c = exp[j];
-				if(!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) {
+				if(!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_')) {
 					break;
 				}
 			}
@@ -393,7 +399,6 @@ expression *token_parser(expression_token *tokens[], int current, expression *lh
 
 expression *expression_parse(const char *exp) {
 	expression *e = 0;
-	printf("exp: %s\n", exp);
 	expression_token **tokens = expression_tokenize(exp);
 	if(tokens) {
 		e = token_parser(tokens, 0, 0);

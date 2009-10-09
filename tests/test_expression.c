@@ -154,11 +154,15 @@ START_TEST(test_expression_parse_var) {
 	expression_context *ec = expression_context_create();
 	expression *e;
 
-	expression_context_set(ec, "width", expression_const(3.0));
-
+	expression_context_set(ec, "width", expression_const(3.0f));
 	e = expression_parse("width*4");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 12.0f);
+
+	expression_context_set(ec, "width_apa", expression_const(3.0f));
+	e = expression_parse("width_apa*2");
+	ck_assert(e != 0);
+	ck_assert(expression_execute(ec, e) == 6.0f);
 }
 END_TEST
 
