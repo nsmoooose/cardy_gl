@@ -4,6 +4,7 @@
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "../api/ease.h"
 #include "../api/image.h"
 #include "../api/mygl.h"
 #include "../api/theme.h"
@@ -15,6 +16,9 @@ typedef struct {
 	mem_context *context;
 	solitaire *sol;
 	visual_settings *settings;
+
+	float first_frame;
+	float time_elapsed;
 } render_solitaire_data;
 
 theme *g_theme = 0;
@@ -231,6 +235,12 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 	GLfloat aspect;
 	render_pick *pick;
 
+	if(i->first_frame == 0.0f) {
+		i->first_frame = delta;
+		i->time_elapsed = delta;
+		return;
+	}
+
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	if(viewport[3] == 0) {
 		viewport[3] = 1;
@@ -255,6 +265,14 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 	glLoadIdentity();
 	glTranslatef(g_camera_translateX, g_camera_translateY, g_camera_zoom);
 
+	if(i->time_elapsed < 6.0) {
+		float distance =
+			ease_quint_out(i->time_elapsed, -2500.0f, 2500.0f, 6.0f);
+		float angle = ease_quint_out(i->time_elapsed, 720.0, -720.0f, 6.0f);
+		glTranslatef(0, 0, distance);
+		glRotatef(angle, 0.0f, 0.0f, 1.0f);
+	}
+
 	pile_count = i->sol->visual->pile_count;
 	for(pile_index=0;pile_index<pile_count;++pile_index) {
 		visual_pile* pile = i->sol->visual->piles[pile_index];
@@ -265,6 +283,8 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 	}
 	glDisable(GL_DEPTH_TEST);
 	glPopMatrix();
+
+	i->time_elapsed += delta;
 }
 
 static bool render_object_solitaire_keyboard_down(

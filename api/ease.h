@@ -5,7 +5,7 @@
    Ease between values....
    t = Current time.
    b = From
-   c = To
+   c = Change
    d = Total time the animation should take.
 
    This is a good reference page:
