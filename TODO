@@ -21,38 +21,43 @@ How to transition between different states?
 
 
 
-/* Simple expression that always returns the same value. */
-expression* width = expression_const(400);
-expression* height = expression_const(400);
-style_set_size(style, width, height);
+expression variables common to all widgets (rendering object as well?):
+* widget_first_frame     Time when widget was first rendered.
+* widget_frame           Total time this widget has been loaded.
 
-/* (viewport_width / 2) - (width / 2) */
-expression* left =
-	expression_subtract(
-		expression_division(expression_variable("viewport_width"), expression_const(2)),
-		expression_division(width, expression_const(2)));
+expression functions:
+* sin, cos
+* ease_xxx_yy
 
-expression *left = expression_parse("(viewport_width/2)-(width/2)");
-style_set_left(style, left);
-
-
-
-
-
+typedef enum {
+		e_entering_state,
+		e_continuous_state,
+		e_leaving_state
+} widget_operation;
 
 typedef struct {
-	hashtable variables;
-	hashtable functions;
-} expression_context;
+		const char *name;
+		widget_operation_state state;
+} widget_state;
 
-typedef struct {
-} expression;
+/* Enqueu a state change. */
+void widget_add_state(render_object *widget, const char *state);
 
-float expression_execute(expression_context *context, expression *exp);
+/* Set the leaving state operation for a widget. */
+void widget_remove_state(render_object *widget, const char *state);
 
-void expression_context_add_variable(const char *key, float value);
-void expression_context_remove_variable(const char *key);
-expression *expression_parse(const char *exp);
+
+
+void widget_style_set_left(widget_style *style, const char *state, widget_operation op, float length, expression *exp);
+widget_style_set_left(style, "", e_entering, 3, expression_parse("sin(viewport_width)*4"));
+
+
+transition *t = widget_transition_create("hover");
+widget_transition_set_status(t, e_entering);
+widget_transition_set_length(t, 3.0f);
+widget_transition_set_expression(t, expression_parse(""));
+widget_style_add_transition("backcolor_red", t);
+
 
 /*
    Containers:

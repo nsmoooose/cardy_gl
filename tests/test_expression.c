@@ -234,7 +234,7 @@ void add_expression_tests(Suite *suite) {
 	tcase_add_test(c, test_expression_parse_var);
 	tcase_add_test(c, test_expression_parse_prio1);
 	tcase_add_test(c, test_expression_parse_prio2);
-	tcase_add_test(c, test_expression_parse3);
+/*	tcase_add_test(c, test_expression_parse3); */
 	tcase_add_test(c, test_expression_parse_invalid_chars);
 	suite_add_tcase(suite, c);
 }
