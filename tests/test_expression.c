@@ -195,6 +195,10 @@ START_TEST(test_expression_parse_prio2) {
 	e = expression_parse("3*3*9");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 81.0f);
+
+	e = expression_parse("3*3+4*4");
+	ck_assert(e != 0);
+	ck_assert(expression_execute(ec, e) == 25.0f);
 }
 END_TEST
 
