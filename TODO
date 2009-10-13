@@ -20,14 +20,20 @@ How to transition between different states?
 -- Events called after the main loop rendering.
 
 
+/* *********************************************************************************** */
 
 expression variables common to all widgets (rendering object as well?):
-* widget_first_frame     Time when widget was first rendered.
-* widget_frame           Total time this widget has been loaded.
+* first_frame
+* total_time        Total time this object has been alive.
+                    This should be a variable in the render_object structure.
+					We can then create a special expression that has a pointer to
+					this one.
 
 expression functions:
 * sin, cos
 * ease_xxx_yy
+
+/* *********************************************************************************** */
 
 typedef enum {
 		e_entering_state,
@@ -35,29 +41,25 @@ typedef enum {
 		e_leaving_state
 } widget_operation;
 
-typedef struct {
-		const char *name;
-		widget_operation_state state;
-} widget_state;
-
 /* Enqueu a state change. */
 void widget_add_state(render_object *widget, const char *state);
 
 /* Set the leaving state operation for a widget. */
 void widget_remove_state(render_object *widget, const char *state);
 
+/* Returns true if the widget or any subwidget has the state active in any transition. */
+bool widget_state_active(render_object *widget, const char *state);
 
+typedef struct {
+		widget_operation op;
+		float length;
+		expression *exp;
+} transition;
 
-void widget_style_set_left(widget_style *style, const char *state, widget_operation op, float length, expression *exp);
-widget_style_set_left(style, "", e_entering, 3, expression_parse("sin(viewport_width)*4"));
+transition *t = widget_transition_create(e_entering_state, 3.0f, expression_parse(""));
+widget_style_add_transition(style, "hover", "backcolor_red", t);
 
-
-transition *t = widget_transition_create("hover");
-widget_transition_set_status(t, e_entering);
-widget_transition_set_length(t, 3.0f);
-widget_transition_set_expression(t, expression_parse(""));
-widget_style_add_transition("backcolor_red", t);
-
+/* *********************************************************************************** */
 
 /*
    Containers:
@@ -79,7 +81,7 @@ widget_style_add_transition("backcolor_red", t);
    around the calls we are using.
 */
 
-
+/* *********************************************************************************** */
 
 /*
    Ease between values....
