@@ -17,6 +17,26 @@ typedef struct {
 	widget_style* style;
 } widget_data;
 
+void widget_add_state(render_object *widget, const char *state) {
+}
+
+void widget_remove_state(render_object *widget, const char *state) {
+}
+
+bool widget_state_active(render_object *widget, const char *state) {
+	return false;
+}
+
+widget_style_transition *widget_transition_create(
+	widget_transition_state state, float length, expression *exp) {
+	return 0;
+}
+
+void widget_style_add_transition(
+	widget_style *style, const char *state,
+	const char *property, widget_style_transition *t) {
+}
+
 widget_style *widget_get_default_style(render_object *object) {
 	widget_data *d = object->data;
 	return d->style;
