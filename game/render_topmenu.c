@@ -28,6 +28,7 @@ void render_object_topmenu(render_object *parent) {
 	style = widget_get_default_style(window);
 	widget_style_set_backcolor(style, 1.0f, 1.0f, 1.0f, 1.0f);
 	widget_style_set_pos(style, 0.0f, 0.0f);
+	widget_style_set_left(style, "viewport_width-208");
 	widget_style_set_size(style, 64.0f * 3 + 4 * 4.0f, 72.0f);
 	render_object_add_child(parent, window);
 
