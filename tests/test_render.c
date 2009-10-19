@@ -252,6 +252,21 @@ START_TEST(test_render_process_keyboard_special_up) {
 }
 END_TEST
 
+START_TEST(test_render_time) {
+	render_context *rc = render_context_create();
+	render_object *ro = render_object_create(0);
+
+	render_scene_object(rc, ro, 1.0f);
+	ck_assert(ro->render_time == 0.0f);
+
+	render_scene_object(rc, ro, 2.0f);
+	ck_assert(ro->render_time == 2.0f);
+
+	render_scene_object(rc, ro, 3.0f);
+	ck_assert(ro->render_time == 5.0f);
+}
+END_TEST
+
 void add_render_tests(Suite *suite) {
 	TCase *c = tcase_create("Render");
 	tcase_add_test(c, test_render_context_create);
@@ -264,5 +279,6 @@ void add_render_tests(Suite *suite) {
 	tcase_add_test(c, test_render_process_keyboard_up);
 	tcase_add_test(c, test_render_process_keyboard_special_down);
 	tcase_add_test(c, test_render_process_keyboard_special_up);
+	tcase_add_test(c, test_render_time);
 	suite_add_tcase(suite, c);
 }

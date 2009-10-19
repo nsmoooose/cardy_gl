@@ -144,6 +144,13 @@ void render_scene_object(
 	if(object->post_render) {
 		object->post_render(&event, delta);
 	}
+
+	if(object->first_frame_rendered) {
+		object->render_time += delta;
+	}
+	else {
+		object->first_frame_rendered = true;
+	}
 }
 
 void render_scene_context(render_context *rcontext) {
