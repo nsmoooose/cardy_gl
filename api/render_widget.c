@@ -129,6 +129,9 @@ static render_object *widget_create(const char *id) {
 	d->style->ec = expression_context_create();
 	o->data = d;
 	o->free = widget_free;
+
+	expression_context_set(
+		d->style->ec, style_key_render_time, expression_pointer(&o->render_time));
 	return o;
 }
 

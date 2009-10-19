@@ -4,6 +4,7 @@
 #include "expression.h"
 #include "render.h"
 
+#define style_key_render_time "render_time"
 #define style_key_width "width"
 #define style_key_height "height"
 #define style_key_top "top"
