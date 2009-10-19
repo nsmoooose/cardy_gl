@@ -98,6 +98,26 @@ expression *expression_var(const char *name) {
 /* ----------------------------------------------------------------------- */
 
 typedef struct {
+	float *pointer;
+} expression_pointer_data;
+
+static float expression_pointer_execute(expression_context *ec, expression *e) {
+	expression_pointer_data *d = e->data;
+	return *d->pointer;
+}
+
+expression *expression_pointer(float *var) {
+	expression *e = calloc(1, sizeof(expression));
+	expression_pointer_data *d = calloc(1, sizeof(expression_pointer_data));
+	d->pointer = var;
+	e->data = d;
+	e->execute = expression_pointer_execute;
+	return e;
+}
+
+/* ----------------------------------------------------------------------- */
+
+typedef struct {
 	expression *e1, *e2;
 } expression_op_data;
 

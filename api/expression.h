@@ -19,6 +19,7 @@ void expression_free(expression *e);
 expression *expression_const(float value);
 
 expression *expression_var(const char *name);
+expression *expression_pointer(float *var);
 
 expression *expression_div(expression *e1, expression *e2);
 expression *expression_mult(expression *e1, expression *e2);

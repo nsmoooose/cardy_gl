@@ -66,6 +66,16 @@ START_TEST(test_expression_var) {
 }
 END_TEST
 
+START_TEST(test_expression_pointer) {
+	expression_context *ec = expression_context_create();
+	float var = 4.0f;
+	expression *e = expression_pointer(&var);
+
+	ck_assert(e != 0);
+	ck_assert(expression_execute(ec, e) == 4.0f);
+}
+END_TEST
+
 START_TEST(test_expression_context_set) {
 	expression *e1 = expression_const(3.0f);
 	expression *e2 = 0;
@@ -227,6 +237,7 @@ void add_expression_tests(Suite *suite) {
 	tcase_add_test(c, test_expression_sub);
 	tcase_add_test(c, test_expression_add);
 	tcase_add_test(c, test_expression_var);
+	tcase_add_test(c, test_expression_pointer);
 	tcase_add_test(c, test_expression_context_set);
 	tcase_add_test(c, test_expression_create_token);
 	tcase_add_test(c, test_expression_tokenize);
