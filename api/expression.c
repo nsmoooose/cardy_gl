@@ -253,8 +253,6 @@ expression_token** expression_tokenize(const char *exp) {
 			case '-':
 				tokens[token] = expression_create_token(e_type_op|e_type_sub, 0, 0);
 				break;
-			default:
-				goto error;
 			}
 			token++;
 			i++;

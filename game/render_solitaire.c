@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../api/ease.h"
-#include "../api/image.h"
 #include "../api/mygl.h"
 #include "../api/theme.h"
 #include "render_mainmenu.h"
@@ -88,7 +87,7 @@ static void process_click(
 			}
 		}
 	}
-	else {
+	else if(pile) {
 		if(g_selected_card) {
 			card_count = visual_get_rest_of_pile(
 				data->sol->visual, g_selected_card);
