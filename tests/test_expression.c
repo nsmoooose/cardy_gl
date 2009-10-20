@@ -1,4 +1,5 @@
 #include <check.h>
+#include <math.h>
 #include <stdlib.h>
 #include "../api/expression.h"
 
@@ -73,6 +74,18 @@ START_TEST(test_expression_pointer) {
 
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 4.0f);
+}
+END_TEST
+
+START_TEST(test_expression_function1f) {
+	expression_context *ec = expression_context_create();
+	expression *e = expression_function1f(sinf, expression_const(2.2f));
+
+	float f1 = expression_execute(ec, e);
+	float f2 = sinf(2.2f);
+
+	ck_assert(e != 0);
+	ck_assert(f1 == f2);
 }
 END_TEST
 
@@ -238,6 +251,7 @@ void add_expression_tests(Suite *suite) {
 	tcase_add_test(c, test_expression_add);
 	tcase_add_test(c, test_expression_var);
 	tcase_add_test(c, test_expression_pointer);
+	tcase_add_test(c, test_expression_function1f);
 	tcase_add_test(c, test_expression_context_set);
 	tcase_add_test(c, test_expression_create_token);
 	tcase_add_test(c, test_expression_tokenize);
