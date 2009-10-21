@@ -62,8 +62,9 @@ void mem_free(mem_context *context, void *mem) {
 	int index;
 	for(index=0;index<context->size;++index) {
 		if(context->blocks[index] == mem) {
-			free(mem);
 			context->blocks[index] = 0;
+			free(mem);
+			return;
 		}
 	}
 }

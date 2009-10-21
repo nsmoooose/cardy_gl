@@ -118,6 +118,28 @@ expression *expression_pointer(float *var) {
 /* ----------------------------------------------------------------------- */
 
 typedef struct {
+	float (*function)(float);
+	expression *e1;
+} expression_function1f_data;
+
+static float expression_function1f_execute(expression_context *ec, expression *e) {
+	expression_function1f_data *d = e->data;
+	return d->function(expression_execute(ec, d->e1));
+}
+
+expression *expression_function1f(float (*function)(float), expression *e1) {
+	expression *e = calloc(1, sizeof(expression));
+	expression_function1f_data *d = calloc(1, sizeof(expression_function1f_data));
+	d->function = function;
+	d->e1 = e1;
+	e->data = d;
+	e->execute = expression_function1f_execute;
+	return e;
+}
+
+/* ----------------------------------------------------------------------- */
+
+typedef struct {
 	expression *e1, *e2;
 } expression_op_data;
 
@@ -205,6 +227,7 @@ expression_token** expression_tokenize(const char *exp) {
 	expression_token *tokens[1000], **tokens_to_return;
 	int token=0, i,j, len = strlen(exp);
 	char c;
+	bool op_mode = false;
 
 	memset(tokens, 0, 1000 * sizeof(expression_token*));
 
@@ -220,6 +243,7 @@ expression_token** expression_tokenize(const char *exp) {
 	for(i=0;i<len;++i) {
 		c = exp[i];
 		if(!(
+			   c == '(' || c == ')' ||
 			   c == '*' || c == '/' ||
 			   c == '-' || c == '+' ||
 			   (c >= '0' && c <= '9') || c == '.' ||
@@ -239,50 +263,73 @@ expression_token** expression_tokenize(const char *exp) {
 		}
 
 		c = exp[i];
-		if(c == '*' || c == '/' || c == '-' || c == '+') {
-			switch(c) {
-			case '*':
-				tokens[token] = expression_create_token(e_type_op|e_type_mul, 0, 0);
-				break;
-			case '/':
-				tokens[token] = expression_create_token(e_type_op|e_type_div, 0, 0);
-				break;
-			case '+':
-				tokens[token] = expression_create_token(e_type_op|e_type_add, 0, 0);
-				break;
-			case '-':
-				tokens[token] = expression_create_token(e_type_op|e_type_sub, 0, 0);
-				break;
-			default:
-				goto error;
-			}
+
+		if(c == '(') {
+			tokens[token] = expression_create_token(e_type_leftp, 0, 0);
 			token++;
 			i++;
 		}
-		else if((c >= '0' && c <= '9') || c == '.') {
-			for(j=i+1;j<len;++j) {
-				c = exp[j];
-				if(!((c >= '0' && c <= '9') || c == '.')) {
-					break;
-				}
-			}
-			tokens[token] = expression_create_token(e_type_const, &exp[i], j-i);
+		else if(c == ')') {
+			tokens[token] = expression_create_token(e_type_rightp, 0, 0);
 			token++;
-			i += (j-i);
-		}
-		else if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
-			for(j=i+1;j<len;++j) {
-				c = exp[j];
-				if(!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_')) {
-					break;
-				}
-			}
-			tokens[token] = expression_create_token(e_type_var, &exp[i], j-i);
-			token++;
-			i += (j-i);
+			i++;
 		}
 		else {
-			goto error;
+			/* Operation mode means that we are looking for a multiplication, subtraction,
+			   addition or division. */
+			if(op_mode) {
+				if(c == '*' || c == '/' || c == '-' || c == '+') {
+					switch(c) {
+					case '*':
+						tokens[token] = expression_create_token(e_type_op|e_type_mul, 0, 0);
+						break;
+					case '/':
+						tokens[token] = expression_create_token(e_type_op|e_type_div, 0, 0);
+						break;
+					case '+':
+						tokens[token] = expression_create_token(e_type_op|e_type_add, 0, 0);
+						break;
+					case '-':
+						tokens[token] = expression_create_token(e_type_op|e_type_sub, 0, 0);
+						break;
+					}
+					token++;
+					i++;
+				}
+				else {
+					goto error;
+				}
+				op_mode = false;
+			}
+			else {
+				/* No we are looking for a variable or a constant value. */
+				if((c >= '0' && c <= '9') || c == '.' || c == '-' || c == '+') {
+					for(j=i+1;j<len;++j) {
+						c = exp[j];
+						if(!((c >= '0' && c <= '9') || c == '.')) {
+							break;
+						}
+					}
+					tokens[token] = expression_create_token(e_type_const, &exp[i], j-i);
+					token++;
+					i += (j-i);
+				}
+				else if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
+					for(j=i+1;j<len;++j) {
+						c = exp[j];
+						if(!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_')) {
+							break;
+						}
+					}
+					tokens[token] = expression_create_token(e_type_var, &exp[i], j-i);
+					token++;
+					i += (j-i);
+				}
+				else {
+					goto error;
+				}
+				op_mode = true;
+			}
 		}
 	}
 

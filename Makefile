@@ -16,7 +16,7 @@ endif
 
 OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 
-all: cardy_gl
+all: cardy_gl cardy_tests
 	@echo Building $@
 	@make -C examples $@
 
@@ -40,10 +40,9 @@ cardy_game:
 cardy_tests:
 	@make -C tests
 
-cardy_gl: cardy_api cardy_game cardy_tests $(OBJECTS)
+cardy_gl: cardy_api cardy_game $(OBJECTS)
 	@echo Building $@
 	@gcc $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -Lapi -Lgame
-	@make -C tests
 
 deploy:
 	@mkdir dist/win32 -p

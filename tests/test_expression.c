@@ -1,4 +1,5 @@
 #include <check.h>
+#include <math.h>
 #include <stdlib.h>
 #include "../api/expression.h"
 
@@ -76,6 +77,18 @@ START_TEST(test_expression_pointer) {
 }
 END_TEST
 
+START_TEST(test_expression_function1f) {
+	expression_context *ec = expression_context_create();
+	expression *e = expression_function1f(sinf, expression_const(2.2f));
+
+	float f1 = expression_execute(ec, e);
+	float f2 = sinf(2.2f);
+
+	ck_assert(e != 0);
+	ck_assert(f1 == f2);
+}
+END_TEST
+
 START_TEST(test_expression_context_set) {
 	expression *e1 = expression_const(3.0f);
 	expression *e2 = 0;
@@ -132,6 +145,24 @@ START_TEST(test_expression_tokenize) {
 
 	tokens = expression_tokenize("3+3*4");
 	ck_assert(expression_token_count(tokens) == 5);
+
+	tokens = expression_tokenize("(2+2)*4");
+	ck_assert(tokens != 0);
+	ck_assert(expression_token_count(tokens) == 7);
+	ck_assert(tokens[0]->type == e_type_leftp);
+	ck_assert(tokens[4]->type == e_type_rightp);
+}
+END_TEST
+
+START_TEST(test_expression_tokenize_neg_values) {
+	expression_token **tokens = expression_tokenize("-3");
+
+	ck_assert(tokens != 0);
+	ck_assert(expression_token_count(tokens) == 1);
+
+	ck_assert(tokens[0] != 0);
+	ck_assert(tokens[0]->type == e_type_const);
+	ck_assert(strcmp(tokens[0]->content, "-3") == 0);
 }
 END_TEST
 
@@ -209,6 +240,10 @@ START_TEST(test_expression_parse_prio2) {
 	e = expression_parse("3*3+4*4");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 25.0f);
+
+	e = expression_parse("4+-3");
+	ck_assert(e != 0);
+	ck_assert(expression_execute(ec, e) == 1.0f);
 }
 END_TEST
 
@@ -238,14 +273,16 @@ void add_expression_tests(Suite *suite) {
 	tcase_add_test(c, test_expression_add);
 	tcase_add_test(c, test_expression_var);
 	tcase_add_test(c, test_expression_pointer);
+	tcase_add_test(c, test_expression_function1f);
 	tcase_add_test(c, test_expression_context_set);
 	tcase_add_test(c, test_expression_create_token);
 	tcase_add_test(c, test_expression_tokenize);
+	tcase_add_test(c, test_expression_tokenize_neg_values);
 	tcase_add_test(c, test_expression_parse);
 	tcase_add_test(c, test_expression_parse_var);
 	tcase_add_test(c, test_expression_parse_prio1);
 	tcase_add_test(c, test_expression_parse_prio2);
-/*	tcase_add_test(c, test_expression_parse3); */
+	tcase_add_test(c, test_expression_parse3);
 	tcase_add_test(c, test_expression_parse_invalid_chars);
 	suite_add_tcase(suite, c);
 }
