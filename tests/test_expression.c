@@ -145,17 +145,24 @@ START_TEST(test_expression_tokenize) {
 
 	tokens = expression_tokenize("3+3*4");
 	ck_assert(expression_token_count(tokens) == 5);
+
+	tokens = expression_tokenize("(2+2)*4");
+	ck_assert(tokens != 0);
+	ck_assert(expression_token_count(tokens) == 7);
+	ck_assert(tokens[0]->type == e_type_leftp);
+	ck_assert(tokens[4]->type == e_type_rightp);
 }
 END_TEST
 
 START_TEST(test_expression_tokenize_neg_values) {
-	expression_token **tokens = expression_tokenize("+3");
+	expression_token **tokens = expression_tokenize("-3");
 
 	ck_assert(tokens != 0);
 	ck_assert(expression_token_count(tokens) == 1);
 
 	ck_assert(tokens[0] != 0);
 	ck_assert(tokens[0]->type == e_type_const);
+	ck_assert(strcmp(tokens[0]->content, "-3") == 0);
 }
 END_TEST
 
@@ -233,6 +240,10 @@ START_TEST(test_expression_parse_prio2) {
 	e = expression_parse("3*3+4*4");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 25.0f);
+
+	e = expression_parse("4+-3");
+	ck_assert(e != 0);
+	ck_assert(expression_execute(ec, e) == 1.0f);
 }
 END_TEST
 
@@ -271,7 +282,7 @@ void add_expression_tests(Suite *suite) {
 	tcase_add_test(c, test_expression_parse_var);
 	tcase_add_test(c, test_expression_parse_prio1);
 	tcase_add_test(c, test_expression_parse_prio2);
-/*	tcase_add_test(c, test_expression_parse3); */
+	tcase_add_test(c, test_expression_parse3);
 	tcase_add_test(c, test_expression_parse_invalid_chars);
 	suite_add_tcase(suite, c);
 }
