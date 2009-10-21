@@ -12,6 +12,7 @@ endif
 
 ifeq ($(PLATFORM), MINGW32_NT-5.1)
 export LIBS=-lcardy-game -lcardy-api -lglu32 -lglut32 -lm -lopengl32 -lglee $(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
+export CFLAGS+=-mwindows
 endif
 
 OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
