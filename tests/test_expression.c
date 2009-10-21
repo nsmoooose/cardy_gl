@@ -148,6 +148,17 @@ START_TEST(test_expression_tokenize) {
 }
 END_TEST
 
+START_TEST(test_expression_tokenize_neg_values) {
+	expression_token **tokens = expression_tokenize("+3");
+
+	ck_assert(tokens != 0);
+	ck_assert(expression_token_count(tokens) == 1);
+
+	ck_assert(tokens[0] != 0);
+	ck_assert(tokens[0]->type == e_type_const);
+}
+END_TEST
+
 START_TEST(test_expression_parse) {
 	expression_context *ec = expression_context_create();
 	expression *e = expression_parse("3.0");
@@ -255,6 +266,7 @@ void add_expression_tests(Suite *suite) {
 	tcase_add_test(c, test_expression_context_set);
 	tcase_add_test(c, test_expression_create_token);
 	tcase_add_test(c, test_expression_tokenize);
+	tcase_add_test(c, test_expression_tokenize_neg_values);
 	tcase_add_test(c, test_expression_parse);
 	tcase_add_test(c, test_expression_parse_var);
 	tcase_add_test(c, test_expression_parse_prio1);
