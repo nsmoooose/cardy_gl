@@ -134,7 +134,6 @@ START_TEST(test_expression_tokenize) {
 	ck_assert(tokens[0]->type == e_type_var);
 	ck_assert(strcmp(tokens[0]->content, "apa") == 0);
 
-
 	tokens = expression_tokenize("width*4");
 	ck_assert(expression_token_count(tokens) == 3);
 	ck_assert(tokens[0]->type == e_type_var);
@@ -151,6 +150,10 @@ START_TEST(test_expression_tokenize) {
 	ck_assert(expression_token_count(tokens) == 7);
 	ck_assert(tokens[0]->type == e_type_leftp);
 	ck_assert(tokens[4]->type == e_type_rightp);
+
+	tokens = expression_tokenize("2+");
+	ck_assert(tokens != 0);
+	ck_assert(expression_token_count(tokens) == 2);
 }
 END_TEST
 
@@ -251,9 +254,17 @@ START_TEST(test_expression_parse3) {
 	expression_context *ec = expression_context_create();
 	expression *e;
 
+	e = expression_parse("(3+3)");
+	ck_assert(e != 0);
+	ck_assert(expression_execute(ec, e) == 6.0f);
+
 	e = expression_parse("(3+3)*4");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 24.0f);
+
+	e = expression_parse("3+(3+3)");
+	ck_assert(e != 0);
+	ck_assert(expression_execute(ec, e) == 9.0f);
 }
 END_TEST
 
