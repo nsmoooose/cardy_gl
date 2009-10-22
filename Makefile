@@ -80,7 +80,7 @@ deploy:
 coverage:
 	@mkdir coverage
 	@echo ===========================================================================
-	@tests/cardy_tests
+	@-tests/cardy_tests
 	@echo ===========================================================================
 	@lcov --directory . --capture --output-file coverage/coverage.info
 	@echo ===========================================================================

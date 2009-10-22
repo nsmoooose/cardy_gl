@@ -421,7 +421,7 @@ expression *token_parser(expression_token *tokens[], int current, expression *lh
 
 	if((current + 1) > (token_count - 1)) {
 		/* We got an operation to perform but no expression to the right. */
-		//expression_free(lhs);
+		expression_free(lhs);
 		return 0;
 	}
 

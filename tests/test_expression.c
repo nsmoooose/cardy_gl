@@ -265,6 +265,10 @@ START_TEST(test_expression_parse3) {
 	e = expression_parse("3+(3+3)");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 9.0f);
+
+	e = expression_parse("((3+3*4))");
+	ck_assert(e != 0);
+	ck_assert(expression_execute(ec, e) == 15.0f);
 }
 END_TEST
 
