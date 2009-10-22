@@ -365,10 +365,6 @@ void expression_free_tokens(expression_token *tokens[]) {
 	free(tokens);
 }
 
-expression* expression_parse_tokens(expression_token *tokens[]) {
-	return 0;
-}
-
 static int find_matching_paranthesis(expression_token *tokens[], int current) {
 	int token_count = expression_token_count(tokens);
 	int index = 0, count = 0;
@@ -386,7 +382,7 @@ static int find_matching_paranthesis(expression_token *tokens[], int current) {
 	return -1;
 }
 
-expression *token_parser(expression_token *tokens[], int current, expression *lhs_in) {
+static expression *expression_parse_tokens_imp(expression_token *tokens[], int current, expression *lhs_in) {
 	expression *lhs=0, *rhs=0, *op=0;
 	int token_count = expression_token_count(tokens);
 	int next = 0;
@@ -398,7 +394,7 @@ expression *token_parser(expression_token *tokens[], int current, expression *lh
 	}
 	else {
 		if(tokens[current]->type == e_type_leftp) {
-			lhs = token_parser(tokens, current + 1, 0);
+			lhs = expression_parse_tokens_imp(tokens, current + 1, 0);
 			current = find_matching_paranthesis(tokens, current);
 		}
 		else if(tokens[current]->type == e_type_const) {
@@ -435,7 +431,7 @@ expression *token_parser(expression_token *tokens[], int current, expression *lh
 	   (tokens[current+2]->type & e_type_mul || tokens[current+2]->type & e_type_div)) {
 
 		look_further = false;
-		rhs = token_parser(tokens, current + 1, 0);
+		rhs = expression_parse_tokens_imp(tokens, current + 1, 0);
 		if(!rhs) {
 			expression_free(lhs);
 			return 0;
@@ -449,7 +445,7 @@ expression *token_parser(expression_token *tokens[], int current, expression *lh
 			return 0;
 		}
 		if(tokens[current]->type == e_type_leftp) {
-			rhs = token_parser(tokens, current + 1, 0);
+			rhs = expression_parse_tokens_imp(tokens, current + 1, 0);
 			/* Set current to the next operation. We must then match
 			   the next paranthesis. */
 			next = find_matching_paranthesis(tokens, current) + 1;
@@ -498,7 +494,7 @@ expression *token_parser(expression_token *tokens[], int current, expression *lh
 		}
 		if(current < token_count ) {
 			/* The above expression has priority. It is the lhs of the next expression. */
-			expression *sub = token_parser(tokens, current, op);
+			expression *sub = expression_parse_tokens_imp(tokens, current, op);
 			if(!sub) {
 				expression_free(op);
 			}
@@ -508,11 +504,15 @@ expression *token_parser(expression_token *tokens[], int current, expression *lh
 	return op;
 }
 
+expression* expression_parse_tokens(expression_token *tokens[]) {
+	return expression_parse_tokens_imp(tokens, 0, 0);
+}
+
 expression *expression_parse(const char *exp) {
 	expression *e = 0;
 	expression_token **tokens = expression_tokenize(exp);
 	if(tokens) {
-		e = token_parser(tokens, 0, 0);
+		e = expression_parse_tokens(tokens);
 		expression_free_tokens(tokens);
 	}
 	return e;
