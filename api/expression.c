@@ -369,9 +369,27 @@ expression* expression_parse_tokens(expression_token *tokens[]) {
 	return 0;
 }
 
+static int find_matching_paranthesis(expression_token *tokens[], int current) {
+	int token_count = expression_token_count(tokens);
+	int index = 0, count = 0;
+	for(;current+index<token_count;++index) {
+		if(tokens[current+index]->type == e_type_leftp) {
+			count++;
+		}
+		else if(tokens[current+index]->type == e_type_rightp) {
+			count--;
+		}
+		if(count == 0) {
+			return current + index;
+		}
+	}
+	return -1;
+}
+
 expression *token_parser(expression_token *tokens[], int current, expression *lhs_in) {
 	expression *lhs=0, *rhs=0, *op=0;
 	int token_count = expression_token_count(tokens);
+	int next = 0;
 	bool look_further=true;
 
 	/* Left hand side. */
@@ -379,20 +397,36 @@ expression *token_parser(expression_token *tokens[], int current, expression *lh
 		lhs = lhs_in;
 	}
 	else {
-		if(tokens[current]->type == e_type_const) {
+		if(tokens[current]->type == e_type_leftp) {
+			lhs = token_parser(tokens, current + 1, 0);
+			current = find_matching_paranthesis(tokens, current);
+		}
+		else if(tokens[current]->type == e_type_const) {
 			lhs = expression_const(atof(tokens[current]->content));
 		}
 		else if(tokens[current]->type == e_type_var) {
 			lhs = expression_var(tokens[current]->content);
 		}
 		else {
-			fprintf(stderr, "Unexpected token (type): %d\n", tokens[current]->type);
+			fprintf(stderr, "Unexpected token lhs (type): %d\n", tokens[current]->type);
 			return 0;
 		}
-		if(current == token_count - 1) {
-			return lhs;
-		}
 		current++;
+	}
+
+	if(current > token_count - 1) {
+		/* No more tokens. Lets return what we have. */
+		return lhs;
+	}
+
+	if(tokens[current]->type == e_type_rightp) {
+		return lhs;
+	}
+
+	if((current + 1) > (token_count - 1)) {
+		/* We got an operation to perform but no expression to the right. */
+		expression_free(lhs);
+		return 0;
 	}
 
 	/* Check if next operation has priority over this one. */
@@ -414,11 +448,19 @@ expression *token_parser(expression_token *tokens[], int current, expression *lh
 			expression_free(lhs);
 			return 0;
 		}
-		if(tokens[current]->type == e_type_const) {
+		if(tokens[current]->type == e_type_leftp) {
+			rhs = token_parser(tokens, current + 1, 0);
+			/* Set current to the next operation. We must then match
+			   the next paranthesis. */
+			next = find_matching_paranthesis(tokens, current) + 1;
+		}
+		else if(tokens[current]->type == e_type_const) {
 			rhs = expression_const(atof(tokens[current]->content));
+			next = current + 1;
 		}
 		else if(tokens[current]->type == e_type_var) {
 			rhs = expression_var(tokens[current]->content);
+			next = current + 1;
 		}
 		else {
 			fprintf(stderr, "Unexpected operation (type): %d\n", tokens[current]->type);
@@ -442,7 +484,7 @@ expression *token_parser(expression_token *tokens[], int current, expression *lh
 		op = expression_div(lhs, rhs);
 	}
 	else {
-		fprintf(stderr, "Unexpected token (type): %d\n", tokens[current]->type);
+		fprintf(stderr, "Unexpected token rhs (type): %d\n", tokens[current]->type);
 		expression_free(lhs);
 		expression_free(rhs);
 		return 0;
@@ -450,7 +492,10 @@ expression *token_parser(expression_token *tokens[], int current, expression *lh
 
 	/* Set current to the next operation */
 	if(look_further) {
-		current+=2;
+		current = next;
+		if(current < token_count && tokens[current]->type == e_type_rightp) {
+			return op;
+		}
 		if(current < token_count ) {
 			/* The above expression has priority. It is the lhs of the next expression. */
 			expression *sub = token_parser(tokens, current, op);
