@@ -5,5 +5,5 @@ make clean
 mkdir analysis
 cov-configure --comptype gcc --compiler /usr/bin/gcc --config analysis/config.xml
 cov-build --config analysis/config.xml --dir analysis make cardy_gl
-cov-analyze --config analysis/config.xml --dir analysis
+cov-analyze --config analysis/config.xml --dir analysis --all
 cov-format-errors --dir analysis

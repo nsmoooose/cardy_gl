@@ -118,22 +118,141 @@ expression *expression_pointer(float *var) {
 /* ----------------------------------------------------------------------- */
 
 typedef struct {
-	float (*function)(float);
-	expression *e1;
-} expression_function1f_data;
+	union {
+		function1f f1;
+		function2f f2;
+		function3f f3;
+		function4f f4;
+		function5f f5;
+		function6f f6;
+	} function;
+	int param_count;
+	expression *params[6];
+} expression_function_data;
 
-static float expression_function1f_execute(expression_context *ec, expression *e) {
-	expression_function1f_data *d = e->data;
-	return d->function(expression_execute(ec, d->e1));
+static float expression_function_execute(expression_context *ec, expression *e) {
+	expression_function_data *d = e->data;
+	switch(d->param_count) {
+	case 1:
+		return d->function.f1(expression_execute(ec, d->params[0]));
+	case 2:
+		return d->function.f2(
+			expression_execute(ec, d->params[0]),
+			expression_execute(ec, d->params[1]));
+	case 3:
+		return d->function.f3(
+			expression_execute(ec, d->params[0]),
+			expression_execute(ec, d->params[1]),
+			expression_execute(ec, d->params[2])
+			);
+	case 4:
+		return d->function.f4(
+			expression_execute(ec, d->params[0]),
+			expression_execute(ec, d->params[1]),
+			expression_execute(ec, d->params[2]),
+			expression_execute(ec, d->params[3])
+			);
+	case 5:
+		return d->function.f5(
+			expression_execute(ec, d->params[0]),
+			expression_execute(ec, d->params[1]),
+			expression_execute(ec, d->params[2]),
+			expression_execute(ec, d->params[3]),
+			expression_execute(ec, d->params[4])
+			);
+	case 6:
+		return d->function.f6(
+			expression_execute(ec, d->params[0]),
+			expression_execute(ec, d->params[1]),
+			expression_execute(ec, d->params[2]),
+			expression_execute(ec, d->params[3]),
+			expression_execute(ec, d->params[4]),
+			expression_execute(ec, d->params[5])
+			);
+	default:
+		fprintf(stderr, "Invalid number of parameters to expression.\n");
+		exit(1);
+	}
 }
 
-expression *expression_function1f(float (*function)(float), expression *e1) {
+expression *expression_function1f(function1f function, expression *e1) {
 	expression *e = calloc(1, sizeof(expression));
-	expression_function1f_data *d = calloc(1, sizeof(expression_function1f_data));
-	d->function = function;
-	d->e1 = e1;
+	expression_function_data *d = calloc(1, sizeof(expression_function_data));
+	d->function.f1 = function;
+	d->param_count = 1;
+	d->params[0] = e1;
 	e->data = d;
-	e->execute = expression_function1f_execute;
+	e->execute = expression_function_execute;
+	return e;
+}
+
+expression *expression_function2f(function2f function, expression *params[]) {
+	expression *e = calloc(1, sizeof(expression));
+	expression_function_data *d = calloc(1, sizeof(expression_function_data));
+	d->function.f2 = function;
+	d->param_count = 2;
+	d->params[0] = params[0];
+	d->params[1] = params[1];
+	e->data = d;
+	e->execute = expression_function_execute;
+	return e;
+}
+
+expression *expression_function3f(function3f function, expression *params[]) {
+	expression *e = calloc(1, sizeof(expression));
+	expression_function_data *d = calloc(1, sizeof(expression_function_data));
+	d->function.f3 = function;
+	d->param_count = 3;
+	d->params[0] = params[0];
+	d->params[1] = params[1];
+	d->params[2] = params[2];
+	e->data = d;
+	e->execute = expression_function_execute;
+	return e;
+}
+
+expression *expression_function4f(function4f function, expression *params[]) {
+	expression *e = calloc(1, sizeof(expression));
+	expression_function_data *d = calloc(1, sizeof(expression_function_data));
+	d->function.f4 = function;
+	d->param_count = 4;
+	d->params[0] = params[0];
+	d->params[1] = params[1];
+	d->params[2] = params[2];
+	d->params[3] = params[3];
+	e->data = d;
+	e->execute = expression_function_execute;
+	return e;
+}
+
+expression *expression_function5f(function5f function, expression *params[]) {
+	expression *e = calloc(1, sizeof(expression));
+	expression_function_data *d = calloc(1, sizeof(expression_function_data));
+	d->function.f5 = function;
+	d->param_count = 5;
+	d->params[0] = params[0];
+	d->params[1] = params[1];
+	d->params[2] = params[2];
+	d->params[3] = params[3];
+	d->params[4] = params[4];
+	e->data = d;
+	e->execute = expression_function_execute;
+	return e;
+}
+
+expression *expression_function6f(function6f function, expression *params[]) {
+	expression *e = calloc(1, sizeof(expression));
+	expression_function_data *d = calloc(1, sizeof(expression_function_data));
+	d->function.f6 = function;
+	d->param_count = 6;
+	d->params[0] = params[0];
+	d->params[1] = params[1];
+	d->params[2] = params[2];
+	d->params[3] = params[3];
+	d->params[4] = params[4];
+	d->params[5] = params[5];
+	e->data = d;
+	e->execute = expression_function_execute;
 	return e;
 }
 
