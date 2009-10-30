@@ -262,6 +262,7 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 	visual_pile *src1, *src2, *src3, *src4;
 	visual_pile *center, *build1, *build2, *build3, *build4;
 	visual_pile *pile1, *pile2, *pile3, *pile4, *pile5;
+	int index;
 	float separator = settings->card_height / 3.0;
 
 	/* The one solitaire instance we have.*/
@@ -436,6 +437,10 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 	pile5->origin[0] = settings->card_spacing * 2 + settings->card_width * 2;
 	pile5->origin[1] = pile1->origin[1];
 	visual_add_pile(context, s->visual, pile5);
+
+	for(index=0;index<s->visual->pile_count;++index) {
+		s->visual->piles[index]->origin[1] += settings->card_height;
+	}
 
 	create_deck(context, i->deck, 1);
 	create_deck(context, i->deck, 1);
