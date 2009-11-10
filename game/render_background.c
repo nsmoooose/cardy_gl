@@ -38,7 +38,7 @@ static void render_object_background_render(render_event_args *event, float delt
 	GLfloat aspect;
 
 	green = ease_time_protect4f(
-		ease_quad_out, i->total_time, 0.0f, 0.8f, 20.0f);
+		ease_quad_out, i->total_time, 0.0f, 0.6f, 20.0f);
 
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	if(viewport[3] == 0) {
