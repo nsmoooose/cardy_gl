@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../api/ease.h"
-#include "../api/image.h"
 #include "../api/mygl.h"
 #include "../api/theme.h"
 #include "render_mainmenu.h"
@@ -88,7 +87,7 @@ static void process_click(
 			}
 		}
 	}
-	else {
+	else if(pile) {
 		if(g_selected_card) {
 			card_count = visual_get_rest_of_pile(
 				data->sol->visual, g_selected_card);
@@ -263,7 +262,11 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 
 	glPushMatrix();
 	glLoadIdentity();
+
 	glTranslatef(g_camera_translateX, g_camera_translateY, g_camera_zoom);
+	glRotatef(
+		ease_time_protect4f(ease_quad_out, i->time_elapsed, 0.0, -25.0f, 12.0),
+		1.0f, 0.0f, 0.0f);
 
 	if(i->time_elapsed < 6.0) {
 		float distance =

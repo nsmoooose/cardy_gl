@@ -21,6 +21,11 @@ typedef struct render_object_St {
 	/* Custom data for this rendering object. */
 	void *data;
 
+	/* Total time spent rendering. */
+	float render_time;
+	/* Flag indicating if the first frame has been rendered. */
+	bool first_frame_rendered;
+
 	/* Render function. */
 	void (*render)(render_event_args *event, float delta);
 	void (*post_render)(render_event_args *event, float delta);

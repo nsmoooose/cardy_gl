@@ -19,6 +19,21 @@ void expression_free(expression *e);
 expression *expression_const(float value);
 
 expression *expression_var(const char *name);
+expression *expression_pointer(float *var);
+
+typedef float (*function1f)(float);
+typedef float (*function2f)(float, float);
+typedef float (*function3f)(float, float, float);
+typedef float (*function4f)(float, float, float, float);
+typedef float (*function5f)(float, float, float, float, float);
+typedef float (*function6f)(float, float, float, float, float, float);
+
+expression *expression_function1f(function1f function, expression *e1);
+expression *expression_function2f(function2f function, expression *e[]);
+expression *expression_function3f(function3f function, expression *e[]);
+expression *expression_function4f(function4f function, expression *e[]);
+expression *expression_function5f(function5f function, expression *e[]);
+expression *expression_function6f(function6f function, expression *e[]);
 
 expression *expression_div(expression *e1, expression *e2);
 expression *expression_mult(expression *e1, expression *e2);

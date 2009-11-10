@@ -4,6 +4,7 @@
 #include "expression.h"
 #include "render.h"
 
+#define style_key_render_time "render_time"
 #define style_key_width "width"
 #define style_key_height "height"
 #define style_key_top "top"
@@ -17,6 +18,35 @@
 
 struct widget_style_St;
 typedef struct widget_style_St widget_style;
+
+typedef enum {
+	e_entering_state,
+	e_continuous_state,
+	e_leaving_state
+} widget_transition_state;
+
+/* Enqueu a state change. */
+void widget_add_state(render_object *widget, const char *state);
+
+/* Set the leaving state operation for a widget. */
+void widget_remove_state(render_object *widget, const char *state);
+
+/* Returns true if the widget or any subwidget has the state
+   active in any transition. */
+bool widget_state_active(render_object *widget, const char *state);
+
+typedef struct {
+	widget_transition_state state;
+	float length;
+	expression *exp;
+} widget_style_transition;
+
+widget_style_transition *widget_transition_create(
+	widget_transition_state state, float length, expression *exp);
+
+void widget_style_add_transition(
+	widget_style *style, const char *state,
+	const char *property, widget_style_transition *t);
 
 widget_style *widget_get_default_style(render_object *object);
 
