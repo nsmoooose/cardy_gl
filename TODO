@@ -21,6 +21,10 @@ How to transition between different states?
 
 /* *********************************************************************************** */
 
+Configurable install directory for linux systems.
+
+/* *********************************************************************************** */
+
 Own mouse pointer.
 
 Could be implemented using a rendering object applied last to the tree of nodes.

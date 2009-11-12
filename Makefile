@@ -74,6 +74,12 @@ deploy:
 	@cp /c/devlibs/bin/libgmodule-2.0-0.dll dist/win32/
 	@cp /c/devlibs/bin/libgmodule-2.0-0.dll dist/win32/
 
+install:
+	@cp cardy_gl /usr/bin/
+	@mkdir /usr/share/cardy_gl/ -p
+	@cp -r themes /usr/share/cardy_gl/
+	@cp -r resources /usr/share/cardy_gl/
+
 %.o: %.c
 	@echo $<
 	@gcc -c $(CFLAGS) $<
