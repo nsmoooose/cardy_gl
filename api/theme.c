@@ -39,7 +39,7 @@ void theme_add_theme(mem_context *context, themes *themes, char *theme_name) {
 	themes->theme_names[themes->theme_count - 1] = buffer;
 }
 
-themes *theme_list(mem_context *context, char *themes_directory) {
+themes *theme_list(mem_context *context, const char *themes_directory) {
 	struct dirent *dp;
 	themes *t;
 	DIR *dir = opendir(themes_directory);
@@ -58,7 +58,7 @@ themes *theme_list(mem_context *context, char *themes_directory) {
 	return t;
 }
 
-theme *theme_load(char *themes_directory, char *name) {
+theme *theme_load(const char *themes_directory, const char *name) {
 	theme *t;
 	char *buffer = calloc(1, 1000);
 	snprintf(buffer, 1000, "%s/%s", themes_directory, name);

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "../api/mygl.h"
 #include "../api/render_widget.h"
+#include "../api/resource.h"
 #include "render_solitaire.h"
 #include "render_mainmenu.h"
 #include "solitaire_theidiot.h"
@@ -40,12 +41,14 @@ static void sol_pyramid_callback(render_event_args *event, void *data) {
 }
 
 void render_object_mainmenu(render_object *parent) {
+	char file_buffer[1024];
 	render_object *window, *idiot, *malt, *noname1;
 	widget_style *style;
 	RsvgHandle *h;
 	float bw = 200.0f, bh = 64.0f;
 
-	h = render_svg_open("resources/images/mainmenu.svg");
+	resource_locate_file("resources/images/mainmenu.svg", file_buffer, 1024);
+	h = render_svg_open(file_buffer);
 
 	window = widget_generic(render_object_mainmenu_id);
 	style = widget_get_default_style(window);

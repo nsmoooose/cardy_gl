@@ -213,7 +213,7 @@ RsvgHandle *render_svg_open(const char* path) {
 	RsvgHandle *h;
 
 	h = rsvg_handle_new_from_file(path, &e);
-	if(e != 0) {
+	if(e != 0 || h == 0) {
 		fprintf(stderr, "Failed to open file: %s\n", path);
 		return 0;
 	}

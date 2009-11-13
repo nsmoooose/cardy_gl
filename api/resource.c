@@ -8,7 +8,7 @@ bool resource_get_dir(char *buffer, int buffer_length) {
 
 	/* First we look in our current local directory. */
 	strncpy(buffer, "resources", buffer_length);
-	if(stat(buffer, &s) == -1) {
+	if(stat(buffer, &s) == 0) {
 		if(getcwd(buffer, buffer_length) == 0) {
 			return false;
 		}

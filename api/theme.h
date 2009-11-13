@@ -24,8 +24,8 @@ typedef struct {
 	int theme_count;
 } themes;
 
-themes *theme_list(mem_context *context, char *themes_directory);
-theme *theme_load(char *themes_directory, char *name);
+themes *theme_list(mem_context *context, const char *themes_directory);
+theme *theme_load(const char *themes_directory, const char *name);
 void theme_unload(theme *theme);
 
 GLuint theme_get_card_texture(theme *theme, card_suit suit, card_value value);

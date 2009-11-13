@@ -4,8 +4,10 @@
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../api/ease.h"
 #include "../api/mygl.h"
+#include "../api/resource.h"
 #include "../api/theme.h"
 #include "render_mainmenu.h"
 #include "render_solitaire.h"
@@ -290,6 +292,15 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 	i->time_elapsed += delta;
 }
 
+static void render_object_solitaire_change_card_theme(const char *theme) {
+	char theme_dir[1024];
+	if(resource_get_dir(theme_dir, 1024)) {
+		strncat(theme_dir, "themes", 1024);
+		theme_unload(g_theme);
+		g_theme = theme_load(theme_dir, theme);
+	}
+}
+
 static bool render_object_solitaire_keyboard_down(
 	render_event_args *event, unsigned char key, int modifiers, int x, int y) {
 	render_object *object;
@@ -331,24 +342,19 @@ static bool render_object_solitaire_keyboard_down(
 		return true;
 
 	case 'z':
-		theme_unload(g_theme);
-		g_theme = theme_load("themes", "anglo");
+		render_object_solitaire_change_card_theme("anglo");
 		return true;
 	case 'x':
-		theme_unload(g_theme);
-		g_theme = theme_load("themes", "gnome");
+		render_object_solitaire_change_card_theme("gnome");
 		return true;
 	case 'c':
-		theme_unload(g_theme);
-		g_theme = theme_load("themes", "kde");
+		render_object_solitaire_change_card_theme("kde");
 		return true;
 	case 'v':
-		theme_unload(g_theme);
-		g_theme = theme_load("themes", "life_and_smoth");
+		render_object_solitaire_change_card_theme("life_and_smoth");
 		return true;
 	case 'b':
-		theme_unload(g_theme);
-		g_theme = theme_load("themes", "twigs");
+		render_object_solitaire_change_card_theme("twigs");
 		return true;
 	default:
 		return false;
@@ -403,7 +409,10 @@ render_object *render_object_solitaire(solitaire_create callback) {
 	i->settings->card_thickness = 0.4f;
 
 	if(g_theme == 0) {
-		g_theme = theme_load("themes", "gnome");
+		char themes_path[1024];
+		resource_get_dir(themes_path, 1024);
+		strncat(themes_path, "themes", 1024);
+		g_theme = theme_load(themes_path, "gnome");
 	}
 
 	i->sol = callback(i->context, i->settings);
