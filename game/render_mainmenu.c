@@ -1,4 +1,5 @@
 #include <librsvg/rsvg.h>
+#include <limits.h>
 #include <stdlib.h>
 #include "../api/mygl.h"
 #include "../api/render_widget.h"
@@ -37,17 +38,19 @@ static void sol_noname1_callback(render_event_args *event, void *data) {
 	set_solitaire(event, solitaire_noname1);
 }
 
+/*
 static void sol_pyramid_callback(render_event_args *event, void *data) {
 }
+*/
 
 void render_object_mainmenu(render_object *parent) {
-	char file_buffer[1024];
+	char file_buffer[PATH_MAX];
 	render_object *window, *idiot, *malt, *noname1;
 	widget_style *style;
 	RsvgHandle *h;
 	float bw = 200.0f, bh = 64.0f;
 
-	resource_locate_file("resources/images/mainmenu.svg", file_buffer, 1024);
+	resource_locate_file("resources/images/mainmenu.svg", file_buffer, PATH_MAX);
 	h = render_svg_open(file_buffer);
 
 	window = widget_generic(render_object_mainmenu_id);

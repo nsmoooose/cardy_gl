@@ -1,4 +1,5 @@
 #include <librsvg/rsvg.h>
+#include <limits.h>
 #include <stdlib.h>
 #include "../api/render_widget.h"
 #include "../api/resource.h"
@@ -19,12 +20,12 @@ static void topmenu_quit_callback(render_event_args *event, void *data) {
 }
 
 void render_object_topmenu(render_object *parent) {
-	char file_buffer[1024];
+	char file_buffer[PATH_MAX];
 	render_object *menu, *options, *quit, *window;
 	widget_style *style;
 	RsvgHandle *h;
 
-	resource_locate_file("resources/images/topmenu.svg", file_buffer, 1024);
+	resource_locate_file("resources/images/topmenu.svg", file_buffer, PATH_MAX);
 	h = render_svg_open(file_buffer);
 
 	window = widget_generic(render_object_topmenu_id);
