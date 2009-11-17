@@ -16,6 +16,14 @@ extern solitaire *g_solitaire;
 extern theme *g_theme;
 extern visual_settings *g_visual_settings;
 
+typedef struct {
+	GLfloat front_vertexes[1];
+	GLfloat back_vertexes[1];
+	GLfloat side_vertexes[1];
+} card_geometry;
+
+card_geometry *card_geometry_create(mem_context *context);
+
 extern const char *render_object_solitaire_id;
 render_object *render_object_solitaire(solitaire_create callback);
 

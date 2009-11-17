@@ -114,6 +114,10 @@ static void callback_card(render_event_args *event, void *data) {
 	process_click(event->rcontext, event->object, event->object->data, pile, data);
 }
 
+card_geometry *card_geometry_create(mem_context *context) {
+	return 0;
+}
+
 void render_card(render_event_args *event, visual_pile* pile,
 				 card_proxy* proxy, bool selected) {
 	int index;

@@ -21,6 +21,47 @@
 		</thead>
 		<tbody>
 		  <tr>
+			<td>Pyramid solitaire.</td>
+			<td>easy</td>
+		  </tr>
+		  <tr>
+			<td>Find more fun solitaires.</td>
+			<td>easy</td>
+		  </tr>
+		  <tr>
+			<td>Poker</td>
+			<td>Hard</td>
+		  </tr>
+		  <tr>
+			<td>
+			  Options window with the following content:
+			  <ll>
+				<li>default deck.</li>
+			  </ll>
+			</td>
+			<td>medium</td>
+		  </tr>
+		  <tr>
+			<td>Functions for generic 3D models with all information about it</td>
+			<td>medium</td>
+		  </tr>
+		  <tr>
+			<td>Slidebar control</td>
+			<td>medium</td>
+		  </tr>
+		  <tr>
+			<td>Animation of cards between positions</td>
+			<td>hard</td>
+		  </tr>
+		  <tr>
+			<td>Statistics about the number of solved solitaires. Storage could be a small sqlite database?</td>
+			<td>medium</td>
+		  </tr>
+		  <tr>
+			<td>Fix rendering issue when solitaire is solved. You cannot get back to the main menu and the topmenu control bar is also moving around with the star.</td>
+			<td>easy</td>
+		  </tr>
+		  <tr>
 			<td>Configurable install directory for linux systems.</td>
 			<td>easy</td>
 		  </tr>
@@ -34,10 +75,9 @@
 		  </tr>
 		  <tr>
 			<td>
-			  <pre>
-Own mouse pointer.
-Could be implemented using a rendering object applied last to the tree of nodes. We also need to attach a mouse movement handler.
-This can be used to hide the cursor: glutSetCursor(GLUT_CURSOR_NONE);</pre>
+			  Own mouse pointer.
+			  Could be implemented using a rendering object applied last to the tree of nodes. We also need to attach a mouse movement handler.
+			  This can be used to hide the cursor: glutSetCursor(GLUT_CURSOR_NONE);
 			</td>
 			<td>easy</td>
 		  </tr>
@@ -126,10 +166,10 @@ TODO split this up in several smaller tasks!
 
 expression variables common to all widgets (rendering object as well?):
 * first_frame
-* total_time        Total time this object has been alive.
-                    This should be a variable in the render_object structure.
-					We can then create a special expression that has a pointer to
-					this one.
+* total_time  Total time this object has been alive.
+              This should be a variable in the render_object structure.
+              We can then create a special expression that has a pointer to
+              this one.
 
 expression functions:
 * sin, cos
@@ -153,9 +193,9 @@ void widget_remove_state(render_object *widget, const char *state);
 bool widget_state_active(render_object *widget, const char *state);
 
 typedef struct {
-		widget_operation op;
-		float length;
-		expression *exp;
+    widget_operation op;
+    float length;
+    expression *exp;
 } transition;
 
 transition *t = widget_transition_create(e_entering_state, 3.0f, expression_parse(""));
