@@ -15,6 +15,7 @@
 #define style_key_backcolor_alpha "backcolor_alpha"
 #define style_key_viewport_width "viewport_width"
 #define style_key_viewport_height "viewport_height"
+#define style_key_rotation "rotation"
 
 struct widget_style_St;
 typedef struct widget_style_St widget_style;

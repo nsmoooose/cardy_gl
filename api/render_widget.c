@@ -164,6 +164,7 @@ render_object *widget_desktop(const char *id) {
 static void widget_generic_render(render_event_args *event, float delta) {
 	GLint viewport[4];
 	float left, top, width, height;
+	float rotation;
 	widget_data *d = event->object->data;
 	widget_color bc;
 	widget_style *style = widget_get_default_style(event->object);
@@ -176,10 +177,14 @@ static void widget_generic_render(render_event_args *event, float delta) {
 	top = widget_get_style_value(d->style, style_key_top, 0.0f);
 	width = widget_get_style_value(d->style, style_key_width, 0.0f);
 	height = widget_get_style_value(d->style, style_key_height, 0.0f);
+	rotation = widget_get_style_value(d->style, style_key_rotation, 0.0f);
 	bc.red = widget_get_style_value(d->style, style_key_backcolor_red, 1.0f);
 	bc.green = widget_get_style_value(d->style, style_key_backcolor_green, 1.0f);
 	bc.blue = widget_get_style_value(d->style, style_key_backcolor_blue, 1.0f);
 	bc.alpha = widget_get_style_value(d->style, style_key_backcolor_alpha, 1.0f);
+
+	/* Push the matrix for this control and child controls. */
+	glPushMatrix();
 
 	glColor4f(bc.red, bc.green, bc.blue, bc.alpha);
 	if(d->style->click) {
@@ -189,6 +194,10 @@ static void widget_generic_render(render_event_args *event, float delta) {
 	if(d->style->back_texture) {
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, d->style->back_texture);
+	}
+
+	if(rotation != 0.0f) {
+		glRotatef(rotation, 0.0f, 0.0f, 1.0f);
 	}
 	glBegin(GL_POLYGON);
 	glTexCoord2f(0.0f, 0.0f);
@@ -206,11 +215,11 @@ static void widget_generic_render(render_event_args *event, float delta) {
 	if(d->style->click) {
 		glPopName();
 	}
-	glPushMatrix();
 	glTranslatef(left, top, 0.0f);
 }
 
 static void widget_generic_post_render(render_event_args *event, float delta) {
+	/* Restore state so parent controls get the proper matrix. */
 	glPopMatrix();
 }
 
