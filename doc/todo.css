@@ -15,6 +15,10 @@ li {
 	margin-left: 20px;
 }
 
+done {
+	text-decoration: line-through;
+}
+
 body {
 	background-color: #cccccc;
 	font-family: arial;

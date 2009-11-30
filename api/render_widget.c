@@ -104,9 +104,9 @@ expression *widget_style_get_height_expression(widget_style *style) {
 	return expression_context_get(style->ec, style_key_height);
 }
 
-void widget_style_set_rotation(widget_style *style, float rotation) {
+void widget_style_set_rotation(widget_style *style, const char *expr) {
 	expression_context_set(
-		style->ec, style_key_rotation, expression_const(rotation));
+		style->ec, style_key_rotation, expression_parse(expr));
 }
 
 expression *widget_style_get_rotation_expression(widget_style *style) {
