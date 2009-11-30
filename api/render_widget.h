@@ -66,6 +66,9 @@ void widget_style_set_size(widget_style *style, float width, float height);
 expression *widget_style_get_width_expression(widget_style *style);
 expression *widget_style_get_height_expression(widget_style *style);
 
+void widget_style_set_rotation(widget_style *style, float rotation);
+expression *widget_style_get_rotation_expression(widget_style *style);
+
 void widget_style_set_image(
 	widget_style *style, RsvgHandle *h, char *svg_id, int width, int height);
 void widget_style_set_click_callback(

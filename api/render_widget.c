@@ -104,6 +104,15 @@ expression *widget_style_get_height_expression(widget_style *style) {
 	return expression_context_get(style->ec, style_key_height);
 }
 
+void widget_style_set_rotation(widget_style *style, float rotation) {
+	expression_context_set(
+		style->ec, style_key_rotation, expression_const(rotation));
+}
+
+expression *widget_style_get_rotation_expression(widget_style *style) {
+	return expression_context_get(style->ec, style_key_rotation);
+}
+
 void widget_style_set_image(
 	widget_style *style, RsvgHandle *h, char *svg_id, int width, int height) {
 	glGenTextures(1, &style->back_texture);
