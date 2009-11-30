@@ -42,12 +42,20 @@
 			<td>medium</td>
 		  </tr>
 		  <tr>
+			<td>Generic messagebox for messages and errors. Also used for yes|no|cancel.</td>
+			<td>medium</td>
+		  </tr>
+		  <tr>
 			<td>Functions for generic 3D models with all information about it</td>
 			<td>medium</td>
 		  </tr>
 		  <tr>
 			<td>Slidebar control</td>
 			<td>medium</td>
+		  </tr>
+		  <tr>
+			<td>Rotation of individual widgets.</td>
+			<td>easy</td>
 		  </tr>
 		  <tr>
 			<td>Animation of cards between positions</td>
@@ -62,7 +70,7 @@
 			<td>easy</td>
 		  </tr>
 		  <tr>
-			<td>Configurable install directory for linux systems.</td>
+			<td>Configurable install directory for linux systems. Currently it is installed in /usr/bin and /usr/share/cardy_gl. Should be customizeable.</td>
 			<td>easy</td>
 		  </tr>
 		  <tr>
@@ -90,7 +98,15 @@
 		  </tr>
 		  <tr>
 			<td>
-			  Create a generic text button control.
+			  <pre>
+Create a generic text button control. Some good notes on what is needed:
+ * a svg handle, node name, width, height and placement for a image.
+ * enumeration on where the text should be placed.
+ * text argument.
+ * a svg handle, node name for an image that will occupy the entire background.
+
+The above could be accomplished with a control with two child controls. All
+three controls should hook the the same click handler.</pre>
 			</td>
 			<td>medium</td>
 		  </tr>

@@ -2,14 +2,10 @@
 #include "solitaire_pyramid.h"
 
 typedef struct {
-	pile* deck;
+	pile *piles[30];
 
-	pile* pile1;
-	pile* pile2;
-	pile* pile3;
-	pile* pile4;
-
-	pile* done;
+	pile *deck;
+	pile *done;
 } internal;
 
 /*
@@ -38,8 +34,8 @@ static void my_deal(solitaire* sol, visual_pile* pile) {
 */
 
 solitaire* solitaire_pyramid(mem_context *context, visual_settings *settings) {
-	card *ace;
-	visual_pile *deck, *pile1, *pile2, *pile3, *pile4, *done;
+	int index;
+	visual_pile *piles[30];
 
 	/* The one solitaire instance we have.*/
 	solitaire* s = mem_alloc(context, sizeof(solitaire));
@@ -49,16 +45,23 @@ solitaire* solitaire_pyramid(mem_context *context, visual_settings *settings) {
 	 * members. */
 	internal* i = mem_alloc(context, sizeof(internal));
 	s->data = i;
-
 	s->visual = visual_create(context, settings);
 
-	i->deck = pile_create(context, 52);
-	i->pile1 = pile_create(context, 13);
-	i->pile2 = pile_create(context, 13);
-	i->pile3 = pile_create(context, 13);
-	i->pile4 = pile_create(context, 13);
-	i->done = pile_create(context, 48);
+	for(index=0;index<30;++index) {
+		if(index == 0 || index == 29) {
+			i->piles[index] = pile_create(context, 52);
+		}
+		else {
+			i->piles[index] = pile_create(context, 1);
+		}
+		piles[index] = visual_pile_create(context, i->piles[index]);
+		visual_add_pile(context, s->visual, piles[index]);
+	}
 
+	i->deck = i->piles[0];
+	i->done = i->piles[29];
+
+#if 0
 	deck = visual_pile_create(context, i->deck);
 	deck->origin[0] = 0 - (settings->card_width / 2 + settings->card_spacing / 2 + settings->card_width * 2 + settings->card_spacing * 2 + settings->card_width / 2);
 	deck->origin[1] = 40.0f;
@@ -103,6 +106,7 @@ solitaire* solitaire_pyramid(mem_context *context, visual_settings *settings) {
 	ace = card_create(context, e_spades, 1);
 	card_reveal(ace),
 	card_append(ace, i->pile1);
+#endif
 
 	visual_sync(s->visual);
 	return s;

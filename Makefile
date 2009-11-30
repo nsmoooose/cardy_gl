@@ -45,6 +45,9 @@ cardy_gl: cardy_api cardy_game $(OBJECTS)
 	@echo Building $@
 	@gcc $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -Lapi -Lgame
 
+ctags:
+	@ctags -e --recurse=yes --exclude=analysis/* --exclude=.doxygen/*
+
 deploy:
 	@mkdir dist/win32 -p
 	@cp resources dist/win32/ -r
