@@ -9,6 +9,7 @@ void add_render_tests(Suite *suite);
 void add_sol_theidiot_tests(Suite *suite);
 void add_sol_malteser_tests(Suite *suite);
 void add_sol_noname1_tests(Suite *suite);
+void add_sol_test1_tests(Suite *suite);
 void add_ease_tests(Suite *suite);
 void add_expression_tests(Suite *suite);
 void add_expression_lib_tests(Suite *suite);
@@ -27,6 +28,7 @@ int main(int argc, char* argv[]) {
 	add_sol_theidiot_tests(suite);
 	add_sol_malteser_tests(suite);
 	add_sol_noname1_tests(suite);
+	add_sol_test1_tests(suite);
 	add_ease_tests(suite);
 	add_expression_tests(suite);
 	add_expression_lib_tests(suite);
