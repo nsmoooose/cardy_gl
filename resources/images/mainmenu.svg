@@ -35,7 +35,7 @@
      guidetolerance="10"
      pagecolor="#ffffff"
      gridtolerance="10"
-     inkscape:window-height="717"
+     inkscape:window-height="715"
      inkscape:zoom="0.85765209"
      objecttolerance="10"
      showgrid="false"
@@ -45,9 +45,10 @@
      inkscape:cy="283.27076"
      inkscape:window-y="25"
      inkscape:window-x="0"
-     inkscape:window-width="1272"
+     inkscape:window-width="1268"
      inkscape:pageopacity="0"
-     id="namedview14053" />
+     id="namedview14053"
+     inkscape:window-maximized="0" />
   <defs
      id="defs7693">
     <linearGradient
@@ -6760,6 +6761,45 @@
          offset="1"
          id="stop2301-6" />
     </linearGradient>
+    <inkscape:perspective
+       id="perspective4274"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2297-3-6"
+       id="linearGradient2321-08-0"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.3721715,0,0,0.99346762,45.297556,1.4201589)"
+       x1="-122.26129"
+       y1="217.40288"
+       x2="101.27376"
+       y2="217.40288" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient2297-3-6">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop2299-4-8" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop2301-6-9" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2297-3-6"
+       id="linearGradient4315"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.3721715,0,0,0.99346762,738.32267,35.125329)"
+       x1="-122.26129"
+       y1="217.40288"
+       x2="101.27376"
+       y2="217.40288" />
   </defs>
   <g
      id="mainmenu">
@@ -7269,5 +7309,32 @@
          x="-110.10363"
          id="tspan2295-0"
          sodipodi:role="line">Pyramid</tspan></text>
+  </g>
+  <g
+     id="sol_test1"
+     inkscape:label="#sol_test1">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       id="rect2547-8-6"
+       width="318.31088"
+       height="67.626495"
+       x="565.37543"
+       y="218.46078" />
+    <rect
+       y="225.62419"
+       x="571.9314"
+       height="50.967724"
+       width="303.98407"
+       id="rect2245-8-6"
+       style="fill:#ffffff;fill-opacity:1;stroke:url(#linearGradient4315);stroke-width:2.33512998;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.55830389;stroke-dasharray:none;stroke-dashoffset:25" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text2293-4-4"
+       y="263.4483"
+       x="582.92151"
+       style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans;text-anchor:start;text-align:start;writing-mode:lr;line-height:125%"
+       xml:space="preserve"><tspan
+         id="tspan4318"
+         sodipodi:role="line">Test1</tspan></text>
   </g>
 </svg>

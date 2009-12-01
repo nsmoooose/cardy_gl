@@ -9,6 +9,8 @@
 #include "solitaire_theidiot.h"
 #include "solitaire_maltesercross.h"
 #include "solitaire_noname1.h"
+#include "solitaire_pyramid.h"
+#include "solitaire_test1.h"
 
 const char* render_object_mainmenu_id = "mainmenu";
 
@@ -38,14 +40,17 @@ static void sol_noname1_callback(render_event_args *event, void *data) {
 	set_solitaire(event, solitaire_noname1);
 }
 
-/*
 static void sol_pyramid_callback(render_event_args *event, void *data) {
+	set_solitaire(event, solitaire_pyramid);
 }
-*/
+
+static void sol_test1_callback(render_event_args *event, void *data) {
+	set_solitaire(event, solitaire_test1);
+}
 
 void render_object_mainmenu(render_object *parent) {
 	char file_buffer[PATH_MAX];
-	render_object *window, *idiot, *malt, *noname1;
+	render_object *window, *button;
 	widget_style *style;
 	RsvgHandle *h;
 	float bw = 200.0f, bh = 64.0f;
@@ -61,29 +66,45 @@ void render_object_mainmenu(render_object *parent) {
 	widget_style_set_image(style, h, "#mainmenu", 512, 512);
 	render_object_add_child(parent, window);
 
-	idiot = widget_generic(0);
-	style = widget_get_default_style(idiot);
+	button = widget_generic(0);
+	style = widget_get_default_style(button);
 	widget_style_set_pos(style, 45.0f, 85.0f);
 	widget_style_set_size(style, bw, bh);
 	widget_style_set_click_callback(style, sol_theidiot_callback);
 	widget_style_set_image(style, h, "#sol_idiot", 256, 64);
-	render_object_add_child(window, idiot);
+	render_object_add_child(window, button);
 
-	malt = widget_generic(0);
-	style = widget_get_default_style(malt);
+	button = widget_generic(0);
+	style = widget_get_default_style(button);
 	widget_style_set_pos(style, 45.0f, 154.0f);
 	widget_style_set_size(style, bw, bh);
 	widget_style_set_click_callback(style, sol_malteser_callback);
 	widget_style_set_image(style, h, "#sol_maltesercross", 256, 64);
-	render_object_add_child(window, malt);
+	render_object_add_child(window, button);
 
-	noname1 = widget_generic(0);
-	style = widget_get_default_style(noname1);
+	button = widget_generic(0);
+	style = widget_get_default_style(button);
 	widget_style_set_pos(style, 45.0f, 223.0f);
 	widget_style_set_size(style, bw, bh);
 	widget_style_set_click_callback(style, sol_noname1_callback);
 	widget_style_set_image(style, h, "#sol_noname1", 256, 64);
-	render_object_add_child(window, noname1);
+	render_object_add_child(window, button);
+
+	button = widget_generic(0);
+	style = widget_get_default_style(button);
+	widget_style_set_pos(style, 45.0f, 292.0f);
+	widget_style_set_size(style, bw, bh);
+	widget_style_set_click_callback(style, sol_pyramid_callback);
+	widget_style_set_image(style, h, "#sol_pyramid", 256, 64);
+	render_object_add_child(window, button);
+
+	button = widget_generic(0);
+	style = widget_get_default_style(button);
+	widget_style_set_pos(style, 45.0f, 361.0f);
+	widget_style_set_size(style, bw, bh);
+	widget_style_set_click_callback(style, sol_test1_callback);
+	widget_style_set_image(style, h, "#sol_test1", 256, 64);
+	render_object_add_child(window, button);
 
 	render_svg_close(h);
 }
