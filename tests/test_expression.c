@@ -169,6 +169,18 @@ START_TEST(test_expression_tokenize_neg_values) {
 }
 END_TEST
 
+START_TEST(test_expression_tokenize_functions) {
+	expression_token **tokens = expression_tokenize("sin(3.0)");
+
+	ck_assert(tokens != 0);
+	ck_assert(expression_token_count(tokens) == 4);
+
+	ck_assert(tokens[0] != 0);
+	ck_assert(tokens[0]->type == e_type_function);
+	ck_assert(strcmp(tokens[0]->content, "sin") == 0);
+}
+END_TEST
+
 START_TEST(test_expression_parse) {
 	expression_context *ec = expression_context_create();
 	expression *e = expression_parse("3.0");
@@ -272,6 +284,16 @@ START_TEST(test_expression_parse3) {
 }
 END_TEST
 
+START_TEST(test_expression_parse_functions) {
+	expression_context *ec = expression_context_create();
+	expression *e;
+
+	e = expression_parse("sin(3.0)");
+	ck_assert(e != 0);
+	ck_assert(expression_execute(ec, e) == sinf(3.0));
+}
+END_TEST
+
 START_TEST(test_expression_parse_invalid_chars) {
 	ck_assert(expression_parse("") == 0);
 	ck_assert(expression_parse("3.3!\"#¤ %&") == 0);
@@ -293,11 +315,13 @@ void add_expression_tests(Suite *suite) {
 	tcase_add_test(c, test_expression_create_token);
 	tcase_add_test(c, test_expression_tokenize);
 	tcase_add_test(c, test_expression_tokenize_neg_values);
+	tcase_add_test(c, test_expression_tokenize_functions);
 	tcase_add_test(c, test_expression_parse);
 	tcase_add_test(c, test_expression_parse_var);
 	tcase_add_test(c, test_expression_parse_prio1);
 	tcase_add_test(c, test_expression_parse_prio2);
 	tcase_add_test(c, test_expression_parse3);
+	tcase_add_test(c, test_expression_parse_functions);
 	tcase_add_test(c, test_expression_parse_invalid_chars);
 	suite_add_tcase(suite, c);
 }

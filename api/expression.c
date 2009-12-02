@@ -384,6 +384,11 @@ expression_token** expression_tokenize(const char *exp) {
 		c = exp[i];
 
 		if(c == '(') {
+			if(token > 0 && tokens[token-1]->type == e_type_var) {
+				tokens[token-1]->type = e_type_function;
+				op_mode = false;
+			}
+
 			tokens[token] = expression_create_token(e_type_leftp, 0, 0);
 			token++;
 			i++;

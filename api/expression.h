@@ -51,7 +51,8 @@ typedef enum {
 	e_type_rightp = 1 << 6,
 
 	e_type_var = 1 << 7,
-	e_type_const = 1 << 8
+	e_type_const = 1 << 8,
+	e_type_function = 1 << 9
 } expression_token_type;
 
 typedef struct {

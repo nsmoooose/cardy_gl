@@ -25,6 +25,10 @@
 			<td>easy</td>
 		  </tr>
 		  <tr>
+			<td>Non animated version for low cpu usage. Purpose is to reduce battery usage on laptops</td>
+			<td>medium</td>
+		  </tr>
+		  <tr>
 			<td>Find more fun solitaires.</td>
 			<td>easy</td>
 		  </tr>
@@ -33,7 +37,16 @@
 			<td>hard</td>
 		  </tr>
 		  <tr>
-			<td>Keyboard handling of widgets. Closely related to focus handling</td>
+			<td>
+			  Keyboard handling of widgets. Closely related to focus handling. Implementation steps:
+			  <ul>
+				<li>send keyboard events to all widgets to get us started.</li>
+				<li>
+				  send keyboard events to control in focus. Then iterate parents
+				  until someone handles the event.
+				</li>
+			  </ul>
+			</td>
 			<td>medium</td>
 		  </tr>
 		  <tr>
@@ -42,10 +55,21 @@
 		  </tr>
 		  <tr>
 			<td>
+			  Animated backgrounds:
+			  <ul>
+				<li>growing grass.</li>
+				<li>fixed svg</li>
+			  </ul>
+			</td>
+			<td>medium</td>
+		  </tr>
+		  <tr>
+			<td>
 			  Options window with the following content:
-			  <ll>
+			  <ul>
 				<li>default deck.</li>
-			  </ll>
+				<li>background</li>
+			  </ul>
 			</td>
 			<td>medium</td>
 		  </tr>
@@ -62,7 +86,14 @@
 			<td>medium</td>
 		  </tr>
 		  <tr>
-			<td><del>Rotation of individual widgets.</del><ins>Done: 2009-11-30</ins></td>
+			<td>
+			  Widget rotation:
+			  <ul>
+				<li><del>Rotation of individual widgets.</del><ins>Done: 2009-11-30</ins></li>
+				<li>rotation around center of widget as default.</li>
+				<li>rotation center expressions. Should be possible to specify what we rotate around</li>
+			  </ul>
+			</td>
 			<td>easy</td>
 		  </tr>
 		  <tr>
@@ -172,6 +203,10 @@ Linked lists.
 
 Do we wish to hide the fact that we are using this lib? Could create wrappers
 around the calls we are using.</pre>
+			  Some steps:
+			  <ul>
+				<li>style object with all expressions in a hashtable that you can perform lookups in.</li>
+			  </ul>
 			</td>
 			<td>easy</td>
 		  </tr>
@@ -204,19 +239,6 @@ TODO split this up in several smaller tasks!
 
 /* *********************************************************************************** */
 
-expression variables common to all widgets (rendering object as well?):
-* first_frame
-* total_time  Total time this object has been alive.
-              This should be a variable in the render_object structure.
-              We can then create a special expression that has a pointer to
-              this one.
-
-expression functions:
-* sin, cos
-* ease_xxx_yy
-
-/* *********************************************************************************** */
-
 typedef enum {
 		e_entering_state,
 		e_continuous_state,
@@ -240,8 +262,24 @@ typedef struct {
 
 transition *t = widget_transition_create(e_entering_state, 3.0f, expression_parse(""));
 widget_style_add_transition(style, "hover", "backcolor_red", t);</pre>
+			  Tasks:
+			  <ul>
+				<li>Start with a simple hover state?</li>
+				<li>todo</li>
+			  </ul>
 			</td>
 			<td>hard</td>
+		  </tr>
+		  <tr>
+			<td>
+			  Expression parsing and library. Tasks:
+			  <ul>
+				<li>parse function expressions.</li>
+				<li>expression library. sin, cos, easing functions</li>
+			  </ul>
+			</td>
+			<td>medium</td>
+		  </tr>
 		</tbody>
 	  </table>
 	</div>

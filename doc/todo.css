@@ -11,8 +11,10 @@ div.content {
 	padding: 10px;
 }
 
-li {
-	margin-left: 20px;
+ul {
+	margin-top: 3px;
+	margin-bottom: 3px;
+	padding-left: 20px;
 }
 
 done {
