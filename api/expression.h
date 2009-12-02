@@ -2,12 +2,16 @@
 #define __EXPRESSION_H__
 
 #include <glib.h>
+#include "types.h"
 
 struct expression_context_St;
 typedef struct expression_context_St expression_context;
 
 struct expression_St;
 typedef struct expression_St expression;
+
+struct expression_lib_St;
+typedef struct expression_lib_St expression_lib;
 
 expression_context *expression_context_create();
 void expression_context_free(expression_context *ec);
@@ -67,8 +71,26 @@ void expression_free_tokens(expression_token *tokens[]);
 expression* expression_parse_tokens(expression_token *tokens[]);
 int expression_token_count(expression_token *tokens[]);
 
-expression *expression_parse(const char *exp);
+expression *expression_parse(expression_lib *library, const char *exp);
 
 float expression_execute(expression_context *context, expression *exp);
+
+expression_lib *expression_lib_create();
+void expression_lib_free(expression_lib *lib);
+
+expression_lib *expression_lib_default();
+
+void expression_lib_add_function1f(expression_lib *lib, const char *name, function1f fun);
+void expression_lib_add_function2f(expression_lib *lib, const char *name, function2f fun);
+void expression_lib_add_function3f(expression_lib *lib, const char *name, function3f fun);
+void expression_lib_add_function4f(expression_lib *lib, const char *name, function4f fun);
+void expression_lib_add_function5f(expression_lib *lib, const char *name, function5f fun);
+void expression_lib_add_function6f(expression_lib *lib, const char *name, function6f fun);
+
+bool expression_lib_is_function(expression_lib *lib, const char *name);
+
+int expression_lib_param_count(expression_lib *lib, const char *name);
+
+expression *expression_lib_build_expression(expression_lib *lib, const char *name, expression *params[]);
 
 #endif /* __EXPRESSION_H__ */

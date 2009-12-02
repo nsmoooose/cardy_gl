@@ -183,25 +183,25 @@ END_TEST
 
 START_TEST(test_expression_parse) {
 	expression_context *ec = expression_context_create();
-	expression *e = expression_parse("3.0");
+	expression *e = expression_parse(0, "3.0");
 
 	mark_point();
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 3.0f);
 
 	mark_point();
-	e = expression_parse("3+4");
+	e = expression_parse(0, "3+4");
 	ck_assert(expression_execute(ec, e) == 7.0f);
 
 	mark_point();
-	e = expression_parse("3-4");
+	e = expression_parse(0, "3-4");
 	ck_assert(expression_execute(ec, e) == -1.0f);
 
 	mark_point();
-	e = expression_parse("3*4");
+	e = expression_parse(0, "3*4");
 	ck_assert(expression_execute(ec, e) == 12.0f);
 
-	e = expression_parse("3/4");
+	e = expression_parse(0, "3/4");
 	ck_assert(expression_execute(ec, e) == 0.75f);
 }
 END_TEST
@@ -211,12 +211,12 @@ START_TEST(test_expression_parse_var) {
 	expression *e;
 
 	expression_context_set(ec, "width", expression_const(3.0f));
-	e = expression_parse("width*4");
+	e = expression_parse(0, "width*4");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 12.0f);
 
 	expression_context_set(ec, "width_apa", expression_const(3.0f));
-	e = expression_parse("width_apa*2");
+	e = expression_parse(0, "width_apa*2");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 6.0f);
 }
@@ -226,11 +226,11 @@ START_TEST(test_expression_parse_prio1) {
 	expression_context *ec = expression_context_create();
 	expression *e;
 
-	e = expression_parse("3+3+4");
+	e = expression_parse(0, "3+3+4");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 10.0f);
 
-	e = expression_parse("3+3-2");
+	e = expression_parse(0, "3+3-2");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 4.0f);
 }
@@ -240,23 +240,23 @@ START_TEST(test_expression_parse_prio2) {
 	expression_context *ec = expression_context_create();
 	expression *e;
 
-	e = expression_parse("3+3*4");
+	e = expression_parse(0, "3+3*4");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 15.0f);
 
-	e = expression_parse("3+3/4");
+	e = expression_parse(0, "3+3/4");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 3.75f);
 
-	e = expression_parse("3*3*9");
+	e = expression_parse(0, "3*3*9");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 81.0f);
 
-	e = expression_parse("3*3+4*4");
+	e = expression_parse(0, "3*3+4*4");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 25.0f);
 
-	e = expression_parse("4+-3");
+	e = expression_parse(0, "4+-3");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 1.0f);
 }
@@ -266,19 +266,19 @@ START_TEST(test_expression_parse3) {
 	expression_context *ec = expression_context_create();
 	expression *e;
 
-	e = expression_parse("(3+3)");
+	e = expression_parse(0, "(3+3)");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 6.0f);
 
-	e = expression_parse("(3+3)*4");
+	e = expression_parse(0, "(3+3)*4");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 24.0f);
 
-	e = expression_parse("3+(3+3)");
+	e = expression_parse(0, "3+(3+3)");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 9.0f);
 
-	e = expression_parse("((3+3*4))");
+	e = expression_parse(0, "((3+3*4))");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == 15.0f);
 }
@@ -288,16 +288,16 @@ START_TEST(test_expression_parse_functions) {
 	expression_context *ec = expression_context_create();
 	expression *e;
 
-	e = expression_parse("sin(3.0)");
+	e = expression_parse(0, "sin(3.0)");
 	ck_assert(e != 0);
 	ck_assert(expression_execute(ec, e) == sinf(3.0));
 }
 END_TEST
 
 START_TEST(test_expression_parse_invalid_chars) {
-	ck_assert(expression_parse("") == 0);
-	ck_assert(expression_parse("3.3!\"#¤ %&") == 0);
-	ck_assert(expression_parse("3+") == 0);
+	ck_assert(expression_parse(0, "") == 0);
+	ck_assert(expression_parse(0, "3.3!\"#¤ %&") == 0);
+	ck_assert(expression_parse(0, "3+") == 0);
 }
 END_TEST
 

@@ -74,11 +74,11 @@ void widget_style_set_pos(widget_style *style, float left, float top) {
 }
 
 void widget_style_set_left(widget_style *style, const char *expr) {
-	expression_context_set(style->ec, style_key_left, expression_parse(expr));
+	expression_context_set(style->ec, style_key_left, expression_parse(0, expr));
 }
 
 void widget_style_set_top(widget_style *style, const char *expr) {
-	expression_context_set(style->ec, style_key_top, expression_parse(expr));
+	expression_context_set(style->ec, style_key_top, expression_parse(0, expr));
 }
 
 expression *widget_style_get_top_expression(widget_style *style) {
@@ -106,7 +106,7 @@ expression *widget_style_get_height_expression(widget_style *style) {
 
 void widget_style_set_rotation(widget_style *style, const char *expr) {
 	expression_context_set(
-		style->ec, style_key_rotation, expression_parse(expr));
+		style->ec, style_key_rotation, expression_parse(0, expr));
 }
 
 expression *widget_style_get_rotation_expression(widget_style *style) {
