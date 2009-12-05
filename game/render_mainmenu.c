@@ -5,6 +5,7 @@
 #include "../api/render_widget.h"
 #include "../api/resource.h"
 #include "render_solitaire.h"
+#include "render_solved.h"
 #include "render_mainmenu.h"
 #include "solitaire_theidiot.h"
 #include "solitaire_maltesercross.h"
@@ -19,9 +20,14 @@ static void set_solitaire(render_event_args *event, solitaire_create sol_callbac
 		event->rcontext->object, "placeholder");
 	render_object *existing_sol = render_object_find(
 		event->rcontext->object, render_object_solitaire_id);
+	render_object *solved = render_object_find(
+		event->rcontext->object, render_object_solved_id);
 
 	if(existing_sol) {
 		render_object_free(event->rcontext, existing_sol);
+	}
+	if(solved) {
+		render_object_free(event->rcontext, solved);
 	}
 	render_object_add_child(placeholder, render_object_solitaire(sol_callback));
 
