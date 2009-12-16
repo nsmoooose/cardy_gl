@@ -7,6 +7,7 @@
 #include "render_solitaire.h"
 #include "render_solved.h"
 #include "render_mainmenu.h"
+#include "solitaire_heirship.h"
 #include "solitaire_theidiot.h"
 #include "solitaire_maltesercross.h"
 #include "solitaire_noname1.h"
@@ -52,6 +53,10 @@ static void sol_pyramid_callback(render_event_args *event, void *data) {
 
 static void sol_test1_callback(render_event_args *event, void *data) {
 	set_solitaire(event, solitaire_test1);
+}
+
+static void sol_heirship_callback(render_event_args *event, void *data) {
+	set_solitaire(event, solitaire_heirship);
 }
 
 void render_object_mainmenu(render_object *parent) {
@@ -110,6 +115,14 @@ void render_object_mainmenu(render_object *parent) {
 	widget_style_set_size(style, bw, bh);
 	widget_style_set_click_callback(style, sol_test1_callback);
 	widget_style_set_image(style, h, "#sol_test1", 256, 64);
+	render_object_add_child(window, button);
+
+	button = widget_generic(0);
+	style = widget_get_default_style(button);
+	widget_style_set_pos(style, 45.0f, 430.0f);
+	widget_style_set_size(style, bw, bh);
+	widget_style_set_click_callback(style, sol_heirship_callback);
+	widget_style_set_image(style, h, "#sol_heirship", 256, 64);
 	render_object_add_child(window, button);
 
 	render_svg_close(h);

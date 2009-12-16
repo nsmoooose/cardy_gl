@@ -36,13 +36,13 @@
      pagecolor="#ffffff"
      gridtolerance="10"
      inkscape:window-height="715"
-     inkscape:zoom="0.85765209"
+     inkscape:zoom="1.2129032"
      objecttolerance="10"
      showgrid="false"
      borderopacity="1"
      inkscape:current-layer="svg7691"
-     inkscape:cx="281.86209"
-     inkscape:cy="283.27076"
+     inkscape:cx="664.91379"
+     inkscape:cy="254.3192"
      inkscape:window-y="25"
      inkscape:window-x="0"
      inkscape:window-width="1268"
@@ -6800,6 +6800,45 @@
        y1="217.40288"
        x2="101.27376"
        y2="217.40288" />
+    <inkscape:perspective
+       id="perspective4285"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2297-3-6-2"
+       id="linearGradient4315-9"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.3721715,0,0,0.99346762,738.32267,35.125329)"
+       x1="-122.26129"
+       y1="217.40288"
+       x2="101.27376"
+       y2="217.40288" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient2297-3-6-2">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop2299-4-8-6" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop2301-6-9-6" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2297-3-6-2"
+       id="linearGradient4326"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.3721715,0,0,0.99346762,740.19358,108.68975)"
+       x1="-122.26129"
+       y1="217.40288"
+       x2="101.27376"
+       y2="217.40288" />
   </defs>
   <g
      id="mainmenu">
@@ -7336,5 +7375,31 @@
        xml:space="preserve"><tspan
          id="tspan4318"
          sodipodi:role="line">Test1</tspan></text>
+  </g>
+  <g
+     id="sol_heirship">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       id="rect2547-8-6-9"
+       width="318.31088"
+       height="67.626495"
+       x="567.24634"
+       y="292.02521" />
+    <rect
+       y="299.18863"
+       x="573.80231"
+       height="50.967724"
+       width="303.98407"
+       id="rect2245-8-6-5"
+       style="fill:#ffffff;fill-opacity:1;stroke:url(#linearGradient4326);stroke-width:2.33512998;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.55830389;stroke-dasharray:none;stroke-dashoffset:25" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text2293-4-4-0"
+       y="337.01273"
+       x="584.79242"
+       style="font-size:40px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;writing-mode:lr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       xml:space="preserve"><tspan
+         id="tspan4329"
+         sodipodi:role="line">Heirship</tspan></text>
   </g>
 </svg>
