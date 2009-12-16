@@ -1,4 +1,5 @@
-analysis
+analysis-cov
+analysis-cppcheck
 .doxygen
 cardy_gl*
 coverage
