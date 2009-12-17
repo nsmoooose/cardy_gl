@@ -40,13 +40,13 @@ void mem_attach(mem_context *context, void *mem) {
 }
 
 void* mem_alloc(mem_context *context, int size) {
-	int old_size, index;
+	int index;
 	void *old_blocks, *data = calloc(1, size);
 
 	index = first_free(context);
 	if(index == -1) {
+		int old_size = context->size;
 		old_blocks = context->blocks;
-		old_size = context->size;
 		context->blocks = calloc(old_size * 2, sizeof(void*));
 		context->size = old_size * 2;
 

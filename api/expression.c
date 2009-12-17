@@ -65,9 +65,7 @@ void expression_free(expression *e) {
 	/* TODO
 	   This expression can have subexpressions that also needs freeing. */
 
-	if(e->data) {
-		free(e->data);
-	}
+	free(e->data);
 	free(e);
 }
 

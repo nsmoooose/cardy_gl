@@ -28,12 +28,12 @@ render_object *render_object_create(const char *id) {
 }
 
 void render_object_free(render_context *rcontext, render_object *object) {
-	int index;
 	render_event_args event;
 
 	event.rcontext = rcontext;
 
 	if(object != 0) {
+		int index;
 		if(object->parent != 0) {
 			render_object_remove_child(object);
 		}
