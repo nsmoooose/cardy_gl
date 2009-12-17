@@ -329,6 +329,22 @@ START_TEST(test_visual_sync) {
 }
 END_TEST
 
+START_TEST(test_card_take_match) {
+	card *taken_card, prototype;
+
+	mem_context *context = mem_context_create();
+	pile *pile = pile_create(context, 52);
+	create_deck(context, pile, 1);
+
+	prototype.value = 13;
+	taken_card = card_take_match(pile, card_match_value, &prototype);
+
+	ck_assert(taken_card != 0);
+	ck_assert(taken_card->value == 13);
+	ck_assert(card_count(pile) == 51);
+}
+END_TEST
+
 void add_card_tests(Suite *suite) {
 	TCase *c = tcase_create("Card");
 	tcase_add_test(c, test_card_create);
@@ -353,5 +369,6 @@ void add_card_tests(Suite *suite) {
 	tcase_add_test(c, test_card_hide);
 	tcase_add_test(c, test_card_hide_count);
 	tcase_add_test(c, test_card_hide_all);
+	tcase_add_test(c, test_card_take_match);
 	suite_add_tcase(suite, c);
 }

@@ -79,6 +79,33 @@ card* card_take_last(pile *pile) {
 	return 0;
 }
 
+bool card_match_value(card *c, card *prototype) {
+	if(c->value == prototype->value) {
+		return true;
+	}
+	return false;
+}
+
+bool card_match_suit(card *c, card *prototype) {
+	exit(1);
+}
+
+bool card_match_suit_value(card *c, card *prototype) {
+	exit(1);
+}
+
+card *card_take_match(pile *pile, card_match match, card *prototype) {
+	if(pile) {
+		int i;
+		for(i=0;i<pile->size;++i) {
+			if(pile->cards[i] != 0 && match(pile->cards[i], prototype)) {
+				return card_take(pile, i);
+			}
+		}
+	}
+	return 0;
+}
+
 card *card_last(pile *pile) {
 	int index;
 	for(index = pile->size-1;index >= 0;--index) {

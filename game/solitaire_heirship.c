@@ -18,8 +18,14 @@ static void action_deal_execute(visual_pile_action *action) {
 	solitaire *sol = data->sol;
 
 	if(card_count(i->deck) == 104) {
-		int ki = 0, qi = 0, ai = 0;
+		card prototype;
+		prototype.value = 13;
+
 		card_reveal_all(i->deck);
+
+		card_append(card_take_match(i->deck, card_match_value, &prototype), i->kings[0]);
+
+		int ki = 0, qi = 0, ai = 0;
 		while(card_count(i->deck) > 0) {
 			card *card = card_take_last(i->deck);
 			if(card->value == 1) {
@@ -31,8 +37,8 @@ static void action_deal_execute(visual_pile_action *action) {
 				qi++;
 			}
 			else if(card->value == 13) {
-				card_append(card, i->kings[ki]);
 				ki++;
+				card_append(card, i->kings[ki]);
 			}
 			else {
 				card_append(card, i->kings[ki]);

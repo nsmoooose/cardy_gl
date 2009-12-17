@@ -126,6 +126,12 @@ int card_count(pile *pile);
 
 card *card_take(pile *pile, int index);
 
+typedef bool(*card_match)(card *c, card *prototype);
+bool card_match_value(card *c, card *prototype);
+bool card_match_suit(card *c, card *prototype);
+bool card_match_suit_value(card *c, card *prototype);
+card *card_take_match(pile *pile, card_match match, card *prototype);
+
 /** Takes the last card from the array and returns it. The index that
  *  The card was found on will be cleared. This makes the card ready to
  *  be inserted into any other array.
