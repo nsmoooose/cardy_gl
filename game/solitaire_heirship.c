@@ -18,14 +18,15 @@ static void action_deal_execute(visual_pile_action *action) {
 	solitaire *sol = data->sol;
 
 	if(card_count(i->deck) == 104) {
+		int ki = 0, qi = 0, ai = 0;
 		card prototype;
 		prototype.value = 13;
 
 		card_reveal_all(i->deck);
 
-		card_append(card_take_match(i->deck, card_match_value, &prototype), i->kings[0]);
+		card_append(
+			card_take_match(i->deck, card_match_value, &prototype), i->kings[0]);
 
-		int ki = 0, qi = 0, ai = 0;
 		while(card_count(i->deck) > 0) {
 			card *card = card_take_last(i->deck);
 			if(card->value == 1) {
@@ -75,12 +76,56 @@ static visual_pile_action *action_deal(
 }
 
 static void setup_rules(mem_context *context, solitaire *s, internal *i) {
-	rule *rule1;
+	rule *r;
+	condition *src = condition_source_array(
+		context, 16,
+		i->kings[0], i->kings[1], i->kings[2], i->kings[3],
+		i->kings[4], i->kings[5], i->kings[6], i->kings[7],
+		i->aces[0], i->aces[1], i->aces[2], i->aces[3],
+		i->aces[4], i->aces[5], i->aces[6], i->aces[7]);
+
+	condition *dst_ace = condition_destination_array(
+		context, 8,
+		i->aces[0], i->aces[1], i->aces[2], i->aces[3],
+		i->aces[4], i->aces[5], i->aces[6], i->aces[7]);
+
+	condition *dst_king = condition_destination_array(
+		context, 8,
+		i->kings[0], i->kings[1], i->kings[2], i->kings[3],
+		i->kings[4], i->kings[5], i->kings[6], i->kings[7]);
 
 	s->ruleset = ruleset_create(context);
-	rule1 = rule_create(context);
-	rule_add_condition(context, rule1, condition_destination_empty(context));
-	ruleset_add_rule(context, s->ruleset, rule1);
+
+	/* We allow to build down regardless of suit on king piles. */
+	r = rule_create(context);
+	rule_add_condition(context, r, src);
+	rule_add_condition(context, r, condition_top_card(context));
+	rule_add_condition(context, r, condition_source_not_equal_destination(context));
+	rule_add_condition(context, r, dst_king);
+	rule_add_condition(
+		context, r, condition_top_card_compare(context, 0, e_dest_1higher_value));
+	ruleset_add_rule(context, s->ruleset, r);
+
+	/* We allow to build up regardless of suit on ace piles. */
+	r = rule_create(context);
+	rule_add_condition(context, r, src);
+	rule_add_condition(context, r, condition_top_card(context));
+	rule_add_condition(context, r, condition_source_not_equal_destination(context));
+	rule_add_condition(context, r, dst_ace);
+	rule_add_condition(
+		context, r, condition_top_card_compare(context, 0, e_dest_1lower_value));
+	ruleset_add_rule(context, s->ruleset, r);
+
+	/* We allow any card to be placed on a king. */
+	r = rule_create(context);
+	rule_add_condition(context, r, src);
+	rule_add_condition(context, r, condition_top_card(context));
+	rule_add_condition(context, r, dst_king);
+	rule_add_condition(
+		context, r,
+		condition_card_equal(context, e_suit_none, 13, e_equal_value, 0));
+	ruleset_add_rule(context, s->ruleset, r);
+
 
 	/*
 	s->ruleset->solved = rule_create(context);
