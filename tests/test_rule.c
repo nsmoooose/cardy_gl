@@ -379,6 +379,18 @@ START_TEST(test_condition_or) {
 }
 END_TEST
 
+START_TEST(test_condition_not) {
+	move_action action;
+	mem_context *context = mem_context_create();
+
+	condition *cond = condition_not(context, condition_fail(context));
+	ck_assert(cond->check(cond, &action) == true);
+
+	cond = condition_not(context, condition_succeed(context));
+	ck_assert(cond->check(cond, &action) == false);
+}
+END_TEST
+
 START_TEST(test_condition_or_array) {
 	mem_context *context = mem_context_create();
 	condition *cond, *or1, *or2, *or3, *or4;
@@ -497,7 +509,7 @@ START_TEST(test_condition_top_card) {
 }
 END_TEST
 
-START_TEST(test_condition_card_equal) {
+START_TEST(test_condition_source_card_equal) {
 	move_action action;
 	pile *deck;
 	condition *cond;
@@ -508,7 +520,7 @@ START_TEST(test_condition_card_equal) {
 	action.source = deck;
 	action.source_index = 0;
 
-	cond = condition_card_equal(context, e_suit_none, 3, e_equal_value, 0);
+	cond = condition_source_card_equal(context, e_suit_none, 3, e_equal_value, 0);
 	ck_assert_msg(cond->check(cond, &action) == false,
 				  "Should fail since card isn't the right value.");
 
@@ -517,12 +529,45 @@ START_TEST(test_condition_card_equal) {
 	ck_assert_msg(cond->check(cond, &action) == true,
 				  "Should be movable since top card value is equal.");
 
-	cond = condition_card_equal(
+	cond = condition_source_card_equal(
 		context, e_clubs, 3, e_equal_value|e_follow_suit, 0);
 	ck_assert_msg(cond->check(cond, &action) == false,
 				  "Should fail since card suit isn't the right value.");
 
-	cond = condition_card_equal(
+	cond = condition_source_card_equal(
+		context, e_clubs, 2, e_equal_value|e_follow_suit, deck);
+	ck_assert_msg(cond->check(cond, 0) == false,
+				  "Should succeed since card is the right value.");
+}
+END_TEST
+
+START_TEST(test_condition_destination_card_equal) {
+	move_action action;
+	pile *deck;
+	condition *cond;
+	mem_context *context = mem_context_create();
+
+	deck = pile_create(context, 52);
+	deck->cards[0] = card_create(context, e_spades, 2);
+	action.destination = deck;
+	action.destination_index = 0;
+
+	cond = condition_destination_card_equal(
+		context, e_suit_none, 3, e_equal_value, 0);
+	ck_assert_msg(cond->check(cond, &action) == false,
+				  "Should fail since card isn't the right value.");
+
+	action.destination_index = 1;
+	deck->cards[1] = card_create(context, e_spades, 3);
+	ck_assert_msg(cond->check(cond, &action) == true,
+				  "Should be movable since top card value is equal.");
+
+	cond = condition_destination_card_equal(
+		context, e_clubs, 3, e_equal_value|e_follow_suit, 0);
+	ck_assert_msg(cond->check(cond, &action) == false,
+				  "Should fail since card suit isn't the right value.");
+
+	cond = condition_destination_card_equal(
 		context, e_clubs, 2, e_equal_value|e_follow_suit, deck);
 	ck_assert_msg(cond->check(cond, 0) == false,
 				  "Should succeed since card is the right value.");
@@ -807,12 +852,14 @@ void add_rule_tests(Suite *suite) {
 	tcase_add_test(c, test_condition_move_count);
 	tcase_add_test(c, test_condition_or);
 	tcase_add_test(c, test_condition_or_array);
+	tcase_add_test(c, test_condition_not);
 	tcase_add_test(c, test_condition_destination);
 	tcase_add_test(c, test_condition_destination_array);
 	tcase_add_test(c, test_condition_destination_empty);
 	tcase_add_test(c, test_condition_rest_of_pile);
 	tcase_add_test(c, test_condition_top_card);
-	tcase_add_test(c, test_condition_card_equal);
+	tcase_add_test(c, test_condition_source_card_equal);
+	tcase_add_test(c, test_condition_destination_card_equal);
 	tcase_add_test(c, test_condition_top_card_compare);
 	tcase_add_test(c, test_rule_create);
 	tcase_add_test(c, test_rule_add_condition);

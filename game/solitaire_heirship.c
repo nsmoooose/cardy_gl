@@ -103,7 +103,12 @@ static void setup_rules(mem_context *context, solitaire *s, internal *i) {
 	rule_add_condition(context, r, condition_source_not_equal_destination(context));
 	rule_add_condition(context, r, dst_king);
 	rule_add_condition(
-		context, r, condition_top_card_compare(context, 0, e_dest_1higher_value));
+		context, r,
+		condition_or(
+			context,
+			condition_top_card_compare(context, 0, e_dest_1higher_value),
+			condition_top_card_compare(context, 0, e_dest_1lower_value)
+			));
 	ruleset_add_rule(context, s->ruleset, r);
 
 	/* We allow to build up regardless of suit on ace piles. */
@@ -121,18 +126,23 @@ static void setup_rules(mem_context *context, solitaire *s, internal *i) {
 	rule_add_condition(context, r, src);
 	rule_add_condition(context, r, condition_top_card(context));
 	rule_add_condition(context, r, dst_king);
+	rule_add_condition(context, r, condition_source_not_equal_destination(context));
 	rule_add_condition(
 		context, r,
-		condition_card_equal(context, e_suit_none, 13, e_equal_value, 0));
+		condition_destination_card_equal(
+			context, e_suit_none, 13, e_equal_value, 0));
 	ruleset_add_rule(context, s->ruleset, r);
 
-
-	/*
+	/* Make sure that we have 11 cards in each ace pile for this solitaire
+	 * to be solved.
+	 */
 	s->ruleset->solved = rule_create(context);
 	rule_add_condition(
 		context, s->ruleset->solved,
-		condition_card_count_array(context, 1, 1, i->done));
-	*/
+		condition_card_count_array(
+			context, 11, 8,
+			i->aces[0], i->aces[1], i->aces[2], i->aces[3],
+			i->aces[4], i->aces[5], i->aces[6], i->aces[7]));
 }
 
 solitaire* solitaire_heirship(mem_context *context, visual_settings *settings) {

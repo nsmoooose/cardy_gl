@@ -154,19 +154,19 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 	s->ruleset->solved = rule_create(context);
 	rule_add_condition(
 		context, s->ruleset->solved,
-		condition_card_equal(
+		condition_source_card_equal(
 			context, e_suit_none, 14, e_equal_value, i->pile1));
 	rule_add_condition(
 		context, s->ruleset->solved,
-		condition_card_equal(
+		condition_source_card_equal(
 			context, e_suit_none, 14, e_equal_value, i->pile2));
 	rule_add_condition(
 		context, s->ruleset->solved,
-		condition_card_equal(
+		condition_source_card_equal(
 			context, e_suit_none, 14, e_equal_value, i->pile3));
 	rule_add_condition(
 		context, s->ruleset->solved,
-		condition_card_equal(
+		condition_source_card_equal(
 			context, e_suit_none, 14, e_equal_value, i->pile4));
 	rule_add_condition(
 		context, s->ruleset->solved,
