@@ -131,6 +131,16 @@ static void setup_rules(mem_context *context, solitaire *s, internal *i) {
 		context, r,
 		condition_destination_card_equal(
 			context, e_suit_none, 13, e_equal_value, 0));
+	rule_add_condition(
+		context, r,	condition_not(
+			context,
+			condition_source_card_equal(
+				context, e_suit_none, 13, e_equal_value, 0)));
+	rule_add_condition(
+		context, r,	condition_not(
+			context,
+			condition_source_card_equal(
+				context, e_suit_none, 1, e_equal_value, 0)));
 	ruleset_add_rule(context, s->ruleset, r);
 
 	/* Make sure that we have 11 cards in each ace pile for this solitaire
