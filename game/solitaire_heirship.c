@@ -189,7 +189,7 @@ solitaire* solitaire_heirship(mem_context *context, visual_settings *settings) {
 		vpile->origin[0] = left_tmp;
 		visual_add_pile(context, s->visual, vpile);
 
-		i->aces[index] = pile_create(context, 52);
+		i->aces[index] = pile_create(context, 11);
 		vpile = visual_pile_create(context, i->aces[index]);
 		vpile->origin[0] = left_tmp;
 		vpile->origin[1] = 0 - settings->card_height - settings->card_spacing;
