@@ -550,14 +550,14 @@ START_TEST(test_condition_destination_card_equal) {
 	deck = pile_create(context, 52);
 	deck->cards[0] = card_create(context, e_spades, 2);
 	action.destination = deck;
-	action.destination_index = 0;
+	action.destination_index = 1;
 
 	cond = condition_destination_card_equal(
 		context, e_suit_none, 3, e_equal_value, 0);
 	ck_assert_msg(cond->check(cond, &action) == false,
 				  "Should fail since card isn't the right value.");
 
-	action.destination_index = 1;
+	action.destination_index = 2;
 	deck->cards[1] = card_create(context, e_spades, 3);
 	ck_assert_msg(cond->check(cond, &action) == true,
 				  "Should be movable since top card value is equal.");
