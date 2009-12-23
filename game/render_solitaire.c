@@ -35,6 +35,11 @@ card_proxy *g_selected_card = 0;
 
 const char *render_object_solitaire_id = "solitaire";
 
+GLfloat ambient_light[] = { 0.01f, 0.01f, 0.01f, 1.0f };
+GLfloat diffuse_light[] = { 0.6f, 0.6f, 0.6f, 1.0f };
+GLfloat specular_light[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+GLfloat light_pos[] = { 0.0f, 0.0f, 10.0f, 1.0f };
+
 /* Build a vector of coordinates for a card. */
 static GLfloat g_card_vertexes[8*3] = {
 	0 - CARD_WIDTH/2.0f, 0 + CARD_HEIGHT/2.0f, 0 + CARD_THICKNESS/2.0f, /* 0, top left, front */
@@ -121,12 +126,14 @@ card_geometry *card_geometry_create(mem_context *context) {
 void render_card(render_event_args *event, visual_pile* pile,
 				 card_proxy* proxy, bool selected) {
 	int index;
+	GLfloat color_sel[] = { 1.0f, 0.7f, 0.7f };
+	GLfloat color_white[] = { 1.0f, 1.0f, 1.0f };
 
 	if(selected) {
-		glColor3f(1.0f, 0.7f, 0.7f);
+		glColor3fv(color_sel);
 	}
 	else {
-		glColor3f(1.0f, 1.0f, 1.0f);
+		glColor3fv(color_white);
 	}
 
 	glPushName(render_register_selection_callback(
@@ -246,6 +253,15 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 		return;
 	}
 
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_light);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_light);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specular_light);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
+	glEnable(GL_COLOR_MATERIAL);
+	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	if(viewport[3] == 0) {
 		viewport[3] = 1;
@@ -292,6 +308,9 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 	}
 	glDisable(GL_DEPTH_TEST);
 	glPopMatrix();
+
+	glDisable(GL_LIGHT0);
+	glDisable(GL_LIGHTING);
 
 	i->time_elapsed += delta;
 }
