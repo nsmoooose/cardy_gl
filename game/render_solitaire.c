@@ -36,9 +36,9 @@ card_proxy *g_selected_card = 0;
 const char *render_object_solitaire_id = "solitaire";
 
 GLfloat ambient_light[] = { 0.01f, 0.01f, 0.01f, 1.0f };
-GLfloat diffuse_light[] = { 0.6f, 0.6f, 0.6f, 1.0f };
+GLfloat diffuse_light[] = { 0.8f, 0.8f, 0.8f, 1.0f };
 GLfloat specular_light[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-GLfloat light_pos[] = { 0.0f, 0.0f, 10.0f, 1.0f };
+GLfloat light_pos[] = { 0.0f, 0.0f, 100.0f, 1.0f };
 
 /* Build a vector of coordinates for a card. */
 static GLfloat g_card_vertexes[8*3] = {
@@ -261,6 +261,7 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 	glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+	glShadeModel(GL_SMOOTH);
 
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	if(viewport[3] == 0) {
