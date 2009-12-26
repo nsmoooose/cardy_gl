@@ -91,6 +91,8 @@ typedef struct visual_pile_St {
  *  and cards.
  */
 typedef struct {
+	float corner_width;
+	int corner_segments;
 	float card_width;
 	float card_height;
 	float card_spacing;

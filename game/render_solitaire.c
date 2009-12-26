@@ -2,6 +2,7 @@
 #include <librsvg/rsvg.h>
 #include <librsvg/rsvg-cairo.h>
 #include <glib.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,6 +21,8 @@ typedef struct {
 
 	float first_frame;
 	float time_elapsed;
+
+	card_geometry *card_geometry;
 } render_solitaire_data;
 
 theme *g_theme = 0;
@@ -119,12 +122,156 @@ static void callback_card(render_event_args *event, void *data) {
 	process_click(event->rcontext, event->object, event->object->data, pile, data);
 }
 
-card_geometry *card_geometry_create(mem_context *context) {
-	return 0;
+card_geometry *card_geometry_create(
+	mem_context *context, visual_settings *settings) {
+
+	card_geometry *geo = mem_alloc(context, sizeof(card_geometry));
+	int i=0, j=0, side_index=0, face_index=0;
+	float hw = settings->card_width / 2.0f;
+	float hh = settings->card_height / 2.0f;
+	float ht = settings->card_thickness / 2.0f;
+	float angle, sa;
+
+	/* 4 corners * corner_segments + 4 side quads == quads
+	 * quads * 4 == vertexes
+	 * vertexes * 3 == data values
+	 */
+	geo->side_count = (4 * settings->corner_segments + 4) * 4 * 3;
+	geo->face_count = 5 * 2 * 4 * settings->corner_segments * 3;
+	geo->front_vertexes = mem_alloc(context,  geo->face_count * sizeof(GLfloat));
+	geo->back_vertexes = mem_alloc(context, geo->face_count * sizeof(GLfloat));
+	geo->side_vertexes = mem_alloc(context, geo->side_count * sizeof(GLfloat));
+	geo->front_texture_coords = mem_alloc(context, geo->face_count / 3 * 2 * sizeof(GLfloat));
+	geo->back_texture_coords = mem_alloc(context, geo->face_count / 3 * 2 * sizeof(GLfloat));
+
+	/* top quad and side */
+	geo->side_vertexes[side_index + 0] = 0.0f - hw + settings->corner_width;
+	geo->side_vertexes[side_index + 1] = 0.0f - hh;
+	geo->side_vertexes[side_index + 2] = 0.0f - ht;
+	side_index += 3;
+	geo->side_vertexes[side_index + 0] = 0.0f + hw - settings->corner_width;
+	geo->side_vertexes[side_index + 1] = 0.0f - hh;
+	geo->side_vertexes[side_index + 2] = 0.0f - ht;
+	side_index += 3;
+	geo->side_vertexes[side_index + 0] = 0.0f + hw - settings->corner_width;
+	geo->side_vertexes[side_index + 1] = 0.0f - hh;
+	geo->side_vertexes[side_index + 2] = 0.0f + ht;
+	side_index += 3;
+	geo->side_vertexes[side_index + 0] = 0.0f - hw + settings->corner_width;
+	geo->side_vertexes[side_index + 1] = 0.0f - hh;
+	geo->side_vertexes[side_index + 2] = 0.0f + ht;
+	side_index += 3;
+
+	/* left quad and side */
+	geo->side_vertexes[side_index + 0] = 0.0f - hw;
+	geo->side_vertexes[side_index + 1] = 0.0f + hh - settings->corner_width;
+	geo->side_vertexes[side_index + 2] = 0.0f - ht;
+	side_index += 3;
+	geo->side_vertexes[side_index + 0] = 0.0f - hw;
+	geo->side_vertexes[side_index + 1] = 0.0f - hh + settings->corner_width;
+	geo->side_vertexes[side_index + 2] = 0.0f - ht;
+	side_index += 3;
+	geo->side_vertexes[side_index + 0] = 0.0f - hw;
+	geo->side_vertexes[side_index + 1] = 0.0f - hh + settings->corner_width;
+	geo->side_vertexes[side_index + 2] = 0.0f + ht / 2.0f;
+	side_index += 3;
+	geo->side_vertexes[side_index + 0] = 0.0f - hw;
+	geo->side_vertexes[side_index + 1] = 0.0f + hh - settings->corner_width;
+	geo->side_vertexes[side_index + 2] = 0.0f + ht;
+	side_index += 3;
+
+	/* right quad and side */
+	geo->side_vertexes[side_index + 0] = 0.0f + hw;
+	geo->side_vertexes[side_index + 1] = 0.0f + hh - settings->corner_width;
+	geo->side_vertexes[side_index + 2] = 0.0f - ht;
+	side_index += 3;
+	geo->side_vertexes[side_index + 0] = 0.0f + hw;
+	geo->side_vertexes[side_index + 1] = 0.0f - hh + settings->corner_width;
+	geo->side_vertexes[side_index + 2] = 0.0f - ht;
+	side_index += 3;
+	geo->side_vertexes[side_index + 0] = 0.0f + hw;
+	geo->side_vertexes[side_index + 1] = 0.0f - hh + settings->corner_width;
+	geo->side_vertexes[side_index + 2] = 0.0f + ht / 2.0f;
+	side_index += 3;
+	geo->side_vertexes[side_index + 0] = 0.0f + hw;
+	geo->side_vertexes[side_index + 1] = 0.0f + hh - settings->corner_width;
+	geo->side_vertexes[side_index + 2] = 0.0f + ht;
+	side_index += 3;
+
+	/* bottom quad and side */
+	geo->side_vertexes[side_index + 0] = 0.0f - hw + settings->corner_width;
+	geo->side_vertexes[side_index + 1] = 0.0f + hh;
+	geo->side_vertexes[side_index + 2] = 0.0f - ht;
+	side_index += 3;
+	geo->side_vertexes[side_index + 0] = 0.0f + hw - settings->corner_width;
+	geo->side_vertexes[side_index + 1] = 0.0f + hh;
+	geo->side_vertexes[side_index + 2] = 0.0f - ht;
+	side_index += 3;
+	geo->side_vertexes[side_index + 0] = 0.0f + hw - settings->corner_width;
+	geo->side_vertexes[side_index + 1] = 0.0f + hh;
+	geo->side_vertexes[side_index + 2] = 0.0f + ht;
+	side_index += 3;
+	geo->side_vertexes[side_index + 0] = 0.0f - hw + settings->corner_width;
+	geo->side_vertexes[side_index + 1] = 0.0f + hh;
+	geo->side_vertexes[side_index + 2] = 0.0f + ht;
+	side_index += 3;
+	/* middle quad */
+
+	/* corner */
+	angle = 0.0f;
+	sa = M_PI / 2 / settings->corner_segments;
+	for(i=0;i<4;++i) {
+		float w, h;
+		switch(i) {
+		case 0:
+			w = hw - settings->corner_width;
+			h = hh - settings->corner_width;
+			break;
+		case 1:
+			w = hw - settings->corner_width;
+			h = 0.0f - hh + settings->corner_width;
+			break;
+		case 2:
+			w = 0.0f - hw + settings->corner_width;
+			h = 0.0f - hh + settings->corner_width;
+			break;
+		case 3:
+			w = 0.0f - hw + settings->corner_width;
+			h = hh - settings->corner_width;
+			break;
+		}
+
+		for(j=0;j<settings->corner_segments;++j) {
+			geo->side_vertexes[side_index + 0] = 0.0f + w + sinf(angle) * settings->corner_width;
+			geo->side_vertexes[side_index + 1] = 0.0f + h + cosf(angle) * settings->corner_width;
+			geo->side_vertexes[side_index + 2] = 0.0f - ht;
+			side_index += 3;
+
+			geo->side_vertexes[side_index + 0] = 0.0f + w + sinf(angle + sa) * settings->corner_width;
+			geo->side_vertexes[side_index + 1] = 0.0f + h + cosf(angle + sa) * settings->corner_width;
+			geo->side_vertexes[side_index + 2] = 0.0f - ht;
+			side_index += 3;
+
+			geo->side_vertexes[side_index + 0] = 0.0f + w + sinf(angle + sa) * settings->corner_width;
+			geo->side_vertexes[side_index + 1] = 0.0f + h + cosf(angle + sa) * settings->corner_width;
+			geo->side_vertexes[side_index + 2] = 0.0f + ht;
+			side_index += 3;
+
+			geo->side_vertexes[side_index + 0] = 0.0f + w + sinf(angle) * settings->corner_width;
+			geo->side_vertexes[side_index + 1] = 0.0f + h + cosf(angle) * settings->corner_width;
+			geo->side_vertexes[side_index + 2] = 0.0f + ht;
+			side_index += 3;
+			angle += sa;
+		}
+	}
+
+	printf("side_index: %d, calc size: %d\n", side_index, geo->side_count);
+
+	return geo;
 }
 
 void render_card(render_event_args *event, visual_pile* pile,
-				 card_proxy* proxy, bool selected) {
+				 card_proxy* proxy, bool selected, card_geometry *geo) {
 	int index;
 	GLfloat color_sel[] = { 1.0f, 0.7f, 0.7f };
 	GLfloat color_white[] = { 1.0f, 1.0f, 1.0f };
@@ -147,6 +294,11 @@ void render_card(render_event_args *event, visual_pile* pile,
 		glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
 	}
 
+	/* Draw the side of the card. */
+	glVertexPointer(3, GL_FLOAT, 0, geo->side_vertexes);
+	glDrawArrays(GL_QUADS, 0, geo->side_count / 3);
+
+#if 0
 	for(index=0;index<6;++index) {
 		/* Only apply texturing on the front and the back of the
 		   card. */
@@ -190,6 +342,7 @@ void render_card(render_event_args *event, visual_pile* pile,
 			glDisable(GL_TEXTURE_2D);
 		}
 	}
+#endif
 
 	glPopMatrix();
 	glPopName();
@@ -200,7 +353,7 @@ void render_card(render_event_args *event, visual_pile* pile,
 }
 
 void render_pile(render_event_args *event,
-				 visual_pile* pile, visual_settings *settings) {
+				 visual_pile* pile, visual_settings *settings, card_geometry *geo) {
 	int card_index;
 	bool selected = false;
 
@@ -230,7 +383,7 @@ void render_pile(render_event_args *event,
 		if(pile->cards[card_index] == g_selected_card) {
 			selected = true;
 		}
-		render_card(event, pile, pile->cards[card_index], selected);
+		render_card(event, pile, pile->cards[card_index], selected, geo);
 	}
 	glPopMatrix();
 
@@ -262,6 +415,8 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 	glShadeModel(GL_SMOOTH);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
 
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	if(viewport[3] == 0) {
@@ -305,7 +460,7 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 		if(!pile) {
 			continue;
 		}
-		render_pile(event, pile, i->sol->visual->settings);
+		render_pile(event, pile, i->sol->visual->settings, i->card_geometry);
 	}
 	glDisable(GL_DEPTH_TEST);
 	glPopMatrix();
@@ -427,10 +582,14 @@ render_object *render_object_solitaire(solitaire_create callback) {
 
 	i->context = mem_context_create();
 	i->settings = mem_alloc(i->context, sizeof(visual_settings));
+	i->settings->corner_width = 3;
+	i->settings->corner_segments = 4;
 	i->settings->card_width = 40.0f;
 	i->settings->card_height = 60.0f;
 	i->settings->card_spacing = 4.0f;
 	i->settings->card_thickness = 0.4f;
+
+	i->card_geometry = card_geometry_create(i->context, i->settings);
 
 	if(g_theme == 0) {
 		char themes_path[PATH_MAX];
