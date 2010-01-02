@@ -538,6 +538,29 @@ card_geometry *card_geometry_create(
 			geo->side_vertexes[side_index + 1] = 0.0f + h + cosf(angle) * cr;
 			geo->side_vertexes[side_index + 2] = 0.0f + ht;
 			side_index += 3;
+
+			geo->front_vertexes[face_index + 0] = 0.0f + w + sinf(angle) * cr;
+			geo->front_vertexes[face_index + 1] = 0.0f + h + cosf(angle) * cr;
+			geo->front_vertexes[face_index + 2] = 0.0f + ht;
+			geo->front_texture_coords[coord_index + 0] = (geo->front_vertexes[face_index + 0] + hw) / cw;
+			geo->front_texture_coords[coord_index + 1] = (geo->front_vertexes[face_index + 1] + hh) / ch;
+			face_index += 3;
+			coord_index += 2;
+			geo->front_vertexes[face_index + 0] = 0.0f + w + sinf(angle + sa) * cr;
+			geo->front_vertexes[face_index + 1] = 0.0f + h + cosf(angle + sa) * cr;
+			geo->front_vertexes[face_index + 2] = 0.0f + ht;
+			geo->front_texture_coords[coord_index + 0] = (geo->front_vertexes[face_index + 0] + hw) / cw;
+			geo->front_texture_coords[coord_index + 1] = (geo->front_vertexes[face_index + 1] + hh) / ch;
+			face_index += 3;
+			coord_index += 2;
+			geo->front_vertexes[face_index + 0] = w;
+			geo->front_vertexes[face_index + 1] = h;
+			geo->front_vertexes[face_index + 2] = 0.0f + ht;
+			geo->front_texture_coords[coord_index + 0] = (w + hw) / cw;
+			geo->front_texture_coords[coord_index + 1] = (h + hh) / ch;
+			face_index += 3;
+			coord_index += 2;
+
 			angle += sa;
 		}
 	}
@@ -869,7 +892,7 @@ render_object *render_object_solitaire(solitaire_create callback) {
 
 	i->context = mem_context_create();
 	i->settings = mem_alloc(i->context, sizeof(visual_settings));
-	i->settings->corner_width = 3;
+	i->settings->corner_width = 2.0f;
 	i->settings->corner_segments = 4;
 	i->settings->card_width = 40.0f;
 	i->settings->card_height = 60.0f;
