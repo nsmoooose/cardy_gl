@@ -565,6 +565,16 @@ card_geometry *card_geometry_create(
 		}
 	}
 
+	for(i=0;i < geo->face_count;++i) {
+		geo->back_vertexes[i] = geo->front_vertexes[i];
+		if((i + 1) % 3 == 0) {
+			geo->back_vertexes[i] = 0.0f - ht;
+		}
+	}
+	for(i=0;i < geo->face_count / 3 * 2;++i) {
+		geo->back_texture_coords[i] = geo->front_texture_coords[i];
+	}
+
 	return geo;
 }
 
@@ -600,13 +610,25 @@ void render_card(render_event_args *event, visual_pile* pile,
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, theme_get_card_texture(
 						  g_theme, proxy->card->suit, proxy->card->value));
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glTexCoordPointer(2, GL_FLOAT, 0, geo->front_texture_coords);
 	}
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glTexCoordPointer(2, GL_FLOAT, 0, geo->front_texture_coords);
 	glVertexPointer(3, GL_FLOAT, 0, geo->front_vertexes);
+	glDrawArrays(GL_TRIANGLES, 0, geo->face_count / 3);
+	if(proxy->card != 0) {
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisable(GL_TEXTURE_2D);
+	}
+
+	glEnable(GL_TEXTURE_2D);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glTexCoordPointer(2, GL_FLOAT, 0, geo->back_texture_coords);
+	glVertexPointer(3, GL_FLOAT, 0, geo->back_vertexes);
+	glBindTexture(GL_TEXTURE_2D, theme_get_card_back_texture(g_theme));
 	glDrawArrays(GL_TRIANGLES, 0, geo->face_count / 3);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisable(GL_TEXTURE_2D);
+
 
 #if 0
 	for(index=0;index<6;++index) {
