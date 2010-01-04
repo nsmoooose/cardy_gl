@@ -43,27 +43,6 @@ GLfloat diffuse_light[] = { 0.8f, 0.8f, 0.8f, 1.0f };
 GLfloat specular_light[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 GLfloat light_pos[] = { 0.0f, 0.0f, 100.0f, 1.0f };
 
-/* Build a vector of coordinates for a card. */
-static GLfloat g_card_vertexes[8*3] = {
-	0 - CARD_WIDTH/2.0f, 0 + CARD_HEIGHT/2.0f, 0 + CARD_THICKNESS/2.0f, /* 0, top left, front */
-	0 + CARD_WIDTH/2.0f, 0 + CARD_HEIGHT/2.0f, 0 + CARD_THICKNESS/2.0f, /* 1, top right, front */
-	0 + CARD_WIDTH/2.0f, 0 - CARD_HEIGHT/2.0f, 0 + CARD_THICKNESS/2.0f, /* 2, bottom right, front */
-	0 - CARD_WIDTH/2.0f, 0 - CARD_HEIGHT/2.0f, 0 + CARD_THICKNESS/2.0f, /* 3, bottom left, front */
-	0 - CARD_WIDTH/2.0f, 0 + CARD_HEIGHT/2.0f, 0 - CARD_THICKNESS/2.0f, /* 4, top left, back */
-	0 + CARD_WIDTH/2.0f, 0 + CARD_HEIGHT/2.0f, 0 - CARD_THICKNESS/2.0f, /* 5, top right, back */
-	0 + CARD_WIDTH/2.0f, 0 - CARD_HEIGHT/2.0f, 0 - CARD_THICKNESS/2.0f, /* 6, bottom right, back */
-	0 - CARD_WIDTH/2.0f, 0 - CARD_HEIGHT/2.0f, 0 - CARD_THICKNESS/2.0f /* 7, bottom left, back */
-};
-
-static GLubyte g_card_indexes[] = {
-	0, 1, 2, 3, /* front face */
-	4, 5, 1, 0, /* top */
-	3, 2, 6, 7, /* bottom */
-	5, 4, 7, 6, /* back face */
-	1, 5, 6, 2, /* right */
-	4, 0, 3, 7 /* left */
-};
-
 static void do_card_move(solitaire *sol, visual_pile *pile,
 					card_proxy *card, int count) {
 	if(!ruleset_move_card(sol->ruleset, sol->visual, pile, card, count)) {
@@ -580,7 +559,6 @@ card_geometry *card_geometry_create(
 
 void render_card(render_event_args *event, visual_pile* pile,
 				 card_proxy* proxy, bool selected, card_geometry *geo) {
-	int index;
 	GLfloat color_sel[] = { 1.0f, 0.7f, 0.7f };
 	GLfloat color_white[] = { 1.0f, 1.0f, 1.0f };
 
@@ -628,53 +606,6 @@ void render_card(render_event_args *event, visual_pile* pile,
 	glDrawArrays(GL_TRIANGLES, 0, geo->face_count / 3);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisable(GL_TEXTURE_2D);
-
-
-#if 0
-	for(index=0;index<6;++index) {
-		/* Only apply texturing on the front and the back of the
-		   card. */
-		if(index == 0 && proxy->card != 0) {
-			glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, theme_get_card_texture(
-							  g_theme, proxy->card->suit, proxy->card->value));
-		}
-		if(index == 3) {
-			glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D, theme_get_card_back_texture(g_theme));
-		}
-
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 0.0f);
-		glVertex3f(
-			g_card_vertexes[g_card_indexes[index*4+0] * 3 + 0],
-			g_card_vertexes[g_card_indexes[index*4+0] * 3 + 1],
-			g_card_vertexes[g_card_indexes[index*4+0] * 3 + 2]);
-
-		glTexCoord2f(1.0f, 0.0f);
-		glVertex3f(
-			g_card_vertexes[g_card_indexes[index*4+1] * 3 + 0],
-			g_card_vertexes[g_card_indexes[index*4+1] * 3 + 1],
-			g_card_vertexes[g_card_indexes[index*4+1] * 3 + 2]);
-
-		glTexCoord2f(1.0f, 1.0f);
-		glVertex3f(
-			g_card_vertexes[g_card_indexes[index*4+2] * 3 + 0],
-			g_card_vertexes[g_card_indexes[index*4+2] * 3 + 1],
-			g_card_vertexes[g_card_indexes[index*4+2] * 3 + 2]);
-
-		glTexCoord2f(0.0f, 1.0f);
-		glVertex3f(
-			g_card_vertexes[g_card_indexes[index*4+3] * 3 + 0],
-			g_card_vertexes[g_card_indexes[index*4+3] * 3 + 1],
-			g_card_vertexes[g_card_indexes[index*4+3] * 3 + 2]);
-		glEnd();
-
-		if(index == 0 || index == 3) {
-			glDisable(GL_TEXTURE_2D);
-		}
-	}
-#endif
 
 	glPopMatrix();
 	glPopName();
