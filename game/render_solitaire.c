@@ -120,28 +120,46 @@ card_geometry *card_geometry_create(
 	 */
 	geo->side_count = (4 * settings->corner_segments + 4) * 4 * 3;
 	geo->face_count = 5 * 2 * 4 * settings->corner_segments * 3;
-	geo->front_vertexes = mem_alloc(context,  geo->face_count * sizeof(GLfloat));
+
 	geo->back_vertexes = mem_alloc(context, geo->face_count * sizeof(GLfloat));
-	geo->side_vertexes = mem_alloc(context, geo->side_count * sizeof(GLfloat));
-	geo->front_texture_coords = mem_alloc(context, geo->face_count / 3 * 2 * sizeof(GLfloat));
+	geo->back_normals = mem_alloc(context, geo->face_count * sizeof(GLfloat));
 	geo->back_texture_coords = mem_alloc(context, geo->face_count / 3 * 2 * sizeof(GLfloat));
+
+	geo->side_vertexes = mem_alloc(context, geo->side_count * sizeof(GLfloat));
+	geo->side_normals = mem_alloc(context, geo->side_count * sizeof(GLfloat));
+
+	geo->front_vertexes = mem_alloc(context,  geo->face_count * sizeof(GLfloat));
+	geo->front_normals = mem_alloc(context, geo->face_count * sizeof(GLfloat));
+	geo->front_texture_coords = mem_alloc(context, geo->face_count / 3 * 2 * sizeof(GLfloat));
 
 	/* top quad and side */
 	geo->side_vertexes[side_index + 0] = 0.0f - hw + cr;
 	geo->side_vertexes[side_index + 1] = 0.0f - hh;
 	geo->side_vertexes[side_index + 2] = 0.0f - ht;
+	geo->side_normals[side_index + 0] = 0.0f;
+	geo->side_normals[side_index + 1] = -1.0f;
+	geo->side_normals[side_index + 2] = 0.0f;
 	side_index += 3;
 	geo->side_vertexes[side_index + 0] = 0.0f + hw - cr;
 	geo->side_vertexes[side_index + 1] = 0.0f - hh;
 	geo->side_vertexes[side_index + 2] = 0.0f - ht;
+	geo->side_normals[side_index + 0] = 0.0f;
+	geo->side_normals[side_index + 1] = -1.0f;
+	geo->side_normals[side_index + 2] = 0.0f;
 	side_index += 3;
 	geo->side_vertexes[side_index + 0] = 0.0f + hw - cr;
 	geo->side_vertexes[side_index + 1] = 0.0f - hh;
 	geo->side_vertexes[side_index + 2] = 0.0f + ht;
+	geo->side_normals[side_index + 0] = 0.0f;
+	geo->side_normals[side_index + 1] = -1.0f;
+	geo->side_normals[side_index + 2] = 0.0f;
 	side_index += 3;
 	geo->side_vertexes[side_index + 0] = 0.0f - hw + cr;
 	geo->side_vertexes[side_index + 1] = 0.0f - hh;
 	geo->side_vertexes[side_index + 2] = 0.0f + ht;
+	geo->side_normals[side_index + 0] = 0.0f;
+	geo->side_normals[side_index + 1] = -1.0f;
+	geo->side_normals[side_index + 2] = 0.0f;
 	side_index += 3;
 
 	/* 1
@@ -154,6 +172,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = cr / cw;
 	geo->front_texture_coords[coord_index + 1] = 0.0f;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f + hw - cr;
@@ -161,6 +182,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = (cw - cr) / cw;
 	geo->front_texture_coords[coord_index + 1] = cr / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f - hw + cr;
@@ -168,6 +192,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = cr / cw;
 	geo->front_texture_coords[coord_index + 1] = cr / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 
@@ -181,6 +208,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = cr / cw;
 	geo->front_texture_coords[coord_index + 1] = 0.0f;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f + hw - cr;
@@ -188,6 +218,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = (cw - cr) / cw;
 	geo->front_texture_coords[coord_index + 1] = 0.0f;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f + hw - cr;
@@ -195,6 +228,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = (cw - cr) / cw;
 	geo->front_texture_coords[coord_index + 1] = cr / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 
@@ -202,18 +238,30 @@ card_geometry *card_geometry_create(
 	geo->side_vertexes[side_index + 0] = 0.0f - hw;
 	geo->side_vertexes[side_index + 1] = 0.0f + hh - cr;
 	geo->side_vertexes[side_index + 2] = 0.0f - ht;
+	geo->side_normals[side_index + 0] = -1.0f;
+	geo->side_normals[side_index + 1] = 0.0f;
+	geo->side_normals[side_index + 2] = 0.0f;
 	side_index += 3;
 	geo->side_vertexes[side_index + 0] = 0.0f - hw;
 	geo->side_vertexes[side_index + 1] = 0.0f - hh + cr;
 	geo->side_vertexes[side_index + 2] = 0.0f - ht;
+	geo->side_normals[side_index + 0] = -1.0f;
+	geo->side_normals[side_index + 1] = 0.0f;
+	geo->side_normals[side_index + 2] = 0.0f;
 	side_index += 3;
 	geo->side_vertexes[side_index + 0] = 0.0f - hw;
 	geo->side_vertexes[side_index + 1] = 0.0f - hh + cr;
 	geo->side_vertexes[side_index + 2] = 0.0f + ht / 2.0f;
+	geo->side_normals[side_index + 0] = -1.0f;
+	geo->side_normals[side_index + 1] = 0.0f;
+	geo->side_normals[side_index + 2] = 0.0f;
 	side_index += 3;
 	geo->side_vertexes[side_index + 0] = 0.0f - hw;
 	geo->side_vertexes[side_index + 1] = 0.0f + hh - cr;
 	geo->side_vertexes[side_index + 2] = 0.0f + ht;
+	geo->side_normals[side_index + 0] = -1.0f;
+	geo->side_normals[side_index + 1] = 0.0f;
+	geo->side_normals[side_index + 2] = 0.0f;
 	side_index += 3;
 
 	/* 1
@@ -226,6 +274,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = 0.0f;
 	geo->front_texture_coords[coord_index + 1] = cr / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f - hw + cr;
@@ -233,6 +284,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = cr / cw;
 	geo->front_texture_coords[coord_index + 1] = (ch - cr) / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f - hw;
@@ -240,6 +294,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = 0.0f;
 	geo->front_texture_coords[coord_index + 1] = (ch - cr) / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 
@@ -253,6 +310,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = 0.0f;
 	geo->front_texture_coords[coord_index + 1] = cr / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f - hw + cr;
@@ -260,6 +320,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = cr / cw;
 	geo->front_texture_coords[coord_index + 1] = cr / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f - hw + cr;
@@ -267,6 +330,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = cr / cw;
 	geo->front_texture_coords[coord_index + 1] = (ch - cr) / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 
@@ -274,18 +340,30 @@ card_geometry *card_geometry_create(
 	geo->side_vertexes[side_index + 0] = 0.0f + hw;
 	geo->side_vertexes[side_index + 1] = 0.0f + hh - cr;
 	geo->side_vertexes[side_index + 2] = 0.0f - ht;
+	geo->side_normals[side_index + 0] = 1.0f;
+	geo->side_normals[side_index + 1] = 0.0f;
+	geo->side_normals[side_index + 2] = 0.0f;
 	side_index += 3;
 	geo->side_vertexes[side_index + 0] = 0.0f + hw;
 	geo->side_vertexes[side_index + 1] = 0.0f - hh + cr;
 	geo->side_vertexes[side_index + 2] = 0.0f - ht;
+	geo->side_normals[side_index + 0] = 1.0f;
+	geo->side_normals[side_index + 1] = 0.0f;
+	geo->side_normals[side_index + 2] = 0.0f;
 	side_index += 3;
 	geo->side_vertexes[side_index + 0] = 0.0f + hw;
 	geo->side_vertexes[side_index + 1] = 0.0f - hh + cr;
 	geo->side_vertexes[side_index + 2] = 0.0f + ht / 2.0f;
+	geo->side_normals[side_index + 0] = 1.0f;
+	geo->side_normals[side_index + 1] = 0.0f;
+	geo->side_normals[side_index + 2] = 0.0f;
 	side_index += 3;
 	geo->side_vertexes[side_index + 0] = 0.0f + hw;
 	geo->side_vertexes[side_index + 1] = 0.0f + hh - cr;
 	geo->side_vertexes[side_index + 2] = 0.0f + ht;
+	geo->side_normals[side_index + 0] = 1.0f;
+	geo->side_normals[side_index + 1] = 0.0f;
+	geo->side_normals[side_index + 2] = 0.0f;
 	side_index += 3;
 
 	/* 1
@@ -298,6 +376,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = (cw - cr) / cw;
 	geo->front_texture_coords[coord_index + 1] = cr / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f + hw;
@@ -305,6 +386,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = 1.0f;
 	geo->front_texture_coords[coord_index + 1] = (ch - cr) / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f + hw - cr;
@@ -312,6 +396,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = (cw - cr) / cw;
 	geo->front_texture_coords[coord_index + 1] = (ch - cr) / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 
@@ -325,6 +412,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = (cw - cr) / cw;
 	geo->front_texture_coords[coord_index + 1] = cr / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f + hw;
@@ -332,6 +422,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = 1.0f;
 	geo->front_texture_coords[coord_index + 1] = cr / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f + hw;
@@ -339,6 +432,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = 1.0f;
 	geo->front_texture_coords[coord_index + 1] = (ch - cr) / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 
@@ -346,18 +442,30 @@ card_geometry *card_geometry_create(
 	geo->side_vertexes[side_index + 0] = 0.0f - hw + cr;
 	geo->side_vertexes[side_index + 1] = 0.0f + hh;
 	geo->side_vertexes[side_index + 2] = 0.0f - ht;
+	geo->side_normals[side_index + 0] = 0.0f;
+	geo->side_normals[side_index + 1] = 1.0f;
+	geo->side_normals[side_index + 2] = 0.0f;
 	side_index += 3;
 	geo->side_vertexes[side_index + 0] = 0.0f + hw - cr;
 	geo->side_vertexes[side_index + 1] = 0.0f + hh;
 	geo->side_vertexes[side_index + 2] = 0.0f - ht;
+	geo->side_normals[side_index + 0] = 0.0f;
+	geo->side_normals[side_index + 1] = 1.0f;
+	geo->side_normals[side_index + 2] = 0.0f;
 	side_index += 3;
 	geo->side_vertexes[side_index + 0] = 0.0f + hw - cr;
 	geo->side_vertexes[side_index + 1] = 0.0f + hh;
 	geo->side_vertexes[side_index + 2] = 0.0f + ht;
+	geo->side_normals[side_index + 0] = 0.0f;
+	geo->side_normals[side_index + 1] = 1.0f;
+	geo->side_normals[side_index + 2] = 0.0f;
 	side_index += 3;
 	geo->side_vertexes[side_index + 0] = 0.0f - hw + cr;
 	geo->side_vertexes[side_index + 1] = 0.0f + hh;
 	geo->side_vertexes[side_index + 2] = 0.0f + ht;
+	geo->side_normals[side_index + 0] = 0.0f;
+	geo->side_normals[side_index + 1] = 1.0f;
+	geo->side_normals[side_index + 2] = 0.0f;
 	side_index += 3;
 
 	/* 1
@@ -370,6 +478,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = cr / cw;
 	geo->front_texture_coords[coord_index + 1] = (ch - cr) / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f + hw - cr;
@@ -377,6 +488,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = (cw - cr) / cw;
 	geo->front_texture_coords[coord_index + 1] = 1.0f;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f - hw + cr;
@@ -384,6 +498,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = cr / cw;
 	geo->front_texture_coords[coord_index + 1] = 1.0f;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 
@@ -397,6 +514,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = cr / cw;
 	geo->front_texture_coords[coord_index + 1] = (ch - cr) / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f + hw - cr;
@@ -404,6 +524,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = (cw - cr) / cw;
 	geo->front_texture_coords[coord_index + 1] = (ch - cr) / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f + hw - cr;
@@ -411,6 +534,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = (cw - cr) / cw;
 	geo->front_texture_coords[coord_index + 1] = 1.0f;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 
@@ -425,6 +551,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = cr / cw;
 	geo->front_texture_coords[coord_index + 1] = cr / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f + hw - cr;
@@ -432,6 +561,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = (cw - cr) / cw;
 	geo->front_texture_coords[coord_index + 1] = (ch - cr) / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f - hw + cr;
@@ -439,6 +571,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = cr / cw;
 	geo->front_texture_coords[coord_index + 1] = (ch - cr) / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 
@@ -452,6 +587,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = cr / cw;
 	geo->front_texture_coords[coord_index + 1] = cr / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f + hw - cr;
@@ -459,6 +597,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = (cw - cr) / cw;
 	geo->front_texture_coords[coord_index + 1] = cr / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 	geo->front_vertexes[face_index + 0] = 0.0f + hw - cr;
@@ -466,6 +607,9 @@ card_geometry *card_geometry_create(
 	geo->front_vertexes[face_index + 2] = 0.0f + ht;
 	geo->front_texture_coords[coord_index + 0] = (cw - cr) / cw;
 	geo->front_texture_coords[coord_index + 1] = (ch - cr) / ch;
+	geo->front_normals[face_index + 0] = 0.0f;
+	geo->front_normals[face_index + 1] = 0.0f;
+	geo->front_normals[face_index + 2] = 1.0f;
 	face_index += 3;
 	coord_index += 2;
 
@@ -501,21 +645,33 @@ card_geometry *card_geometry_create(
 			geo->side_vertexes[side_index + 0] = 0.0f + w + sinf(angle) * cr;
 			geo->side_vertexes[side_index + 1] = 0.0f + h + cosf(angle) * cr;
 			geo->side_vertexes[side_index + 2] = 0.0f - ht;
+			geo->side_normals[side_index + 0] = 0.0f + sinf(angle);
+			geo->side_normals[side_index + 1] = 0.0f + cosf(angle);
+			geo->side_normals[side_index + 2] = 0.0f;
 			side_index += 3;
 
 			geo->side_vertexes[side_index + 0] = 0.0f + w + sinf(angle + sa) * cr;
 			geo->side_vertexes[side_index + 1] = 0.0f + h + cosf(angle + sa) * cr;
 			geo->side_vertexes[side_index + 2] = 0.0f - ht;
+			geo->side_normals[side_index + 0] = 0.0f + sinf(angle);
+			geo->side_normals[side_index + 1] = 0.0f + cosf(angle);
+			geo->side_normals[side_index + 2] = 0.0f;
 			side_index += 3;
 
 			geo->side_vertexes[side_index + 0] = 0.0f + w + sinf(angle + sa) * cr;
 			geo->side_vertexes[side_index + 1] = 0.0f + h + cosf(angle + sa) * cr;
 			geo->side_vertexes[side_index + 2] = 0.0f + ht;
+			geo->side_normals[side_index + 0] = 0.0f + sinf(angle);
+			geo->side_normals[side_index + 1] = 0.0f + cosf(angle);
+			geo->side_normals[side_index + 2] = 0.0f;
 			side_index += 3;
 
 			geo->side_vertexes[side_index + 0] = 0.0f + w + sinf(angle) * cr;
 			geo->side_vertexes[side_index + 1] = 0.0f + h + cosf(angle) * cr;
 			geo->side_vertexes[side_index + 2] = 0.0f + ht;
+			geo->side_normals[side_index + 0] = 0.0f + sinf(angle);
+			geo->side_normals[side_index + 1] = 0.0f + cosf(angle);
+			geo->side_normals[side_index + 2] = 0.0f;
 			side_index += 3;
 
 			geo->front_vertexes[face_index + 0] = 0.0f + w + sinf(angle) * cr;
@@ -523,6 +679,9 @@ card_geometry *card_geometry_create(
 			geo->front_vertexes[face_index + 2] = 0.0f + ht;
 			geo->front_texture_coords[coord_index + 0] = (geo->front_vertexes[face_index + 0] + hw) / cw;
 			geo->front_texture_coords[coord_index + 1] = (geo->front_vertexes[face_index + 1] + hh) / ch;
+			geo->front_normals[face_index + 0] = 0.0f;
+			geo->front_normals[face_index + 1] = 0.0f;
+			geo->front_normals[face_index + 2] = 1.0f;
 			face_index += 3;
 			coord_index += 2;
 			geo->front_vertexes[face_index + 0] = 0.0f + w + sinf(angle + sa) * cr;
@@ -530,6 +689,9 @@ card_geometry *card_geometry_create(
 			geo->front_vertexes[face_index + 2] = 0.0f + ht;
 			geo->front_texture_coords[coord_index + 0] = (geo->front_vertexes[face_index + 0] + hw) / cw;
 			geo->front_texture_coords[coord_index + 1] = (geo->front_vertexes[face_index + 1] + hh) / ch;
+			geo->front_normals[face_index + 0] = 0.0f;
+			geo->front_normals[face_index + 1] = 0.0f;
+			geo->front_normals[face_index + 2] = 1.0f;
 			face_index += 3;
 			coord_index += 2;
 			geo->front_vertexes[face_index + 0] = w;
@@ -537,6 +699,9 @@ card_geometry *card_geometry_create(
 			geo->front_vertexes[face_index + 2] = 0.0f + ht;
 			geo->front_texture_coords[coord_index + 0] = (w + hw) / cw;
 			geo->front_texture_coords[coord_index + 1] = (h + hh) / ch;
+			geo->front_normals[face_index + 0] = 0.0f;
+			geo->front_normals[face_index + 1] = 0.0f;
+			geo->front_normals[face_index + 2] = 1.0f;
 			face_index += 3;
 			coord_index += 2;
 
@@ -546,8 +711,10 @@ card_geometry *card_geometry_create(
 
 	for(i=0;i < geo->face_count;++i) {
 		geo->back_vertexes[i] = geo->front_vertexes[i];
+		geo->back_normals[i] = geo->front_normals[i];
 		if((i + 1) % 3 == 0) {
 			geo->back_vertexes[i] = 0.0f - ht;
+			geo->back_normals[i] = -1.0f;
 		}
 	}
 	for(i=0;i < geo->face_count / 3 * 2;++i) {
@@ -581,9 +748,13 @@ void render_card(render_event_args *event, visual_pile* pile,
 	}
 
 	/* Draw the side of the card. */
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glNormalPointer(GL_FLOAT, 0, geo->side_normals);
 	glVertexPointer(3, GL_FLOAT, 0, geo->side_vertexes);
 	glDrawArrays(GL_QUADS, 0, geo->side_count / 3);
 
+	/* Front of the card. */
+	glNormalPointer(GL_FLOAT, 0, geo->front_normals);
 	if(proxy->card != 0) {
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, theme_get_card_texture(
@@ -598,13 +769,16 @@ void render_card(render_event_args *event, visual_pile* pile,
 		glDisable(GL_TEXTURE_2D);
 	}
 
+	/* Back side of the card. */
 	glEnable(GL_TEXTURE_2D);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glNormalPointer(GL_FLOAT, 0, geo->back_normals);
 	glTexCoordPointer(2, GL_FLOAT, 0, geo->back_texture_coords);
 	glVertexPointer(3, GL_FLOAT, 0, geo->back_vertexes);
 	glBindTexture(GL_TEXTURE_2D, theme_get_card_back_texture(g_theme));
 	glDrawArrays(GL_TRIANGLES, 0, geo->face_count / 3);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_NORMAL_ARRAY);
 	glDisable(GL_TEXTURE_2D);
 
 	glPopMatrix();

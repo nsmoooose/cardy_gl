@@ -24,9 +24,14 @@ typedef struct {
 
 	GLfloat *front_vertexes;
 	GLfloat *front_texture_coords;
+	GLfloat *front_normals;
+
 	GLfloat *back_vertexes;
 	GLfloat *back_texture_coords;
+	GLfloat *back_normals;
+
 	GLfloat *side_vertexes;
+	GLfloat *side_normals;
 } card_geometry;
 
 card_geometry *card_geometry_create(mem_context *context, visual_settings *settings);
