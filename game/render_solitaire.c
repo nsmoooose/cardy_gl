@@ -23,25 +23,26 @@ typedef struct {
 	float time_elapsed;
 
 	card_geometry *card_geometry;
+
+	float camera_zoom;
+	float camera_translateX;
+	float camera_translateY;
+	float perspective_near;
+	float perspective_far;
+	float perspective_fov;
+
+	card_proxy *selected_card;
+
+	GLfloat ambient_light[4];
+	GLfloat diffuse_light[4];
+	GLfloat specular_light[4];
+	GLfloat light_pos[4];
 } render_solitaire_data;
 
+/* Themes are slow to load. Keep it global for now. */
 theme *g_theme = 0;
 
-float g_camera_zoom = -500.0f;
-float g_camera_translateX = 0.0f;
-float g_camera_translateY = 0.0f;
-float g_perspective_near = 1.0f;
-float g_perspective_far = 5000.0f;
-float g_perspective_fov = 45.0f;
-
-card_proxy *g_selected_card = 0;
-
 const char *render_object_solitaire_id = "solitaire";
-
-GLfloat ambient_light[] = { 0.01f, 0.01f, 0.01f, 1.0f };
-GLfloat diffuse_light[] = { 0.8f, 0.8f, 0.8f, 1.0f };
-GLfloat specular_light[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-GLfloat light_pos[] = { 0.0f, 0.0f, 100.0f, 1.0f };
 
 static void do_card_move(solitaire *sol, visual_pile *pile,
 					card_proxy *card, int count) {
@@ -61,27 +62,27 @@ static void process_click(
 		pile->action->execute(pile->action);
 	}
 	else if(pile && proxy) {
-		if(g_selected_card == proxy) {
-			g_selected_card = 0;
+		if(data->selected_card == proxy) {
+			data->selected_card = 0;
 		}
 		else {
-			if(g_selected_card == 0) {
-				g_selected_card = proxy;
+			if(data->selected_card == 0) {
+				data->selected_card = proxy;
 			}
 			else {
 				card_count = visual_get_rest_of_pile(
-					data->sol->visual, g_selected_card);
-				do_card_move(data->sol, pile, g_selected_card, card_count);
-				g_selected_card = 0;
+					data->sol->visual, data->selected_card);
+				do_card_move(data->sol, pile, data->selected_card, card_count);
+				data->selected_card = 0;
 			}
 		}
 	}
 	else if(pile) {
-		if(g_selected_card) {
+		if(data->selected_card) {
 			card_count = visual_get_rest_of_pile(
-				data->sol->visual, g_selected_card);
-			do_card_move(data->sol, pile, g_selected_card, card_count);
-			g_selected_card = 0;
+				data->sol->visual, data->selected_card);
+			do_card_move(data->sol, pile, data->selected_card, card_count);
+			data->selected_card = 0;
 		}
 	}
 
@@ -793,6 +794,7 @@ void render_pile(render_event_args *event,
 				 visual_pile* pile, visual_settings *settings, card_geometry *geo) {
 	int card_index;
 	bool selected = false;
+	render_solitaire_data *i = event->object->data;
 
 	/* Do a translation of our position for the pile. */
 	glPushMatrix();
@@ -821,7 +823,7 @@ void render_pile(render_event_args *event,
 
 	glPushMatrix();
 	for(card_index=0;card_index<pile->card_count;++card_index) {
-		if(pile->cards[card_index] == g_selected_card) {
+		if(pile->cards[card_index] == i->selected_card) {
 			selected = true;
 		}
 		render_card(event, pile, pile->cards[card_index], selected, geo);
@@ -849,10 +851,10 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient_light);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse_light);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, specular_light);
-	glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, i->ambient_light);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, i->diffuse_light);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, i->specular_light);
+	glLightfv(GL_LIGHT0, GL_POSITION, i->light_pos);
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 	glShadeModel(GL_SMOOTH);
@@ -871,8 +873,8 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 		gluPickMatrix(pick->x, pick->y, pick->width, pick->height, pick->viewport);
 	}
 	aspect = (float)viewport[2]/(float)viewport[3];
-	gluPerspective(g_perspective_fov, aspect, g_perspective_near,
-				   g_perspective_far);
+	gluPerspective(i->perspective_fov, aspect, i->perspective_near,
+				   i->perspective_far);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -882,7 +884,7 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 	glPushMatrix();
 	glLoadIdentity();
 
-	glTranslatef(g_camera_translateX, g_camera_translateY, g_camera_zoom);
+	glTranslatef(i->camera_translateX, i->camera_translateY, i->camera_zoom);
 	glRotatef(
 		ease_time_protect4f(ease_quad_out, i->time_elapsed, 0.0, -25.0f, 12.0),
 		1.0f, 0.0f, 0.0f);
@@ -924,6 +926,7 @@ static void render_object_solitaire_change_card_theme(const char *theme) {
 static bool render_object_solitaire_keyboard_down(
 	render_event_args *event, unsigned char key, int modifiers, int x, int y) {
 	render_object *object;
+	render_solitaire_data *i = event->object->data;
 
 	/*
 	int key_modifiers;
@@ -954,11 +957,11 @@ static bool render_object_solitaire_keyboard_down(
 		}
 		return true;
 	case '-':
-		g_camera_zoom -= 10.0f;
+		i->camera_zoom -= 10.0f;
 		return true;
 
 	case '+':
-		g_camera_zoom += 10.0f;
+		i->camera_zoom += 10.0f;
 		return true;
 
 	case 'z':
@@ -983,23 +986,24 @@ static bool render_object_solitaire_keyboard_down(
 
 bool render_object_solitaire_special_down(
 	render_event_args *event, int key, int modifiers, int x, int y) {
+	render_solitaire_data *i = event->object->data;
 
 	switch(key) {
 	case 100:
 		/* Left */
-		g_camera_translateX -= 10.0f;
+		i->camera_translateX -= 10.0f;
 		return true;
 	case 101:
 		/* Up */
-		g_camera_translateY += 10.0f;
+		i->camera_translateY += 10.0f;
 		return true;
 	case 102:
 		/* Right */
-		g_camera_translateX += 10.0f;
+		i->camera_translateX += 10.0f;
 		return true;
 	case 103:
 		/* Down */
-		g_camera_translateY -= 10.0f;
+		i->camera_translateY -= 10.0f;
 		return true;
 	default:
 		return false;
@@ -1031,6 +1035,34 @@ render_object *render_object_solitaire(solitaire_create callback) {
 	i->settings->card_thickness = 0.4f;
 
 	i->card_geometry = card_geometry_create(i->context, i->settings);
+
+	/* Setup some default values. These could optionally be saved
+	 * in some settings file or database.
+	 */
+	i->camera_zoom = -500.0f;
+	i->camera_translateX = 0.0f;
+	i->camera_translateY = 0.0f;
+	i->perspective_near = 1.0f;
+	i->perspective_far = 5000.0f;
+	i->perspective_fov = 45.0f;
+	i->selected_card = 0;
+
+	i->ambient_light[0] = 0.01f;
+	i->ambient_light[1] = 0.01f;
+	i->ambient_light[2] = 0.01f;
+	i->ambient_light[3] = 1.0f;
+	i->diffuse_light[0] = 0.8f;
+	i->diffuse_light[1] = 0.8f;
+	i->diffuse_light[2] = 0.8f;
+	i->diffuse_light[3] = 1.0f;
+	i->specular_light[0] = 1.0f;
+	i->specular_light[1] = 1.0f;
+	i->specular_light[2] = 1.0f;
+	i->specular_light[3] = 1.0f;
+	i->light_pos[0] = 0.0f;
+	i->light_pos[1] = 0.0f;
+	i->light_pos[2] = 100.0f;
+	i->light_pos[3] = 1.0f;
 
 	if(g_theme == 0) {
 		char themes_path[PATH_MAX];
