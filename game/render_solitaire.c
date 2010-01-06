@@ -729,6 +729,7 @@ void render_card(render_event_args *event, visual_pile* pile,
 				 card_proxy* proxy, bool selected, card_geometry *geo) {
 	GLfloat color_sel[] = { 1.0f, 0.7f, 0.7f };
 	GLfloat color_white[] = { 1.0f, 1.0f, 1.0f };
+	render_solitaire_data *i = event->object->data;
 
 	if(selected) {
 		glColor3fv(color_sel);
@@ -786,7 +787,7 @@ void render_card(render_event_args *event, visual_pile* pile,
 	glPopName();
 
 	/* Do a translation of our position for the next card. */
-	glTranslatef(pile->translateX, pile->translateY, CARD_THICKNESS);
+	glTranslatef(pile->translateX, pile->translateY, i->settings->card_thickness);
 	check_gl_errors("render_card");
 }
 

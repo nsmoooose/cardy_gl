@@ -4,11 +4,6 @@
 #include "memory.h"
 #include "types.h"
 
-#define CARD_WIDTH 40.0
-#define CARD_HEIGHT 60.0
-#define CARD_SPACING 4.0
-#define CARD_THICKNESS 0.4
-
 typedef enum {
 	e_suit_none = -1,
 	e_suit_first = 0,
