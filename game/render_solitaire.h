@@ -5,16 +5,7 @@
 #include "../api/solitaire.h"
 #include "../api/theme.h"
 
-extern float g_camera_zoom;
-extern float g_camera_translateX;
-extern float g_camera_translateY;
-extern float g_perspective_near;
-extern float g_perspective_far;
-extern float g_perspective_fov;
-extern card_proxy *g_selected_card;
-extern solitaire *g_solitaire;
 extern theme *g_theme;
-extern visual_settings *g_visual_settings;
 
 typedef struct {
 	/* number of values for the side of the card. Use quads */
