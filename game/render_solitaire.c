@@ -808,9 +808,13 @@ void render_pile(render_event_args *event,
 	glColor3f(0.0f, 0.7f, 0.0f);
 	glBegin(GL_QUADS);
 	glVertex2f(0 - settings->card_width/2.0f, 0 + settings->card_height/2.0f);
+	glNormal3f(0.0f, 0.0f, 1.0f);
 	glVertex2f(0 + settings->card_width/2.0f, 0 + settings->card_height/2.0f);
+	glNormal3f(0.0f, 0.0f, 1.0f);
 	glVertex2f(0 + settings->card_width/2.0f, 0 - settings->card_height/2.0f);
+	glNormal3f(0.0f, 0.0f, 1.0f);
 	glVertex2f(0 - settings->card_width/2.0f, 0 - settings->card_height/2.0f);
+	glNormal3f(0.0f, 0.0f, 1.0f);
 	glEnd();
 
 	check_gl_errors("render_pile (1)");
