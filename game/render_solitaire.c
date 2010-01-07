@@ -618,7 +618,7 @@ card_geometry *card_geometry_create(
 	angle = 0.0f;
 	sa = M_PI / 2 / settings->corner_segments;
 	for(i=0;i<4;++i) {
-		float w, h;
+		float w=0.0, h=0.0;
 		switch(i) {
 		case 0:
 			/* top left */
