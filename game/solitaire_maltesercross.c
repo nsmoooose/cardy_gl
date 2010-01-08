@@ -442,8 +442,8 @@ solitaire* solitaire_maltesercross(mem_context *context, visual_settings *settin
 		s->visual->piles[index]->origin[1] += settings->card_height;
 	}
 
-	create_deck(context, i->deck, 1);
-	create_deck(context, i->deck, 1);
+	card_create_deck(context, i->deck, 1);
+	card_create_deck(context, i->deck, 1);
 
 	card_shuffle(i->deck);
 

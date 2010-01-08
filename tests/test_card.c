@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include "../api/card.h"
 
-START_TEST(test_create_deck) {
+START_TEST(test_card_create_deck) {
 	pile* deck;
 	int i;
 	mem_context *context = mem_context_create();
 
 	deck = pile_create(context, 52);
 
-	create_deck(context, deck, 1);
+	card_create_deck(context, deck, 1);
 	for(i=0;i<52;++i) {
 		ck_assert_msg(deck->cards[i] != 0, "Card pointer was NULL at index: %d", i);
 		ck_assert_msg(deck->cards[i]->value >= 1 && deck->cards[i]->value <= 13, "Card value isn't in range at index: %d", i);
@@ -74,7 +74,7 @@ START_TEST(test_card_last) {
 
 	ck_assert_msg(card_last(deck) == 0, "Last card should return 0 when no cards present.");
 
-	create_deck(context, deck, 1);
+	card_create_deck(context, deck, 1);
 	ck_assert_msg(card_last(deck) == deck->cards[51], "Last card should be the last in the deck.");
 }
 END_TEST
@@ -84,7 +84,7 @@ START_TEST(test_card_reveal_count) {
 	mem_context *context = mem_context_create();
 	pile *deck = pile_create(context, 52);
 
-	create_deck(context, deck, 1);
+	card_create_deck(context, deck, 1);
 	card_reveal_count(deck, 3, 5);
 
 	for(index=0;index<52;++index) {
@@ -103,7 +103,7 @@ START_TEST(test_card_reveal_all) {
 	mem_context *context = mem_context_create();
 	pile *deck = pile_create(context, 104);
 
-	create_deck(context, deck, 1);
+	card_create_deck(context, deck, 1);
 	card_reveal_all(deck);
 
 	for(index=0;index<52;++index) {
@@ -142,7 +142,7 @@ START_TEST(test_card_hide_count) {
 	mem_context *context = mem_context_create();
 	pile *deck = pile_create(context, 104);
 
-	create_deck(context, deck, 1);
+	card_create_deck(context, deck, 1);
 	card_reveal_all(deck);
 	card_hide_count(deck, 3, 5);
 
@@ -162,7 +162,7 @@ START_TEST(test_card_hide_all) {
 	mem_context *context = mem_context_create();
 	pile *deck = pile_create(context, 104);
 
-	create_deck(context, deck, 1);
+	card_create_deck(context, deck, 1);
 	card_reveal_all(deck);
 	card_hide_all(deck);
 
@@ -255,8 +255,8 @@ START_TEST(test_card_move_all_array) {
 	src1 = pile_create(context, 52);
 	src2 = pile_create(context, 52);
 	dst = pile_create(context, 104);
-	create_deck(context, src1, 1);
-	create_deck(context, src2, 1);
+	card_create_deck(context, src1, 1);
+	card_create_deck(context, src2, 1);
 
 	card_move_all_array(dst, 2, src1, src2);
 
@@ -334,7 +334,7 @@ START_TEST(test_card_take_match) {
 
 	mem_context *context = mem_context_create();
 	pile *pile = pile_create(context, 52);
-	create_deck(context, pile, 1);
+	card_create_deck(context, pile, 1);
 
 	prototype.value = 13;
 	taken_card = card_take_match(pile, card_match_value, &prototype);
@@ -350,7 +350,7 @@ void add_card_tests(Suite *suite) {
 	tcase_add_test(c, test_card_create);
 	tcase_add_test(c, test_card_free);
 	tcase_add_test(c, test_pile_create);
-	tcase_add_test(c, test_create_deck);
+	tcase_add_test(c, test_card_create_deck);
 	tcase_add_test(c, test_card_count);
 	tcase_add_test(c, test_card_take_last);
 	tcase_add_test(c, test_card_append);

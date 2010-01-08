@@ -23,7 +23,7 @@ void card_free(mem_context *context, card* card) {
 	}
 }
 
-void create_deck(mem_context *context, pile *pile, card_value ace) {
+void card_create_deck(mem_context *context, pile *pile, card_value ace) {
 	int index = 0;
 	card* card;
 	card_suit suit;

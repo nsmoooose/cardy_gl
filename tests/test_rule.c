@@ -97,7 +97,7 @@ START_TEST(test_rule_execute_actions) {
 	mem_context *context = mem_context_create();
 
 	deck = pile_create(context, 52);
-	create_deck(context, deck, 1);
+	card_create_deck(context, deck, 1);
 	move.source = deck;
 	rule = rule_create(context);
 	rule_add_action(context, rule, action_reveal_source_top_card(context));
@@ -178,7 +178,7 @@ START_TEST(test_ruleset_move_card) {
 	vis = visual_create(context, 0);
 
 	deck = pile_create(context, 52);
-	create_deck(context, deck, 1);
+	card_create_deck(context, deck, 1);
 	vis_deck = visual_pile_create(context, deck);
 	visual_add_pile(context, vis, vis_deck);
 
@@ -252,10 +252,10 @@ START_TEST(test_condition_card_count_array) {
 
 	cond = condition_card_count_array(context, 52, 2, p1, p2);
 
-	create_deck(context, p1, 1);
+	card_create_deck(context, p1, 1);
 	ck_assert_msg(cond->check(cond, 0) == false, "Should be false.");
 
-	create_deck(context, p2, 1);
+	card_create_deck(context, p2, 1);
 	ck_assert_msg(cond->check(cond, 0) == true, "Should be true.");
 }
 END_TEST
@@ -457,7 +457,7 @@ START_TEST(test_condition_destination_empty) {
 
 	p1 = pile_create(context, 52);
 	p2 = pile_create(context, 52);
-	create_deck(context, p1, 1);
+	card_create_deck(context, p1, 1);
 
 	cond = condition_destination_empty(context);
 
@@ -476,7 +476,7 @@ START_TEST(test_condition_rest_of_pile) {
 	mem_context *context = mem_context_create();
 
 	p1 = pile_create(context, 52);
-	create_deck(context, p1, 1);
+	card_create_deck(context, p1, 1);
 
 	cond = condition_rest_of_pile(context);
 
@@ -497,7 +497,7 @@ START_TEST(test_condition_top_card) {
 	mem_context *context = mem_context_create();
 
 	deck = pile_create(context, 52);
-	create_deck(context, deck, 1);
+	card_create_deck(context, deck, 1);
 	action.source = deck;
 	cond = condition_top_card(context);
 
@@ -711,7 +711,7 @@ START_TEST(test_ruleset_get_move_action) {
 
 	deck = pile_create(context, 52);
 	done = pile_create(context, 52);
-	create_deck(context, deck, 1);
+	card_create_deck(context, deck, 1);
 
 	vis = visual_create(context, 0);
 	visual_add_pile(context, vis, visual_pile_create(context, deck));
@@ -737,7 +737,7 @@ START_TEST(test_ruleset_apply_move_action) {
 
 	deck = pile_create(context, 52);
 	done = pile_create(context, 52);
-	create_deck(context, deck, 1);
+	card_create_deck(context, deck, 1);
 
 	vis = visual_create(context, 0);
 	visual_add_pile(context, vis, visual_pile_create(context, deck));
@@ -764,7 +764,7 @@ START_TEST(test_ruleset_apply_move_action2) {
 
 	deck = pile_create(context, 52);
 	done = pile_create(context, 52);
-	create_deck(context, deck, 1);
+	card_create_deck(context, deck, 1);
 
 	vis = visual_create(context, 0);
 	visual_add_pile(context, vis, visual_pile_create(context, deck));
@@ -832,7 +832,7 @@ START_TEST(test_action_reveal_source_top_card) {
 	move_action move;
 
 	deck = pile_create(context, 52);
-	create_deck(context, deck, 1);
+	card_create_deck(context, deck, 1);
 	move.source = deck;
 
 	action = action_reveal_source_top_card(context);

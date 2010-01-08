@@ -115,7 +115,7 @@ void card_free(mem_context *context, card* card);
 
 /** Creates a deck of cards with 52 cards if the array permits it.
  */
-void create_deck(mem_context *context, pile *pile, card_value ace);
+void card_create_deck(mem_context *context, pile *pile, card_value ace);
 
 /** Counts the number of cards that exists within the array.
  */

@@ -36,7 +36,7 @@ solitaire* solitaire_test1(mem_context *context, visual_settings *settings) {
 	done->origin[0] = settings->card_width - settings->card_spacing/2;
 	visual_add_pile(context, s->visual, done);
 
-	create_deck(context, i->deck, 1);
+	card_create_deck(context, i->deck, 1);
 	visual_sync(s->visual);
 
 	setup_rules(context, s, i);
