@@ -63,6 +63,8 @@ expression *widget_style_get_top_expression(widget_style *style);
 expression *widget_style_get_left_expression(widget_style *style);
 
 void widget_style_set_size(widget_style *style, float width, float height);
+void widget_style_set_width(widget_style *style, const char *expr);
+void widget_style_set_height(widget_style *style, const char *expr);
 expression *widget_style_get_width_expression(widget_style *style);
 expression *widget_style_get_height_expression(widget_style *style);
 

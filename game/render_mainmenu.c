@@ -64,22 +64,38 @@ void render_object_mainmenu(render_object *parent) {
 	render_object *window, *button;
 	widget_style *style;
 	RsvgHandle *h;
-	float bw = 200.0f, bh = 64.0f;
+	float bw = 200.0f, bh = 64.0f, button_top=40.0f;
 
 	resource_locate_file("resources/images/mainmenu.svg", file_buffer, PATH_MAX);
 	h = render_svg_open(file_buffer);
 
 	window = widget_generic(render_object_mainmenu_id);
 	style = widget_get_default_style(window);
-	widget_style_set_left(style, "viewport_width/2-width/2");
-	widget_style_set_top(style, "viewport_height/2-height/2");
-	widget_style_set_size(style, 500.0f, 412.0f);
-	widget_style_set_image(style, h, "#mainmenu", 512, 512);
+	widget_style_set_left(style, "0");
+	widget_style_set_top(style, "0");
+	widget_style_set_width(style, "viewport_width");
+	widget_style_set_height(style, "viewport_height");
 	render_object_add_child(parent, window);
 
 	button = widget_generic(0);
 	style = widget_get_default_style(button);
-	widget_style_set_pos(style, 45.0f, 85.0f);
+	widget_style_set_left(style, "viewport_width/2-width/2");
+	widget_style_set_top(style, "viewport_height/2-height/2");
+	widget_style_set_size(style, 300.0f, 300.0f);
+	widget_style_set_image(style, h, "#background", 512, 512);
+	/* widget_style_set_rotation(style, "45"); */
+	render_object_add_child(window, button);
+
+	button = widget_generic(0);
+	style = widget_get_default_style(button);
+	widget_style_set_pos(style, 0.0f, 0.0f);
+	widget_style_set_size(style, 342.0f, 138.0f);
+	widget_style_set_image(style, h, "#logo", 256, 128);
+	render_object_add_child(window, button);
+
+	button = widget_generic(0);
+	style = widget_get_default_style(button);
+	widget_style_set_pos(style, 45.0f, 85.0f + button_top);
 	widget_style_set_size(style, bw, bh);
 	widget_style_set_click_callback(style, sol_theidiot_callback);
 	widget_style_set_image(style, h, "#sol_idiot", 256, 64);
@@ -87,7 +103,7 @@ void render_object_mainmenu(render_object *parent) {
 
 	button = widget_generic(0);
 	style = widget_get_default_style(button);
-	widget_style_set_pos(style, 45.0f, 154.0f);
+	widget_style_set_pos(style, 45.0f, 154.0f + button_top);
 	widget_style_set_size(style, bw, bh);
 	widget_style_set_click_callback(style, sol_malteser_callback);
 	widget_style_set_image(style, h, "#sol_maltesercross", 256, 64);
@@ -95,7 +111,7 @@ void render_object_mainmenu(render_object *parent) {
 
 	button = widget_generic(0);
 	style = widget_get_default_style(button);
-	widget_style_set_pos(style, 45.0f, 223.0f);
+	widget_style_set_pos(style, 45.0f, 223.0f + button_top);
 	widget_style_set_size(style, bw, bh);
 	widget_style_set_click_callback(style, sol_noname1_callback);
 	widget_style_set_image(style, h, "#sol_noname1", 256, 64);
@@ -103,7 +119,7 @@ void render_object_mainmenu(render_object *parent) {
 
 	button = widget_generic(0);
 	style = widget_get_default_style(button);
-	widget_style_set_pos(style, 45.0f, 292.0f);
+	widget_style_set_pos(style, 45.0f, 292.0f + button_top);
 	widget_style_set_size(style, bw, bh);
 	widget_style_set_click_callback(style, sol_pyramid_callback);
 	widget_style_set_image(style, h, "#sol_pyramid", 256, 64);
@@ -111,7 +127,7 @@ void render_object_mainmenu(render_object *parent) {
 
 	button = widget_generic(0);
 	style = widget_get_default_style(button);
-	widget_style_set_pos(style, 45.0f, 361.0f);
+	widget_style_set_pos(style, 45.0f, 361.0f + button_top);
 	widget_style_set_size(style, bw, bh);
 	widget_style_set_click_callback(style, sol_test1_callback);
 	widget_style_set_image(style, h, "#sol_test1", 256, 64);
@@ -119,7 +135,7 @@ void render_object_mainmenu(render_object *parent) {
 
 	button = widget_generic(0);
 	style = widget_get_default_style(button);
-	widget_style_set_pos(style, 45.0f, 430.0f);
+	widget_style_set_pos(style, 45.0f, 430.0f + button_top);
 	widget_style_set_size(style, bw, bh);
 	widget_style_set_click_callback(style, sol_heirship_callback);
 	widget_style_set_image(style, h, "#sol_heirship", 256, 64);

@@ -89,6 +89,14 @@ expression *widget_style_get_left_expression(widget_style *style) {
 	return expression_context_get(style->ec, style_key_left);
 }
 
+void widget_style_set_width(widget_style *style, const char *expr) {
+	expression_context_set(style->ec, style_key_width, expression_parse(0, expr));
+}
+
+void widget_style_set_height(widget_style *style, const char *expr) {
+	expression_context_set(style->ec, style_key_height, expression_parse(0, expr));
+}
+
 void widget_style_set_size(widget_style *style, float width, float height) {
 	expression *width_exp = expression_const(width);
 	expression *height_exp = expression_const(height);
