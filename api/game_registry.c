@@ -9,12 +9,18 @@ game_registry *game_registry_create() {
 }
 
 void game_registry_free(game_registry *registry) {
+	GHashTableIter it;
+	gpointer key, value;
+	g_hash_table_iter_init(&it, registry->games);
+	while(g_hash_table_iter_next(&it, &key, &value)) {
+		game_free((game*)value);
+	}
 	g_hash_table_unref(registry->games);
 	free(registry);
 }
 
-void game_registry_add(game *game) {
-
+void game_registry_add(game_registry *registry, const char *id, game *game) {
+	g_hash_table_insert(registry->games, (char*)id, game);
 }
 
 game *game_create(const char* name, solitaire_create cb) {
