@@ -1,4 +1,6 @@
+#include <cairo.h>
 #include <stdlib.h>
+#include <string.h>
 #include "expression.h"
 #include "render_widget.h"
 
@@ -9,8 +11,13 @@ typedef struct {
 struct widget_style_St {
 	expression_context *ec;
 
-	GLuint back_texture;
+	GLuint texture;
 	render_selection_callback click;
+
+	int image_width, image_height;
+	char *font_face;
+	float font_size;
+	float text_color[4];
 };
 
 typedef struct {
@@ -123,8 +130,8 @@ expression *widget_style_get_rotation_expression(widget_style *style) {
 
 void widget_style_set_image(
 	widget_style *style, RsvgHandle *h, char *svg_id, int width, int height) {
-	glGenTextures(1, &style->back_texture);
-	render_svg_texture(h, style->back_texture, svg_id, width, height);
+	glGenTextures(1, &style->texture);
+	render_svg_texture(h, style->texture, svg_id, width, height);
 }
 
 void widget_style_set_click_callback(
@@ -135,6 +142,12 @@ void widget_style_set_click_callback(
 static void widget_free(render_event_args *event) {
 	widget_data *d = event->object->data;
 	expression_context_free(d->style->ec);
+	if(d->style->texture) {
+		glDeleteTextures(1, &d->style->texture);
+	}
+	if(d->style->font_face) {
+		free(d->style->font_face);
+	}
 	free(d->style);
 	free(d);
 }
@@ -208,9 +221,9 @@ static void widget_generic_render(render_event_args *event, float delta) {
 		glPushName(render_register_selection_callback(
 					   event->rcontext, event->object, d->style->click, 0));
 	}
-	if(d->style->back_texture) {
+	if(d->style->texture) {
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, d->style->back_texture);
+		glBindTexture(GL_TEXTURE_2D, d->style->texture);
 	}
 
 	if(rotation != 0.0f) {
@@ -226,7 +239,7 @@ static void widget_generic_render(render_event_args *event, float delta) {
 	glTexCoord2f(0.0f, 1.0f);
 	glVertex2f(left, top + height);
 	glEnd();
-	if(d->style->back_texture) {
+	if(d->style->texture) {
 		glDisable(GL_TEXTURE_2D);
 	}
 	if(d->style->click) {
@@ -249,5 +262,57 @@ render_object *widget_generic(const char *id) {
 
 /* ----------------------------------------------------------------------------*/
 
-void widget_button_set_text(render_object *object, char *text) {
+void widget_style_set_image_size(widget_style *style, int width, int height) {
+	style->image_width = width;
+	style->image_height = height;
+}
+
+void widget_style_set_font_face(widget_style *style, const char *name) {
+	style->font_face = strdup(name);
+}
+
+void widget_style_set_font_size(widget_style *style, float size) {
+	style->font_size = size;
+}
+
+void widget_style_set_text_color(widget_style *style, float red, float green, float blue, float alpha) {
+	style->text_color[0] = red;
+	style->text_color[1] = green;
+	style->text_color[2] = blue;
+	style->text_color[3] = alpha;
+}
+
+void widget_style_set_text(widget_style *style, const char *text) {
+	cairo_t *cr;
+	cairo_surface_t *cairo_surface;
+	unsigned char* cairo_data;
+	int stride;
+
+	stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, style->image_width);
+	cairo_data = (unsigned char *) calloc(stride * style->image_height, 1);
+	cairo_surface = cairo_image_surface_create_for_data(
+		cairo_data, CAIRO_FORMAT_ARGB32, style->image_width, style->image_height, stride);
+
+	cr = cairo_create(cairo_surface);
+	cairo_set_source_rgb(cr, 0.1, 0.1, 0.1);
+	cairo_select_font_face(cr, style->font_face,
+						   CAIRO_FONT_SLANT_NORMAL,
+						   CAIRO_FONT_WEIGHT_BOLD);
+
+	cairo_set_font_size(cr, style->font_size);
+	cairo_move_to(cr, 20, 30);
+	cairo_show_text(cr, text);
+	cairo_destroy(cr);
+
+	glBindTexture(GL_TEXTURE_2D, style->texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, style->image_width, style->image_height,
+				 0, GL_BGRA, GL_UNSIGNED_BYTE, cairo_data);
+
+	free(cairo_data);
+	cairo_destroy(cr);
+	cairo_surface_destroy(cairo_surface);
 }

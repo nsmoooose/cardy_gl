@@ -80,6 +80,10 @@ render_object *widget_desktop(const char *id);
 
 render_object *widget_generic(const char *id);
 
-void widget_button_set_text(render_object *object, char *text);
+void widget_style_set_image_size(widget_style *style, int width, int height);
+void widget_style_set_font_face(widget_style *style, const char *name);
+void widget_style_set_font_size(widget_style *style, float size);
+void widget_style_set_text(widget_style *style, const char *text);
+void widget_style_set_text_color(widget_style *style, float red, float green, float blue, float alpha);
 
 #endif /* __RENDER_WIDGET_H__ */
