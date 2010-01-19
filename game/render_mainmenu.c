@@ -7,6 +7,7 @@
 #include "render_solitaire.h"
 #include "render_solved.h"
 #include "render_mainmenu.h"
+#include "solitaires.h"
 #include "solitaire_heirship.h"
 #include "solitaire_theidiot.h"
 #include "solitaire_maltesercross.h"
@@ -35,28 +36,13 @@ static void set_solitaire(render_event_args *event, solitaire_create sol_callbac
 	render_object_free(event->rcontext, event->object->parent);
 }
 
-static void sol_theidiot_callback(render_event_args *event, void *data) {
-	set_solitaire(event, solitaire_theidiot);
-}
-
-static void sol_malteser_callback(render_event_args *event, void *data) {
-	set_solitaire(event, solitaire_maltesercross);
-}
-
-static void sol_noname1_callback(render_event_args *event, void *data) {
-	set_solitaire(event, solitaire_noname1);
-}
-
-static void sol_pyramid_callback(render_event_args *event, void *data) {
-	set_solitaire(event, solitaire_pyramid);
-}
-
-static void sol_test1_callback(render_event_args *event, void *data) {
-	set_solitaire(event, solitaire_test1);
-}
-
-static void sol_heirship_callback(render_event_args *event, void *data) {
-	set_solitaire(event, solitaire_heirship);
+static void sol_callback(render_event_args *event, void *data) {
+	game_registry *registry = solitaire_get_registry();
+	game *game = g_hash_table_lookup(registry->games, event->object->id);
+	if(game) {
+		set_solitaire(event, game->create_instance);
+	}
+	game_registry_free(registry);
 }
 
 void render_object_mainmenu(render_object *parent) {
@@ -64,7 +50,10 @@ void render_object_mainmenu(render_object *parent) {
 	render_object *window, *button;
 	widget_style *style;
 	RsvgHandle *h;
-	float bw = 200.0f, bh = 64.0f, button_top=40.0f;
+	float button_top=140.0f;
+	GHashTableIter it;
+	gpointer key, value;
+	game_registry *registry = solitaire_get_registry();
 
 	resource_locate_file("resources/images/mainmenu.svg", file_buffer, PATH_MAX);
 	h = render_svg_open(file_buffer);
@@ -92,54 +81,24 @@ void render_object_mainmenu(render_object *parent) {
 	widget_style_set_size(style, 342.0f, 138.0f);
 	widget_style_set_image(style, h, "#logo", 256, 128);
 	render_object_add_child(window, button);
-
-	button = widget_generic(0);
-	style = widget_get_default_style(button);
-	widget_style_set_pos(style, 45.0f, 85.0f + button_top);
-	widget_style_set_size(style, bw, bh);
-	widget_style_set_click_callback(style, sol_theidiot_callback);
-	widget_style_set_image(style, h, "#sol_idiot", 256, 64);
-	render_object_add_child(window, button);
-
-	button = widget_generic(0);
-	style = widget_get_default_style(button);
-	widget_style_set_pos(style, 45.0f, 154.0f + button_top);
-	widget_style_set_size(style, bw, bh);
-	widget_style_set_click_callback(style, sol_malteser_callback);
-	widget_style_set_image(style, h, "#sol_maltesercross", 256, 64);
-	render_object_add_child(window, button);
-
-	button = widget_generic(0);
-	style = widget_get_default_style(button);
-	widget_style_set_pos(style, 45.0f, 223.0f + button_top);
-	widget_style_set_size(style, bw, bh);
-	widget_style_set_click_callback(style, sol_noname1_callback);
-	widget_style_set_image(style, h, "#sol_noname1", 256, 64);
-	render_object_add_child(window, button);
-
-	button = widget_generic(0);
-	style = widget_get_default_style(button);
-	widget_style_set_pos(style, 45.0f, 292.0f + button_top);
-	widget_style_set_size(style, bw, bh);
-	widget_style_set_click_callback(style, sol_pyramid_callback);
-	widget_style_set_image(style, h, "#sol_pyramid", 256, 64);
-	render_object_add_child(window, button);
-
-	button = widget_generic(0);
-	style = widget_get_default_style(button);
-	widget_style_set_pos(style, 45.0f, 361.0f + button_top);
-	widget_style_set_size(style, bw, bh);
-	widget_style_set_click_callback(style, sol_test1_callback);
-	widget_style_set_image(style, h, "#sol_test1", 256, 64);
-	render_object_add_child(window, button);
-
-	button = widget_generic(0);
-	style = widget_get_default_style(button);
-	widget_style_set_pos(style, 45.0f, 430.0f + button_top);
-	widget_style_set_size(style, bw, bh);
-	widget_style_set_click_callback(style, sol_heirship_callback);
-	widget_style_set_image(style, h, "#sol_heirship", 256, 64);
-	render_object_add_child(window, button);
-
 	render_svg_close(h);
+
+	g_hash_table_iter_init(&it, registry->games);
+	while(g_hash_table_iter_next(&it, &key, &value)) {
+		game *game = value;
+		button = widget_generic(key);
+		style = widget_get_default_style(button);
+		widget_style_set_image_size(style, 128, 32);
+		/* widget_style_set_font_face(style, "Meera"); */
+		widget_style_set_font_size(style, 16.0f);
+		widget_style_set_text(style, game->name);
+		widget_style_set_text_color(style, 0.0f, 0.0f, 0.0f, 0.0f);
+		widget_style_set_size(style, 128.0f, 32.0f);
+		widget_style_set_pos(style, 30.0f, button_top);
+		widget_style_set_click_callback(style, sol_callback);
+		render_object_add_child(window, button);
+
+		button_top += 40;
+	}
+	game_registry_free(registry);
 }

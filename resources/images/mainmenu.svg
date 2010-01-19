@@ -42,7 +42,7 @@
      borderopacity="1"
      inkscape:current-layer="svg7691"
      inkscape:cx="580.65555"
-     inkscape:cy="274.1453"
+     inkscape:cy="271.81335"
      inkscape:window-y="25"
      inkscape:window-x="0"
      inkscape:window-width="1268"
@@ -6822,15 +6822,6 @@
        inkscape:vp_y="0 : 1000 : 0"
        inkscape:vp_x="0 : 0.5 : 1"
        sodipodi:type="inkscape:persp3d" />
-    <filter
-       color-interpolation-filters="sRGB"
-       inkscape:collect="always"
-       id="filter6127">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="10.573995"
-         id="feGaussianBlur6129" />
-    </filter>
     <linearGradient
        id="linearGradient9766-9-8">
       <stop
@@ -7667,186 +7658,6 @@
         </g>
       </g>
     </g>
-  </g>
-  <g
-     id="sol_idiot"
-     transform="translate(285.63913,4.6638965)">
-    <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:none"
-       id="rect2547"
-       width="318.31088"
-       height="67.626495"
-       x="-127.64966"
-       y="184.75562" />
-    <rect
-       y="191.91902"
-       x="-121.09373"
-       height="50.967724"
-       width="303.98407"
-       id="rect2245"
-       style="fill:#ffffff;fill-opacity:1;stroke:url(#linearGradient2321);stroke-width:2.33512998000000005;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.55830389000000002;stroke-dasharray:none;stroke-dashoffset:25;opacity:1" />
-    <text
-       id="text2293"
-       y="229.74313"
-       x="-110.10363"
-       style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       xml:space="preserve"><tspan
-         style="font-size:36px"
-         y="229.74313"
-         x="-110.10363"
-         id="tspan2295"
-         sodipodi:role="line">The idiot</tspan></text>
-  </g>
-  <g
-     style="display:inline"
-     id="sol_maltesercross"
-     transform="translate(285.63913,76.176975)"
-     inkscape:label="#sol_maltesercross">
-    <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:none"
-       id="rect2547-9"
-       width="318.31088"
-       height="67.626495"
-       x="-127.64966"
-       y="184.75562" />
-    <rect
-       y="191.91902"
-       x="-121.09373"
-       height="50.967724"
-       width="303.98407"
-       id="rect2245-0"
-       style="fill:#ffffff;fill-opacity:1;stroke:url(#linearGradient2321-3);stroke-width:2.33512998;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.55830389;stroke-dasharray:none;stroke-dashoffset:25" />
-    <text
-       id="text2293-6"
-       y="229.74313"
-       x="-110.10363"
-       style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       xml:space="preserve"><tspan
-         style="font-size:36px"
-         y="229.74313"
-         x="-110.10363"
-         id="tspan2295-1"
-         sodipodi:role="line">Malteser cross</tspan></text>
-  </g>
-  <g
-     style="display:inline"
-     id="sol_noname1"
-     transform="translate(285.63913,147.69003)">
-    <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:none"
-       id="rect2547-7"
-       width="318.31088"
-       height="67.626495"
-       x="-127.64966"
-       y="184.75562" />
-    <rect
-       y="191.91902"
-       x="-121.09373"
-       height="50.967724"
-       width="303.98407"
-       id="rect2245-5"
-       style="fill:#ffffff;fill-opacity:1;stroke:url(#linearGradient2321-0);stroke-width:2.33512998;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.55830389;stroke-dasharray:none;stroke-dashoffset:25" />
-    <text
-       id="text2293-2"
-       y="229.74313"
-       x="-110.10363"
-       style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       xml:space="preserve"><tspan
-         style="font-size:36px"
-         y="229.74313"
-         x="-110.10363"
-         id="tspan2295-2"
-         sodipodi:role="line">Noname 1</tspan></text>
-  </g>
-  <g
-     style="display:inline"
-     id="sol_pyramid"
-     transform="translate(285.63913,219.20309)"
-     inkscape:label="#sol_pyramid">
-    <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:none"
-       id="rect2547-8"
-       width="318.31088"
-       height="67.626495"
-       x="-127.64966"
-       y="184.75562" />
-    <rect
-       y="191.91902"
-       x="-121.09373"
-       height="50.967724"
-       width="303.98407"
-       id="rect2245-8"
-       style="fill:#ffffff;fill-opacity:1;stroke:url(#linearGradient2321-08);stroke-width:2.33512998;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.55830389;stroke-dasharray:none;stroke-dashoffset:25" />
-    <text
-       id="text2293-4"
-       y="229.74313"
-       x="-110.10363"
-       style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       xml:space="preserve"><tspan
-         style="font-size:36px"
-         y="229.74313"
-         x="-110.10363"
-         id="tspan2295-0"
-         sodipodi:role="line">Pyramid</tspan></text>
-  </g>
-  <g
-     id="sol_test1"
-     inkscape:label="#sol_test1"
-     transform="translate(-406.92492,250.6844)">
-    <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:none"
-       id="rect2547-8-6"
-       width="318.31088"
-       height="67.626495"
-       x="565.37543"
-       y="218.46078" />
-    <rect
-       y="225.62419"
-       x="571.9314"
-       height="50.967724"
-       width="303.98407"
-       id="rect2245-8-6"
-       style="fill:#ffffff;fill-opacity:1;stroke:url(#linearGradient4315);stroke-width:2.33512998;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.55830389;stroke-dasharray:none;stroke-dashoffset:25" />
-    <text
-       sodipodi:linespacing="125%"
-       id="text2293-4-4"
-       y="263.4483"
-       x="582.92151"
-       style="font-size:40px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       xml:space="preserve"><tspan
-         id="tspan4318"
-         sodipodi:role="line"
-         x="582.92151"
-         y="263.4483">Test1</tspan></text>
-  </g>
-  <g
-     id="sol_heirship"
-     transform="translate(-409.25686,240.19064)">
-    <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:none"
-       id="rect2547-8-6-9"
-       width="318.31088"
-       height="67.626495"
-       x="567.24634"
-       y="292.02521" />
-    <rect
-       y="299.18863"
-       x="573.80231"
-       height="50.967724"
-       width="303.98407"
-       id="rect2245-8-6-5"
-       style="fill:#ffffff;fill-opacity:1;stroke:url(#linearGradient4326);stroke-width:2.33512998;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.55830389;stroke-dasharray:none;stroke-dashoffset:25" />
-    <text
-       sodipodi:linespacing="125%"
-       id="text2293-4-4-0"
-       y="337.01273"
-       x="584.79242"
-       style="font-size:40px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
-       xml:space="preserve"><tspan
-         id="tspan4329"
-         sodipodi:role="line"
-         x="584.79242"
-         y="337.01273">Heirship</tspan></text>
   </g>
   <g
      transform="translate(36.535055,18.473529)"

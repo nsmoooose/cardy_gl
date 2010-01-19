@@ -294,16 +294,24 @@ void widget_style_set_text(widget_style *style, const char *text) {
 		cairo_data, CAIRO_FORMAT_ARGB32, style->image_width, style->image_height, stride);
 
 	cr = cairo_create(cairo_surface);
-	cairo_set_source_rgb(cr, 0.1, 0.1, 0.1);
-	cairo_select_font_face(cr, style->font_face,
-						   CAIRO_FONT_SLANT_NORMAL,
-						   CAIRO_FONT_WEIGHT_BOLD);
+
+	/* Set the background color of the bitmap generated. */
+	cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
+	cairo_rectangle (cr, 0, 0, style->image_width, style->image_height);
+	cairo_fill (cr);
+
+	cairo_set_source_rgb(cr, style->text_color[0], style->text_color[1], style->text_color[2]);
+	if(style->font_face) {
+		cairo_select_font_face(cr, style->font_face,
+				CAIRO_FONT_SLANT_NORMAL,
+				CAIRO_FONT_WEIGHT_NORMAL);
+	}
 
 	cairo_set_font_size(cr, style->font_size);
-	cairo_move_to(cr, 20, 30);
+	cairo_move_to(cr, 0, style->image_height/2);
 	cairo_show_text(cr, text);
-	cairo_destroy(cr);
 
+	glGenTextures(1, &style->texture);
 	glBindTexture(GL_TEXTURE_2D, style->texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
