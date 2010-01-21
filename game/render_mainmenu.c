@@ -45,6 +45,11 @@ static void sol_callback(render_event_args *event, void *data) {
 	game_registry_free(registry);
 }
 
+static void quit_callback(render_event_args *event, void *data) {
+	/* TODO: Have a better shutdown of the application. */
+	exit(0);
+}
+
 void render_object_mainmenu(render_object *parent) {
 	char file_buffer[PATH_MAX];
 	render_object *window, *button;
@@ -101,4 +106,17 @@ void render_object_mainmenu(render_object *parent) {
 		button_top += 40;
 	}
 	game_registry_free(registry);
+
+	button = widget_generic(0);
+	style = widget_get_default_style(button);
+	widget_style_set_image_size(style, 128, 32);
+	/* widget_style_set_font_face(style, "Meera"); */
+	widget_style_set_font_size(style, 16.0f);
+	widget_style_set_text(style, "Quit");
+	widget_style_set_text_color(style, 0.0f, 0.0f, 0.0f, 0.0f);
+	widget_style_set_size(style, 128.0f, 32.0f);
+	widget_style_set_pos(style, 30.0f, button_top);
+	widget_style_set_click_callback(style, quit_callback);
+	render_object_add_child(window, button);
+	button_top += 40;
 }
