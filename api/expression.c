@@ -39,9 +39,7 @@ expression_context *expression_context_create() {
 }
 
 void expression_context_free(expression_context *ec) {
-	/* TODO
-	   Iterate through all expressions and free them.
-	*/
+	/* TODO: Iterate through all expressions and free them.	*/
 	g_hash_table_unref(ec->expressions);
 }
 
@@ -62,9 +60,7 @@ expression *expression_context_get(expression_context *ec, const char *key) {
 /* ----------------------------------------------------------------------- */
 
 void expression_free(expression *e) {
-	/* TODO
-	   This expression can have subexpressions that also needs freeing. */
-
+	/* TODO: This expression can have subexpressions that also needs freeing. */
 	free(e->data);
 	free(e);
 }
@@ -97,9 +93,7 @@ static float expression_var_execute(expression_context *ec, expression *e) {
 		return expression_execute(ec, var);
 	}
 
-	/* TODO
-	   Better error handling when there are expression errors.
-	**/
+	/* TODO: Better error handling when there are expression errors. */
 	fprintf(stderr, "Invalid expression. Variable: %s not found.", (char*)e->data);
 	exit(1);
 }
@@ -671,9 +665,7 @@ expression_lib *expression_lib_create() {
 }
 
 void expression_lib_free(expression_lib *lib) {
-	/* TODO
-	   Iterate through all functions and free them.
-	*/
+	/* TODO: Iterate through all functions and free them. */
 	g_hash_table_unref(lib->functions);
 	free(lib);
 }

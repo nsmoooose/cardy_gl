@@ -33,7 +33,7 @@ void mem_context_free(mem_context *context) {
 void mem_attach(mem_context *context, void *mem) {
 	int index = first_free(context);
 	if(index == -1) {
-		/* TODO */
+		/* TODO: Something */
 		exit(0);
 	}
 	context->blocks[index] = mem;

@@ -164,7 +164,7 @@ void card_move_count(pile *dest, pile *src, int count) {
 			card_append(card, dest);
 		}
 		else {
-			/* TODO. This is an error that should be signalled or something. */
+			/* TODO: This is an error that should be signalled or something. */
 		}
 	}
 }
@@ -177,10 +177,10 @@ void card_reveal_count(pile *pile, int start_index, int count) {
 	int index;
 	for(index=start_index;index<start_index+count;++index) {
 		if(index >= pile->size) {
-			/* TODO. This is an error. We should signal
-			   in some way that you didn't handle the number
-			   of cards correctly.
-			*/
+			/* TODO: This is an error. We should signal
+			 * in some way that you didn't handle the number
+			 * of cards correctly.
+			 */
 			return;
 		}
 		card_reveal(pile->cards[index]);
@@ -215,7 +215,7 @@ void card_hide_count(pile *pile, int start_index, int count) {
 	int index;
 	for(index=start_index;index<start_index+count;++index) {
 		if(index >= pile->size) {
-			/* TODO. This is an error. We should signal
+			/* TODO: This is an error. We should signal
 			   in some way that you didn't handle the number
 			   of cards correctly.
 			*/
