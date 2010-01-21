@@ -8,12 +8,6 @@
 #include "render_solved.h"
 #include "render_mainmenu.h"
 #include "solitaires.h"
-#include "solitaire_heirship.h"
-#include "solitaire_theidiot.h"
-#include "solitaire_maltesercross.h"
-#include "solitaire_noname1.h"
-#include "solitaire_pyramid.h"
-#include "solitaire_test1.h"
 
 const char* render_object_mainmenu_id = "mainmenu";
 
