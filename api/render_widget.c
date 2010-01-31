@@ -227,7 +227,9 @@ static void widget_generic_render(render_event_args *event, float delta) {
 	}
 
 	if(rotation != 0.0f) {
+		glTranslatef(left + width / 2.0f, top + height / 2.0f, 0.0f);
 		glRotatef(rotation, 0.0f, 0.0f, 1.0f);
+		glTranslatef(- (left + width / 2.0f), - (top + height / 2.0f), 0.0f);
 	}
 	glBegin(GL_POLYGON);
 	glTexCoord2f(0.0f, 0.0f);
