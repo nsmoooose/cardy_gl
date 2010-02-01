@@ -11,5 +11,6 @@ examples/widget-window/widget-window*
 *.o
 api/libcardy-api.a
 game/libcardy-game.a
+server/cardy_server*
 tests/cardy_tests
 TAGS
