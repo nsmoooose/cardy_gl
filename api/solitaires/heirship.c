@@ -1,4 +1,4 @@
-#include "solitaire_heirship.h"
+#include "heirship.h"
 
 typedef struct {
 	pile *deck;

@@ -1,13 +1,10 @@
-OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
+OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c)) $(patsubst %.c,%.o,$(wildcard solitaires/*.c))
 
 all: libcardy-api.a
 
 clean:
 	@echo Cleaning libcardy-api
-
-	@rm *.o -f
-	@rm libcardy-api.a -f
-	@rm *.gcda *.gcno -f
+	@rm libcardy-api.a *.o *.gc* solitaires/*.o solitaires/*.gc* -f
 
 libcardy-api.a: $(OBJECTS)
 	@echo Creating library $@
@@ -15,4 +12,4 @@ libcardy-api.a: $(OBJECTS)
 
 %.o: %.c
 	@echo $<
-	@gcc -c $(CFLAGS) $<
+	@gcc -c $(CFLAGS) $< -o $@

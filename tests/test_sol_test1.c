@@ -1,5 +1,5 @@
 #include <check.h>
-#include "../game/solitaire_test1.h"
+#include "../api/solitaires/test1.h"
 
 START_TEST(test_sol_test1_solved) {
 	mem_context *context = mem_context_create();

@@ -1,10 +1,10 @@
 #include "solitaires.h"
-#include "solitaire_theidiot.h"
-#include "solitaire_maltesercross.h"
-#include "solitaire_noname1.h"
-#include "solitaire_pyramid.h"
-#include "solitaire_heirship.h"
-#include "solitaire_test1.h"
+#include "theidiot.h"
+#include "maltesercross.h"
+#include "noname1.h"
+#include "pyramid.h"
+#include "heirship.h"
+#include "test1.h"
 
 game_registry *solitaire_get_registry() {
 	game_registry *r = game_registry_create();

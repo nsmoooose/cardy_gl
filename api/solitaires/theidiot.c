@@ -1,6 +1,6 @@
 #include <stdlib.h>
-#include "../api/rule.h"
-#include "solitaire_theidiot.h"
+#include "../rule.h"
+#include "theidiot.h"
 
 typedef struct {
 	pile *deck;

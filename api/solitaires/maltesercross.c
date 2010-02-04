@@ -1,6 +1,6 @@
 #include <stdlib.h>
-#include "../api/rule.h"
-#include "solitaire_maltesercross.h"
+#include "../rule.h"
+#include "maltesercross.h"
 
 typedef struct {
 	char state;

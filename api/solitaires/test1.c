@@ -1,4 +1,4 @@
-#include "solitaire_test1.h"
+#include "test1.h"
 
 typedef struct {
 	pile *deck;

@@ -5,7 +5,6 @@
 #include <string.h>
 #include "api/card.h"
 #include "api/mygl.h"
-#include "game/solitaire_theidiot.h"
 #include "game/render_solitaire.h"
 #include "mouse_handler.h"
 #include "rendering.h"

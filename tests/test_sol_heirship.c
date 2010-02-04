@@ -1,5 +1,5 @@
 #include <check.h>
-#include "../game/solitaire_heirship.h"
+#include "../api/solitaires/heirship.h"
 
 START_TEST(test_sol_heirship_init) {
 	mem_context *context = mem_context_create();

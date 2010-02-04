@@ -4,10 +4,10 @@
 #include "../api/mygl.h"
 #include "../api/render_widget.h"
 #include "../api/resource.h"
+#include "../api/solitaires/solitaires.h"
 #include "render_solitaire.h"
 #include "render_solved.h"
 #include "render_mainmenu.h"
-#include "solitaires.h"
 
 const char* render_object_mainmenu_id = "mainmenu";
 

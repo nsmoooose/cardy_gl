@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "solitaire_pyramid.h"
+#include "pyramid.h"
 
 typedef struct {
 	pile *piles[30];
