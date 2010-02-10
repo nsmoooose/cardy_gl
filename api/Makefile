@@ -1,4 +1,4 @@
-OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c)) $(patsubst %.c,%.o,$(wildcard solitaires/*.c))
+OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c)) $(patsubst %.c,%.o,$(wildcard solitaires/*.c)) $(patsubst %.c,%.o,$(wildcard network/*.c))
 
 all: libcardy-api.a
 
