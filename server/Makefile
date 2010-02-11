@@ -8,8 +8,4 @@ clean:
 
 cardy_server: $(OBJECTS)
 	@echo Linking $@
-	@gcc $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -L../api -L../game
-
-%.o: %.c
-	@echo $<
-	@gcc -c $(CFLAGS) $<
+	@$(CC) $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -L../api -L../game

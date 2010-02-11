@@ -12,7 +12,3 @@ clean:
 libcardy-game.a: $(OBJECTS)
 	@echo Creating library $@
 	@ar rcs $@ $(OBJECTS)
-
-%.o: %.c
-	@echo $<
-	@gcc -c $(CFLAGS) $<

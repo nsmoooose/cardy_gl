@@ -46,7 +46,7 @@ cardy_tests:
 
 cardy_gl: cardy_api cardy_game $(OBJECTS)
 	@echo Linking $@
-	@gcc $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -Lapi -Lgame
+	@$(CC) $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -Lapi -Lgame
 
 ctags:
 	@ctags -e --recurse=yes --exclude=analysis/* --exclude=.doxygen/*
@@ -85,10 +85,6 @@ install:
 	@mkdir /usr/share/cardy_gl/ -p
 	@cp -r themes /usr/share/cardy_gl/
 	@cp -r resources /usr/share/cardy_gl/
-
-%.o: %.c
-	@echo $<
-	@gcc -c $(CFLAGS) $<
 
 coverage:
 	@mkdir coverage

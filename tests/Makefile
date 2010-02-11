@@ -13,14 +13,10 @@ clean:
 ifeq ($(PLATFORM), Linux)
 cardy_tests:  $(OBJECTS) ../api/libcardy-api.a ../game/libcardy-game.a
 	@echo Building $@
-	@gcc $(CFLAGS) -o $@ $(OBJECTS) -L../api -L../game $(LIBS) -lcheck
+	@$(CC) $(CFLAGS) -o $@ $(OBJECTS) -L../api -L../game $(LIBS) -lcheck
 endif
 
 ifeq ($(PLATFORM), MINGW32_NT-5.1)
 cardy_tests:
 	@echo Tests is not supported on windows.
 endif
-
-%.o: %.c
-	@echo $<
-	@gcc -c $(CFLAGS) $<
