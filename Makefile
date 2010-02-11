@@ -19,27 +19,27 @@ OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 
 all: cardy_gl cardy_server cardy_tests
 	@echo Building $@
-	@make -C examples $@
+	@$(MAKE)  -C examples $@
 
 clean:
 	@echo Cleaning cardy_gl
 	@rm *.o cardy_gl* coverage *.gcda *.gcno -rf
-	@make -C tests $@
-	@make -C api $@
-	@make -C game $@
-	@make -C examples $@
+	@$(MAKE)  -C tests $@
+	@$(MAKE)  -C api $@
+	@$(MAKE)  -C game $@
+	@$(MAKE)  -C examples $@
 
 cardy_api:
-	@make -C api
+	@$(MAKE)  -C api
 
 cardy_game:
-	@make -C game
+	@$(MAKE)  -C game
 
 cardy_server:
-	@make -C server
+	@$(MAKE)  -C server
 
 cardy_tests:
-	@make -C tests
+	@$(MAKE)  -C tests
 
 cardy_gl: cardy_api cardy_game $(OBJECTS)
 	@echo Linking $@

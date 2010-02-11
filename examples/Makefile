@@ -1,9 +1,9 @@
 all:
-	make -C background $@
-	make -C solved $@
-	make -C widget-window $@
+	@$(MAKE) -C background $@
+	@$(MAKE) -C solved $@
+	@$(MAKE) -C widget-window $@
 
 clean:
-	make -C background $@
-	make -C solved $@
-	make -C widget-window $@
+	@$(MAKE) -C background $@
+	@$(MAKE) -C solved $@
+	@$(MAKE) -C widget-window $@

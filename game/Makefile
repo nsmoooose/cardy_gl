@@ -8,4 +8,4 @@ clean:
 
 libcardy-game.a: $(OBJECTS)
 	@echo Creating library $@
-	@ar rcs $@ $(OBJECTS)
+	@$(AR) rcs $@ $(OBJECTS)

@@ -8,4 +8,4 @@ clean:
 
 libcardy-api.a: $(OBJECTS)
 	@echo Creating library $@
-	@ar rcs $@ $(OBJECTS)
+	@$(AR) rcs $@ $(OBJECTS)
