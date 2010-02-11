@@ -3,8 +3,7 @@ OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 all: cardy_server
 
 clean:
-	@rm *.o -f
-	@rm *.gcda *.gcno -f
+	@rm *.o *.gcda *.gcno -f
 
 cardy_server: $(OBJECTS)
 	@echo Linking $@

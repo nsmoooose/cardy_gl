@@ -6,9 +6,7 @@ all: cardy_tests
 
 clean:
 	@echo Cleaning cardy_tests
-	@rm *.o -f
-	@rm *.gcda *.gcno -f
-	@rm cardy_tests -f
+	@rm *.o *.gcda *.gcno cardy_tests -f
 
 ifeq ($(PLATFORM), Linux)
 cardy_tests:  $(OBJECTS) ../api/libcardy-api.a ../game/libcardy-game.a

@@ -23,10 +23,7 @@ all: cardy_gl cardy_server cardy_tests
 
 clean:
 	@echo Cleaning cardy_gl
-	@rm *.o -f
-	@rm cardy_gl* -f
-	@rm coverage -rf
-	@rm *.gcda *.gcno -f
+	@rm *.o cardy_gl* coverage *.gcda *.gcno -rf
 	@make -C tests $@
 	@make -C api $@
 	@make -C game $@
