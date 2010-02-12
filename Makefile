@@ -48,6 +48,9 @@ cardy_gl: cardy_api cardy_game $(OBJECTS)
 ctags:
 	@ctags -e --recurse=yes --exclude=analysis/* --exclude=.doxygen/*
 
+style:
+	@find -name "*.h" -or -name "*.c"|xargs astyle
+
 deploy:
 	@mkdir dist/win32 -p
 	@cp resources dist/win32/ -r
