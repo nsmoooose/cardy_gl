@@ -57,11 +57,20 @@ START_TEST(test_widget_object_variable_render_time) {
 }
 END_TEST
 
+START_TEST(test_widget_set_data) {
+	render_object *ro = widget_generic(0);
+	widget_set_data(ro, ro);
+
+	ck_assert(widget_get_data(ro) == ro);
+}
+END_TEST
+
 void add_render_widget_tests(Suite *suite) {
 	TCase *c = tcase_create("Render widget");
 	tcase_add_test(c, test_widget_get_default_style);
 	tcase_add_test(c, test_widget_set_pos);
 	tcase_add_test(c, test_widget_set_size);
 	tcase_add_test(c, test_widget_object_variable_render_time);
+	tcase_add_test(c, test_widget_set_data);
 	suite_add_tcase(suite, c);
 }

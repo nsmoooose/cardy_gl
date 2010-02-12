@@ -17,6 +17,12 @@
 #define style_key_viewport_height "viewport_height"
 #define style_key_rotation "rotation"
 
+render_object *widget_desktop(const char *id);
+render_object *widget_generic(const char *id);
+
+void widget_set_data(render_object *widget, void *data);
+void *widget_get_data(render_object *widget);
+
 struct widget_style_St;
 typedef struct widget_style_St widget_style;
 
@@ -75,10 +81,6 @@ void widget_style_set_image(
 	widget_style *style, RsvgHandle *h, char *svg_id, int width, int height);
 void widget_style_set_click_callback(
 	widget_style *style, render_selection_callback callback);
-
-render_object *widget_desktop(const char *id);
-
-render_object *widget_generic(const char *id);
 
 void widget_style_set_image_size(widget_style *style, int width, int height);
 void widget_style_set_font_face(widget_style *style, const char *name);

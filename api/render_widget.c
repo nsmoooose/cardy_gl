@@ -22,7 +22,18 @@ struct widget_style_St {
 
 typedef struct {
 	widget_style* style;
+	void *data;
 } widget_data;
+
+void widget_set_data(render_object *widget, void *data) {
+	widget_data *d = widget->data;
+	d->data = data;
+}
+
+void *widget_get_data(render_object *widget) {
+	widget_data *d = widget->data;
+	return d->data;
+}
 
 void widget_add_state(render_object *widget, const char *state) {
 }
