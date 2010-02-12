@@ -21,10 +21,9 @@ static void game_system_local_close(game_system *system) {
 /* TODO: Move this since code has a dependency to solitaires lib */
 game_system *game_system_local() {
 	game_system *system = calloc(1, sizeof(game_system));
+	game_system_data *data = calloc(1, sizeof(game_system_data));
 	system->get_registry = game_system_local_get_registry;
 	system->close = game_system_local_close;
-
-	game_system_data *data = calloc(1, sizeof(game_system_data));
 	data->registry = solitaire_get_registry();
 	system->handle = data;
 	return system;

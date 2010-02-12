@@ -4,7 +4,9 @@ all: libcardy-api.a
 
 clean:
 	@echo Cleaning libcardy-api
-	@rm libcardy-api.a *.o *.gc* solitaires/*.o solitaires/*.gc* network/*.o network/*.gc* -f
+	@rm libcardy-api.a *.o *.gc*
+	@$(MAKE) -C network clean
+	@$(MAKE) -C solitaires clean
 
 libcardy-api.a: $(OBJECTS)
 	@$(MAKE) -C network
