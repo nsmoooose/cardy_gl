@@ -7,11 +7,11 @@ ifdef COVERAGE
 endif
 
 ifeq ($(PLATFORM), Linux)
-export LIBS=-lcardy-game -lcardy-api -lglut -lGL -lGLU -lm $(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
+export LIBS=-lcardy-game -lcardy-api -lcardy-network -lcardy-solitaires -lglut -lGL -lGLU -lm $(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
 endif
 
 ifeq ($(PLATFORM), MINGW32_NT-5.1)
-export LIBS=-lcardy-game -lcardy-api -lglu32 -lglut32 -lm -lopengl32 -lglee $(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
+export LIBS=-lcardy-game -lcardy-api -lcardy-network -lcardy-solitaires -lglu32 -lglut32 -lm -lopengl32 -lglee $(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
 export CFLAGS+=-mwindows
 endif
 
@@ -43,7 +43,7 @@ cardy_tests:
 
 cardy_gl: cardy_api cardy_game $(OBJECTS)
 	@echo Linking $@
-	@$(CC) $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -Lapi -Lgame
+	@$(CC) $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -Lapi -Lgame -Lapi/network -Lapi/solitaires
 
 ctags:
 	@ctags -e --recurse=yes --exclude=analysis/* --exclude=.doxygen/*
