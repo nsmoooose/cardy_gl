@@ -49,7 +49,7 @@ ctags:
 	@ctags -e --recurse=yes --exclude=analysis/* --exclude=.doxygen/*
 
 style:
-	@find -name "*.h" -or -name "*.c"|xargs astyle
+	@find -name "*.h" -or -name "*.c"|xargs astyle --suffix=none
 
 deploy:
 	@mkdir dist/win32 -p
