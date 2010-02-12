@@ -145,9 +145,7 @@ static void widget_free(render_event_args *event) {
 	if(d->style->texture) {
 		glDeleteTextures(1, &d->style->texture);
 	}
-	if(d->style->font_face) {
-		free(d->style->font_face);
-	}
+	free(d->style->font_face);
 	free(d->style);
 	free(d);
 }
