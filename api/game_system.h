@@ -10,6 +10,5 @@ typedef struct game_system_St {
 } game_system;
 
 game_system *game_system_local();
-void game_system_free(game_system *system);
 
 #endif /* __GAME_SYSTEM_H__ */
