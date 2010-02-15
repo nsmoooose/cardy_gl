@@ -4,7 +4,7 @@ all: libcardy-api.a
 
 clean:
 	@echo Cleaning libcardy-api
-	@rm libcardy-api.a *.o *.gc*
+	@$(RM) libcardy-api.a *.o *.gc*
 	@$(MAKE) -C network clean
 	@$(MAKE) -C solitaires clean
 

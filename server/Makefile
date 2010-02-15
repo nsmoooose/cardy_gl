@@ -7,4 +7,4 @@ clean:
 
 cardy_server: $(OBJECTS)
 	@echo Linking $@
-	@$(CC) $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -L../api -L../game
+	@$(CC) $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -L../api -L../game -L../api/network -L../api/solitaires
