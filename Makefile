@@ -19,27 +19,27 @@ OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 
 all: cardy_gl cardy_server cardy_tests
 	@echo Building $@
-	@$(MAKE)  -C examples $@
+	@$(MAKE) -C examples $@
 
 clean:
 	@echo Cleaning cardy_gl
 	@rm *.o cardy_gl* coverage *.gcda *.gcno -rf
-	@$(MAKE)  -C tests $@
-	@$(MAKE)  -C api $@
-	@$(MAKE)  -C game $@
-	@$(MAKE)  -C examples $@
+	@$(MAKE) -C tests $@
+	@$(MAKE) -C api $@
+	@$(MAKE) -C game $@
+	@$(MAKE) -C examples $@
 
 cardy_api:
-	@$(MAKE)  -C api
+	@$(MAKE) -C api
 
 cardy_game:
-	@$(MAKE)  -C game
+	@$(MAKE) -C game
 
 cardy_server:
-	@$(MAKE)  -C server
+	@$(MAKE) -C server
 
 cardy_tests:
-	@$(MAKE)  -C tests
+	@$(MAKE) -C tests
 
 cardy_gl: cardy_api cardy_game $(OBJECTS)
 	@echo Linking $@
@@ -86,7 +86,8 @@ install:
 	@cp -r themes /usr/share/cardy_gl/
 	@cp -r resources /usr/share/cardy_gl/
 
-coverage:
+coverage: clean
+	@$(MAKE) -C . all COVERAGE=1
 	@mkdir coverage
 	@echo ===========================================================================
 	@-tests/cardy_tests
