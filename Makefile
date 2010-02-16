@@ -95,3 +95,9 @@ coverage: clean
 	@lcov --directory . --capture --output-file coverage/coverage.info
 	@echo ===========================================================================
 	@genhtml -o coverage/ coverage/coverage.info
+
+cppcheck:
+	@mkdir -p analysis-cppcheck
+	@$(RM) analysis-cppcheck/*
+	cppcheck . --enable=all --xml 2> analysis-cppcheck/errors.xml
+	cppcheck-htmlreport --file analysis-cppcheck/errors.xml --report-dir=analysis-cppcheck --source-dir=. --title cardy_gl
