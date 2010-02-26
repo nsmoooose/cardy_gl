@@ -1,6 +1,6 @@
 PLATFORM := $(shell uname)
 
-export CFLAGS=-g -Os -Wall -pedantic $(shell pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
+export CFLAGS=-g -Os -Wall -pedantic -Werror $(shell pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
 
 ifdef COVERAGE
 	export CFLAGS+=--coverage

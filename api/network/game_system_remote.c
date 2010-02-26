@@ -17,6 +17,7 @@ static void game_system_close(game_system *system) {
 
 game_system *game_system_connect(game_system_provider *provider, const char *path, const char *username, const char *password) {
 	char buffer[1000];
+	int bytes_read;
 
 	game_system *system = calloc(1, sizeof(game_system));
 	game_system_data *data = calloc(1, sizeof(game_system_data));
@@ -35,8 +36,9 @@ game_system *game_system_connect(game_system_provider *provider, const char *pat
 	strncat(buffer, "\n", 1000);
 	data->provider->write(data->provider, buffer, strlen(buffer));
 
-	int bytes_read = data->provider->read(data->provider, buffer, sizeof(buffer));
+	bytes_read = data->provider->read(data->provider, buffer, sizeof(buffer));
 	if(bytes_read == 2 && strcmp(buffer, "OK") == 0) {
 		return system;
 	}
+	return 0;
 }

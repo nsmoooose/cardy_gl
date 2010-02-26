@@ -21,13 +21,16 @@ float ease_time_protect6f(ease_function6f function, float t, float b, float c, f
 }
 
 float ease_quad_in(float t, float b, float c, float d) {
-	return c*(t/=d)*t + b;
+	t/=d;
+	return c * t * t + b;
 }
 
 float ease_quad_out(float t, float b, float c, float d) {
-	return -c *(t/=d)*(t-2) + b;
+	t/=d;
+	return -c * t *(t-2) + b;
 }
 
+#if 0
 float ease_quad_in_out(float t, float b, float c, float d) {
 	if ((t/=d/2) < 1) return c/2*t*t + b;
 	return -c/2 * ((--t)*(t-2) - 1) + b;
@@ -62,11 +65,14 @@ float ease_quart_in_out(float t, float b, float c, float d) {
 float ease_quint_in(float t, float b, float c, float d) {
 	return c*(t/=d)*t*t*t*t + b;
 }
+#endif
 
 float ease_quint_out(float t, float b, float c, float d) {
-	return c*((t=t/d-1)*t*t*t*t + 1) + b;
+	t=t/d-1;
+	return c*((t)*t*t*t*t + 1) + b;
 }
 
+#if 0
 float ease_quint_in_out(float t, float b, float c, float d) {
 	if ((t/=d/2) < 1) return c/2*t*t*t*t*t + b;
 	return c/2*((t-=2)*t*t*t*t + 2) + b;
@@ -173,6 +179,7 @@ float ease_elastic_in_out(float t, float b, float c, float d, float a, float p) 
 	if (t < 1) return -.5*(a*pow(2,10*(t-=1)) * sin( (t*d-s)*(2*M_PI)/p )) + b;
 	return a*pow(2,-10*(t-=1)) * sin( (t*d-s)*(2*M_PI)/p )*.5 + c + b;
 }
+#endif
 
 float ease_linear(float t, float b, float c, float d) {
 	return c*t/d + b;
