@@ -67,9 +67,43 @@ START_TEST(test_sol_maltesercross_deal) {
 }
 END_TEST
 
+START_TEST(test_sol_maltesercross_move_from_king_pile) {
+	mem_context *context = mem_context_create();
+	visual_settings *settings = mem_alloc(context, sizeof(visual_settings));
+	solitaire* sol = solitaire_maltesercross(context, settings);
+	pile *p = (pile*)sol->visual->piles[3]->data;
+	int i=0;
+	bool result;
+	for(i=13;i>0;--i) {
+		card_append(card_create(context, e_clubs, i), p);
+	}
+	visual_sync(sol->visual);
+
+	/* deck */
+	result = ruleset_move_card(
+		sol->ruleset, sol->visual, sol->visual->piles[0],
+		sol->visual->piles[3]->cards[0], 13);
+	ck_assert_msg(result == false, "index: 0");
+
+	for(i=2;i < sol->visual->pile_count ;++i) {
+		result = ruleset_move_card(
+			sol->ruleset, sol->visual, sol->visual->piles[i],
+			sol->visual->piles[3]->cards[0], 13);
+		ck_assert_msg(result == false, "index: %d", i);
+	}
+
+	/* done */
+	result = ruleset_move_card(
+		sol->ruleset, sol->visual, sol->visual->piles[1],
+		sol->visual->piles[3]->cards[0], 13);
+	ck_assert_msg(result == true);
+}
+END_TEST
+
 void add_sol_malteser_tests(Suite *suite) {
 	TCase *sol_malteser = tcase_create("Sol-MalteserCross");
 	tcase_add_test(sol_malteser, test_sol_maltesercross_init);
 	tcase_add_test(sol_malteser, test_sol_maltesercross_deal);
+	tcase_add_test(sol_malteser, test_sol_maltesercross_move_from_king_pile);
 	suite_add_tcase(suite, sol_malteser);
 }

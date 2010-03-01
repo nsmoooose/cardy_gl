@@ -248,6 +248,7 @@ static void setup_rules(mem_context *context, solitaire *s, internal *i) {
 		context, rule7,
 		condition_source_array(context, 4, i->king1, i->king2, i->king3, i->king4));
 	rule_add_condition(context, rule7, condition_move_count(context, 13));
+	rule_add_condition(context, rule7, condition_destination(context, i->done));
 	ruleset_add_rule(context, s->ruleset, rule7);
 
 	/* Solved rule */
