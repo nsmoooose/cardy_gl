@@ -20,7 +20,7 @@ for every one there after.
 typedef struct {
 	float total_time;
 	GLuint triangle;
-} render_object_background_data;
+} render_object_triangles_data;
 
 static void render_triangle() {
 	glBegin(GL_TRIANGLES);
@@ -31,7 +31,7 @@ static void render_triangle() {
 }
 
 static void render_object_triangles_render(render_event_args *event, float delta) {
-	render_object_background_data *i = event->object->data;
+	render_object_triangles_data *i = event->object->data;
 	int x, y;
 	float distance, green;
 	GLint viewport[4];
@@ -75,14 +75,14 @@ static void render_object_triangles_render(render_event_args *event, float delta
 }
 
 static void render_object_triangles_free(render_event_args *event) {
-	render_object_background_data *i = event->object->data;
+	render_object_triangles_data *i = event->object->data;
 	glDeleteLists(i->triangle, 1);
 	free(event->object->data);
 }
 
 render_object *render_object_triangles() {
 	render_object *o = render_object_create("background");
-	render_object_background_data *d = calloc(1, sizeof(render_object_background_data));
+	render_object_triangles_data *d = calloc(1, sizeof(render_object_triangles_data));
 	o->data = d;
 	o->render = render_object_triangles_render;
 	o->free = render_object_triangles_free;

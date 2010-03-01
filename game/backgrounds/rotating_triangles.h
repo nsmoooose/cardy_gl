@@ -1,8 +1,8 @@
-#ifndef __RENDER_DESKTOP_H__
-#define __RENDER_DESKTOP_H__
+#ifndef __BACKGROUND_ROTATING_TRIANGLES_H__
+#define __BACKGROUND_ROTATING_TRIANGLES_H__
 
 #include "../../api/render.h"
 
 render_object *render_object_triangles();
 
-#endif /* __RENDER_DESKTOP_H__ */
+#endif /* __BACKGROUND_ROTATING_TRIANGLES_H__ */
