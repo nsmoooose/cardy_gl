@@ -1,6 +1,6 @@
 #include <unistd.h>
 #include "api/render_widget.h"
-#include "game/render_background.h"
+#include "game/backgrounds/rotating_triangles.h"
 #include "game/render_mainmenu.h"
 #include "game/render_topmenu.h"
 #include "program.h"
@@ -10,7 +10,7 @@ void rendering_setup() {
 	render_object *desktop;
 
 	g_rcontext = render_context_create(g_context);
-	g_rcontext->object = render_object_background(g_context);
+	g_rcontext->object = render_object_triangles(g_context);
 
 	render_object_add_child(g_rcontext->object, render_object_create("placeholder"));
 

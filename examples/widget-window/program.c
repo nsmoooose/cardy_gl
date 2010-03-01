@@ -2,7 +2,7 @@
 #include "../../api/mygl.h"
 #include "../../api/render.h"
 #include "../../api/render_widget.h"
-#include "../../game/render_background.h"
+#include "../../game/backgrounds/rotating_triangles.h"
 
 render_context *g_rcontext = 0;
 
@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
 	glutIdleFunc(rendering_idle);
 	glutDisplayFunc(rendering_scene);
 
-	g_rcontext->object = render_object_background();
+	g_rcontext->object = render_object_triangles();
 
 	desktop = widget_desktop("id");
 	render_object_add_child(g_rcontext->object, desktop);

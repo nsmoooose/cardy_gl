@@ -1,8 +1,8 @@
 #include <math.h>
 #include <stdlib.h>
-#include "../api/ease.h"
-#include "../api/mygl.h"
-#include "../api/render.h"
+#include "../../api/ease.h"
+#include "../../api/mygl.h"
+#include "../../api/render.h"
 
 /* Fun algorithms:
 
@@ -30,7 +30,7 @@ static void render_triangle() {
 	glEnd();
 }
 
-static void render_object_background_render(render_event_args *event, float delta) {
+static void render_object_triangles_render(render_event_args *event, float delta) {
 	render_object_background_data *i = event->object->data;
 	int x, y;
 	float distance, green;
@@ -74,18 +74,18 @@ static void render_object_background_render(render_event_args *event, float delt
 	i->total_time += delta;
 }
 
-static void render_object_background_free(render_event_args *event) {
+static void render_object_triangles_free(render_event_args *event) {
 	render_object_background_data *i = event->object->data;
 	glDeleteLists(i->triangle, 1);
 	free(event->object->data);
 }
 
-render_object *render_object_background() {
+render_object *render_object_triangles() {
 	render_object *o = render_object_create("background");
 	render_object_background_data *d = calloc(1, sizeof(render_object_background_data));
 	o->data = d;
-	o->render = render_object_background_render;
-	o->free = render_object_background_free;
+	o->render = render_object_triangles_render;
+	o->free = render_object_triangles_free;
 
 	d->triangle = glGenLists(1);
 	glNewList(d->triangle, GL_COMPILE);

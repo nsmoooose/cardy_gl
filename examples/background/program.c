@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include "../../api/mygl.h"
 #include "../../api/render.h"
-#include "../../game/render_background.h"
+#include "../../game/backgrounds/rotating_triangles.h"
 
 render_context *g_rcontext = 0;
 
@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 	glLoadIdentity();
 	gluPerspective(45.0f, 1.0f, 1.0f, 5000.0f);
 
-	g_rcontext->object = render_object_background();
+	g_rcontext->object = render_object_triangles();
 
 	glutMainLoop();
 

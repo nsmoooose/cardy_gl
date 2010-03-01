@@ -11,7 +11,7 @@ clean:
 ifeq ($(PLATFORM), Linux)
 cardy_tests:  $(OBJECTS) ../api/libcardy-api.a ../game/libcardy-game.a
 	@echo Building $@
-	@$(CC) $(CFLAGS) -o $@ $(OBJECTS) -L../api -L../game -L../api/network -L../api/solitaires $(LIBS) -lcheck
+	@$(CC) $(CFLAGS) -o $@ $(OBJECTS) -L../api -L../game -L../api/network -L../api/solitaires -L../game/backgrounds $(LIBS) -lcheck
 endif
 
 ifeq ($(PLATFORM), MINGW32_NT-5.1)

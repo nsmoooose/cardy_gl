@@ -7,5 +7,6 @@ clean:
 	@rm *.o libcardy-game.a *.gcda *.gcno -f
 
 libcardy-game.a: $(OBJECTS)
+	@$(MAKE) -C backgrounds
 	@echo Creating library $@
 	@$(AR) rcs $@ $(OBJECTS)
