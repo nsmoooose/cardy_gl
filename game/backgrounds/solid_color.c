@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "../../api/render.h"
 
 typedef struct {

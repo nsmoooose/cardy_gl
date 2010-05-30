@@ -1,0 +1,26 @@
+#!/bin/bash
+set -e
+cfg=$1
+
+if [ "$cfg" == "windows" ]; then
+	sed s/-pthread//> config <<EOF
+export CC=/usr/bin/i686-pc-mingw32-gcc
+export AR=/usr/i686-pc-mingw32/bin/ar
+export LIBS=-lcardy-game -lcardy-backgrounds -lcardy-api -lcardy-network -lcardy-solitaires -lglu32 -lglut -lm -lopengl32 $(pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
+# export LIBS=-lcardy-game -lcardy-backgrounds -lcardy-api -lcardy-network -lcardy-solitaires -lglut -lGL -lGLU -lm \$(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
+export CFLAGS=-mwindows -g -Os -Wall -pedantic -Werror $(pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
+EOF
+
+elif [ "$cfg" == "linux" ]; then
+	cat > config <<EOF
+export CFLAGS=-g -Os -Wall -pedantic -Werror \$(shell pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
+export LIBS=-lcardy-game -lcardy-backgrounds -lcardy-api -lcardy-network -lcardy-solitaires -lglut -lGL -lGLU -lm \$(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
+EOF
+
+else
+	echo "Usage:"
+	echo "  $0 platform"
+	echo "Platforms:"
+	echo "  window"
+	echo "  linux"
+fi
