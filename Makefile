@@ -52,10 +52,6 @@ deploy:
 	@cp $(MINGW_ROOT)/bin/libexpat-1.dll dist/win32/
 	@cp $(MINGW_ROOT)/bin/libpng12-0.dll dist/win32/
 	@cp $(MINGW_ROOT)/bin/zlib1.dll dist/win32/
-	#@cp $(MINGW_ROOT)/bin/glee.dll dist/win32/
-	#@cp $(MINGW_ROOT)/bin/glut32.dll dist/win32/
-	#@cp dependencies/bin/librsvg-2-2.dll dist/win32/
-	#@cp $(MINGW_ROOT)/bin/libcroco-0.6-3.dll dist/win32/
 	@cp $(MINGW_ROOT)/bin/libglib-2.0-0.dll dist/win32/
 	@cp $(MINGW_ROOT)/bin/libxml2-2.dll dist/win32/
 	@cp $(MINGW_ROOT)/bin/libiconv-2.dll dist/win32/
