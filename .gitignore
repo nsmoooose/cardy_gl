@@ -9,7 +9,8 @@ dependencies/bin
 dependencies/etc
 dependencies/include
 dependencies/lib
-share
+dependencies/share
+dist
 examples/background/example-background*
 examples/solved/example-solved*
 examples/widget-window/widget-window*

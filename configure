@@ -4,6 +4,7 @@ cfg=$1
 
 if [ "$cfg" == "windows" ]; then
 	sed s/-pthread//> config <<EOF
+export MINGW_ROOT=/usr/i686-pc-mingw32/sys-root/mingw/
 export CC=/usr/bin/i686-pc-mingw32-gcc
 export AR=/usr/bin/i686-pc-mingw32-ar
 export PKG_CONFIG=/usr/bin/i686-pc-mingw32-pkg-config
