@@ -21,6 +21,6 @@ else
 	echo "Usage:"
 	echo "  $0 platform"
 	echo "Platforms:"
-	echo "  window"
+	echo "  windows"
 	echo "  linux"
 fi

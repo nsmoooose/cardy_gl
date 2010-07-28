@@ -4,6 +4,7 @@ analysis-cppcheck
 .doxygen
 cardy_gl*
 coverage
+dependencies/librsvg*
 examples/background/example-background*
 examples/solved/example-solved*
 examples/widget-window/widget-window*
