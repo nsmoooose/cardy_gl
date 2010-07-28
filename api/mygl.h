@@ -1,10 +1,6 @@
 #ifndef __MYGL_H__
 #define __MYGL_H__
 
-#ifdef WIN32
-#include <GL/glee.h>
-#endif
-
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>

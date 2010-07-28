@@ -12,4 +12,4 @@ libcardy-api.a: $(OBJECTS)
 	@$(MAKE) -C network
 	@$(MAKE) -C solitaires
 	@echo Creating library $@
-	@$(AR) rcs $@ $(OBJECTS)
+	$(AR) rcs $@ $(OBJECTS)

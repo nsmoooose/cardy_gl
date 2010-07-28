@@ -1,18 +1,8 @@
+include config
 PLATFORM := $(shell uname)
-
-export CFLAGS=-g -Os -Wall -pedantic -Werror $(shell pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
 
 ifdef COVERAGE
 	export CFLAGS+=--coverage
-endif
-
-ifeq ($(PLATFORM), Linux)
-export LIBS=-lcardy-game -lcardy-backgrounds -lcardy-api -lcardy-network -lcardy-solitaires -lglut -lGL -lGLU -lm $(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
-endif
-
-ifeq ($(PLATFORM), MINGW32_NT-5.1)
-export LIBS=-lcardy-game -lcardy-backgrounds -lcardy-api -lcardy-network -lcardy-solitaires -lglu32 -lglut32 -lm -lopengl32 -lglee $(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
-export CFLAGS+=-mwindows
 endif
 
 OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
@@ -43,7 +33,7 @@ cardy_tests:
 
 cardy_gl: cardy_api cardy_game $(OBJECTS)
 	@echo Linking $@
-	@$(CC) $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -Lapi -Lgame -Lapi/network -Lapi/solitaires -Lgame/backgrounds
+	$(CC) $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -Lapi -Lgame -Lapi/network -Lapi/solitaires -Lgame/backgrounds
 
 ctags:
 	@ctags -e --recurse=yes --exclude=analysis/* --exclude=.doxygen/*
@@ -55,30 +45,34 @@ deploy:
 	@mkdir dist/win32 -p
 	@cp resources dist/win32/ -r
 	@cp themes dist/win32/ -r
-	@cp cardy_gl.exe dist/win32/
-	@cp /c/devlibs/bin/libcairo-2.dll dist/win32/
-	@cp /c/devlibs/bin/libfontconfig-1.dll dist/win32/
-	@cp /c/devlibs/bin/freetype6.dll dist/win32/
-	@cp /c/devlibs/bin/libexpat.dll dist/win32/
-	@cp /c/devlibs/bin/libpng12-0.dll dist/win32/
-	@cp /c/devlibs/bin/zlib1.dll dist/win32/
-	@cp /mingw/bin/glee.dll dist/win32/
-	@cp /mingw/bin/glut32.dll dist/win32/
-	@cp /mingw/bin/librsvg-2-2.dll dist/win32/
-	@cp /c/devlibs/bin/libcroco-0.6-3.dll dist/win32/
-	@cp /c/devlibs/bin/libglib-2.0-0.dll dist/win32/
-	@cp /c/devlibs/bin/libxml2.dll dist/win32/
-	@cp /c/devlibs/bin/iconv.dll dist/win32/
-	@cp /c/devlibs/bin/libgdk_pixbuf-2.0-0.dll dist/win32/
-	@cp /c/devlibs/bin/libgio-2.0-0.dll dist/win32/
-	@cp /c/devlibs/bin/libgmodule-2.0-0.dll dist/win32/
-	@cp /c/devlibs/bin/libgobject-2.0-0.dll dist/win32/
-	@cp /c/devlibs/bin/libpango-1.0-0.dll dist/win32/
-	@cp /c/devlibs/bin/libpangocairo-1.0-0.dll dist/win32/
-	@cp /c/devlibs/bin/libpangowin32-1.0-0.dll dist/win32/
-	@cp /c/devlibs/bin/libpangoft2-1.0-0.dll dist/win32/
-	@cp /c/devlibs/bin/libgmodule-2.0-0.dll dist/win32/
-	@cp /c/devlibs/bin/libgmodule-2.0-0.dll dist/win32/
+	@cp cardy_gl dist/win32/cardy_gl.exe
+	@cp $(MINGW_ROOT)/bin/libcairo-2.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libfontconfig-1.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libfreetype-6.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libexpat-1.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libpng12-0.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/zlib1.dll dist/win32/
+	#@cp $(MINGW_ROOT)/bin/glee.dll dist/win32/
+	#@cp $(MINGW_ROOT)/bin/glut32.dll dist/win32/
+	#@cp dependencies/bin/librsvg-2-2.dll dist/win32/
+	#@cp $(MINGW_ROOT)/bin/libcroco-0.6-3.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libglib-2.0-0.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libxml2-2.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libiconv-2.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libgdk_pixbuf-2.0-0.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libgio-2.0-0.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libgmodule-2.0-0.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libgobject-2.0-0.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libpango-1.0-0.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libpangocairo-1.0-0.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libpangowin32-1.0-0.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libpangoft2-1.0-0.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libgmodule-2.0-0.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libgmodule-2.0-0.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libpixman-1-0.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libintl-8.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libgthread-2.0-0.dll dist/win32/
+	@cp $(MINGW_ROOT)/bin/libglut-0.dll dist/win32/
 
 install:
 	@cp cardy_gl /usr/bin/
