@@ -5,6 +5,11 @@ analysis-cppcheck
 cardy_gl*
 coverage
 dependencies/librsvg*
+dependencies/bin
+dependencies/etc
+dependencies/include
+dependencies/lib
+share
 examples/background/example-background*
 examples/solved/example-solved*
 examples/widget-window/widget-window*
