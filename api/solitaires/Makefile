@@ -3,7 +3,7 @@ OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 all: libcardy-solitaires.a
 
 clean:
-	@$(RM) all *.o *.gc*
+	@$(RM) libcardy-solitaires.a *.o *.gc*
 
 libcardy-solitaires.a: $(OBJECTS)
 	@echo Creating library $@
