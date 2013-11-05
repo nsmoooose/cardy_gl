@@ -54,9 +54,8 @@ START_TEST(test_free) {
 END_TEST
 
 START_TEST(test_context_free) {
-	void *data;
 	mem_context *c = mem_context_create();
-	data = mem_alloc(c, 33);
+	mem_alloc(c, 33);
 	mem_context_free(c);
 }
 END_TEST

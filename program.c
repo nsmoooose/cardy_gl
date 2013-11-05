@@ -47,7 +47,6 @@ int main(int argc, char* argv[]) {
 	}
 
 	srand(time(NULL));
-	rsvg_init();
 
 	g_context = mem_context_create();
 

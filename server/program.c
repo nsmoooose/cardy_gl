@@ -13,6 +13,10 @@
 /* TODO: Create thread pool for client requests */
 /* TODO: Take thread from pool and do send/receive */
 
+struct client_args {
+	int fd;
+};
+
 void *client_handler(void *arg) {
 	printf("A thread created.\n");
 
@@ -52,8 +56,10 @@ int main(int argc, char* argv[]) {
 		}
 		else {
 			pthread_t thread;
+			struct client_args *args = calloc(1, sizeof(struct client_args));
+			args->fd = sock_fd;
 			printf("Client connected. Time to start a thread\n");
-			if(pthread_create(&thread, NULL, client_handler, (void*)sock_fd) != 0) {
+			if(pthread_create(&thread, NULL, client_handler, (void*)args) != 0) {
 				perror("Failed to create thread.");
 				return 1;
 			}

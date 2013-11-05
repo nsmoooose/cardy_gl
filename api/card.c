@@ -62,11 +62,9 @@ card *card_take(pile *pile, int index) {
 }
 
 card* card_take_last(pile *pile) {
-	card* last = 0;
 	int index = 0, last_index = -1;
 	for(;index<pile->size;++index) {
 		if(pile->cards[index]) {
-			last = pile->cards[index];
 			last_index = index;
 		}
 	}
