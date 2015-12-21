@@ -2,6 +2,10 @@ PLATFORM := $(shell uname)
 
 OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 
+ifeq ($(PLATFORM), Linux)
+LIBS+=$(shell pkg-config --libs check)
+endif
+
 all: cardy_tests
 
 clean:
