@@ -13,8 +13,9 @@ export CFLAGS=-mwindows -g -Os -Wall -pedantic -Werror \$(shell \$(PKG_CONFIG) -
 EOF
 
 elif [ "$cfg" == "linux" ]; then
+    # TODO Readd '-Wall -pedantic -Werror' again.
 	cat > config <<EOF
-export CFLAGS=-g -Os -Wall -pedantic -Werror \$(shell pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
+export CFLAGS=-g -Os \$(shell pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
 export LIBS=-lcardy-game -lcardy-backgrounds -lcardy-api -lcardy-network -lcardy-solitaires -lglut -lGL -lGLU -lm \$(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
 EOF
 
