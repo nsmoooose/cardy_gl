@@ -3,13 +3,9 @@ set -e
 cfg=$1
 
 if [ "$cfg" == "windows" ]; then
-	sed s/-pthread//> config <<EOF
-export MINGW_ROOT=/usr/i686-pc-mingw32/sys-root/mingw/
-export CC=/usr/bin/i686-pc-mingw32-gcc
-export AR=/usr/bin/i686-pc-mingw32-ar
-export PKG_CONFIG=/usr/bin/i686-pc-mingw32-pkg-config
-export LIBS=-lcardy-game -lcardy-backgrounds -lcardy-api -lcardy-network -lcardy-solitaires -lglu32 -lglut -lm -lopengl32 \$(shell \$(PKG_CONFIG) --libs glib-2.0 gdk-pixbuf-2.0 pango cairo $(pwd)/dependencies/lib/pkgconfig/librsvg-2.0.pc libxml-2.0 pangocairo gio-2.0)
-export CFLAGS=-mwindows -g -Os -Wall -pedantic -Werror \$(shell \$(PKG_CONFIG) --cflags glib-2.0 gdk-pixbuf-2.0 cairo $(pwd)/dependencies/lib/pkgconfig/librsvg-2.0.pc libxml-2.0 pangocairo gio-2.0) -L$(pwd)/dependencies/lib/
+	cat > config <<EOF
+export LIBS=-lcardy-game -lcardy-backgrounds -lcardy-api -lcardy-network -lcardy-solitaires -lglu32 -lglut -lm -lopengl32 $(pkg-config --libs glib-2.0 gdk-pixbuf-2.0 pango cairo librsvg-2.0 libxml-2.0 pangocairo gio-2.0)
+export CFLAGS=-mwindows -g -Os -Wall -pedantic -Werror $(pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0 libxml-2.0 pangocairo gio-2.0)
 EOF
 
 elif [ "$cfg" == "linux" ]; then
