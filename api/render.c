@@ -221,12 +221,7 @@ RsvgHandle *render_svg_open(const char* path) {
 }
 
 void render_svg_close(RsvgHandle *h) {
-	GError *e = 0;
-	rsvg_handle_close(h, &e);
-
-	if(e != 0) {
-		fprintf(stderr, "Failed to close svg handle.\n");
-	}
+	g_object_unref (h);
 }
 
 void render_svg_texture(RsvgHandle *h, GLuint texture, char *node_name,
@@ -241,30 +236,29 @@ void render_svg_texture(RsvgHandle *h, GLuint texture, char *node_name,
   This file contains information about how to render things into bitmaps:
     rsvg-convert.c
 */
-    RsvgDimensionData dimensions;
-	RsvgPositionData pos;
-	cairo_matrix_t matrix;
 	int stride;
 	unsigned char* cairo_data;
 	cairo_surface_t *cairo_surface;
 	cairo_t *cr;
-	double xzoom=1.0f, yzoom=1.0f;
 
 	if(!rsvg_handle_has_sub(h, node_name)) {
 		fprintf(stderr, "%s wasn't found within the svg document.\n", node_name);
 		exit(0);
 	}
 
-	if(!rsvg_handle_get_dimensions_sub(h, &dimensions, node_name)) {
+	GError *e = 0;
+	RsvgRectangle ink_rect, logical_rect;
+	if(!rsvg_handle_get_geometry_for_element (h, node_name, &ink_rect, &logical_rect, &e)) {
 		fprintf(stderr, "Failed to obtain the card dimensions for: %s\n",
 				node_name);
 		exit(0);
 	}
 
-	rsvg_handle_get_position_sub(h, &pos, node_name);
-	if (dimensions.width <= 0 || dimensions.height <= 0) {
-		exit(0);
-	}
+/* 	fprintf(stderr, "%s\n", node_name);
+	fprintf(stderr, "Output dimensions: %d x %d\n", width, height);
+	fprintf(stderr, "Sizes: \n  Ink: %f x %f\n  Logical: %f x %f\n", ink_rect.width, ink_rect.height, logical_rect.width, logical_rect.height);
+	fprintf(stderr, "Position: \n  Ink: %f x %f\n  Logical: %f x %f\n", ink_rect.x, ink_rect.y, logical_rect.x, logical_rect.y);
+ */
 	stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, width);
 	cairo_data = (unsigned char *) calloc(stride * height, 1);
 	cairo_surface = cairo_image_surface_create_for_data(
@@ -275,16 +269,27 @@ void render_svg_texture(RsvgHandle *h, GLuint texture, char *node_name,
 	cairo_rectangle (cr, 0, 0, width, height);
 	cairo_fill (cr);
 
-	xzoom = (double)width / (double)dimensions.width;
-	yzoom = (double)height / (double)dimensions.height;
+	/* rsvg_handle_render_element will make sure that the vector is zoomed
+	   in to fit into the bitmap. But it will keep the aspect ratio of the
+	   svg. Adjust a single axis depending on the aspect ratio differences. */
+	double xzoom = 1;
+	double yzoom = 1;
+	double ar1 = (double)width / (double)height;
+	double ar2 = ink_rect.width / ink_rect.height;
+	if(ar1 > ar2) {
+		xzoom = ar1 / ar2;
+	} else {
+		yzoom = ar2 / ar1;
+	}
 
+	cairo_matrix_t matrix;
 	cairo_matrix_init_identity(&matrix);
 	cairo_matrix_scale(&matrix, xzoom, yzoom);
-	cairo_matrix_translate(&matrix, 0 - pos.x, 0 - pos.y);
+    /* cairo_matrix_translate(&matrix, 0 - ink_rect.x, 0 - ink_rect.y); */
+    cairo_set_matrix(cr, &matrix);
 
-	cairo_set_matrix(cr, &matrix);
-
-	if(!rsvg_handle_render_cairo_sub(h, cr, node_name)) {
+	RsvgRectangle viewport = { 0, 0, width, height };
+	if(!rsvg_handle_render_element (h, cr, node_name, &viewport, &e)) {
 		fprintf(stderr, "Failed to render image: %s.\n", node_name);
 		exit(0);
 	}

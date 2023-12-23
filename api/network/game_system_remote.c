@@ -29,11 +29,11 @@ game_system *game_system_connect(game_system_provider *provider, const char *pat
 	data->provider->open(data->provider, path);
 
 	strncpy(buffer, username, 1000);
-	strncat(buffer, "\n", 1000);
+	strncat(buffer, "\n", 999);
 	data->provider->write(data->provider, buffer, strlen(buffer));
 
 	strncpy(buffer, password, 1000);
-	strncat(buffer, "\n", 1000);
+	strncat(buffer, "\n", 999);
 	data->provider->write(data->provider, buffer, strlen(buffer));
 
 	bytes_read = data->provider->read(data->provider, buffer, sizeof(buffer));
