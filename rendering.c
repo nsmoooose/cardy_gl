@@ -33,24 +33,7 @@ void rendering_scene() {
 	glutSwapBuffers();
 }
 
-void rendering_idle() {
-	static int lastUpdate = 0;
-	static int frames = 0;
-	char buf[20];
-	int currentTime;
-
+void rendering_timer(int value) {
 	glutPostRedisplay();
-	glutSwapBuffers();
-
-	currentTime = glutGet(GLUT_ELAPSED_TIME);
-	frames++;
-
-	if ((currentTime - lastUpdate) >= 1000) {
-		sprintf( buf, "Cardy 4.0 (fps: %d)", frames );
-		glutSetWindowTitle(buf);
-		frames = 0;
-		lastUpdate = currentTime;
-	}
-
-	usleep(50000);
+	glutTimerFunc(1000/60, rendering_timer, 0);
 }

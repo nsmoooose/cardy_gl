@@ -12,6 +12,6 @@ void rendering_window_size_change(int width, int height);
  */
 void rendering_scene();
 
-void rendering_idle();
+void rendering_timer(int value);
 
 #endif /* __RENDERING_H__ */

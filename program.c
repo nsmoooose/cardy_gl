@@ -59,8 +59,8 @@ int main(int argc, char* argv[]) {
 	glutSpecialFunc(window_special_key_press);
 	glutMouseFunc(window_mouse);
 	glutMotionFunc(window_mouse_move);
-	glutIdleFunc(rendering_idle);
 	glutDisplayFunc(rendering_scene);
+	glutTimerFunc(1000/60, rendering_timer, 0);
 
 	rendering_setup();
 
