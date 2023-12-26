@@ -107,8 +107,7 @@ void theme_render_card_textures(theme *theme) {
 	for(suit=e_suit_first;suit<=e_suit_last;++suit) {
 		for(value=1;value<=13;++value) {
 			snprintf(name_buffer, sizeof(name_buffer),
-					 "#%s_%s", g_card_value_names[value-1],
-					 g_card_suit_names[suit]);
+					 "#%s_%s", g_card_suit_names[suit], g_card_value_names[value-1]);
 			card_texture = theme_get_card_texture(theme, suit, value);
 			render_svg_texture(h, card_texture, name_buffer,
 							  card_texture_width, card_texture_height);

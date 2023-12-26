@@ -965,19 +965,19 @@ static bool render_object_solitaire_keyboard_down(
 		return true;
 
 	case 'z':
-		render_object_solitaire_change_card_theme("anglo");
+		render_object_solitaire_change_card_theme("ancient_french");
 		return true;
 	case 'x':
-		render_object_solitaire_change_card_theme("gnome");
+		render_object_solitaire_change_card_theme("anglo");
 		return true;
 	case 'c':
-		render_object_solitaire_change_card_theme("kde");
+		render_object_solitaire_change_card_theme("atlasnye");
 		return true;
 	case 'v':
-		render_object_solitaire_change_card_theme("life_and_smoth");
+		render_object_solitaire_change_card_theme("dondorf");
 		return true;
 	case 'b':
-		render_object_solitaire_change_card_theme("twigs");
+		render_object_solitaire_change_card_theme("paris");
 		return true;
 	default:
 		return false;
@@ -1068,7 +1068,7 @@ render_object *render_object_solitaire(solitaire_create callback) {
 		char themes_path[PATH_MAX];
 		resource_get_dir(themes_path, PATH_MAX);
 		strncat(themes_path, "themes", PATH_MAX-1);
-		g_theme = theme_load(themes_path, "gnome");
+		g_theme = theme_load(themes_path, "paris");
 	}
 
 	i->sol = callback(i->context, i->settings);

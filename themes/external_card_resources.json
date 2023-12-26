@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Ancient French",
+        "dir": "ancient_french",
+        "license_url": "https://gitlab.gnome.org/GNOME/aisleriot/-/raw/master/cards/README.ancient_french",
+        "cards_url": "https://gitlab.gnome.org/GNOME/aisleriot/-/raw/master/cards/ancient_french.svg"
+    },
+    {
+        "name": "Anglo",
+        "dir": "anglo",
+        "license_url": "https://gitlab.gnome.org/GNOME/aisleriot/-/raw/master/cards/README.anglo",
+        "cards_url": "https://gitlab.gnome.org/GNOME/aisleriot/-/raw/master/cards/anglo.svg"
+    },
+    {
+        "name": "Atlasnye",
+        "dir": "atlasnye",
+        "license_url": "https://gitlab.gnome.org/GNOME/aisleriot/-/raw/master/cards/README.atlasnye",
+        "cards_url": "https://gitlab.gnome.org/GNOME/aisleriot/-/raw/master/cards/atlasnye.svg"
+    },
+    {
+        "name": "Dondorf",
+        "dir": "dondorf",
+        "license_url": "https://gitlab.gnome.org/GNOME/aisleriot/-/raw/master/cards/README.dondorf",
+        "cards_url": "https://gitlab.gnome.org/GNOME/aisleriot/-/raw/master/cards/dondorf.svg"
+    },
+    {
+        "name": "Paris",
+        "dir": "paris",
+        "license_url": "https://gitlab.gnome.org/GNOME/aisleriot/-/raw/master/cards/README.paris",
+        "cards_url": "https://gitlab.gnome.org/GNOME/aisleriot/-/raw/master/cards/paris.svg"
+    }
+]

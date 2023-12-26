@@ -17,6 +17,7 @@ Dependencies:
     pacman -S mingw64/mingw-w64-x86_64-librsvg
     pacman -S mingw64/mingw-w64-x86_64-pkgconf
     pacman -S mingw64/mingw-w64-x86_64-freeglut
+    pacman -S mingw64/mingw-w64-x86_64-jq
 
 Building::
 

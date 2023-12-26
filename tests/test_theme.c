@@ -11,11 +11,11 @@ START_TEST(test_theme_list) {
 
 	for(i=0;i<5;++i) {
 		ck_assert_msg(
+			strcmp(t->theme_names[i], "ancient_french") == 0 ||
 			strcmp(t->theme_names[i], "anglo") == 0 ||
-			strcmp(t->theme_names[i], "gnome") == 0 ||
-			strcmp(t->theme_names[i], "life_and_smoth") == 0 ||
-			strcmp(t->theme_names[i], "twigs") == 0 ||
-			strcmp(t->theme_names[i], "kde") == 0, "Not a matching theme name.");
+			strcmp(t->theme_names[i], "atlasnye") == 0 ||
+			strcmp(t->theme_names[i], "dondorf") == 0 ||
+			strcmp(t->theme_names[i], "paris") == 0, "Not a matching theme name.");
 	}
 }
 END_TEST
