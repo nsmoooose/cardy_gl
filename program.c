@@ -64,6 +64,13 @@ int main(int argc, char* argv[]) {
 
 	rendering_setup();
 
+#ifdef WIN32
+	/* If the desktop is using scaling you don't want all content
+	   to be scaled bitmaps. It really looks uggly if you are scaling
+	   things up 150%. */
+    SetProcessDPIAware();
+#endif
+
 	glutMainLoop();
 
 	mem_context_free(g_context);
