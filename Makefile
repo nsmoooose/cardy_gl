@@ -42,36 +42,11 @@ style:
 	@find -name "*.h" -or -name "*.c"|xargs astyle --suffix=none
 
 deploy:
-	@mkdir dist/win32 dist/win32/etc dist/win32/lib/ -p
+	@mkdir -p dist/win32
 	@cp resources dist/win32/ -r
 	@cp themes dist/win32/ -r
 	@cp cardy_gl dist/win32/cardy_gl.exe
-	@cp $(MINGW_ROOT)/bin/libcairo-2.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libfontconfig-1.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libfreetype-6.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libexpat-1.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libpng12-0.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/zlib1.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libglib-2.0-0.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libxml2-2.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libiconv-2.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libgdk_pixbuf-2.0-0.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libgio-2.0-0.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libgmodule-2.0-0.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libgobject-2.0-0.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libpango-1.0-0.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libpangocairo-1.0-0.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libpangowin32-1.0-0.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libpangoft2-1.0-0.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libgmodule-2.0-0.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libgmodule-2.0-0.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libpixman-1-0.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libintl-8.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libgthread-2.0-0.dll dist/win32/
-	@cp $(MINGW_ROOT)/bin/libglut-0.dll dist/win32/
-	@cp -r $(MINGW_ROOT)/etc/gtk-2.0 dist/win32/etc/
-	@cp -r $(MINGW_ROOT)/lib/gtk-2.0 dist/win32/lib/
-	sed -i 's/[.][.]\/lib/lib/g' dist/win32/etc/gtk-2.0/gdk-pixbuf.loaders
+	./copy_dependencies.sh cardy_gl dist/win32/
 
 install:
 	@cp cardy_gl /usr/bin/
