@@ -1,0 +1,1 @@
+ RSVG_LOG=1 rust-gdb --args ../../librsvg/target/debug/rsvg-convert.exe -w 1024 -h 1024 -i "#club_4" bug.svg -o kaka2.png

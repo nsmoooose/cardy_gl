@@ -1,0 +1,28 @@
+
+
+b rsvg::drawing_ctx::draw_tree
+
+
+b rsvg::drawing_ctx::draw_node_from_stack
+b rsvg::drawing_ctx::DrawingCtx::draw_node_from_stack
+
+# polyline
+b rsvg::shapes::draw_basic_shape
+
+# For g tag
+b rsvg::structure::{impl#0}::draw
+b rsvg::drawing_ctx::DrawingCtx::with_discrete_layer
+
+
+compute_stroke_and_fill_box
+
+
+
+draw
+draw_children
+draw_basic_shape
+
+
+info args
+info locals
+

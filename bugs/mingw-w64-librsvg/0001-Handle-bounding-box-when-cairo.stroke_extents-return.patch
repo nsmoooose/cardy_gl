@@ -1,0 +1,34 @@
+From de6432f6c1612bd293baa2318c2b028f74c30966 Mon Sep 17 00:00:00 2001
+From: Henrik Nilsson <nsmoooose@gmail.com>
+Date: Sun, 31 Dec 2023 11:37:43 +0100
+Subject: [PATCH] Handle bounding box when cairo.stroke_extents() returns 0, 0,
+ 0, 0
+
+This messed up the bounding box causing issues when using
+rsvg_handle_render_element to render a single element.
+
+Closes Xxxx
+---
+ rsvg/src/drawing_ctx.rs | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/rsvg/src/drawing_ctx.rs b/rsvg/src/drawing_ctx.rs
+index 678f5ffe..b1b2f4eb 100644
+--- a/rsvg/src/drawing_ctx.rs
++++ b/rsvg/src/drawing_ctx.rs
+@@ -2125,7 +2125,11 @@ fn compute_stroke_and_fill_extents(
+         if let Some(matrix) = backup_matrix {
+             cr.set_matrix(matrix);
+         }
+-        Some(Rect::new(x0, y0, x1, y1))
++        if x0 != 0.0 || y0 != 0.0 || x1 != 0.0 || y1 != 0.0 {
++            Some(Rect::new(x0, y0, x1, y1))
++        } else {
++            None
++        }
+     } else {
+         None
+     };
+-- 
+2.41.0
+

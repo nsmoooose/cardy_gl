@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1027" height="615" viewBox="0 0 1027 615" version="1.1">
+     <defs>
+          <g id="it4" fill="none" stroke-width="1.5">
+               <polyline points="245,17.75 249,17.75"/>
+               <polyline points="247,17.75 247,5.25 246.25,5.25 240.75,14.25 240.75,14.75 249,14.75 "/>
+          </g>
+     </defs>
+     <g id="club_4">
+          <use x="1" y="-0.5" xlink:href="#it4" stroke="#000000"/>
+     </g>
+</svg>

@@ -1,0 +1,117 @@
+# Maintainer: Alexey Pavlov <alexpux@gmail.com>
+
+_realname=librsvg
+pkgbase=mingw-w64-${_realname}
+pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}"
+         "${MINGW_PACKAGE_PREFIX}-${_realname}-docs")
+pkgver=2.57.1
+pkgrel=1
+pkgdesc="SVG rendering library (mingw-w64)"
+arch=('any')
+mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32' 'clangarm64')
+url="https://wiki.gnome.org/Projects/LibRsvg"
+license=("spdx:LGPL-2.1-or-later")
+makedepends=("${MINGW_PACKAGE_PREFIX}-autotools"
+             "${MINGW_PACKAGE_PREFIX}-gobject-introspection"
+             "${MINGW_PACKAGE_PREFIX}-vala"
+             "${MINGW_PACKAGE_PREFIX}-rust"
+             "${MINGW_PACKAGE_PREFIX}-gi-docgen"
+             "${MINGW_PACKAGE_PREFIX}-python-docutils"
+             "${MINGW_PACKAGE_PREFIX}-cc")
+depends=("${MINGW_PACKAGE_PREFIX}-gdk-pixbuf2"
+         "${MINGW_PACKAGE_PREFIX}-pango"
+         "${MINGW_PACKAGE_PREFIX}-cairo"
+         "${MINGW_PACKAGE_PREFIX}-libxml2")
+optdepends=("${MINGW_PACKAGE_PREFIX}-gtk3: for rsvg-view-3")
+options=('staticlibs' 'strip')
+source=("https://download.gnome.org/sources/librsvg/${pkgver%.*}/${_realname}-${pkgver}.tar.xz"
+        "0001-configure-set-pass-prefix-to-pkg-config-when-retriev.patch"
+        "glib-0.18.1.tar.gz::https://crates.io/api/v1/crates/glib/0.18.1/download"
+        "glib-rs.patch"
+        "0001-Handle-bounding-box-when-cairo_fill_extents-returns-.patch"
+        "0001-Handle-bounding-box-when-cairo.stroke_extents-return.patch")
+
+sha256sums=('074671a3ed6fbcd67cae2a40e539107f4f097ca8a4ab1a894c05e2524ff340ef'
+            '189eec6486c9ef6cf1071af9750405bc41e16ae3a55ad663435e574369fec915'
+            '331156127e8166dd815cf8d2db3a5beb492610c716c03ee6db4f2d07092af0a7'
+            'e0f5accba0ff47d9cdf79f506ea76ea0b373edaf6845a23180a00c15e0a8691d'
+            'e024f290893ad97e05b5ca4dadb33de2bd9a33491d3afe1069c24fe11237b658'
+            '91a38c18b9260bb4d986ec19d9e24fcd26c2ee64f144532f6b0d6e673693655d')
+msys2_repository_url="https://gitlab.gnome.org/GNOME/librsvg"
+
+prepare() {
+  # Patch bug in glib rust bindings
+  # See: https://github.com/gtk-rs/gtk-rs-core/pull/1199
+  # Version of glib-rs should match what is in librsvg Cargo.lock
+  cd "${srcdir}/glib-0.18.1"
+  patch -p1 -i "${srcdir}/glib-rs.patch"
+
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -p1 -i "${srcdir}/0001-configure-set-pass-prefix-to-pkg-config-when-retriev.patch"
+  patch -p1 -i "${srcdir}/0001-Handle-bounding-box-when-cairo_fill_extents-returns-.patch"
+  patch -p1 -i "${srcdir}/0001-Handle-bounding-box-when-cairo.stroke_extents-return.patch"
+
+  echo "" >> Cargo.toml
+  echo "[patch.crates-io]" >> Cargo.toml
+  echo "glib = { path = '../glib-0.18.1' }" >> Cargo.toml
+  cargo update --package glib
+  cargo fetch --locked
+
+  autoreconf -fiv
+}
+
+build() {
+  [[ -d "${srcdir}/build-${MSYSTEM}" ]] && rm -rf "${srcdir}/build-${MSYSTEM}"
+  mkdir "${srcdir}/build-${MSYSTEM}" && cd "${srcdir}/build-${MSYSTEM}"
+
+  # html documentation doesn't install from out of tree
+  cp -rf "${srcdir}/${_realname}-${pkgver}/doc" "${srcdir}/build-${MSYSTEM}/doc"
+
+  # https://github.com/msys2/MINGW-packages/pull/13622#issuecomment-1285820970
+  export WINAPI_NO_BUNDLED_LIBRARIES=1
+
+  export lt_cv_deplibs_check_method='pass_all'
+
+  # an argument passed to glib-mkenums starts with a c++ comment
+  export MSYS2_ARG_CONV_EXCL="/*"
+  # so the unix path gets preserved when passed through pkg-config
+  MSYS2_ARG_CONV_EXCL="$MSYS2_ARG_CONV_EXCL;--define-variable=prefix"
+
+  ../${_realname}-${pkgver}/configure \
+    --prefix=${MINGW_PREFIX} \
+    --build=${MINGW_CHOST} \
+    --host=${MINGW_CHOST} \
+    --enable-introspection \
+    --enable-vala \
+    --enable-silent-rules
+
+  make
+}
+
+package_librsvg() {
+  conflicts=("${MINGW_PACKAGE_PREFIX}-${_realname}-2.40")
+  replaces=("${MINGW_PACKAGE_PREFIX}-${_realname}-2.40")
+  make -C "${srcdir}/build-${MSYSTEM}" DESTDIR="${pkgdir}" install
+  install -Dm644 "${srcdir}/${_realname}-${pkgver}/COPYING.LIB" "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/COPYING.LIB"
+
+  mkdir -p dest${MINGW_PREFIX}/share
+  mv "${pkgdir}${MINGW_PREFIX}"/share/doc dest${MINGW_PREFIX}/share/doc
+}
+
+package_librsvg-docs() {
+  pkgdesc+=" (documentation)"
+  depends=()
+
+  mv dest/* "${pkgdir}"
+}
+
+# template start; name=mingw-w64-splitpkg-wrappers; version=1.0;
+# vim: set ft=bash :
+
+# generate wrappers
+for _name in "${pkgname[@]}"; do
+  _short="package_${_name#${MINGW_PACKAGE_PREFIX}-}"
+  _func="$(declare -f "${_short}")"
+  eval "${_func/#${_short}/package_${_name}}"
+done
+# template end;

@@ -1,0 +1,32 @@
+From 83bd06a24579d06d0dcdedfacfc679133c620791 Mon Sep 17 00:00:00 2001
+From: Henrik Nilsson <nsmoooose@gmail.com>
+Date: Wed, 27 Dec 2023 22:16:23 +0100
+Subject: [PATCH] Handle bounding box when cairo_fill_extents returns 0, 0, 0,
+ 0
+
+This messed up the bounding box causing issues when using
+rsvg_handle_render_element to render a single element.
+---
+ rsvg/src/drawing_ctx.rs | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/rsvg/src/drawing_ctx.rs b/rsvg/src/drawing_ctx.rs
+index af5698b2..678f5ffe 100644
+--- a/rsvg/src/drawing_ctx.rs
++++ b/rsvg/src/drawing_ctx.rs
+@@ -2094,7 +2094,11 @@ fn compute_stroke_and_fill_extents(
+     // rectangle's extents, even when it has no fill nor stroke.
+ 
+     let (x0, y0, x1, y1) = cr.fill_extents()?;
+-    let fill_extents = Some(Rect::new(x0, y0, x1, y1));
++    let fill_extents = if x0 != 0.0 || y0 != 0.0 || x1 != 0.0 || y1 != 0.0 {
++        Some(Rect::new(x0, y0, x1, y1))
++    } else {
++        None
++    };
+ 
+     // Bounding box for stroke
+     //
+-- 
+2.41.0
+
