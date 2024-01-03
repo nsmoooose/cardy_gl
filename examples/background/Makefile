@@ -1,9 +1,10 @@
+include ../../config
 OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 
 all: example-background
 
 example-background: $(OBJECTS) ../../api/libcardy-api.a ../../game/libcardy-game.a
-	@$(CC) $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -L../../api -L../../game -L../../api/network -L../../api/solitaires -L../../game/backgrounds
+	@$(CC) $(CFLAGS) -o $@ $(OBJECTS) $(LIBS)
 
 clean:
-	@rm example-background* *.o *.gcda *.gcno -rf
+	@$(RM) example-background* *.o
