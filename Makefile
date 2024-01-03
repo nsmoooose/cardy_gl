@@ -13,7 +13,7 @@ all: cardy_gl cardy_server cardy_tests
 
 clean:
 	@echo Cleaning cardy_gl
-	@rm *.o cardy_gl* coverage *.gcda *.gcno -rf dist
+	@$(RM) *.o cardy_gl* coverage *.gcda *.gcno -rf dist
 	@$(MAKE) -C tests $@
 	@$(MAKE) -C api $@
 	@$(MAKE) -C game $@
@@ -67,8 +67,4 @@ coverage: clean
 	@echo ===========================================================================
 	@genhtml -o coverage/ coverage/coverage.info
 
-cppcheck:
-	@mkdir -p analysis-cppcheck
-	@$(RM) analysis-cppcheck/*
-	cppcheck . --enable=all --xml 2> analysis-cppcheck/errors.xml
-	cppcheck-htmlreport --file analysis-cppcheck/errors.xml --report-dir=analysis-cppcheck --source-dir=. --title cardy_gl
+.PHONY: all clean cardy_api cardy_game cardy_server cardy_tests ctags format scan deploy coverage
