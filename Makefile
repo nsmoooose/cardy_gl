@@ -41,6 +41,9 @@ ctags:
 format:
 	clang-format.exe -i $(shell find -name "*.c" -or -name "*.h")
 
+scan: clean
+	scan-build make cardy_gl
+
 deploy:
 	@mkdir -p dist/win32
 	@cp resources dist/win32/ -r
