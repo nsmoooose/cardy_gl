@@ -28,7 +28,7 @@ typedef struct {
 	   that is known to the client app that renders this game.
 	   This was way we can prevent the user from peeking at cards
 	   that hasn't been revealed yet. */
-	struct card_proxy_St* proxy;
+	struct card_proxy_St *proxy;
 } card;
 
 /** A pile of cards. This is the internal representation of
@@ -36,7 +36,7 @@ typedef struct {
  *  state is held here.
  */
 typedef struct {
-	card** cards;
+	card **cards;
 	unsigned int size;
 } pile;
 
@@ -44,7 +44,7 @@ typedef struct {
  *  hasn't been revealed yet the card pointer is null.
  */
 typedef struct card_proxy_St {
-	card* card;
+	card *card;
 } card_proxy;
 
 typedef struct visual_pile_action_St {
@@ -57,7 +57,7 @@ typedef struct visual_pile_action_St {
  *  content.
  */
 typedef struct visual_pile_St {
-	card_proxy** cards;
+	card_proxy **cards;
 	unsigned int card_count;
 
 	/** The origin of this pile. Where it should be placed on the desk.
@@ -99,19 +99,19 @@ typedef struct {
  *  interface.
  */
 typedef struct {
-	visual_pile** piles;
+	visual_pile **piles;
 	int pile_count;
 
-	visual_settings* settings;
+	visual_settings *settings;
 } visual;
 
 /** Creates a single card with the suit and value.
  */
-card* card_create(mem_context *context, card_suit suit, card_value value);
+card *card_create(mem_context *context, card_suit suit, card_value value);
 
 /** Frees the memory used by the card.
  */
-void card_free(mem_context *context, card* card);
+void card_free(mem_context *context, card *card);
 
 /** Creates a deck of cards with 52 cards if the array permits it.
  */
@@ -123,7 +123,7 @@ int card_count(pile *pile);
 
 card *card_take(pile *pile, int index);
 
-typedef bool(*card_match)(card *c, card *prototype);
+typedef bool (*card_match)(card *c, card *prototype);
 bool card_match_value(card *c, card *prototype);
 bool card_match_suit(card *c, card *prototype);
 bool card_match_suit_value(card *c, card *prototype);
@@ -133,11 +133,11 @@ card *card_take_match(pile *pile, card_match match, card *prototype);
  *  The card was found on will be cleared. This makes the card ready to
  *  be inserted into any other array.
  */
-card* card_take_last(pile *pile);
+card *card_take_last(pile *pile);
 
 /** Appends the card to the first free position in the array of cards.
  */
-void card_append(card* card_to_append, pile *pile);
+void card_append(card *card_to_append, pile *pile);
 
 /** Moves all cards from src array into the destination array.
  */
@@ -147,7 +147,7 @@ void card_move_count(pile *dest, pile *src, int count);
 
 /** Creates a pile with the specified fixed size.
  */
-pile* pile_create(mem_context *context, int size);
+pile *pile_create(mem_context *context, int size);
 
 /** Returns the first free position of a card in the array.
  */
@@ -170,7 +170,7 @@ void card_hide_all(pile *pile);
 
 void card_shuffle(pile *pile);
 
-visual* visual_create(mem_context *context, visual_settings *settings);
+visual *visual_create(mem_context *context, visual_settings *settings);
 void visual_add_pile(mem_context *context, visual *vis, visual_pile *p);
 void visual_sync(visual *vis);
 visual_pile *visual_find_pile_from_card(visual *vis, card_proxy *proxy);

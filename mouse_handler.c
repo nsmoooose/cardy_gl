@@ -12,12 +12,13 @@ void window_mouse(int button, int state, int x, int y) {
 	GLint hits;
 	render_pick pick;
 
-	/* printf("Button: %d, state: %d, position (%d,%d)\n", button, state, x, y); */
+	/* printf("Button: %d, state: %d, position (%d,%d)\n", button, state, x, y);
+	 */
 
 	/* Do nothing unless it is a left button and a mouse
 	 * down event.
 	 */
-	if(button != GLUT_LEFT_BUTTON || state != GLUT_DOWN) {
+	if (button != GLUT_LEFT_BUTTON || state != GLUT_DOWN) {
 		return;
 	}
 
@@ -40,10 +41,9 @@ void window_mouse(int button, int state, int x, int y) {
 	g_rcontext->pick = 0;
 
 	hits = glRenderMode(GL_RENDER);
-	if(hits == -1) {
+	if (hits == -1) {
 		fprintf(stderr, "-1 hits. Selection buffer not large enough.\n");
-	}
-	else if(hits > 0) {
+	} else if (hits > 0) {
 		render_process_selections(g_rcontext, hits, selections);
 	}
 

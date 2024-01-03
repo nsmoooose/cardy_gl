@@ -18,30 +18,29 @@ void window_key_press(unsigned char key, int x, int y) {
 }
 
 void window_special_key_press(int key, int x, int y) {
-	render_process_keyboard_special_down(g_rcontext, key, glutGetModifiers(), x, y);
+	render_process_keyboard_special_down(g_rcontext, key, glutGetModifiers(), x,
+	                                     y);
 	glutPostRedisplay();
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
 	int opt, width = 800, height = 600;
 	char *separator;
 
 	while ((opt = getopt(argc, argv, "hg:")) != -1) {
 		switch (opt) {
 		case 'h':
-			fprintf(stderr, "Usage: %s [-h] [-g] 300x200\n",
-					argv[0]);
+			fprintf(stderr, "Usage: %s [-h] [-g] 300x200\n", argv[0]);
 			return 0;
 		case 'g':
 			separator = strstr(optarg, "x");
-			if(separator) {
+			if (separator) {
 				width = atoi(optarg);
 				height = atoi(separator + 1);
 			}
 			break;
 		default: /* '?' */
-			fprintf(stderr, "Usage: %s [-h] [-g] 300x200\n",
-					argv[0]);
+			fprintf(stderr, "Usage: %s [-h] [-g] 300x200\n", argv[0]);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -60,7 +59,7 @@ int main(int argc, char* argv[]) {
 	glutMouseFunc(window_mouse);
 	glutMotionFunc(window_mouse_move);
 	glutDisplayFunc(rendering_scene);
-	glutTimerFunc(1000/60, rendering_timer, 0);
+	glutTimerFunc(1000 / 60, rendering_timer, 0);
 
 	rendering_setup();
 
@@ -68,7 +67,7 @@ int main(int argc, char* argv[]) {
 	/* If the desktop is using scaling you don't want all content
 	   to be scaled bitmaps. It really looks uggly if you are scaling
 	   things up 150%. */
-    SetProcessDPIAware();
+	SetProcessDPIAware();
 #endif
 
 	glutMainLoop();

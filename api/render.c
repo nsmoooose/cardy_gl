@@ -10,8 +10,8 @@ render_context *render_context_create(mem_context *context) {
 }
 
 void render_context_free(render_context *rcontext) {
-	if(rcontext != 0) {
-		if(rcontext->object != 0) {
+	if (rcontext != 0) {
+		if (rcontext->object != 0) {
 			render_object_free(rcontext, rcontext->object);
 		}
 		free(rcontext);
@@ -20,7 +20,7 @@ void render_context_free(render_context *rcontext) {
 
 render_object *render_object_create(const char *id) {
 	render_object *o = calloc(1, sizeof(render_object));
-	if(id != 0) {
+	if (id != 0) {
 		o->id = strdup(id);
 	}
 	return o;
@@ -31,18 +31,18 @@ void render_object_free(render_context *rcontext, render_object *object) {
 
 	event.rcontext = rcontext;
 
-	if(object != 0) {
+	if (object != 0) {
 		int index;
-		if(object->parent != 0) {
+		if (object->parent != 0) {
 			render_object_remove_child(object);
 		}
 
-		for(index=0;index<object->child_count;++index) {
+		for (index = 0; index < object->child_count; ++index) {
 			render_object_free(rcontext, object->children[index]);
 		}
 
 		event.object = object;
-		if(object->free != 0) {
+		if (object->free != 0) {
 			object->free(&event);
 		}
 		free(object);
@@ -52,13 +52,13 @@ void render_object_free(render_context *rcontext, render_object *object) {
 void render_object_add_child(render_object *parent, render_object *child) {
 	render_object **old = parent->children;
 
-	parent->children = calloc(1, (parent->child_count + 1) *
-								 sizeof(render_object*));
+	parent->children =
+		calloc(1, (parent->child_count + 1) * sizeof(render_object *));
 	parent->child_count++;
 
-	if(old) {
-		memcpy(parent->children, old, sizeof(render_object*) *
-			   (parent->child_count - 1));
+	if (old) {
+		memcpy(parent->children, old,
+		       sizeof(render_object *) * (parent->child_count - 1));
 		free(old);
 	}
 	parent->children[parent->child_count - 1] = child;
@@ -69,25 +69,24 @@ void render_object_remove_child(render_object *child) {
 	render_object *parent = child->parent;
 	render_object **old = parent->children;
 	int index;
-	for(index=0;index<parent->child_count;++index) {
-		if(parent->children[index] == child) {
+	for (index = 0; index < parent->child_count; ++index) {
+		if (parent->children[index] == child) {
 			break;
 		}
 	}
 
-	if(index<parent->child_count) {
+	if (index < parent->child_count) {
 		child->parent = 0;
-		memmove(&parent->children[index],
-				&parent->children[index+1],
-				(parent->child_count - index - 1) * sizeof(render_object*));
+		memmove(&parent->children[index], &parent->children[index + 1],
+		        (parent->child_count - index - 1) * sizeof(render_object *));
 		parent->child_count--;
-		if(parent->child_count == 0) {
+		if (parent->child_count == 0) {
 			parent->children = 0;
-		}
-		else {
-			parent->children = calloc(parent->child_count, sizeof(render_object*));
-			memcpy(parent->children, old, parent->child_count *
-				   sizeof(render_object*));
+		} else {
+			parent->children =
+				calloc(parent->child_count, sizeof(render_object *));
+			memcpy(parent->children, old,
+			       parent->child_count * sizeof(render_object *));
 		}
 		free(old);
 	}
@@ -96,20 +95,20 @@ void render_object_remove_child(render_object *child) {
 render_object *render_object_find(render_object *parent, const char *id) {
 	int index;
 	render_object *object;
-	if(parent->id != 0) {
-		if(strcmp(parent->id, id) == 0) {
+	if (parent->id != 0) {
+		if (strcmp(parent->id, id) == 0) {
 			return parent;
 		}
 	}
 
-	for(index=0;index<parent->child_count;++index) {
-		if(parent->children[index]->id != 0) {
-			if(strcmp(parent->children[index]->id, id) == 0) {
+	for (index = 0; index < parent->child_count; ++index) {
+		if (parent->children[index]->id != 0) {
+			if (strcmp(parent->children[index]->id, id) == 0) {
 				return parent->children[index];
 			}
 
 			object = render_object_find(parent->children[index], id);
-			if(object != 0) {
+			if (object != 0) {
 				return object;
 			}
 		}
@@ -118,36 +117,35 @@ render_object *render_object_find(render_object *parent, const char *id) {
 }
 
 render_object *render_object_find_root(render_object *object) {
-	if(object->parent == 0) {
+	if (object->parent == 0) {
 		return object;
 	}
 
 	return render_object_find_root(object->parent);
 }
 
-void render_scene_object(
-	render_context *rcontext, render_object *object, float delta) {
+void render_scene_object(render_context *rcontext, render_object *object,
+                         float delta) {
 	int i;
 	render_event_args event;
 	event.rcontext = rcontext;
 	event.object = object;
 
-	if(object->render) {
+	if (object->render) {
 		object->render(&event, delta);
 	}
 
-	for(i=0;i<object->child_count;++i) {
+	for (i = 0; i < object->child_count; ++i) {
 		render_scene_object(rcontext, object->children[i], delta);
 	}
 
-	if(object->post_render) {
+	if (object->post_render) {
 		object->post_render(&event, delta);
 	}
 
-	if(object->first_frame_rendered) {
+	if (object->first_frame_rendered) {
 		object->render_time += delta;
-	}
-	else {
+	} else {
 		object->first_frame_rendered = true;
 	}
 }
@@ -159,16 +157,17 @@ void render_scene_context(render_context *rcontext) {
 	delta = ((float)(current_time - rcontext->last_render)) / 1000.0f;
 
 	render_selection_reset(rcontext);
-	if(rcontext->object) {
+	if (rcontext->object) {
 		render_scene_object(rcontext, rcontext->object, delta);
 	}
 
 	rcontext->last_render = current_time;
 }
 
-GLuint render_register_selection_callback(
-	render_context *rcontext, render_object *object,
-	render_selection_callback callback, void *data) {
+GLuint render_register_selection_callback(render_context *rcontext,
+                                          render_object *object,
+                                          render_selection_callback callback,
+                                          void *data) {
 
 	GLuint i = rcontext->selection_size;
 	rcontext->selections[i].object = object;
@@ -183,36 +182,36 @@ void render_selection_reset(render_context *rcontext) {
 	rcontext->selection_size = 0;
 }
 
-void render_process_selections(
-	render_context *rcontext, GLint hits, GLuint* selections) {
+void render_process_selections(render_context *rcontext, GLint hits,
+                               GLuint *selections) {
 	int index, hit, records;
 	bool hit_found = false;
-	GLuint last_hit=0;
+	GLuint last_hit = 0;
 	render_event_args event;
 
-	for(index=0, hit=0;hit<hits;++hit) {
+	for (index = 0, hit = 0; hit < hits; ++hit) {
 		records = selections[index];
-		if(records > 0) {
+		if (records > 0) {
 			last_hit = selections[index + 2 + records];
 			hit_found = true;
 		}
 		index += records + 3;
 	}
 
-	if(hit_found) {
+	if (hit_found) {
 		event.rcontext = rcontext;
 		event.object = rcontext->selections[last_hit].object;
-		rcontext->selections[last_hit].callback(&event,
-			rcontext->selections[last_hit].data);
+		rcontext->selections[last_hit].callback(
+			&event, rcontext->selections[last_hit].data);
 	}
 }
 
-RsvgHandle *render_svg_open(const char* path) {
+RsvgHandle *render_svg_open(const char *path) {
 	GError *e = 0;
 	RsvgHandle *h;
 
 	h = rsvg_handle_new_from_file(path, &e);
-	if(e != 0 || h == 0) {
+	if (e != 0 || h == 0) {
 		fprintf(stderr, "Failed to open file: %s\n", path);
 		return 0;
 	}
@@ -220,54 +219,57 @@ RsvgHandle *render_svg_open(const char* path) {
 	return h;
 }
 
-void render_svg_close(RsvgHandle *h) {
-	g_object_unref (h);
-}
+void render_svg_close(RsvgHandle *h) { g_object_unref(h); }
 
 void render_svg_texture(RsvgHandle *h, GLuint texture, char *node_name,
-						int width, int height) {
-/*
-  This can be some source of information on how to render a svg file
-  into a bitmap. This is the svg -> bitmap conversion tool part of
-  gnome.
+                        int width, int height) {
+	/*
+	  This can be some source of information on how to render a svg file
+	  into a bitmap. This is the svg -> bitmap conversion tool part of
+	  gnome.
 
-  git clone git://git.gnome.org/librsvg
+	  git clone git://git.gnome.org/librsvg
 
-  This file contains information about how to render things into bitmaps:
-    rsvg-convert.c
-*/
+	  This file contains information about how to render things into bitmaps:
+	    rsvg-convert.c
+	*/
 	int stride;
-	unsigned char* cairo_data;
+	unsigned char *cairo_data;
 	cairo_surface_t *cairo_surface;
 	cairo_t *cr;
 
-	if(!rsvg_handle_has_sub(h, node_name)) {
-		fprintf(stderr, "%s wasn't found within the svg document.\n", node_name);
+	if (!rsvg_handle_has_sub(h, node_name)) {
+		fprintf(stderr, "%s wasn't found within the svg document.\n",
+		        node_name);
 		exit(0);
 	}
 
 	GError *e = 0;
 	RsvgRectangle ink_rect, logical_rect;
-	if(!rsvg_handle_get_geometry_for_element (h, node_name, &ink_rect, &logical_rect, &e)) {
+	if (!rsvg_handle_get_geometry_for_element(h, node_name, &ink_rect,
+	                                          &logical_rect, &e)) {
 		fprintf(stderr, "Failed to obtain the card dimensions for: %s\n",
-				node_name);
+		        node_name);
 		exit(0);
 	}
 
-/* 	fprintf(stderr, "%s\n", node_name);
-	fprintf(stderr, "Output dimensions: %d x %d\n", width, height);
-	fprintf(stderr, "Sizes: \n  Ink: %f x %f\n  Logical: %f x %f\n", ink_rect.width, ink_rect.height, logical_rect.width, logical_rect.height);
-	fprintf(stderr, "Position: \n  Ink: %f x %f\n  Logical: %f x %f\n", ink_rect.x, ink_rect.y, logical_rect.x, logical_rect.y);
- */
+	/* 	fprintf(stderr, "%s\n", node_name);
+	        fprintf(stderr, "Output dimensions: %d x %d\n", width, height);
+	        fprintf(stderr, "Sizes: \n  Ink: %f x %f\n  Logical: %f x %f\n",
+	   ink_rect.width, ink_rect.height, logical_rect.width,
+	   logical_rect.height); fprintf(stderr, "Position: \n  Ink: %f x %f\n
+	   Logical: %f x %f\n", ink_rect.x, ink_rect.y, logical_rect.x,
+	   logical_rect.y);
+	 */
 	stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, width);
-	cairo_data = (unsigned char *) calloc(stride * height, 1);
+	cairo_data = (unsigned char *)calloc(stride * height, 1);
 	cairo_surface = cairo_image_surface_create_for_data(
-		cairo_data, CAIRO_FORMAT_ARGB32, width,	height, stride);
+		cairo_data, CAIRO_FORMAT_ARGB32, width, height, stride);
 
 	cr = cairo_create(cairo_surface);
-	cairo_set_source_rgba (cr, 1.0f, 1.0f, 1.0f, 1.0f);
-	cairo_rectangle (cr, 0, 0, width, height);
-	cairo_fill (cr);
+	cairo_set_source_rgba(cr, 1.0f, 1.0f, 1.0f, 1.0f);
+	cairo_rectangle(cr, 0, 0, width, height);
+	cairo_fill(cr);
 
 	/* rsvg_handle_render_element will make sure that the vector is zoomed
 	   in to fit into the bitmap. But it will keep the aspect ratio of the
@@ -276,7 +278,7 @@ void render_svg_texture(RsvgHandle *h, GLuint texture, char *node_name,
 	double yzoom = 1;
 	double ar1 = (double)width / (double)height;
 	double ar2 = ink_rect.width / ink_rect.height;
-	if(ar1 > ar2) {
+	if (ar1 > ar2) {
 		xzoom = ar1 / ar2;
 	} else {
 		yzoom = ar2 / ar1;
@@ -285,11 +287,11 @@ void render_svg_texture(RsvgHandle *h, GLuint texture, char *node_name,
 	cairo_matrix_t matrix;
 	cairo_matrix_init_identity(&matrix);
 	cairo_matrix_scale(&matrix, xzoom, yzoom);
-    /* cairo_matrix_translate(&matrix, 0 - ink_rect.x, 0 - ink_rect.y); */
-    cairo_set_matrix(cr, &matrix);
+	/* cairo_matrix_translate(&matrix, 0 - ink_rect.x, 0 - ink_rect.y); */
+	cairo_set_matrix(cr, &matrix);
 
-	RsvgRectangle viewport = { 0, 0, width, height };
-	if(!rsvg_handle_render_element (h, cr, node_name, &viewport, &e)) {
+	RsvgRectangle viewport = {0, 0, width, height};
+	if (!rsvg_handle_render_element(h, cr, node_name, &viewport, &e)) {
 		fprintf(stderr, "Failed to render image: %s.\n", node_name);
 		exit(0);
 	}
@@ -305,8 +307,8 @@ void render_svg_texture(RsvgHandle *h, GLuint texture, char *node_name,
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
-				 0, GL_BGRA, GL_UNSIGNED_BYTE, cairo_data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_BGRA,
+	             GL_UNSIGNED_BYTE, cairo_data);
 
 	free(cairo_data);
 	cairo_destroy(cr);
@@ -334,24 +336,24 @@ void render_rect(float x1, float y1, float x2, float y2, GLuint texture) {
 	glDisable(GL_TEXTURE_2D);
 }
 
-bool render_process_keyboard_down_iterator(
-	render_context *rcontext, render_object *object, unsigned char key,
-	int modifiers, int x, int y)
-{
+bool render_process_keyboard_down_iterator(render_context *rcontext,
+                                           render_object *object,
+                                           unsigned char key, int modifiers,
+                                           int x, int y) {
 	render_event_args event;
 	int i;
 	bool result;
 
-	for(i=0;i<object->child_count;++i) {
+	for (i = 0; i < object->child_count; ++i) {
 		result = render_process_keyboard_down_iterator(
 			rcontext, object->children[i], key, modifiers, x, y);
 
-		if(result) {
+		if (result) {
 			return true;
 		}
 	}
 
-	if(object->keyboard_down) {
+	if (object->keyboard_down) {
 		event.rcontext = rcontext;
 		event.object = object;
 		return object->keyboard_down(&event, key, modifiers, x, y);
@@ -359,32 +361,30 @@ bool render_process_keyboard_down_iterator(
 	return false;
 }
 
-void render_process_keyboard_down(
-	render_context *rcontext, unsigned char key, int modifiers,
-	int x, int y)
-{
-	render_process_keyboard_down_iterator(
-		rcontext, rcontext->object, key, modifiers, x, y);
+void render_process_keyboard_down(render_context *rcontext, unsigned char key,
+                                  int modifiers, int x, int y) {
+	render_process_keyboard_down_iterator(rcontext, rcontext->object, key,
+	                                      modifiers, x, y);
 }
 
-bool render_process_keyboard_up_iterator(
-	render_context *rcontext, render_object *object, unsigned char key,
-	int modifiers, int x, int y)
-{
+bool render_process_keyboard_up_iterator(render_context *rcontext,
+                                         render_object *object,
+                                         unsigned char key, int modifiers,
+                                         int x, int y) {
 	render_event_args event;
 	int i;
 	bool result;
 
-	for(i=0;i<object->child_count;++i) {
+	for (i = 0; i < object->child_count; ++i) {
 		result = render_process_keyboard_up_iterator(
 			rcontext, object->children[i], key, modifiers, x, y);
 
-		if(result) {
+		if (result) {
 			return true;
 		}
 	}
 
-	if(object->keyboard_up) {
+	if (object->keyboard_up) {
 		event.rcontext = rcontext;
 		event.object = object;
 		return object->keyboard_up(&event, key, modifiers, x, y);
@@ -392,31 +392,30 @@ bool render_process_keyboard_up_iterator(
 	return false;
 }
 
-void render_process_keyboard_up(
-	render_context *rcontext, unsigned char key, int modifiers,
-	int x, int y) {
-	render_process_keyboard_up_iterator(
-		rcontext, rcontext->object, key, modifiers, x, y);
+void render_process_keyboard_up(render_context *rcontext, unsigned char key,
+                                int modifiers, int x, int y) {
+	render_process_keyboard_up_iterator(rcontext, rcontext->object, key,
+	                                    modifiers, x, y);
 }
 
-bool render_process_keyboard_special_down_iterator(
-	render_context *rcontext, render_object *object, int key,
-	int modifiers, int x, int y)
-{
+bool render_process_keyboard_special_down_iterator(render_context *rcontext,
+                                                   render_object *object,
+                                                   int key, int modifiers,
+                                                   int x, int y) {
 	render_event_args event;
 	int i;
 	bool result;
 
-	for(i=0;i<object->child_count;++i) {
+	for (i = 0; i < object->child_count; ++i) {
 		result = render_process_keyboard_special_down_iterator(
 			rcontext, object->children[i], key, modifiers, x, y);
 
-		if(result) {
+		if (result) {
 			return true;
 		}
 	}
 
-	if(object->keyboard_special_down) {
+	if (object->keyboard_special_down) {
 		event.rcontext = rcontext;
 		event.object = object;
 		return object->keyboard_special_down(&event, key, modifiers, x, y);
@@ -424,30 +423,29 @@ bool render_process_keyboard_special_down_iterator(
 	return false;
 }
 
-void render_process_keyboard_special_down(
-	render_context *rcontext, int key, int modifiers, int x, int y) {
-	render_process_keyboard_special_down_iterator(
-		rcontext, rcontext->object, key, modifiers, x, y);
+void render_process_keyboard_special_down(render_context *rcontext, int key,
+                                          int modifiers, int x, int y) {
+	render_process_keyboard_special_down_iterator(rcontext, rcontext->object,
+	                                              key, modifiers, x, y);
 }
 
-bool render_process_keyboard_special_up_iterator(
-	render_context *rcontext, render_object *object, int key,
-	int modifiers, int x, int y)
-{
+bool render_process_keyboard_special_up_iterator(render_context *rcontext,
+                                                 render_object *object, int key,
+                                                 int modifiers, int x, int y) {
 	render_event_args event;
 	int i;
 	bool result;
 
-	for(i=0;i<object->child_count;++i) {
+	for (i = 0; i < object->child_count; ++i) {
 		result = render_process_keyboard_special_up_iterator(
 			rcontext, object->children[i], key, modifiers, x, y);
 
-		if(result) {
+		if (result) {
 			return true;
 		}
 	}
 
-	if(object->keyboard_special_up) {
+	if (object->keyboard_special_up) {
 		event.rcontext = rcontext;
 		event.object = object;
 		return object->keyboard_special_up(&event, key, modifiers, x, y);
@@ -455,8 +453,8 @@ bool render_process_keyboard_special_up_iterator(
 	return false;
 }
 
-void render_process_keyboard_special_up(
-	render_context *rcontext, int key, int modifiers, int x, int y) {
-	render_process_keyboard_special_up_iterator(
-		rcontext, rcontext->object, key, modifiers, x, y);
+void render_process_keyboard_special_up(render_context *rcontext, int key,
+                                        int modifiers, int x, int y) {
+	render_process_keyboard_special_up_iterator(rcontext, rcontext->object, key,
+	                                            modifiers, x, y);
 }

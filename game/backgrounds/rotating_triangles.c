@@ -30,24 +30,25 @@ static void render_triangle() {
 	glEnd();
 }
 
-static void render_object_triangles_render(render_event_args *event, float delta) {
+static void render_object_triangles_render(render_event_args *event,
+                                           float delta) {
 	render_object_triangles_data *i = event->object->data;
 	int x, y;
 	float distance, green;
 	GLint viewport[4];
 	GLfloat aspect;
 
-	green = ease_time_protect4f(
-		ease_quad_out, i->total_time, 0.0f, 0.6f, 20.0f);
+	green =
+		ease_time_protect4f(ease_quad_out, i->total_time, 0.0f, 0.6f, 20.0f);
 
 	glGetIntegerv(GL_VIEWPORT, viewport);
-	if(viewport[3] == 0) {
+	if (viewport[3] == 0) {
 		viewport[3] = 1;
 	}
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	aspect = (float)viewport[2]/(float)viewport[3];
+	aspect = (float)viewport[2] / (float)viewport[3];
 	gluPerspective(45.0f, aspect, 1.0f, 400.0f);
 
 	glClearColor(0.0f, green, 0.0f, 0.0f);
@@ -58,9 +59,10 @@ static void render_object_triangles_render(render_event_args *event, float delta
 	glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, -200.0f);
 
-	for(x=-20;x<20;++x) {
-		for(y=-20;y<20;++y) {
-			distance = sqrt((float)(abs(x)*abs(x) + abs(y)*abs(y))) / 300.0f;
+	for (x = -20; x < 20; ++x) {
+		for (y = -20; y < 20; ++y) {
+			distance =
+				sqrt((float)(abs(x) * abs(x) + abs(y) * abs(y))) / 300.0f;
 
 			glColor3f(0.0f, green + distance, 0.0f);
 			glPushMatrix();
@@ -82,7 +84,8 @@ static void render_object_triangles_free(render_event_args *event) {
 
 render_object *render_object_triangles() {
 	render_object *o = render_object_create("background");
-	render_object_triangles_data *d = calloc(1, sizeof(render_object_triangles_data));
+	render_object_triangles_data *d =
+		calloc(1, sizeof(render_object_triangles_data));
 	o->data = d;
 	o->render = render_object_triangles_render;
 	o->free = render_object_triangles_free;

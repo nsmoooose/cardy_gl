@@ -2,32 +2,41 @@
 #include <stdlib.h>
 #include "ease.h"
 
-float ease_time_protect4f(ease_function4f function, float t, float b, float c, float d) {
-	if(t <= 0.0f) return b;
-	if(t >= d) return c;
+float ease_time_protect4f(ease_function4f function, float t, float b, float c,
+                          float d) {
+	if (t <= 0.0f)
+		return b;
+	if (t >= d)
+		return c;
 	return function(t, b, c, d);
 }
 
-float ease_time_protect5f(ease_function5f function, float t, float b, float c, float d, float x1) {
-	if(t <= 0.0f) return b;
-	if(t >= d) return c;
+float ease_time_protect5f(ease_function5f function, float t, float b, float c,
+                          float d, float x1) {
+	if (t <= 0.0f)
+		return b;
+	if (t >= d)
+		return c;
 	return function(t, b, c, d, x1);
 }
 
-float ease_time_protect6f(ease_function6f function, float t, float b, float c, float d, float x1, float x2) {
-	if(t <= 0.0f) return b;
-	if(t >= d) return c;
+float ease_time_protect6f(ease_function6f function, float t, float b, float c,
+                          float d, float x1, float x2) {
+	if (t <= 0.0f)
+		return b;
+	if (t >= d)
+		return c;
 	return function(t, b, c, d, x1, x2);
 }
 
 float ease_quad_in(float t, float b, float c, float d) {
-	t/=d;
+	t /= d;
 	return c * t * t + b;
 }
 
 float ease_quad_out(float t, float b, float c, float d) {
-	t/=d;
-	return -c * t *(t-2) + b;
+	t /= d;
+	return -c * t * (t - 2) + b;
 }
 
 #if 0
@@ -68,8 +77,8 @@ float ease_quint_in(float t, float b, float c, float d) {
 #endif
 
 float ease_quint_out(float t, float b, float c, float d) {
-	t=t/d-1;
-	return c*((t)*t*t*t*t + 1) + b;
+	t = t / d - 1;
+	return c * ((t)*t * t * t * t + 1) + b;
 }
 
 #if 0
@@ -181,6 +190,4 @@ float ease_elastic_in_out(float t, float b, float c, float d, float a, float p) 
 }
 #endif
 
-float ease_linear(float t, float b, float c, float d) {
-	return c*t/d + b;
-}
+float ease_linear(float t, float b, float c, float d) { return c * t / d + b; }

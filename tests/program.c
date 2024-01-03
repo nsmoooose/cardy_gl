@@ -20,11 +20,11 @@ void add_game_registry_tests(Suite *suite);
 void add_game_system_tests(Suite *suite);
 void add_network_tests(Suite *suite);
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
 	int failed;
-	SRunner* runner;
+	SRunner *runner;
 
-	Suite* suite = suite_create("Cardy");
+	Suite *suite = suite_create("Cardy");
 	add_memory_tests(suite);
 	add_card_tests(suite);
 	add_rule_tests(suite);
@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
 	add_network_tests(suite);
 
 	runner = srunner_create(suite);
-	if(argc == 2 && strcmp(argv[1], "--debug") == 0) {
+	if (argc == 2 && strcmp(argv[1], "--debug") == 0) {
 		srunner_set_fork_status(runner, CK_NOFORK);
 	}
 	srunner_run_all(runner, CK_VERBOSE);

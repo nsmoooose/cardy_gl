@@ -27,10 +27,10 @@ START_TEST(test_rule_create) {
 
 	ck_assert_msg(rule != 0, "Failed to create rule.");
 	ck_assert_msg(rule->condition_size == 0,
-				  "The size of the condition array should initially be 0");
+	              "The size of the condition array should initially be 0");
 	ck_assert_msg(rule->conditions == 0, "Conditions array should be 0.");
 	ck_assert_msg(rule->action_size == 0,
-				  "The size of the action array should initially be 0");
+	              "The size of the action array should initially be 0");
 	ck_assert_msg(rule->actions == 0, "Action array should be 0.");
 }
 END_TEST
@@ -46,7 +46,7 @@ START_TEST(test_rule_add_condition) {
 
 	ck_assert_msg(rule->condition_size == 1, "Size of rules array should be 1");
 	ck_assert_msg(rule->conditions[0] == cond,
-				  "First item in array should be condition.");
+	              "First item in array should be condition.");
 }
 END_TEST
 
@@ -63,9 +63,9 @@ START_TEST(test_rule_add_action) {
 
 	ck_assert_msg(rule->action_size == 2, "Array should now be 2.");
 	ck_assert_msg(rule->actions[0] == action1,
-				  "First element should be the first action.");
+	              "First element should be the first action.");
 	ck_assert_msg(rule->actions[1] == action2,
-				  "Second element should be the second action.");
+	              "Second element should be the second action.");
 }
 END_TEST
 
@@ -80,13 +80,13 @@ START_TEST(test_rule_check) {
 	rule_add_condition(context, rule, cond1);
 
 	ck_assert_msg(rule_check(rule, &action) == true,
-				  "Should have returned true");
+	              "Should have returned true");
 
 	cond2 = condition_fail(context);
 	rule_add_condition(context, rule, cond2);
 
 	ck_assert_msg(rule_check(rule, &action) == false,
-				  "Should have returned false");
+	              "Should have returned false");
 }
 END_TEST
 
@@ -104,8 +104,9 @@ START_TEST(test_rule_execute_actions) {
 
 	rule_execute_actions(rule, &move);
 
-	ck_assert_msg(deck->cards[51]->proxy->card != 0,
-				  "Card should have been revealed if action had been executed.");
+	ck_assert_msg(
+		deck->cards[51]->proxy->card != 0,
+		"Card should have been revealed if action had been executed.");
 }
 END_TEST
 
@@ -149,19 +150,18 @@ START_TEST(test_ruleset_check) {
 	rule_add_condition(context, rule1, condition_fail(context));
 	ruleset_add_rule(context, ruleset, rule1);
 
-	ck_assert_msg(
-		ruleset_check(ruleset, &action, &matching_rule) == false,
-		"Check should fail");
+	ck_assert_msg(ruleset_check(ruleset, &action, &matching_rule) == false,
+	              "Check should fail");
 	ck_assert_msg(matching_rule == 0, "Matching rule should be set to 0 "
-				  "since no match was made.");
+	                                  "since no match was made.");
 
 	rule2 = rule_create(context);
 	rule_add_condition(context, rule2, condition_succeed(context));
 	ruleset_add_rule(context, ruleset, rule2);
-	ck_assert_msg(
-		ruleset_check(ruleset, &action, &matching_rule) == true,
-		"Check should succeed");
-	ck_assert_msg(matching_rule == rule2, "matching_rule should be equal to rule2");
+	ck_assert_msg(ruleset_check(ruleset, &action, &matching_rule) == true,
+	              "Check should succeed");
+	ck_assert_msg(matching_rule == rule2,
+	              "matching_rule should be equal to rule2");
 }
 END_TEST
 
@@ -194,7 +194,8 @@ START_TEST(test_ruleset_move_card) {
 	ruleset_add_rule(context, ruleset, rule1);
 
 	/* Act and assert */
-	result = ruleset_move_card(ruleset, vis, vis_done, vis->piles[0]->cards[51], 1);
+	result =
+		ruleset_move_card(ruleset, vis, vis_done, vis->piles[0]->cards[51], 1);
 	ck_assert_msg(result == true, "Move should have been allowed.");
 	ck_assert_msg(vis->piles[0]->cards[51] == 0, "Card wasn't moved.");
 	ck_assert_msg(vis->piles[1]->cards[0] != 0, "Card wasn't moved.");
@@ -202,7 +203,8 @@ START_TEST(test_ruleset_move_card) {
 
 	/* Act and assert */
 	rule_add_condition(context, rule1, condition_fail(context));
-	result = ruleset_move_card(ruleset, vis, vis_done, vis->piles[0]->cards[50], 1);
+	result =
+		ruleset_move_card(ruleset, vis, vis_done, vis->piles[0]->cards[50], 1);
 	ck_assert_msg(result == false, "Move should not have been allowed.");
 	ck_assert_msg(vis->piles[0]->cards[50] != 0, "Card was moved.");
 	ck_assert_msg(vis->piles[1]->cards[1] == 0, "Card was moved.");
@@ -233,9 +235,8 @@ START_TEST(test_ruleset_move_individual_card) {
 	rule_add_condition(context, rule1, condition_succeed(context));
 	ruleset_add_rule(context, ruleset, rule1);
 
-	ck_assert(
-		ruleset_move_individual_card(
-			ruleset, vis, vis->piles[1], vis->piles[0]->cards[0], 2) == true);
+	ck_assert(ruleset_move_individual_card(ruleset, vis, vis->piles[1],
+	                                       vis->piles[0]->cards[0], 2) == true);
 	ck_assert(card_count(done) == 2);
 	ck_assert(done->cards[0]->value == 2);
 	ck_assert(done->cards[1]->value == 1);
@@ -272,10 +273,12 @@ START_TEST(test_condition_source) {
 
 	cond = condition_source(context, p1);
 	ck_assert_msg(cond->check != 0, "Check method not implemented.");
-	ck_assert_msg(cond->check(cond, &action) == true, "Should have returned true");
+	ck_assert_msg(cond->check(cond, &action) == true,
+	              "Should have returned true");
 
 	action.source = p2;
-	ck_assert_msg(cond->check(cond, &action) == false, "Should have returned false");
+	ck_assert_msg(cond->check(cond, &action) == false,
+	              "Should have returned false");
 }
 END_TEST
 
@@ -293,12 +296,15 @@ START_TEST(test_condition_source_array) {
 	ck_assert_msg(cond->check != 0, "Check method not implemented.");
 
 	action.source = p1;
-	ck_assert_msg(cond->check(cond, &action) == true, "Should have returned true");
+	ck_assert_msg(cond->check(cond, &action) == true,
+	              "Should have returned true");
 	action.source = p2;
-	ck_assert_msg(cond->check(cond, &action) == true, "Should have returned true");
+	ck_assert_msg(cond->check(cond, &action) == true,
+	              "Should have returned true");
 
 	action.source = p3;
-	ck_assert_msg(cond->check(cond, &action) == false, "Should have returned false");
+	ck_assert_msg(cond->check(cond, &action) == false,
+	              "Should have returned false");
 }
 END_TEST
 
@@ -316,12 +322,14 @@ START_TEST(test_condition_source_card_revealed) {
 
 	action.source = p1;
 	action.source_index = 0;
-	ck_assert_msg(cond->check(cond, &action) == false, "Should have returned "
-				  "false when card hasn't been revealed yet.");
+	ck_assert_msg(cond->check(cond, &action) == false,
+	              "Should have returned "
+	              "false when card hasn't been revealed yet.");
 
 	card_reveal(p1->cards[0]);
-	ck_assert_msg(cond->check(cond, &action) == true, "Should have returned "
-				  "false when card hasn't been revealed yet.");
+	ck_assert_msg(cond->check(cond, &action) == true,
+	              "Should have returned "
+	              "false when card hasn't been revealed yet.");
 }
 END_TEST
 
@@ -363,19 +371,20 @@ START_TEST(test_condition_or) {
 	condition *cond;
 	mem_context *context = mem_context_create();
 
-	cond = condition_or(context, condition_fail(context), condition_fail(context));
+	cond =
+		condition_or(context, condition_fail(context), condition_fail(context));
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "Or operation should be false.");
+	              "Or operation should be false.");
 
 	cond = condition_or(context, condition_fail(context),
-						condition_succeed(context));
+	                    condition_succeed(context));
 	ck_assert_msg(cond->check(cond, &action) == true,
-				  "Or operation should be true.");
+	              "Or operation should be true.");
 
 	cond = condition_or(context, condition_succeed(context),
-						condition_fail(context));
+	                    condition_fail(context));
 	ck_assert_msg(cond->check(cond, &action) == true,
-				  "Or operation should be true.");
+	              "Or operation should be true.");
 }
 END_TEST
 
@@ -417,11 +426,12 @@ START_TEST(test_condition_destination) {
 
 	cond = condition_destination(context, p1);
 	ck_assert_msg(cond->check != 0, "Check method not implemented.");
-	ck_assert_msg(cond->check(cond, &action) == true, "Should have returned true");
+	ck_assert_msg(cond->check(cond, &action) == true,
+	              "Should have returned true");
 
 	action.destination = p2;
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "Should have returned false");
+	              "Should have returned false");
 }
 END_TEST
 
@@ -439,13 +449,15 @@ START_TEST(test_condition_destination_array) {
 	ck_assert_msg(cond->check != 0, "Check method not implemented.");
 
 	action.destination = p1;
-	ck_assert_msg(cond->check(cond, &action) == true, "Should have returned true");
+	ck_assert_msg(cond->check(cond, &action) == true,
+	              "Should have returned true");
 	action.destination = p2;
-	ck_assert_msg(cond->check(cond, &action) == true, "Should have returned true");
+	ck_assert_msg(cond->check(cond, &action) == true,
+	              "Should have returned true");
 
 	action.destination = p3;
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "Should have returned false");
+	              "Should have returned false");
 }
 END_TEST
 
@@ -520,24 +532,25 @@ START_TEST(test_condition_source_card_equal) {
 	action.source = deck;
 	action.source_index = 0;
 
-	cond = condition_source_card_equal(context, e_suit_none, 3, e_equal_value, 0);
+	cond =
+		condition_source_card_equal(context, e_suit_none, 3, e_equal_value, 0);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "Should fail since card isn't the right value.");
+	              "Should fail since card isn't the right value.");
 
 	action.source_index = 1;
 	deck->cards[1] = card_create(context, e_spades, 3);
 	ck_assert_msg(cond->check(cond, &action) == true,
-				  "Should be movable since top card value is equal.");
+	              "Should be movable since top card value is equal.");
 
-	cond = condition_source_card_equal(
-		context, e_clubs, 3, e_equal_value|e_follow_suit, 0);
+	cond = condition_source_card_equal(context, e_clubs, 3,
+	                                   e_equal_value | e_follow_suit, 0);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "Should fail since card suit isn't the right value.");
+	              "Should fail since card suit isn't the right value.");
 
-	cond = condition_source_card_equal(
-		context, e_clubs, 2, e_equal_value|e_follow_suit, deck);
+	cond = condition_source_card_equal(context, e_clubs, 2,
+	                                   e_equal_value | e_follow_suit, deck);
 	ck_assert_msg(cond->check(cond, 0) == false,
-				  "Should succeed since card is the right value.");
+	              "Should succeed since card is the right value.");
 }
 END_TEST
 
@@ -552,25 +565,25 @@ START_TEST(test_condition_destination_card_equal) {
 	action.destination = deck;
 	action.destination_index = 1;
 
-	cond = condition_destination_card_equal(
-		context, e_suit_none, 3, e_equal_value, 0);
+	cond = condition_destination_card_equal(context, e_suit_none, 3,
+	                                        e_equal_value, 0);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "Should fail since card isn't the right value.");
+	              "Should fail since card isn't the right value.");
 
 	action.destination_index = 2;
 	deck->cards[1] = card_create(context, e_spades, 3);
 	ck_assert_msg(cond->check(cond, &action) == true,
-				  "Should be movable since top card value is equal.");
+	              "Should be movable since top card value is equal.");
 
-	cond = condition_destination_card_equal(
-		context, e_clubs, 3, e_equal_value|e_follow_suit, 0);
+	cond = condition_destination_card_equal(context, e_clubs, 3,
+	                                        e_equal_value | e_follow_suit, 0);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "Should fail since card suit isn't the right value.");
+	              "Should fail since card suit isn't the right value.");
 
 	cond = condition_destination_card_equal(
-		context, e_clubs, 2, e_equal_value|e_follow_suit, deck);
+		context, e_clubs, 2, e_equal_value | e_follow_suit, deck);
 	ck_assert_msg(cond->check(cond, 0) == false,
-				  "Should succeed since card is the right value.");
+	              "Should succeed since card is the right value.");
 }
 END_TEST
 
@@ -589,117 +602,120 @@ START_TEST(test_condition_top_card_compare) {
 	action.destination = dest;
 
 	cond = condition_top_card_compare(context, dest,
-									  e_dest_higher_value|e_follow_suit);
+	                                  e_dest_higher_value | e_follow_suit);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "false when destination doesn't contain any cards.");
+	              "false when destination doesn't contain any cards.");
 
 	/* e_follow_suit */
 	dest->cards[0] = card_create(context, e_clubs, 2);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "false when destination contains other suit.");
+	              "false when destination contains other suit.");
 
 	/* e_suit_opposite */
 	cond = condition_top_card_compare(context, dest, e_suit_opposite);
 	dest->cards[0] = card_create(context, e_clubs, 2);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "false when destination is black.");
+	              "false when destination is black.");
 	dest->cards[0] = card_create(context, e_spades, 2);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "false when destination is black.");
+	              "false when destination is black.");
 	dest->cards[0] = card_create(context, e_hearts, 2);
 	ck_assert_msg(cond->check(cond, &action) == true,
-				  "true when source is red.");
+	              "true when source is red.");
 	dest->cards[0] = card_create(context, e_diamonds, 2);
 	ck_assert_msg(cond->check(cond, &action) == true,
-				  "true when source is red.");
+	              "true when source is red.");
 
 	deck->cards[0] = card_create(context, e_hearts, 3);
 	dest->cards[0] = card_create(context, e_clubs, 2);
 	ck_assert_msg(cond->check(cond, &action) == true,
-				  "true when destination is black.");
+	              "true when destination is black.");
 	dest->cards[0] = card_create(context, e_spades, 2);
 	ck_assert_msg(cond->check(cond, &action) == true,
-				  "true when destination is black.");
+	              "true when destination is black.");
 	dest->cards[0] = card_create(context, e_hearts, 2);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "false when source is red.");
+	              "false when source is red.");
 	dest->cards[0] = card_create(context, e_diamonds, 2);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "false when source is red.");
+	              "false when source is red.");
 
 	/* e_dest_higher */
 	cond = condition_top_card_compare(context, dest,
-									  e_dest_higher_value|e_follow_suit);
+	                                  e_dest_higher_value | e_follow_suit);
 	deck->cards[0] = card_create(context, e_spades, 3);
 	dest->cards[0] = card_create(context, e_spades, 2);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "false when destination contains lower value.");
+	              "false when destination contains lower value.");
 
 	dest->cards[0] = card_create(context, e_spades, 4);
 	ck_assert_msg(cond->check(cond, &action) == true,
-				  "true when destination contains higher value.");
+	              "true when destination contains higher value.");
 
 	/* e_dest_1higher */
 	cond = condition_top_card_compare(context, dest,
-									  e_dest_1higher_value|e_follow_suit);
+	                                  e_dest_1higher_value | e_follow_suit);
 	dest->cards[0] = card_create(context, e_spades, 2);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "false when destination contains lower value.");
+	              "false when destination contains lower value.");
 
 	dest->cards[0] = card_create(context, e_spades, 4);
 	ck_assert_msg(cond->check(cond, &action) == true,
-				  "true when destination contains higher value.");
+	              "true when destination contains higher value.");
 
 	dest->cards[0] = card_create(context, e_spades, 5);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "false when destination contains higher value"
-				  " more than one step.");
+	              "false when destination contains higher value"
+	              " more than one step.");
 
 	/* e_dest_lower */
 	cond = condition_top_card_compare(context, dest,
-									  e_dest_lower_value|e_follow_suit);
+	                                  e_dest_lower_value | e_follow_suit);
 	dest->cards[0] = card_create(context, e_spades, 2);
 	ck_assert_msg(cond->check(cond, &action) == true,
-				  "true when destination contains lower value.");
+	              "true when destination contains lower value.");
 
 	dest->cards[0] = card_create(context, e_spades, 4);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "false when destination contains higher value.");
+	              "false when destination contains higher value.");
 
 	/* e_dest_1lower */
 	cond = condition_top_card_compare(context, dest,
-									  e_dest_1lower_value|e_follow_suit);
+	                                  e_dest_1lower_value | e_follow_suit);
 	dest->cards[0] = card_create(context, e_spades, 2);
 	ck_assert_msg(cond->check(cond, &action) == true,
-				  "true when destination contains lower value.");
+	              "true when destination contains lower value.");
 
 	dest->cards[0] = card_create(context, e_spades, 4);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "false when destination contains higher value.");
+	              "false when destination contains higher value.");
 
 	dest->cards[0] = card_create(context, e_spades, 1);
-	ck_assert_msg(cond->check(cond, &action) == false,
-				  "false when destination contains lower value more than 1 step.");
+	ck_assert_msg(
+		cond->check(cond, &action) == false,
+		"false when destination contains lower value more than 1 step.");
 
 	/* e_equal_value */
-	cond = condition_top_card_compare(context, dest, e_equal_value|e_follow_suit);
+	cond = condition_top_card_compare(context, dest,
+	                                  e_equal_value | e_follow_suit);
 	dest->cards[0] = card_create(context, e_spades, 2);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "false when destination contains lower value.");
+	              "false when destination contains lower value.");
 
 	dest->cards[0] = card_create(context, e_spades, 4);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "false when destination contains higher value.");
+	              "false when destination contains higher value.");
 
 	dest->cards[0] = card_create(context, e_spades, 3);
 	ck_assert_msg(cond->check(cond, &action) == true,
-				  "true when destination contains equal value.");
+	              "true when destination contains equal value.");
 
 	/* Use destination from move_action */
-	cond = condition_top_card_compare(context, 0, e_equal_value|e_follow_suit);
+	cond =
+		condition_top_card_compare(context, 0, e_equal_value | e_follow_suit);
 	dest->cards[0] = card_create(context, e_spades, 2);
 	ck_assert_msg(cond->check(cond, &action) == false,
-				  "false when destination contains lower value.");
+	              "false when destination contains lower value.");
 }
 END_TEST
 
@@ -718,14 +734,16 @@ START_TEST(test_ruleset_get_move_action) {
 	visual_add_pile(context, vis, visual_pile_create(context, done));
 	visual_sync(vis);
 
-	action = ruleset_get_move_action(vis, vis->piles[0]->cards[4], 3, vis->piles[1]);
+	action =
+		ruleset_get_move_action(vis, vis->piles[0]->cards[4], 3, vis->piles[1]);
 
 	ck_assert_msg(action != 0, "No action returned.");
 	ck_assert_msg(action->source == deck, "Deck should be the source.");
 	ck_assert_msg(action->source_index == 4, "Source index incorrect.");
 	ck_assert_msg(action->source_count == 3, "Source count incorrect.");
 	ck_assert_msg(action->destination == done, "Done should be destination.");
-	ck_assert_msg(action->destination_index == 0, "Destination index incorrect.");
+	ck_assert_msg(action->destination_index == 0,
+	              "Destination index incorrect.");
 }
 END_TEST
 
@@ -744,14 +762,19 @@ START_TEST(test_ruleset_apply_move_action) {
 	visual_add_pile(context, vis, visual_pile_create(context, done));
 	visual_sync(vis);
 
-	action = ruleset_get_move_action(vis, vis->piles[0]->cards[51], 1, vis->piles[1]);
+	action = ruleset_get_move_action(vis, vis->piles[0]->cards[51], 1,
+	                                 vis->piles[1]);
 	ruleset_apply_move_action(vis, action);
 	visual_sync(vis);
 
-	ck_assert_msg(vis->piles[0]->card_count == 51, "Card count should be one less.");
-	ck_assert_msg(vis->piles[1]->card_count == 1, "Card count should be one more.");
-	ck_assert_msg(vis->piles[0]->cards[51] == 0, "Card should have been moved.");
-	ck_assert_msg(vis->piles[1]->cards[0] != 0, "Card should have been moved here.");
+	ck_assert_msg(vis->piles[0]->card_count == 51,
+	              "Card count should be one less.");
+	ck_assert_msg(vis->piles[1]->card_count == 1,
+	              "Card count should be one more.");
+	ck_assert_msg(vis->piles[0]->cards[51] == 0,
+	              "Card should have been moved.");
+	ck_assert_msg(vis->piles[1]->cards[0] != 0,
+	              "Card should have been moved here.");
 }
 END_TEST
 
@@ -784,14 +807,15 @@ START_TEST(test_ruleset_apply_move_action2) {
 	visual_sync(vis);
 
 	ck_assert_msg(card_count(deck) == 47,
-				  "Number of cards should be 47 after move. But was %d", card_count(deck));
+	              "Number of cards should be 47 after move. But was %d",
+	              card_count(deck));
 	ck_assert_msg(deck->cards[0]->value == 1, "Should be an ace here.");
 	ck_assert_msg(deck->cards[0]->suit == e_clubs, "Should be clubs.");
 	ck_assert_msg(deck->cards[1]->value == 7, "Should be an 7 here.");
 	ck_assert_msg(deck->cards[1]->suit == e_clubs, "Should be clubs.");
-	for(index=0;index<5;++index) {
+	for (index = 0; index < 5; ++index) {
 		ck_assert_msg(done->cards[index]->value == index + 2,
-					  "Should be an card here.");
+		              "Should be an card here.");
 		ck_assert_msg(done->cards[index]->suit == e_clubs, "Should be clubs.");
 	}
 }
@@ -838,7 +862,8 @@ START_TEST(test_action_reveal_source_top_card) {
 	action = action_reveal_source_top_card(context);
 	action->execute(action, &move);
 
-	ck_assert_msg(deck->cards[51]->proxy->card != 0, "Card should have been revealed");
+	ck_assert_msg(deck->cards[51]->proxy->card != 0,
+	              "Card should have been revealed");
 }
 END_TEST
 

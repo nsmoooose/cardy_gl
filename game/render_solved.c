@@ -9,19 +9,19 @@ typedef struct {
 	float total_time;
 } internal;
 
-static bool render_object_solved_keyboard_down(
-	render_event_args *event, unsigned char key, int modifiers, int x, int y) {
+static bool render_object_solved_keyboard_down(render_event_args *event,
+                                               unsigned char key, int modifiers,
+                                               int x, int y) {
 	render_object *object;
 
-	switch(key) {
+	switch (key) {
 	case 27:
-		object = render_object_find(
-			event->rcontext->object, render_object_mainmenu_id);
-		if(object == 0) {
+		object = render_object_find(event->rcontext->object,
+		                            render_object_mainmenu_id);
+		if (object == 0) {
 			object = render_object_find(event->rcontext->object, "desktop");
 			render_object_mainmenu(object);
-		}
-		else {
+		} else {
 			render_object_free(event->rcontext, object);
 		}
 		return true;

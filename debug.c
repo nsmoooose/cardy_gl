@@ -1,18 +1,17 @@
 #include <stdio.h>
 #include "api/solitaire.h"
 
-void print_solitaire_info(solitaire* sol) {
+void print_solitaire_info(solitaire *sol) {
 	int i, j;
 	visual_pile *pile;
 
-	for(i=0;i<sol->visual->pile_count;++i) {
+	for (i = 0; i < sol->visual->pile_count; ++i) {
 		printf("Pile: %d\n", i);
 		pile = sol->visual->piles[i];
-		for(j=0;j<pile->card_count;++j) {
-			if(pile->cards[j]->card == 0) {
+		for (j = 0; j < pile->card_count; ++j) {
+			if (pile->cards[j]->card == 0) {
 				printf("Card at index: %d is facing down.\n", j);
-			}
-			else {
+			} else {
 				printf("TODO");
 			}
 		}

@@ -14,13 +14,17 @@
 
 typedef float (*ease_function4f)(float t, float b, float c, float d);
 typedef float (*ease_function5f)(float t, float b, float c, float d, float x1);
-typedef float (*ease_function6f)(float t, float b, float c, float d, float x1, float x2);
+typedef float (*ease_function6f)(float t, float b, float c, float d, float x1,
+                                 float x2);
 
 /* Protect the easing algorithm to generate incorrect output when
    time is < 0.0 or larger than d. */
-float ease_time_protect4f(ease_function4f function, float t, float b, float c, float d);
-float ease_time_protect5f(ease_function5f function, float t, float b, float c, float d, float x1);
-float ease_time_protect6f(ease_function6f function, float t, float b, float c, float d, float x1, float x2);
+float ease_time_protect4f(ease_function4f function, float t, float b, float c,
+                          float d);
+float ease_time_protect5f(ease_function5f function, float t, float b, float c,
+                          float d, float x1);
+float ease_time_protect6f(ease_function6f function, float t, float b, float c,
+                          float d, float x1, float x2);
 
 float ease_quad_in(float t, float b, float c, float d);
 float ease_quad_out(float t, float b, float c, float d);

@@ -25,7 +25,7 @@ void rendering_idle() {
 	frames++;
 
 	if ((currentTime - lastUpdate) >= 1000) {
-		sprintf( buf, "Cardy 4.0 (fps: %d)", frames );
+		sprintf(buf, "Cardy 4.0 (fps: %d)", frames);
 		glutSetWindowTitle(buf);
 		frames = 0;
 		lastUpdate = currentTime;
@@ -42,7 +42,7 @@ void button2_callback(render_event_args *event, void *data) {
 	printf("button2\n");
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
 	render_object *desktop, *window, *button1, *button2;
 	widget_style *style;
 	g_rcontext = render_context_create();

@@ -18,11 +18,11 @@ static void action_deal_execute(visual_pile_action *action) {
 	internal *i = data->i;
 	solitaire *sol = data->sol;
 
-	if(card_count(i->deck) >= 4) {
-		card* card1 = card_take_last(i->deck);
-		card* card2 = card_take_last(i->deck);
-		card* card3 = card_take_last(i->deck);
-		card* card4 = card_take_last(i->deck);
+	if (card_count(i->deck) >= 4) {
+		card *card1 = card_take_last(i->deck);
+		card *card2 = card_take_last(i->deck);
+		card *card3 = card_take_last(i->deck);
+		card *card4 = card_take_last(i->deck);
 
 		card_reveal(card1);
 		card_reveal(card2);
@@ -38,8 +38,10 @@ static void action_deal_execute(visual_pile_action *action) {
 	visual_sync(sol->visual);
 }
 
-static visual_pile_action *action_deal(mem_context *context, solitaire *sol, internal *i) {
-	visual_pile_action *deal_action = mem_alloc(context, sizeof(visual_pile_action));
+static visual_pile_action *action_deal(mem_context *context, solitaire *sol,
+                                       internal *i) {
+	visual_pile_action *deal_action =
+		mem_alloc(context, sizeof(visual_pile_action));
 	action_deal_data *data = mem_alloc(context, sizeof(action_deal_data));
 	data->sol = sol;
 	data->i = i;
@@ -48,25 +50,28 @@ static visual_pile_action *action_deal(mem_context *context, solitaire *sol, int
 	return deal_action;
 }
 
-solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
+solitaire *solitaire_theidiot(mem_context *context, visual_settings *settings) {
 	visual_pile *deck, *pile1, *pile2, *pile3, *pile4, *done;
 	rule *rule1, *rule2;
 	condition *pile1_4_cond;
 
 	/* The one solitaire instance we have.*/
-	solitaire* s = mem_alloc(context, sizeof(solitaire));
+	solitaire *s = mem_alloc(context, sizeof(solitaire));
 
 	/* This is the internal data representation of this
 	 * solitaire. This is a local struct hidden from other
 	 * members. */
-	internal* i = mem_alloc(context, sizeof(internal));
+	internal *i = mem_alloc(context, sizeof(internal));
 	s->data = i;
 
 	s->visual = visual_create(context, settings);
 
 	i->deck = pile_create(context, 52);
 	deck = visual_pile_create(context, i->deck);
-	deck->origin[0] = 0 - (settings->card_width / 2 + settings->card_spacing / 2 + settings->card_width * 2 + settings->card_spacing * 2 + settings->card_width / 2);
+	deck->origin[0] =
+		0 - (settings->card_width / 2 + settings->card_spacing / 2 +
+	         settings->card_width * 2 + settings->card_spacing * 2 +
+	         settings->card_width / 2);
 	deck->origin[1] = 40.0f;
 	deck->rotation = 45.0f;
 	deck->action = action_deal(context, s, i);
@@ -74,14 +79,17 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 
 	i->pile1 = pile_create(context, 13);
 	pile1 = visual_pile_create(context, i->pile1);
-	pile1->origin[0] = 0 - (settings->card_width / 2 + settings->card_spacing / 2 + settings->card_width + settings->card_spacing);
+	pile1->origin[0] =
+		0 - (settings->card_width / 2 + settings->card_spacing / 2 +
+	         settings->card_width + settings->card_spacing);
 	pile1->origin[1] = 70.0f;
 	pile1->translateY = 0 - settings->card_height / 5;
 	visual_add_pile(context, s->visual, pile1);
 
 	i->pile2 = pile_create(context, 13);
 	pile2 = visual_pile_create(context, i->pile2);
-	pile2->origin[0] = 0 - (settings->card_width / 2 + settings->card_spacing / 2);
+	pile2->origin[0] =
+		0 - (settings->card_width / 2 + settings->card_spacing / 2);
 	pile2->origin[1] = 70.0f;
 	pile2->translateY = 0 - settings->card_height / 5;
 	visual_add_pile(context, s->visual, pile2);
@@ -95,14 +103,17 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 
 	i->pile4 = pile_create(context, 13);
 	pile4 = visual_pile_create(context, i->pile4);
-	pile4->origin[0] = settings->card_width / 2 + settings->card_spacing / 2 + settings->card_width + settings->card_spacing;
+	pile4->origin[0] = settings->card_width / 2 + settings->card_spacing / 2 +
+					   settings->card_width + settings->card_spacing;
 	pile4->origin[1] = 70.0f;
 	pile4->translateY = 0 - settings->card_height / 5;
 	visual_add_pile(context, s->visual, pile4);
 
 	i->done = pile_create(context, 48);
 	done = visual_pile_create(context, i->done);
-	done->origin[0] = settings->card_width / 2 + settings->card_spacing / 2 + settings->card_width * 2 + settings->card_spacing * 2 + settings->card_width / 2;
+	done->origin[0] = settings->card_width / 2 + settings->card_spacing / 2 +
+					  settings->card_width * 2 + settings->card_spacing * 2 +
+					  settings->card_width / 2;
 	done->origin[1] = 40.0f;
 	done->rotation = -45.0f;
 	visual_add_pile(context, s->visual, done);
@@ -115,8 +126,8 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 	s->ruleset = ruleset_create(context);
 
 	/* Shared condition between several rules. */
-	pile1_4_cond = condition_source_array(
-		context, 4, i->pile1, i->pile2, i->pile3, i->pile4);
+	pile1_4_cond = condition_source_array(context, 4, i->pile1, i->pile2,
+	                                      i->pile3, i->pile4);
 
 	/* Move card to done pile if source is pile1-pile4 and there is
 	   a higher card in same suit in those piles. */
@@ -124,18 +135,17 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 	rule_add_condition(context, rule1, pile1_4_cond);
 	rule_add_condition(context, rule1, condition_destination(context, i->done));
 	rule_add_condition(
-		context,
-		rule1,
+		context, rule1,
 		condition_or_array(
 			context, 4,
 			condition_top_card_compare(context, i->pile1,
-									   e_dest_higher_value | e_follow_suit),
+	                                   e_dest_higher_value | e_follow_suit),
 			condition_top_card_compare(context, i->pile2,
-									   e_dest_higher_value | e_follow_suit),
+	                                   e_dest_higher_value | e_follow_suit),
 			condition_top_card_compare(context, i->pile3,
-									   e_dest_higher_value | e_follow_suit),
+	                                   e_dest_higher_value | e_follow_suit),
 			condition_top_card_compare(context, i->pile4,
-									   e_dest_higher_value | e_follow_suit)));
+	                                   e_dest_higher_value | e_follow_suit)));
 	rule_add_condition(context, rule1, condition_top_card(context));
 	ruleset_add_rule(context, s->ruleset, rule1);
 
@@ -144,33 +154,28 @@ solitaire* solitaire_theidiot(mem_context *context, visual_settings *settings) {
 	rule_add_condition(context, rule2, pile1_4_cond);
 	rule_add_condition(context, rule2, condition_top_card(context));
 	rule_add_condition(context, rule2, condition_destination_empty(context));
-	rule_add_condition(
-		context, rule2,
-		condition_destination_array(
-			context, 4, i->pile1, i->pile2, i->pile3, i->pile4));
+	rule_add_condition(context, rule2,
+	                   condition_destination_array(
+						   context, 4, i->pile1, i->pile2, i->pile3, i->pile4));
 	ruleset_add_rule(context, s->ruleset, rule2);
 
 	/* Solved rule */
 	s->ruleset->solved = rule_create(context);
-	rule_add_condition(
-		context, s->ruleset->solved,
-		condition_source_card_equal(
-			context, e_suit_none, 14, e_equal_value, i->pile1));
-	rule_add_condition(
-		context, s->ruleset->solved,
-		condition_source_card_equal(
-			context, e_suit_none, 14, e_equal_value, i->pile2));
-	rule_add_condition(
-		context, s->ruleset->solved,
-		condition_source_card_equal(
-			context, e_suit_none, 14, e_equal_value, i->pile3));
-	rule_add_condition(
-		context, s->ruleset->solved,
-		condition_source_card_equal(
-			context, e_suit_none, 14, e_equal_value, i->pile4));
-	rule_add_condition(
-		context, s->ruleset->solved,
-		condition_card_count_array(
-			context, 1, 4, i->pile1, i->pile2, i->pile3, i->pile4));
+	rule_add_condition(context, s->ruleset->solved,
+	                   condition_source_card_equal(context, e_suit_none, 14,
+	                                               e_equal_value, i->pile1));
+	rule_add_condition(context, s->ruleset->solved,
+	                   condition_source_card_equal(context, e_suit_none, 14,
+	                                               e_equal_value, i->pile2));
+	rule_add_condition(context, s->ruleset->solved,
+	                   condition_source_card_equal(context, e_suit_none, 14,
+	                                               e_equal_value, i->pile3));
+	rule_add_condition(context, s->ruleset->solved,
+	                   condition_source_card_equal(context, e_suit_none, 14,
+	                                               e_equal_value, i->pile4));
+	rule_add_condition(context, s->ruleset->solved,
+	                   condition_card_count_array(context, 1, 4, i->pile1,
+	                                              i->pile2, i->pile3,
+	                                              i->pile4));
 	return s;
 }

@@ -7,12 +7,12 @@ typedef struct {
 } game_system_data;
 
 static game_registry *game_system_local_get_registry(game_system *system) {
-	game_system_data *data = (game_system_data*)system->handle;
+	game_system_data *data = (game_system_data *)system->handle;
 	return data->registry;
 }
 
 static void game_system_local_close(game_system *system) {
-	game_system_data *data = (game_system_data*)system->handle;
+	game_system_data *data = (game_system_data *)system->handle;
 	game_registry_free(data->registry);
 	free(system->handle);
 	free(system);

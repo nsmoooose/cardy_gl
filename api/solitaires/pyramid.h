@@ -3,6 +3,6 @@
 
 #include "../solitaire.h"
 
-solitaire* solitaire_pyramid(mem_context *context, visual_settings *settings);
+solitaire *solitaire_pyramid(mem_context *context, visual_settings *settings);
 
 #endif /* __SOLITAIRE_PYRAMID_H__ */

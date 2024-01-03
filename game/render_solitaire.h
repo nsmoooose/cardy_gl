@@ -25,7 +25,8 @@ typedef struct {
 	GLfloat *side_normals;
 } card_geometry;
 
-card_geometry *card_geometry_create(mem_context *context, visual_settings *settings);
+card_geometry *card_geometry_create(mem_context *context,
+                                    visual_settings *settings);
 
 extern const char *render_object_solitaire_id;
 render_object *render_object_solitaire(solitaire_create callback);

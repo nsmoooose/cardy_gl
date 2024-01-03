@@ -16,4 +16,3 @@ void add_game_registry_tests(Suite *suite) {
 	tcase_add_test(c, test_game_registry_create);
 	suite_add_tcase(suite, c);
 }
-

@@ -10,19 +10,20 @@ typedef struct {
 	int size;
 } condition_card_count_data;
 
-static bool condition_card_count_array_check(condition *cond, move_action *action) {
+static bool condition_card_count_array_check(condition *cond,
+                                             move_action *action) {
 	int index;
 	condition_card_count_data *d = cond->data;
-	for(index=0;index<d->size;++index) {
-		if(card_count(d->piles[index]) != d->card_count) {
+	for (index = 0; index < d->size; ++index) {
+		if (card_count(d->piles[index]) != d->card_count) {
 			return false;
 		}
 	}
 	return true;
 }
 
-condition *condition_card_count_array(
-	mem_context *context, int count, int pile_count, ...) {
+condition *condition_card_count_array(mem_context *context, int count,
+                                      int pile_count, ...) {
 	int index;
 	va_list vl;
 	condition_card_count_data *d =
@@ -32,11 +33,11 @@ condition *condition_card_count_array(
 	c->check = condition_card_count_array_check;
 
 	d->card_count = count;
-	d->piles = mem_alloc(context, pile_count * sizeof(pile*));
+	d->piles = mem_alloc(context, pile_count * sizeof(pile *));
 	d->size = pile_count;
 	va_start(vl, pile_count);
-	for(index = 0;index<pile_count;++index) {
-		d->piles[index] = va_arg(vl, pile*);
+	for (index = 0; index < pile_count; ++index) {
+		d->piles[index] = va_arg(vl, pile *);
 	}
 	va_end(vl);
 	return c;
@@ -50,9 +51,9 @@ typedef struct {
 
 static bool condition_source_check(condition *condition, move_action *action) {
 	int index;
-	condition_source_data* data = (condition_source_data*)condition->data;
-	for(index=0;index<data->size;++index) {
-		if(data->piles[index] == action->source) {
+	condition_source_data *data = (condition_source_data *)condition->data;
+	for (index = 0; index < data->size; ++index) {
+		if (data->piles[index] == action->source) {
 			return true;
 		}
 	}
@@ -65,17 +66,17 @@ condition *condition_source(mem_context *context, pile *pile) {
 
 condition *condition_source_array(mem_context *context, int count, ...) {
 	int index;
-	condition* c;
-	condition_source_data* data;
+	condition *c;
+	condition_source_data *data;
 	va_list vl;
 
 	c = mem_alloc(context, sizeof(condition));
 	data = mem_alloc(context, sizeof(condition_source_data));
 	data->size = count;
-	data->piles = mem_alloc(context, count * sizeof(pile*));
+	data->piles = mem_alloc(context, count * sizeof(pile *));
 	va_start(vl, count);
-	for(index=0;index<count;++index) {
-		data->piles[index] = va_arg(vl, pile*);
+	for (index = 0; index < count; ++index) {
+		data->piles[index] = va_arg(vl, pile *);
 	}
 	va_end(vl);
 	c->data = data;
@@ -85,9 +86,9 @@ condition *condition_source_array(mem_context *context, int count, ...) {
 
 /* ------------------------------------------------------------------------- */
 
-bool condition_source_card_revealed_check(
-	condition *condition, move_action *action) {
-	if(action->source->cards[action->source_index]->proxy->card == 0) {
+bool condition_source_card_revealed_check(condition *condition,
+                                          move_action *action) {
+	if (action->source->cards[action->source_index]->proxy->card == 0) {
 		return false;
 	}
 	return true;
@@ -101,8 +102,8 @@ condition *condition_source_card_revealed(mem_context *context) {
 
 /* ------------------------------------------------------------------------- */
 
-bool condition_source_not_equal_destination_check(
-	condition *cond, move_action *action) {
+bool condition_source_not_equal_destination_check(condition *cond,
+                                                  move_action *action) {
 	return action->source != action->destination;
 }
 
@@ -119,11 +120,13 @@ typedef struct {
 	int size;
 } condition_destination_data;
 
-static bool condition_destination_check(condition *condition, move_action *action) {
+static bool condition_destination_check(condition *condition,
+                                        move_action *action) {
 	int index;
-	condition_destination_data* data = (condition_destination_data*)condition->data;
-	for(index=0;index<data->size;++index) {
-		if(data->piles[index] == action->destination) {
+	condition_destination_data *data =
+		(condition_destination_data *)condition->data;
+	for (index = 0; index < data->size; ++index) {
+		if (data->piles[index] == action->destination) {
 			return true;
 		}
 	}
@@ -136,17 +139,17 @@ condition *condition_destination(mem_context *context, pile *pile) {
 
 condition *condition_destination_array(mem_context *context, int count, ...) {
 	int index;
-	condition* c;
-	condition_destination_data* data;
+	condition *c;
+	condition_destination_data *data;
 	va_list vl;
 
 	c = mem_alloc(context, sizeof(condition));
 	data = mem_alloc(context, sizeof(condition_destination_data));
 	data->size = count;
-	data->piles = mem_alloc(context, count * sizeof(pile*));
+	data->piles = mem_alloc(context, count * sizeof(pile *));
 	va_start(vl, count);
-	for(index=0;index<count;++index) {
-		data->piles[index] = va_arg(vl, pile*);
+	for (index = 0; index < count; ++index) {
+		data->piles[index] = va_arg(vl, pile *);
 	}
 	va_end(vl);
 	c->data = data;
@@ -160,7 +163,8 @@ typedef struct {
 	int count;
 } condition_move_count_data;
 
-static bool condition_move_count_check(condition *condition, move_action *action) {
+static bool condition_move_count_check(condition *condition,
+                                       move_action *action) {
 	condition_move_count_data *d = condition->data;
 	return action->source_count == d->count;
 }
@@ -185,9 +189,9 @@ typedef struct {
 
 static bool condition_or_check(condition *cond, move_action *action) {
 	int index;
-	condition_or_data *data = (condition_or_data*)cond->data;
-	for(index=0;index<data->size;++index) {
-		if(data->conditions[index]->check(data->conditions[index], action)) {
+	condition_or_data *data = (condition_or_data *)cond->data;
+	for (index = 0; index < data->size; ++index) {
+		if (data->conditions[index]->check(data->conditions[index], action)) {
 			return true;
 		}
 	}
@@ -206,11 +210,11 @@ condition *condition_or_array(mem_context *context, int count, ...) {
 
 	c = mem_alloc(context, sizeof(condition));
 	data = mem_alloc(context, sizeof(condition_or_data));
-	data->conditions = mem_alloc(context, count * sizeof(condition*));
+	data->conditions = mem_alloc(context, count * sizeof(condition *));
 	data->size = count;
 	va_start(vl, count);
-	for(index=0;index<count;++index) {
-		data->conditions[index] = va_arg(vl, condition*);
+	for (index = 0; index < count; ++index) {
+		data->conditions[index] = va_arg(vl, condition *);
 	}
 	va_end(vl);
 	c->data = data;
@@ -254,7 +258,7 @@ condition *condition_destination_empty(mem_context *context) {
 
 bool condition_rest_of_pile_check(condition *cond, move_action *action) {
 	return (card_count(action->source) - action->source_count) ==
-		action->source_index;
+		   action->source_index;
 }
 
 condition *condition_rest_of_pile(mem_context *context) {
@@ -266,7 +270,8 @@ condition *condition_rest_of_pile(mem_context *context) {
 /* ------------------------------------------------------------------------- */
 
 bool condition_top_card_check(condition *cond, move_action *action) {
-	return action->source->cards[action->source_index] == card_last(action->source);
+	return action->source->cards[action->source_index] ==
+		   card_last(action->source);
 }
 
 condition *condition_top_card(mem_context *context) {
@@ -284,8 +289,7 @@ typedef struct {
 	condition_compare_operation operation;
 } condition_card_equal_data;
 
-bool condition_source_card_equal_check(
-	condition *cond, move_action *action) {
+bool condition_source_card_equal_check(condition *cond, move_action *action) {
 	card *card;
 	condition_card_equal_data *data = cond->data;
 
@@ -293,32 +297,32 @@ bool condition_source_card_equal_check(
 	   the top card. This might be a good idea to send as a parameter as
 	   well.
 	   Otherwise we will use the card specified with the action. */
-	if(data->pile) {
+	if (data->pile) {
 		card = card_last(data->pile);
-	}
-	else {
+	} else {
 		card = action->source->cards[action->source_index];
 	}
-	if(card == 0) {
+	if (card == 0) {
 		return false;
 	}
 
-	if(data->operation & e_equal_value) {
-		if(card->value != data->value) {
+	if (data->operation & e_equal_value) {
+		if (card->value != data->value) {
 			return false;
 		}
 	}
-	if(data->operation & e_follow_suit) {
-		if(card->suit != data->suit) {
+	if (data->operation & e_follow_suit) {
+		if (card->suit != data->suit) {
 			return false;
 		}
 	}
 	return true;
 }
 
-condition *condition_source_card_equal(
-	mem_context *context, card_suit suit,
-	card_value value, condition_compare_operation operation, pile *pile) {
+condition *condition_source_card_equal(mem_context *context, card_suit suit,
+                                       card_value value,
+                                       condition_compare_operation operation,
+                                       pile *pile) {
 	condition *c = mem_alloc(context, sizeof(condition));
 	condition_card_equal_data *data =
 		mem_alloc(context, sizeof(condition_card_equal_data));
@@ -331,8 +335,8 @@ condition *condition_source_card_equal(
 	return c;
 }
 
-bool condition_destination_card_equal_check(
-	condition *cond, move_action *action) {
+bool condition_destination_card_equal_check(condition *cond,
+                                            move_action *action) {
 	card *card;
 	condition_card_equal_data *data = cond->data;
 
@@ -340,26 +344,24 @@ bool condition_destination_card_equal_check(
 	   the top card. This might be a good idea to send as a parameter as
 	   well.
 	   Otherwise we will use the card specified with the action. */
-	if(data->pile) {
+	if (data->pile) {
 		card = card_last(data->pile);
-	}
-	else if(action->destination_index <= 0) {
+	} else if (action->destination_index <= 0) {
 		return false;
+	} else {
+		card = action->destination->cards[action->destination_index - 1];
 	}
-	else {
-		card = action->destination->cards[action->destination_index-1];
-	}
-	if(card == 0) {
+	if (card == 0) {
 		return false;
 	}
 
-	if(data->operation & e_equal_value) {
-		if(card->value != data->value) {
+	if (data->operation & e_equal_value) {
+		if (card->value != data->value) {
 			return false;
 		}
 	}
-	if(data->operation & e_follow_suit) {
-		if(card->suit != data->suit) {
+	if (data->operation & e_follow_suit) {
+		if (card->suit != data->suit) {
 			return false;
 		}
 	}
@@ -367,8 +369,8 @@ bool condition_destination_card_equal_check(
 }
 
 condition *condition_destination_card_equal(
-	mem_context *context, card_suit suit,
-	card_value value, condition_compare_operation operation, pile *pile) {
+	mem_context *context, card_suit suit, card_value value,
+	condition_compare_operation operation, pile *pile) {
 	condition *c = mem_alloc(context, sizeof(condition));
 	condition_card_equal_data *data =
 		mem_alloc(context, sizeof(condition_card_equal_data));
@@ -393,43 +395,49 @@ bool condition_top_card_compare_check(condition *cond, move_action *action) {
 	card *src_card, *dst_card;
 	pile *dest = data->dest == 0 ? action->destination : data->dest;
 
-	if(card_count(dest) == 0) {
+	if (card_count(dest) == 0) {
 		return false;
 	}
 	src_card = action->source->cards[action->source_index];
 	dst_card = card_last(dest);
-	if(data->operation & e_follow_suit && dst_card->suit != src_card->suit) {
+	if (data->operation & e_follow_suit && dst_card->suit != src_card->suit) {
 		return false;
 	}
-	if(data->operation & e_dest_lower_value && dst_card->value >= src_card->value) {
+	if (data->operation & e_dest_lower_value &&
+	    dst_card->value >= src_card->value) {
 		return false;
 	}
-	if(data->operation & e_dest_1lower_value && dst_card->value != src_card->value - 1) {
+	if (data->operation & e_dest_1lower_value &&
+	    dst_card->value != src_card->value - 1) {
 		return false;
 	}
-	if(data->operation & e_dest_higher_value && dst_card->value <= src_card->value) {
+	if (data->operation & e_dest_higher_value &&
+	    dst_card->value <= src_card->value) {
 		return false;
 	}
-	if(data->operation & e_dest_1higher_value && dst_card->value != src_card->value + 1) {
+	if (data->operation & e_dest_1higher_value &&
+	    dst_card->value != src_card->value + 1) {
 		return false;
 	}
-	if(data->operation & e_equal_value && dst_card->value != src_card->value) {
+	if (data->operation & e_equal_value && dst_card->value != src_card->value) {
 		return false;
 	}
-	if(data->operation & e_suit_opposite) {
-		if((src_card->suit == e_spades || src_card->suit == e_clubs) &&
-		   (dst_card->suit == e_spades || dst_card->suit == e_clubs)) {
+	if (data->operation & e_suit_opposite) {
+		if ((src_card->suit == e_spades || src_card->suit == e_clubs) &&
+		    (dst_card->suit == e_spades || dst_card->suit == e_clubs)) {
 			return false;
-		}
-		else if((src_card->suit == e_hearts || src_card->suit == e_diamonds) &&
-		   (dst_card->suit == e_hearts || dst_card->suit == e_diamonds)) {
+		} else if ((src_card->suit == e_hearts ||
+		            src_card->suit == e_diamonds) &&
+		           (dst_card->suit == e_hearts ||
+		            dst_card->suit == e_diamonds)) {
 			return false;
 		}
 	}
 	return true;
 }
 
-condition *condition_top_card_compare(mem_context *context, pile *dest, condition_compare_operation operation) {
+condition *condition_top_card_compare(mem_context *context, pile *dest,
+                                      condition_compare_operation operation) {
 	condition *c;
 	condition_top_card_compare_data *data;
 
@@ -444,9 +452,10 @@ condition *condition_top_card_compare(mem_context *context, pile *dest, conditio
 
 /* ------------------------------------------------------------------------- */
 
-void action_reveal_source_top_card_execute(rule_action* action, move_action *move) {
+void action_reveal_source_top_card_execute(rule_action *action,
+                                           move_action *move) {
 	card *c = card_last(move->source);
-	if(c != 0) {
+	if (c != 0) {
 		card_reveal(c);
 	}
 }
@@ -466,11 +475,13 @@ rule *rule_create(mem_context *context) {
 void rule_add_condition(mem_context *context, rule *rule, condition *cond) {
 	condition **old_cond = rule->conditions;
 
-	rule->conditions = mem_alloc(context, (rule->condition_size + 1) * sizeof(condition*));
+	rule->conditions =
+		mem_alloc(context, (rule->condition_size + 1) * sizeof(condition *));
 	rule->condition_size++;
 
-	if(old_cond) {
-		memcpy(rule->conditions, old_cond, sizeof(condition*) * (rule->condition_size - 1));
+	if (old_cond) {
+		memcpy(rule->conditions, old_cond,
+		       sizeof(condition *) * (rule->condition_size - 1));
 		mem_free(context, old_cond);
 	}
 	rule->conditions[rule->condition_size - 1] = cond;
@@ -479,11 +490,13 @@ void rule_add_condition(mem_context *context, rule *rule, condition *cond) {
 void rule_add_action(mem_context *context, rule *rule, rule_action *action) {
 	rule_action **old = rule->actions;
 
-	rule->actions = mem_alloc(context, (rule->action_size + 1) * sizeof(rule_action*));
+	rule->actions =
+		mem_alloc(context, (rule->action_size + 1) * sizeof(rule_action *));
 	rule->action_size++;
 
-	if(old) {
-		memcpy(rule->actions, old, sizeof(rule_action*) * (rule->action_size - 1));
+	if (old) {
+		memcpy(rule->actions, old,
+		       sizeof(rule_action *) * (rule->action_size - 1));
 		mem_free(context, old);
 	}
 	rule->actions[rule->action_size - 1] = action;
@@ -493,9 +506,9 @@ bool rule_check(rule *rule, move_action *action) {
 	int index;
 	condition *condition;
 
-	for(index=0;index<rule->condition_size;++index) {
+	for (index = 0; index < rule->condition_size; ++index) {
 		condition = rule->conditions[index];
-		if(!condition->check(condition, action)) {
+		if (!condition->check(condition, action)) {
 			return false;
 		}
 	}
@@ -504,7 +517,7 @@ bool rule_check(rule *rule, move_action *action) {
 
 void rule_execute_actions(rule *rule, move_action *move) {
 	int index;
-	for(index=0;index<rule->action_size;++index) {
+	for (index = 0; index < rule->action_size; ++index) {
 		rule->actions[index]->execute(rule->actions[index], move);
 	}
 }
@@ -516,21 +529,22 @@ ruleset *ruleset_create(mem_context *context) {
 void ruleset_add_rule(mem_context *context, ruleset *ruleset, rule *new_rule) {
 	rule **old_rules = ruleset->rules;
 
-	ruleset->rules = mem_alloc(context, (ruleset->size + 1) * sizeof(rule*));
+	ruleset->rules = mem_alloc(context, (ruleset->size + 1) * sizeof(rule *));
 	ruleset->size++;
 
-	if(old_rules) {
-		memcpy(ruleset->rules, old_rules, sizeof(rule*) * (ruleset->size - 1));
+	if (old_rules) {
+		memcpy(ruleset->rules, old_rules, sizeof(rule *) * (ruleset->size - 1));
 		mem_free(context, old_rules);
 	}
 	ruleset->rules[ruleset->size - 1] = new_rule;
 }
 
-bool ruleset_check(ruleset *ruleset, move_action *action, rule **matching_rule) {
+bool ruleset_check(ruleset *ruleset, move_action *action,
+                   rule **matching_rule) {
 	int index;
 	*matching_rule = 0;
-	for(index = 0;index<ruleset->size;++index) {
-		if(rule_check(ruleset->rules[index], action)) {
+	for (index = 0; index < ruleset->size; ++index) {
+		if (rule_check(ruleset->rules[index], action)) {
 			*matching_rule = ruleset->rules[index];
 			return true;
 		}
@@ -538,15 +552,15 @@ bool ruleset_check(ruleset *ruleset, move_action *action, rule **matching_rule) 
 	return false;
 }
 
-bool ruleset_move_card(ruleset *ruleset, visual *visual, visual_pile *destination,
-					   card_proxy *card, int count) {
+bool ruleset_move_card(ruleset *ruleset, visual *visual,
+                       visual_pile *destination, card_proxy *card, int count) {
 	rule *matching_rule;
 	bool result;
 	move_action *action;
 
 	action = ruleset_get_move_action(visual, card, count, destination);
 	result = ruleset_check(ruleset, action, &matching_rule);
-	if(result) {
+	if (result) {
 		ruleset_apply_move_action(visual, action);
 		rule_execute_actions(matching_rule, action);
 	}
@@ -556,30 +570,31 @@ bool ruleset_move_card(ruleset *ruleset, visual *visual, visual_pile *destinatio
 	return result;
 }
 
-bool ruleset_move_individual_card(
-	ruleset *ruleset, visual *visual, visual_pile *destination,
-	card_proxy *card, int count) {
+bool ruleset_move_individual_card(ruleset *ruleset, visual *visual,
+                                  visual_pile *destination, card_proxy *card,
+                                  int count) {
 
 	visual_pile *pile = visual_find_pile_from_card(visual, card);
 	int card_index = visual_get_card_index(pile, card);
 
 	int i;
-	for(i = count-1 + card_index;i >= (0 + card_index);--i) {
-		if(!ruleset_move_card(ruleset, visual, destination, pile->cards[i], 1)) {
+	for (i = count - 1 + card_index; i >= (0 + card_index); --i) {
+		if (!ruleset_move_card(ruleset, visual, destination, pile->cards[i],
+		                       1)) {
 			return false;
 		}
 	}
 	return true;
 }
 
-move_action *ruleset_get_move_action(
-	visual *vis, card_proxy *card, int count, visual_pile *destination_pile) {
+move_action *ruleset_get_move_action(visual *vis, card_proxy *card, int count,
+                                     visual_pile *destination_pile) {
 	int i, j;
 	move_action *a = calloc(1, sizeof(move_action));
-	for(i=0;i<vis->pile_count && a->source == 0;++i) {
-		for(j=0;j<vis->piles[i]->card_count;++j) {
-			if(vis->piles[i]->cards[j] == card) {
-				a->source = (pile*)vis->piles[i]->data;
+	for (i = 0; i < vis->pile_count && a->source == 0; ++i) {
+		for (j = 0; j < vis->piles[i]->card_count; ++j) {
+			if (vis->piles[i]->cards[j] == card) {
+				a->source = (pile *)vis->piles[i]->data;
 				a->source_index = j;
 				break;
 			}
@@ -587,7 +602,7 @@ move_action *ruleset_get_move_action(
 	}
 
 	a->source_count = count;
-	a->destination = (pile*)destination_pile->data;
+	a->destination = (pile *)destination_pile->data;
 	a->destination_index = card_first_free(a->destination);
 	return a;
 }
@@ -595,7 +610,7 @@ move_action *ruleset_get_move_action(
 void ruleset_apply_move_action(visual *vis, move_action *action) {
 	int index;
 	card *c;
-	for(index=0;index<action->source_count;++index) {
+	for (index = 0; index < action->source_count; ++index) {
 		c = card_take(action->source, action->source_index);
 		action->destination->cards[card_first_free(action->destination)] = c;
 	}
@@ -605,4 +620,3 @@ void ruleset_apply_move_action(visual *vis, move_action *action) {
 	 * inserting card instead of overwriting.
 	 */
 }
-

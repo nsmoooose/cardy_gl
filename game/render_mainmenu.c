@@ -9,20 +9,21 @@
 #include "render_solved.h"
 #include "render_mainmenu.h"
 
-const char* render_object_mainmenu_id = "mainmenu";
+const char *render_object_mainmenu_id = "mainmenu";
 
-static void set_solitaire(render_event_args *event, solitaire_create sol_callback) {
-	render_object *placeholder = render_object_find(
-		event->rcontext->object, "placeholder");
-	render_object *existing_sol = render_object_find(
-		event->rcontext->object, render_object_solitaire_id);
-	render_object *solved = render_object_find(
-		event->rcontext->object, render_object_solved_id);
+static void set_solitaire(render_event_args *event,
+                          solitaire_create sol_callback) {
+	render_object *placeholder =
+		render_object_find(event->rcontext->object, "placeholder");
+	render_object *existing_sol =
+		render_object_find(event->rcontext->object, render_object_solitaire_id);
+	render_object *solved =
+		render_object_find(event->rcontext->object, render_object_solved_id);
 
-	if(existing_sol) {
+	if (existing_sol) {
 		render_object_free(event->rcontext, existing_sol);
 	}
-	if(solved) {
+	if (solved) {
 		render_object_free(event->rcontext, solved);
 	}
 	render_object_add_child(placeholder, render_object_solitaire(sol_callback));
@@ -33,7 +34,7 @@ static void set_solitaire(render_event_args *event, solitaire_create sol_callbac
 static void sol_callback(render_event_args *event, void *data) {
 	game_registry *registry = solitaire_get_registry();
 	game *game = g_hash_table_lookup(registry->games, event->object->id);
-	if(game) {
+	if (game) {
 		set_solitaire(event, game->create_instance);
 	}
 	game_registry_free(registry);
@@ -49,12 +50,13 @@ void render_object_mainmenu(render_object *parent) {
 	render_object *window, *button;
 	widget_style *style;
 	RsvgHandle *h;
-	float button_top=140.0f;
+	float button_top = 140.0f;
 	GHashTableIter it;
 	gpointer key, value;
 	game_registry *registry = solitaire_get_registry();
 
-	resource_locate_file("resources/images/mainmenu.svg", file_buffer, PATH_MAX);
+	resource_locate_file("resources/images/mainmenu.svg", file_buffer,
+	                     PATH_MAX);
 	h = render_svg_open(file_buffer);
 
 	window = widget_generic(render_object_mainmenu_id);
@@ -83,7 +85,7 @@ void render_object_mainmenu(render_object *parent) {
 	render_svg_close(h);
 
 	g_hash_table_iter_init(&it, registry->games);
-	while(g_hash_table_iter_next(&it, &key, &value)) {
+	while (g_hash_table_iter_next(&it, &key, &value)) {
 		game *game = value;
 		button = widget_generic(key);
 		style = widget_get_default_style(button);

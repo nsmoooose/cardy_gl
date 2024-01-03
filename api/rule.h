@@ -14,12 +14,12 @@ typedef struct {
 
 typedef struct rule_action_St {
 	void *data;
-	void (*execute)(struct rule_action_St* action, move_action *move);
+	void (*execute)(struct rule_action_St *action, move_action *move);
 } rule_action;
 
 typedef struct condition_St {
 	void *data;
-	bool (*check)(struct condition_St* condition, move_action *action);
+	bool (*check)(struct condition_St *condition, move_action *action);
 } condition;
 
 typedef struct {
@@ -38,21 +38,21 @@ typedef struct {
 } ruleset;
 
 typedef enum {
-	e_equal_value=1,
-	e_dest_lower_value=2,
-	e_dest_higher_value=4,
-	e_dest_1lower_value=8,
-	e_dest_1higher_value=16,
-	e_follow_suit=32,
+	e_equal_value = 1,
+	e_dest_lower_value = 2,
+	e_dest_higher_value = 4,
+	e_dest_1lower_value = 8,
+	e_dest_1higher_value = 16,
+	e_follow_suit = 32,
 
 	/** Used in condition when an opposite suit is used. Opposite
 	 *  uses the color as comparison. red is opposite to black.
 	 */
-	e_suit_opposite=64
+	e_suit_opposite = 64
 } condition_compare_operation;
 
-condition *condition_card_count_array(
-	mem_context *context, int count, int pile_count, ...);
+condition *condition_card_count_array(mem_context *context, int count,
+                                      int pile_count, ...);
 condition *condition_move_count(mem_context *context, int count);
 condition *condition_or(mem_context *context, condition *c1, condition *c2);
 condition *condition_or_array(mem_context *context, int count, ...);
@@ -63,11 +63,12 @@ condition *condition_source_card_revealed(mem_context *context);
 condition *condition_source_not_equal_destination(mem_context *context);
 condition *condition_rest_of_pile(mem_context *context);
 condition *condition_top_card(mem_context *context);
-condition *condition_top_card_compare(
-	mem_context *context, pile *dest, condition_compare_operation operation);
-condition *condition_source_card_equal(
-	mem_context *context, card_suit suit, card_value value,
-	condition_compare_operation operation, pile *pile);
+condition *condition_top_card_compare(mem_context *context, pile *dest,
+                                      condition_compare_operation operation);
+condition *condition_source_card_equal(mem_context *context, card_suit suit,
+                                       card_value value,
+                                       condition_compare_operation operation,
+                                       pile *pile);
 condition *condition_destination_card_equal(
 	mem_context *context, card_suit suit, card_value value,
 	condition_compare_operation operation, pile *pile);
@@ -86,14 +87,13 @@ void rule_execute_actions(rule *rule, move_action *move);
 ruleset *ruleset_create(mem_context *context);
 void ruleset_add_rule(mem_context *context, ruleset *ruleset, rule *rule);
 bool ruleset_check(ruleset *ruleset, move_action *action, rule **matching_rule);
-move_action *ruleset_get_move_action(
-	visual *vis, card_proxy *card, int count, visual_pile *destination_pile);
+move_action *ruleset_get_move_action(visual *vis, card_proxy *card, int count,
+                                     visual_pile *destination_pile);
 void ruleset_apply_move_action(visual *vis, move_action *action);
-bool ruleset_move_card(
-	ruleset *ruleset, visual *visual, visual_pile *destination,
-	card_proxy *card, int count);
-bool ruleset_move_individual_card(
-	ruleset *ruleset, visual *visual, visual_pile *destination,
-	card_proxy *card, int count);
+bool ruleset_move_card(ruleset *ruleset, visual *visual,
+                       visual_pile *destination, card_proxy *card, int count);
+bool ruleset_move_individual_card(ruleset *ruleset, visual *visual,
+                                  visual_pile *destination, card_proxy *card,
+                                  int count);
 
 #endif /* __RULE_H__ */

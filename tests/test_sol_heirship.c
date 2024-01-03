@@ -7,7 +7,8 @@ START_TEST(test_sol_heirship_init) {
 	solitaire *sol = solitaire_heirship(context, settings);
 
 	ck_assert_msg(sol->visual != 0, "visual member should be set");
-	ck_assert_msg(sol->visual->pile_count == (3*8+1), "incorrect number of piles.");
+	ck_assert_msg(sol->visual->pile_count == (3 * 8 + 1),
+	              "incorrect number of piles.");
 }
 END_TEST
 
@@ -23,25 +24,29 @@ START_TEST(test_sol_heirship_deal) {
 	ck_assert_msg(deck->action != 0, "No action set on pile.");
 	deck->action->execute(deck->action);
 
-	ck_assert_msg(sol->visual->piles[0]->card_count == 0, "No card should remain in deck.");
+	ck_assert_msg(sol->visual->piles[0]->card_count == 0,
+	              "No card should remain in deck.");
 
 	/* king piles */
-	for(index=1;index<(1+8*3);index+=3) {
+	for (index = 1; index < (1 + 8 * 3); index += 3) {
 		ck_assert(sol->visual->piles[index]->card_count > 0);
 		ck_assert(sol->visual->piles[index]->cards[0]->card != 0);
-		ck_assert_msg(sol->visual->piles[index]->cards[0]->card->value == 13, "Bottom card in pile index: %d wasn't a king.", index);
+		ck_assert_msg(sol->visual->piles[index]->cards[0]->card->value == 13,
+		              "Bottom card in pile index: %d wasn't a king.", index);
 	}
 	/* queen piles */
-	for(index=2;index<(2+8*3);index+=3) {
+	for (index = 2; index < (2 + 8 * 3); index += 3) {
 		ck_assert(sol->visual->piles[index]->card_count == 1);
 		ck_assert(sol->visual->piles[index]->cards[0]->card != 0);
-		ck_assert_msg(sol->visual->piles[index]->cards[0]->card->value == 12, "Bottom card in pile index: %d wasn't a queen.", index);
+		ck_assert_msg(sol->visual->piles[index]->cards[0]->card->value == 12,
+		              "Bottom card in pile index: %d wasn't a queen.", index);
 	}
 	/* ace piles */
-	for(index=3;index<(3+8*3);index+=3) {
+	for (index = 3; index < (3 + 8 * 3); index += 3) {
 		ck_assert(sol->visual->piles[index]->card_count == 1);
 		ck_assert(sol->visual->piles[index]->cards[0]->card != 0);
-		ck_assert_msg(sol->visual->piles[index]->cards[0]->card->value == 1, "Bottom card in pile index: %d wasn't a ace.", index);
+		ck_assert_msg(sol->visual->piles[index]->cards[0]->card->value == 1,
+		              "Bottom card in pile index: %d wasn't a ace.", index);
 	}
 }
 END_TEST
@@ -57,16 +62,18 @@ START_TEST(test_sol_heirship_deal2) {
 	deck->action->execute(deck->action);
 	deck->action->execute(deck->action);
 
-	for(index=0;index<sol->visual->pile_count;++index) {
-		if(index==0) {
-			ck_assert_msg(sol->visual->piles[index]->card_count == 104, "All cards should have been moved back to the deck");
-		}
-		else {
-			ck_assert_msg(sol->visual->piles[index]->card_count == 0, "There shouldn't be any cards here.");
+	for (index = 0; index < sol->visual->pile_count; ++index) {
+		if (index == 0) {
+			ck_assert_msg(sol->visual->piles[index]->card_count == 104,
+			              "All cards should have been moved back to the deck");
+		} else {
+			ck_assert_msg(sol->visual->piles[index]->card_count == 0,
+			              "There shouldn't be any cards here.");
 		}
 	}
-	for(index=0;index<52;++index) {
-		ck_assert_msg(sol->visual->piles[0]->cards[index]->card == 0, "Card should be hidden.");
+	for (index = 0; index < 52; ++index) {
+		ck_assert_msg(sol->visual->piles[0]->cards[index]->card == 0,
+		              "Card should be hidden.");
 	}
 }
 END_TEST

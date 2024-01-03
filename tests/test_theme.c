@@ -9,13 +9,13 @@ START_TEST(test_theme_list) {
 	ck_assert_msg(t != 0, "No themes struct returned.");
 	ck_assert_msg(t->theme_count == 5, "Incorrect number of themes listed.");
 
-	for(i=0;i<5;++i) {
-		ck_assert_msg(
-			strcmp(t->theme_names[i], "ancient_french") == 0 ||
-			strcmp(t->theme_names[i], "anglo") == 0 ||
-			strcmp(t->theme_names[i], "atlasnye") == 0 ||
-			strcmp(t->theme_names[i], "dondorf") == 0 ||
-			strcmp(t->theme_names[i], "paris") == 0, "Not a matching theme name.");
+	for (i = 0; i < 5; ++i) {
+		ck_assert_msg(strcmp(t->theme_names[i], "ancient_french") == 0 ||
+		                  strcmp(t->theme_names[i], "anglo") == 0 ||
+		                  strcmp(t->theme_names[i], "atlasnye") == 0 ||
+		                  strcmp(t->theme_names[i], "dondorf") == 0 ||
+		                  strcmp(t->theme_names[i], "paris") == 0,
+		              "Not a matching theme name.");
 	}
 }
 END_TEST

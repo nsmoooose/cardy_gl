@@ -7,7 +7,8 @@ START_TEST(test_render_context_create) {
 	render_context *c = render_context_create(0);
 
 	ck_assert_msg(c->object == 0, "Root object should be 0.");
-	ck_assert_msg(c->selection_size == 0, "No selections has been created yet.");
+	ck_assert_msg(c->selection_size == 0,
+	              "No selections has been created yet.");
 }
 END_TEST
 
@@ -54,7 +55,8 @@ START_TEST(test_render_object_remove_child) {
 
 	render_object_remove_child(child2);
 	ck_assert_msg(parent->child_count == 0, "Child count should be 0");
-	ck_assert_msg(parent->children == 0, "Child vector should have been freed.");
+	ck_assert_msg(parent->children == 0,
+	              "Child vector should have been freed.");
 }
 END_TEST
 
@@ -72,12 +74,14 @@ START_TEST(test_render_object_find) {
 	render_object_add_child(child1, subchild1);
 	render_object_add_child(child2, subchild2);
 
-	ck_assert_msg(render_object_find(root, "child1") == child1, "Child1 not found.");
-	ck_assert_msg(render_object_find(root, "child2") == child2, "Child2 not found.");
+	ck_assert_msg(render_object_find(root, "child1") == child1,
+	              "Child1 not found.");
+	ck_assert_msg(render_object_find(root, "child2") == child2,
+	              "Child2 not found.");
 	ck_assert_msg(render_object_find(root, "subchild1") == subchild1,
-				  "Subchild1 not found.");
+	              "Subchild1 not found.");
 	ck_assert_msg(render_object_find(root, "subchild2") == subchild2,
-				  "Subchild2 not found.");
+	              "Subchild2 not found.");
 	ck_assert_msg(render_object_find(root, "root") == root, "root not found.");
 }
 END_TEST
@@ -96,7 +100,8 @@ START_TEST(test_render_object_find_root) {
 	render_object_add_child(child1, subchild1);
 	render_object_add_child(child2, subchild2);
 
-	ck_assert_msg(render_object_find_root(subchild2) == root, "Root not found.");
+	ck_assert_msg(render_object_find_root(subchild2) == root,
+	              "Root not found.");
 }
 END_TEST
 
@@ -105,9 +110,9 @@ int kd_mod = 0;
 int kd_x = 0;
 int kd_y = 0;
 
-bool callback_keydown(
-	render_event_args *event, unsigned char key, int modifiers, int x, int y) {
-	if(key == 'b') {
+bool callback_keydown(render_event_args *event, unsigned char key,
+                      int modifiers, int x, int y) {
+	if (key == 'b') {
 		kd_key = key;
 		kd_mod = modifiers;
 		kd_x = x;
@@ -143,9 +148,9 @@ int ku_mod = 0;
 int ku_x = 0;
 int ku_y = 0;
 
-bool callback_keyup(
-	render_event_args *event, unsigned char key, int modifiers, int x, int y) {
-	if(key == 'b') {
+bool callback_keyup(render_event_args *event, unsigned char key, int modifiers,
+                    int x, int y) {
+	if (key == 'b') {
 		ku_key = key;
 		ku_mod = modifiers;
 		ku_x = x;
@@ -181,9 +186,9 @@ int skd_mod = 0;
 int skd_x = 0;
 int skd_y = 0;
 
-bool callback_special_keydown(
-	render_event_args *event, int key, int modifiers, int x, int y) {
-	if(key == 'b') {
+bool callback_special_keydown(render_event_args *event, int key, int modifiers,
+                              int x, int y) {
+	if (key == 'b') {
 		skd_key = key;
 		skd_mod = modifiers;
 		skd_x = x;
@@ -219,9 +224,9 @@ int sku_mod = 0;
 int sku_x = 0;
 int sku_y = 0;
 
-bool callback_special_keyup(
-	render_event_args *event, int key, int modifiers, int x, int y) {
-	if(key == 'b') {
+bool callback_special_keyup(render_event_args *event, int key, int modifiers,
+                            int x, int y) {
+	if (key == 'b') {
 		sku_key = key;
 		sku_mod = modifiers;
 		sku_x = x;

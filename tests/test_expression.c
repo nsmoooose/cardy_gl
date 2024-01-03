@@ -102,7 +102,8 @@ START_TEST(test_expression_context_set) {
 END_TEST
 
 START_TEST(test_expression_create_token) {
-	expression_token *token = expression_create_token(e_type_var, "abcdefg*123", 7);
+	expression_token *token =
+		expression_create_token(e_type_var, "abcdefg*123", 7);
 
 	ck_assert(token->type == e_type_var);
 	ck_assert(strcmp(token->content, "abcdefg") == 0);
@@ -120,7 +121,7 @@ START_TEST(test_expression_tokenize) {
 	ck_assert(strcmp(tokens[0]->content, "3") == 0);
 
 	ck_assert(tokens[1] != 0);
-	ck_assert(tokens[1]->type == (e_type_op|e_type_add));
+	ck_assert(tokens[1]->type == (e_type_op | e_type_add));
 
 	ck_assert(tokens[2] != 0);
 	ck_assert(strcmp(tokens[2]->content, "4") == 0);
@@ -138,7 +139,7 @@ START_TEST(test_expression_tokenize) {
 	ck_assert(expression_token_count(tokens) == 3);
 	ck_assert(tokens[0]->type == e_type_var);
 	ck_assert(strcmp(tokens[0]->content, "width") == 0);
-	ck_assert(tokens[1]->type == (e_type_op|e_type_mul));
+	ck_assert(tokens[1]->type == (e_type_op | e_type_mul));
 	ck_assert(tokens[2]->type == e_type_const);
 	ck_assert(strcmp(tokens[2]->content, "4") == 0);
 

@@ -15,8 +15,8 @@ typedef struct expression_lib_St expression_lib;
 
 expression_context *expression_context_create();
 void expression_context_free(expression_context *ec);
-void expression_context_set(
-	expression_context *ec, const char *key, expression *value);
+void expression_context_set(expression_context *ec, const char *key,
+                            expression *value);
 expression *expression_context_get(expression_context *ec, const char *key);
 
 void expression_free(expression *e);
@@ -65,10 +65,11 @@ typedef struct {
 } expression_token;
 
 void expression_free_token(expression_token *token);
-expression_token *expression_create_token(expression_token_type type, const char *str, int length);
-expression_token** expression_tokenize(const char *exp);
+expression_token *expression_create_token(expression_token_type type,
+                                          const char *str, int length);
+expression_token **expression_tokenize(const char *exp);
 void expression_free_tokens(expression_token *tokens[]);
-expression* expression_parse_tokens(expression_token *tokens[]);
+expression *expression_parse_tokens(expression_token *tokens[]);
 int expression_token_count(expression_token *tokens[]);
 
 expression *expression_parse(expression_lib *library, const char *exp);
@@ -80,17 +81,25 @@ void expression_lib_free(expression_lib *lib);
 
 expression_lib *expression_lib_default();
 
-void expression_lib_add_function1f(expression_lib *lib, const char *name, function1f fun);
-void expression_lib_add_function2f(expression_lib *lib, const char *name, function2f fun);
-void expression_lib_add_function3f(expression_lib *lib, const char *name, function3f fun);
-void expression_lib_add_function4f(expression_lib *lib, const char *name, function4f fun);
-void expression_lib_add_function5f(expression_lib *lib, const char *name, function5f fun);
-void expression_lib_add_function6f(expression_lib *lib, const char *name, function6f fun);
+void expression_lib_add_function1f(expression_lib *lib, const char *name,
+                                   function1f fun);
+void expression_lib_add_function2f(expression_lib *lib, const char *name,
+                                   function2f fun);
+void expression_lib_add_function3f(expression_lib *lib, const char *name,
+                                   function3f fun);
+void expression_lib_add_function4f(expression_lib *lib, const char *name,
+                                   function4f fun);
+void expression_lib_add_function5f(expression_lib *lib, const char *name,
+                                   function5f fun);
+void expression_lib_add_function6f(expression_lib *lib, const char *name,
+                                   function6f fun);
 
 bool expression_lib_is_function(expression_lib *lib, const char *name);
 
 int expression_lib_param_count(expression_lib *lib, const char *name);
 
-expression *expression_lib_build_expression(expression_lib *lib, const char *name, expression *params[]);
+expression *expression_lib_build_expression(expression_lib *lib,
+                                            const char *name,
+                                            expression *params[]);
 
 #endif /* __EXPRESSION_H__ */

@@ -24,7 +24,7 @@ void rendering_idle() {
 	frames++;
 
 	if ((currentTime - lastUpdate) >= 1000) {
-		sprintf( buf, "Cardy 4.0 (fps: %d)", frames );
+		sprintf(buf, "Cardy 4.0 (fps: %d)", frames);
 		glutSetWindowTitle(buf);
 		frames = 0;
 		lastUpdate = currentTime;
@@ -33,7 +33,7 @@ void rendering_idle() {
 	usleep(50000);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
 	g_rcontext = render_context_create();
 
 	glutInit(&argc, argv);

@@ -11,7 +11,8 @@ static int dummy_open(game_system_provider *provider, const char *path) {
 	return 0;
 }
 
-static int dummy_write(game_system_provider *provider, const char *buffer, int size) {
+static int dummy_write(game_system_provider *provider, const char *buffer,
+                       int size) {
 	strncat(dummy_calls, "write(\"", 1000);
 	strncat(dummy_calls, buffer, 1000);
 	strncat(dummy_calls, "\");", 1000);
@@ -40,7 +41,11 @@ game_system_provider *dummy_provider() {
 START_TEST(test_game_system_remote_connect) {
 	game_system_provider *provider = dummy_provider();
 	game_system *system = game_system_connect(provider, "apa", "henrikn", "hn");
-	ck_assert_msg(strcmp(dummy_calls, "open(\"apa\");write(\"henrikn\n\");write(\"hn\n\");read();") == 0, "Was %s", dummy_calls);
+	ck_assert_msg(
+		strcmp(dummy_calls,
+	           "open(\"apa\");write(\"henrikn\n\");write(\"hn\n\");read();") ==
+			0,
+		"Was %s", dummy_calls);
 	ck_assert(system != 0);
 }
 END_TEST

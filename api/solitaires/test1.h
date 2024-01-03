@@ -3,6 +3,6 @@
 
 #include "../solitaire.h"
 
-solitaire* solitaire_test1(mem_context *context, visual_settings *settings);
+solitaire *solitaire_test1(mem_context *context, visual_settings *settings);
 
 #endif /* __SOLITAIRE_TEST1_H__ */

@@ -10,48 +10,47 @@ typedef struct {
 
 /*
 static void my_deal(solitaire* sol, visual_pile* pile) {
-	internal* i = sol->data;
+        internal* i = sol->data;
 
-	if(card_count(i->deck) >= 4) {
-		card* card1 = card_take_last(i->deck);
-		card* card2 = card_take_last(i->deck);
-		card* card3 = card_take_last(i->deck);
-		card* card4 = card_take_last(i->deck);
+        if(card_count(i->deck) >= 4) {
+                card* card1 = card_take_last(i->deck);
+                card* card2 = card_take_last(i->deck);
+                card* card3 = card_take_last(i->deck);
+                card* card4 = card_take_last(i->deck);
 
-		card_reveal(card1);
-		card_reveal(card2);
-		card_reveal(card3);
-		card_reveal(card4);
+                card_reveal(card1);
+                card_reveal(card2);
+                card_reveal(card3);
+                card_reveal(card4);
 
-		card_append(card1, i->pile1);
-		card_append(card2, i->pile2);
-		card_append(card3, i->pile3);
-		card_append(card4, i->pile4);
-	}
+                card_append(card1, i->pile1);
+                card_append(card2, i->pile2);
+                card_append(card3, i->pile3);
+                card_append(card4, i->pile4);
+        }
 
-	visual_sync(sol->visual);
+        visual_sync(sol->visual);
 }
 */
 
-solitaire* solitaire_pyramid(mem_context *context, visual_settings *settings) {
+solitaire *solitaire_pyramid(mem_context *context, visual_settings *settings) {
 	int index;
 	visual_pile *piles[30];
 
 	/* The one solitaire instance we have.*/
-	solitaire* s = mem_alloc(context, sizeof(solitaire));
+	solitaire *s = mem_alloc(context, sizeof(solitaire));
 
 	/* This is the internal data representation of this
 	 * solitaire. This is a local struct hidden from other
 	 * members. */
-	internal* i = mem_alloc(context, sizeof(internal));
+	internal *i = mem_alloc(context, sizeof(internal));
 	s->data = i;
 	s->visual = visual_create(context, settings);
 
-	for(index=0;index<30;++index) {
-		if(index == 0 || index == 29) {
+	for (index = 0; index < 30; ++index) {
+		if (index == 0 || index == 29) {
 			i->piles[index] = pile_create(context, 52);
-		}
-		else {
+		} else {
 			i->piles[index] = pile_create(context, 1);
 		}
 		piles[index] = visual_pile_create(context, i->piles[index]);

@@ -33,14 +33,14 @@ typedef struct render_object_St {
 	void (*free)(render_event_args *event);
 
 	bool (*keyboard_down)(render_event_args *event, unsigned char key,
-						  int modifiers, int x, int y);
+	                      int modifiers, int x, int y);
 	bool (*keyboard_up)(render_event_args *event, unsigned char key,
-						int modifiers, int x, int y);
+	                    int modifiers, int x, int y);
 
 	bool (*keyboard_special_down)(render_event_args *event, int key,
-								  int modifiers, int x, int y);
+	                              int modifiers, int x, int y);
 	bool (*keyboard_special_up)(render_event_args *event, int key,
-								int modifiers, int x, int y);
+	                            int modifiers, int x, int y);
 
 	struct render_object_St *parent;
 
@@ -90,38 +90,37 @@ render_object *render_object_find(render_object *parent, const char *id);
 
 render_object *render_object_find_root(render_object *object);
 
-void render_scene_object(
-	render_context *rcontext, render_object *object, float delta);
+void render_scene_object(render_context *rcontext, render_object *object,
+                         float delta);
 
 void render_scene_context(render_context *rcontext);
 
-GLuint render_register_selection_callback(
-	render_context *rcontext, render_object *object,
-	render_selection_callback callback, void *data);
+GLuint render_register_selection_callback(render_context *rcontext,
+                                          render_object *object,
+                                          render_selection_callback callback,
+                                          void *data);
 
 void render_selection_reset(render_context *rcontext);
 
-void render_process_selections(
-	render_context *rcontext, GLint hits, GLuint* selections);
+void render_process_selections(render_context *rcontext, GLint hits,
+                               GLuint *selections);
 
-void render_process_keyboard_down(
-	render_context *rcontext, unsigned char key, int modifiers,
-	int x, int y);
-void render_process_keyboard_up(
-	render_context *rcontext, unsigned char key, int modifiers,
-	int x, int y);
+void render_process_keyboard_down(render_context *rcontext, unsigned char key,
+                                  int modifiers, int x, int y);
+void render_process_keyboard_up(render_context *rcontext, unsigned char key,
+                                int modifiers, int x, int y);
 
-void render_process_keyboard_special_down(
-	render_context *rcontext, int key, int modifiers, int x, int y);
-void render_process_keyboard_special_up(
-	render_context *rcontext, int key, int modifiers, int x, int y);
+void render_process_keyboard_special_down(render_context *rcontext, int key,
+                                          int modifiers, int x, int y);
+void render_process_keyboard_special_up(render_context *rcontext, int key,
+                                        int modifiers, int x, int y);
 
-RsvgHandle *render_svg_open(const char* path);
+RsvgHandle *render_svg_open(const char *path);
 
 void render_svg_close(RsvgHandle *h);
 
-void render_svg_texture(RsvgHandle *h, GLuint texture,
-						char *node_name, int width, int height);
+void render_svg_texture(RsvgHandle *h, GLuint texture, char *node_name,
+                        int width, int height);
 
 void render_rect(float x1, float y1, float x2, float y2, GLuint texture);
 

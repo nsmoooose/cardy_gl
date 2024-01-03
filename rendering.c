@@ -12,7 +12,8 @@ void rendering_setup() {
 	g_rcontext = render_context_create(g_context);
 	g_rcontext->object = render_object_triangles(g_context);
 
-	render_object_add_child(g_rcontext->object, render_object_create("placeholder"));
+	render_object_add_child(g_rcontext->object,
+	                        render_object_create("placeholder"));
 
 	desktop = widget_desktop("desktop");
 	render_object_add_child(g_rcontext->object, desktop);
@@ -35,5 +36,5 @@ void rendering_scene() {
 
 void rendering_timer(int value) {
 	glutPostRedisplay();
-	glutTimerFunc(1000/60, rendering_timer, 0);
+	glutTimerFunc(1000 / 60, rendering_timer, 0);
 }

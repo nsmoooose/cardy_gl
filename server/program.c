@@ -23,10 +23,10 @@ void *client_handler(void *arg) {
 	return 0;
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
 	struct sockaddr_in addr;
 	int fd = socket(AF_INET, SOCK_STREAM, 0);
-	if(fd == -1) {
+	if (fd == -1) {
 		fprintf(stderr, "failed to create socket.\n");
 		return 1;
 	}
@@ -34,32 +34,32 @@ int main(int argc, char* argv[]) {
 	memset(&addr, 0, sizeof(struct sockaddr_in));
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(6666);
-	if(inet_pton(AF_INET, "0.0.0.0", &addr.sin_addr) != 1) {
+	if (inet_pton(AF_INET, "0.0.0.0", &addr.sin_addr) != 1) {
 		perror("failed to parse address.\n");
 		return 1;
 	}
-	if(bind(fd, (struct sockaddr*)&addr, sizeof(struct sockaddr_in)) == -1) {
+	if (bind(fd, (struct sockaddr *)&addr, sizeof(struct sockaddr_in)) == -1) {
 		perror("failed to bind socket.\n");
 		return 1;
 	}
 
-	if(listen(fd, 3) == -1) {
+	if (listen(fd, 3) == -1) {
 		perror("failed to listen on incoming connections.\n");
 		return 1;
 	}
 
-	for(;;) {
+	for (;;) {
 		int sock_fd = accept(fd, 0, 0);
-		if(sock_fd == -1) {
+		if (sock_fd == -1) {
 			perror("failed to accept socket\n");
 			return 1;
-		}
-		else {
+		} else {
 			pthread_t thread;
 			struct client_args *args = calloc(1, sizeof(struct client_args));
 			args->fd = sock_fd;
 			printf("Client connected. Time to start a thread\n");
-			if(pthread_create(&thread, NULL, client_handler, (void*)args) != 0) {
+			if (pthread_create(&thread, NULL, client_handler, (void *)args) !=
+			    0) {
 				perror("Failed to create thread.");
 				return 1;
 			}

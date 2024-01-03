@@ -5,7 +5,7 @@
 #include "../api/resource.h"
 #include "render_topmenu.h"
 
-const char* render_object_topmenu_id = "topmenu";
+const char *render_object_topmenu_id = "topmenu";
 
 static void topmenu_menu_callback(render_event_args *event, void *data) {
 	printf("Go to main menu.\n");

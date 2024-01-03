@@ -8,7 +8,7 @@ START_TEST(test_context_create) {
 	ck_assert_msg(c != 0, "Failed to allocate context.");
 	ck_assert_msg(c->blocks != 0, "The context is default non zero.");
 	ck_assert_msg(c->size == 1000, "Default size is 1000");
-	for(index=0;index<c->size;++index) {
+	for (index = 0; index < c->size; ++index) {
 		ck_assert_msg(c->blocks[index] == 0, "Block wasn't 0 after creation.");
 	}
 }
@@ -33,11 +33,12 @@ START_TEST(test_reallocs) {
 	void *data;
 	mem_context *c = mem_context_create();
 
-	for(index=0;index<1200;++index) {
+	for (index = 0; index < 1200; ++index) {
 		data = mem_alloc(c, 2);
 
 		ck_assert_msg(data != 0, "Allocation failure.");
-		ck_assert_msg(c->blocks[index] == data, "Failed to resize array and set block.");
+		ck_assert_msg(c->blocks[index] == data,
+		              "Failed to resize array and set block.");
 	}
 }
 END_TEST

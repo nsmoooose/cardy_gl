@@ -43,14 +43,14 @@ void expression_context_free(expression_context *ec) {
 	g_hash_table_unref(ec->expressions);
 }
 
-void expression_context_set(
-	expression_context *ec, const char *key, expression *value) {
+void expression_context_set(expression_context *ec, const char *key,
+                            expression *value) {
 	expression *old = expression_context_get(ec, key);
-	if(old) {
+	if (old) {
 		expression_free(old);
 	}
 
-	g_hash_table_insert(ec->expressions, (char*)key, value);
+	g_hash_table_insert(ec->expressions, (char *)key, value);
 }
 
 expression *expression_context_get(expression_context *ec, const char *key) {
@@ -89,12 +89,13 @@ expression *expression_const(float value) {
 
 static float expression_var_execute(expression_context *ec, expression *e) {
 	expression *var = expression_context_get(ec, e->data);
-	if(var) {
+	if (var) {
 		return expression_execute(ec, var);
 	}
 
 	/* TODO: Better error handling when there are expression errors. */
-	fprintf(stderr, "Invalid expression. Variable: %s not found.", (char*)e->data);
+	fprintf(stderr, "Invalid expression. Variable: %s not found.",
+	        (char *)e->data);
 	exit(1);
 }
 
@@ -140,45 +141,37 @@ typedef struct {
 	expression *params[6];
 } expression_function_data;
 
-static float expression_function_execute(expression_context *ec, expression *e) {
+static float expression_function_execute(expression_context *ec,
+                                         expression *e) {
 	expression_function_data *d = e->data;
-	switch(d->param_count) {
+	switch (d->param_count) {
 	case 1:
 		return d->function.f1(expression_execute(ec, d->params[0]));
 	case 2:
-		return d->function.f2(
-			expression_execute(ec, d->params[0]),
-			expression_execute(ec, d->params[1]));
+		return d->function.f2(expression_execute(ec, d->params[0]),
+		                      expression_execute(ec, d->params[1]));
 	case 3:
-		return d->function.f3(
-			expression_execute(ec, d->params[0]),
-			expression_execute(ec, d->params[1]),
-			expression_execute(ec, d->params[2])
-			);
+		return d->function.f3(expression_execute(ec, d->params[0]),
+		                      expression_execute(ec, d->params[1]),
+		                      expression_execute(ec, d->params[2]));
 	case 4:
-		return d->function.f4(
-			expression_execute(ec, d->params[0]),
-			expression_execute(ec, d->params[1]),
-			expression_execute(ec, d->params[2]),
-			expression_execute(ec, d->params[3])
-			);
+		return d->function.f4(expression_execute(ec, d->params[0]),
+		                      expression_execute(ec, d->params[1]),
+		                      expression_execute(ec, d->params[2]),
+		                      expression_execute(ec, d->params[3]));
 	case 5:
-		return d->function.f5(
-			expression_execute(ec, d->params[0]),
-			expression_execute(ec, d->params[1]),
-			expression_execute(ec, d->params[2]),
-			expression_execute(ec, d->params[3]),
-			expression_execute(ec, d->params[4])
-			);
+		return d->function.f5(expression_execute(ec, d->params[0]),
+		                      expression_execute(ec, d->params[1]),
+		                      expression_execute(ec, d->params[2]),
+		                      expression_execute(ec, d->params[3]),
+		                      expression_execute(ec, d->params[4]));
 	case 6:
-		return d->function.f6(
-			expression_execute(ec, d->params[0]),
-			expression_execute(ec, d->params[1]),
-			expression_execute(ec, d->params[2]),
-			expression_execute(ec, d->params[3]),
-			expression_execute(ec, d->params[4]),
-			expression_execute(ec, d->params[5])
-			);
+		return d->function.f6(expression_execute(ec, d->params[0]),
+		                      expression_execute(ec, d->params[1]),
+		                      expression_execute(ec, d->params[2]),
+		                      expression_execute(ec, d->params[3]),
+		                      expression_execute(ec, d->params[4]),
+		                      expression_execute(ec, d->params[5]));
 	default:
 		fprintf(stderr, "Invalid number of parameters to expression.\n");
 		exit(1);
@@ -335,13 +328,12 @@ expression *expression_add(expression *e1, expression *e2) {
 
 /* ----------------------------------------------------------------------- */
 
-void expression_free_token(expression_token *token) {
-	free(token);
-}
+void expression_free_token(expression_token *token) { free(token); }
 
-expression_token *expression_create_token(expression_token_type type, const char *str, int length) {
+expression_token *expression_create_token(expression_token_type type,
+                                          const char *str, int length) {
 	expression_token *token = 0;
-	if(length >= 100) {
+	if (length >= 100) {
 		return 0;
 	}
 
@@ -352,15 +344,15 @@ expression_token *expression_create_token(expression_token_type type, const char
 	return token;
 }
 
-expression_token** expression_tokenize(const char *exp) {
+expression_token **expression_tokenize(const char *exp) {
 	expression_token *tokens[1000], **tokens_to_return;
-	int token=0, i,j, len = strlen(exp);
+	int token = 0, i, j, len = strlen(exp);
 	char c;
 	bool op_mode = false;
 
-	memset(tokens, 0, 1000 * sizeof(expression_token*));
+	memset(tokens, 0, 1000 * sizeof(expression_token *));
 
-	if(len == 0) {
+	if (len == 0) {
 		return 0;
 	}
 
@@ -369,97 +361,93 @@ expression_token** expression_tokenize(const char *exp) {
 	 * Count number of paranthesis and mismatching of them.
 	 */
 
-	for(i=0;i<len;++i) {
+	for (i = 0; i < len; ++i) {
 		c = exp[i];
-		if(!(
-			   c == '(' || c == ')' ||
-			   c == '*' || c == '/' ||
-			   c == '-' || c == '+' ||
-			   (c >= '0' && c <= '9') || c == '.' ||
-			   (c >= 'a' && c <= 'z') ||
-			   (c >= 'A' && c <= 'Z') ||
-			   c == '_')
-			)
-		{
+		if (!(c == '(' || c == ')' || c == '*' || c == '/' || c == '-' ||
+		      c == '+' || (c >= '0' && c <= '9') || c == '.' ||
+		      (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_')) {
 			return 0;
 		}
 	}
 
-	for(i=0;i<len;) {
-		if(token >= 1000) {
+	for (i = 0; i < len;) {
+		if (token >= 1000) {
 			fprintf(stderr, "Too many tokens in expression.\n");
 			goto error;
 		}
 
 		c = exp[i];
 
-		if(c == '(') {
-			if(token > 0 && tokens[token-1]->type == e_type_var) {
-				tokens[token-1]->type = e_type_function;
+		if (c == '(') {
+			if (token > 0 && tokens[token - 1]->type == e_type_var) {
+				tokens[token - 1]->type = e_type_function;
 				op_mode = false;
 			}
 
 			tokens[token] = expression_create_token(e_type_leftp, 0, 0);
 			token++;
 			i++;
-		}
-		else if(c == ')') {
+		} else if (c == ')') {
 			tokens[token] = expression_create_token(e_type_rightp, 0, 0);
 			token++;
 			i++;
-		}
-		else {
-			/* Operation mode means that we are looking for a multiplication, subtraction,
-			   addition or division. */
-			if(op_mode) {
-				if(c == '*' || c == '/' || c == '-' || c == '+') {
-					switch(c) {
+		} else {
+			/* Operation mode means that we are looking for a multiplication,
+			   subtraction, addition or division. */
+			if (op_mode) {
+				if (c == '*' || c == '/' || c == '-' || c == '+') {
+					switch (c) {
 					case '*':
-						tokens[token] = expression_create_token(e_type_op|e_type_mul, 0, 0);
+						tokens[token] = expression_create_token(
+							e_type_op | e_type_mul, 0, 0);
 						break;
 					case '/':
-						tokens[token] = expression_create_token(e_type_op|e_type_div, 0, 0);
+						tokens[token] = expression_create_token(
+							e_type_op | e_type_div, 0, 0);
 						break;
 					case '+':
-						tokens[token] = expression_create_token(e_type_op|e_type_add, 0, 0);
+						tokens[token] = expression_create_token(
+							e_type_op | e_type_add, 0, 0);
 						break;
 					case '-':
-						tokens[token] = expression_create_token(e_type_op|e_type_sub, 0, 0);
+						tokens[token] = expression_create_token(
+							e_type_op | e_type_sub, 0, 0);
 						break;
 					}
 					token++;
 					i++;
-				}
-				else {
+				} else {
 					goto error;
 				}
 				op_mode = false;
-			}
-			else {
+			} else {
 				/* No we are looking for a variable or a constant value. */
-				if((c >= '0' && c <= '9') || c == '.' || c == '-' || c == '+') {
-					for(j=i+1;j<len;++j) {
+				if ((c >= '0' && c <= '9') || c == '.' || c == '-' ||
+				    c == '+') {
+					for (j = i + 1; j < len; ++j) {
 						c = exp[j];
-						if(!((c >= '0' && c <= '9') || c == '.')) {
+						if (!((c >= '0' && c <= '9') || c == '.')) {
 							break;
 						}
 					}
-					tokens[token] = expression_create_token(e_type_const, &exp[i], j-i);
+					tokens[token] =
+						expression_create_token(e_type_const, &exp[i], j - i);
 					token++;
-					i += (j-i);
-				}
-				else if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
-					for(j=i+1;j<len;++j) {
+					i += (j - i);
+				} else if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+				           c == '_') {
+					for (j = i + 1; j < len; ++j) {
 						c = exp[j];
-						if(!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_')) {
+						if (!((c >= 'a' && c <= 'z') ||
+						      (c >= 'A' && c <= 'Z') || c == '_')) {
 							break;
 						}
 					}
-					tokens[token] = expression_create_token(e_type_var, &exp[i], j-i);
+					tokens[token] =
+						expression_create_token(e_type_var, &exp[i], j - i);
 					token++;
-					i += (j-i);
-				}
-				else {
+					i += (j - i);
+				} else {
 					goto error;
 				}
 				op_mode = true;
@@ -467,13 +455,13 @@ expression_token** expression_tokenize(const char *exp) {
 		}
 	}
 
-	tokens_to_return = calloc(token+1, sizeof(expression_token*));
-	memcpy(tokens_to_return, tokens, sizeof(expression_token*) * token);
+	tokens_to_return = calloc(token + 1, sizeof(expression_token *));
+	memcpy(tokens_to_return, tokens, sizeof(expression_token *) * token);
 	return tokens_to_return;
 
 error:
 	token = 0;
-	for(token=0;tokens[token];++token) {
+	for (token = 0; tokens[token]; ++token) {
 		expression_free_token(tokens[token]);
 	}
 	return 0;
@@ -481,11 +469,10 @@ error:
 
 int expression_token_count(expression_token *tokens[]) {
 	int count = 0;
-	for(;;) {
-		if(tokens[count]) {
+	for (;;) {
+		if (tokens[count]) {
 			count++;
-		}
-		else {
+		} else {
 			return count;
 		}
 	}
@@ -493,7 +480,7 @@ int expression_token_count(expression_token *tokens[]) {
 
 void expression_free_tokens(expression_token *tokens[]) {
 	int index, count = expression_token_count(tokens);
-	for(index=0;index<count;++index) {
+	for (index = 0; index < count; ++index) {
 		expression_free_token(tokens[index]);
 	}
 	free(tokens);
@@ -502,98 +489,95 @@ void expression_free_tokens(expression_token *tokens[]) {
 static int find_matching_paranthesis(expression_token *tokens[], int current) {
 	int token_count = expression_token_count(tokens);
 	int index = 0, count = 0;
-	for(;current+index<token_count;++index) {
-		if(tokens[current+index]->type == e_type_leftp) {
+	for (; current + index < token_count; ++index) {
+		if (tokens[current + index]->type == e_type_leftp) {
 			count++;
-		}
-		else if(tokens[current+index]->type == e_type_rightp) {
+		} else if (tokens[current + index]->type == e_type_rightp) {
 			count--;
 		}
-		if(count == 0) {
+		if (count == 0) {
 			return current + index;
 		}
 	}
 	return -1;
 }
 
-static expression *expression_parse_tokens_imp(expression_token *tokens[], int current, expression *lhs_in) {
-	expression *lhs=0, *rhs=0, *op=0;
+static expression *expression_parse_tokens_imp(expression_token *tokens[],
+                                               int current,
+                                               expression *lhs_in) {
+	expression *lhs = 0, *rhs = 0, *op = 0;
 	int token_count = expression_token_count(tokens);
 	int next = 0;
-	bool look_further=true;
+	bool look_further = true;
 
 	/* Left hand side. */
-	if(lhs_in) {
+	if (lhs_in) {
 		lhs = lhs_in;
-	}
-	else {
-		if(tokens[current]->type == e_type_leftp) {
+	} else {
+		if (tokens[current]->type == e_type_leftp) {
 			lhs = expression_parse_tokens_imp(tokens, current + 1, 0);
 			current = find_matching_paranthesis(tokens, current);
-		}
-		else if(tokens[current]->type == e_type_const) {
+		} else if (tokens[current]->type == e_type_const) {
 			lhs = expression_const(atof(tokens[current]->content));
-		}
-		else if(tokens[current]->type == e_type_var) {
+		} else if (tokens[current]->type == e_type_var) {
 			lhs = expression_var(tokens[current]->content);
-		}
-		else {
-			fprintf(stderr, "Unexpected token lhs (type): %d\n", tokens[current]->type);
+		} else {
+			fprintf(stderr, "Unexpected token lhs (type): %d\n",
+			        tokens[current]->type);
 			return 0;
 		}
 		current++;
 	}
 
-	if(current > token_count - 1) {
+	if (current > token_count - 1) {
 		/* No more tokens. Lets return what we have. */
 		return lhs;
 	}
 
-	if(tokens[current]->type == e_type_rightp) {
+	if (tokens[current]->type == e_type_rightp) {
 		return lhs;
 	}
 
-	if((current + 1) > (token_count - 1)) {
+	if ((current + 1) > (token_count - 1)) {
 		/* We got an operation to perform but no expression to the right. */
 		expression_free(lhs);
 		return 0;
 	}
 
 	/* Check if next operation has priority over this one. */
-	if((tokens[current]->type & e_type_add || tokens[current]->type & e_type_sub) &&
-	   current + 2 < token_count &&
-	   (tokens[current+2]->type & e_type_mul || tokens[current+2]->type & e_type_div)) {
+	if ((tokens[current]->type & e_type_add ||
+	     tokens[current]->type & e_type_sub) &&
+	    current + 2 < token_count &&
+	    (tokens[current + 2]->type & e_type_mul ||
+	     tokens[current + 2]->type & e_type_div)) {
 
 		look_further = false;
 		rhs = expression_parse_tokens_imp(tokens, current + 1, 0);
-		if(!rhs) {
+		if (!rhs) {
 			expression_free(lhs);
 			return 0;
 		}
-	}
-	else {
+	} else {
 		current++;
-		if(current >= token_count) {
+		if (current >= token_count) {
 			fprintf(stderr, "No RHS token.");
 			expression_free(lhs);
 			return 0;
 		}
-		if(tokens[current]->type == e_type_leftp) {
+		if (tokens[current]->type == e_type_leftp) {
 			rhs = expression_parse_tokens_imp(tokens, current + 1, 0);
 			/* Set current to the next operation. We must then match
 			   the next paranthesis. */
 			next = find_matching_paranthesis(tokens, current) + 1;
-		}
-		else if(tokens[current]->type == e_type_const) {
+		} else if (tokens[current]->type == e_type_const) {
 			rhs = expression_const(atof(tokens[current]->content));
 			next = current + 1;
-		}
-		else if(tokens[current]->type == e_type_var) {
+		} else if (tokens[current]->type == e_type_var) {
 			rhs = expression_var(tokens[current]->content);
 			next = current + 1;
-		}
-		else {
-			fprintf(stderr, "Unexpected operation (type): %d\n", tokens[current]->type);
+		} else {
+			fprintf(stderr, "Unexpected operation (type): %d\n",
+			        tokens[current]->type);
 			expression_free(lhs);
 			return 0;
 		}
@@ -601,35 +585,33 @@ static expression *expression_parse_tokens_imp(expression_token *tokens[], int c
 	}
 
 	/* Operation */
-	if(tokens[current]->type & e_type_add) {
+	if (tokens[current]->type & e_type_add) {
 		op = expression_add(lhs, rhs);
-	}
-	else if(tokens[current]->type & e_type_sub) {
+	} else if (tokens[current]->type & e_type_sub) {
 		op = expression_sub(lhs, rhs);
-	}
-	else if(tokens[current]->type & e_type_mul) {
+	} else if (tokens[current]->type & e_type_mul) {
 		op = expression_mult(lhs, rhs);
-	}
-	else if(tokens[current]->type & e_type_div) {
+	} else if (tokens[current]->type & e_type_div) {
 		op = expression_div(lhs, rhs);
-	}
-	else {
-		fprintf(stderr, "Unexpected token rhs (type): %d\n", tokens[current]->type);
+	} else {
+		fprintf(stderr, "Unexpected token rhs (type): %d\n",
+		        tokens[current]->type);
 		expression_free(lhs);
 		expression_free(rhs);
 		return 0;
 	}
 
 	/* Set current to the next operation */
-	if(look_further) {
+	if (look_further) {
 		current = next;
-		if(current < token_count && tokens[current]->type == e_type_rightp) {
+		if (current < token_count && tokens[current]->type == e_type_rightp) {
 			return op;
 		}
-		if(current < token_count ) {
-			/* The above expression has priority. It is the lhs of the next expression. */
+		if (current < token_count) {
+			/* The above expression has priority. It is the lhs of the next
+			 * expression. */
 			expression *sub = expression_parse_tokens_imp(tokens, current, op);
-			if(!sub) {
+			if (!sub) {
 				expression_free(op);
 			}
 			op = sub;
@@ -638,14 +620,14 @@ static expression *expression_parse_tokens_imp(expression_token *tokens[], int c
 	return op;
 }
 
-expression* expression_parse_tokens(expression_token *tokens[]) {
+expression *expression_parse_tokens(expression_token *tokens[]) {
 	return expression_parse_tokens_imp(tokens, 0, 0);
 }
 
 expression *expression_parse(expression_lib *library, const char *exp) {
 	expression *e = 0;
 	expression_token **tokens = expression_tokenize(exp);
-	if(tokens) {
+	if (tokens) {
 		e = expression_parse_tokens(tokens);
 		expression_free_tokens(tokens);
 	}
@@ -677,8 +659,7 @@ static void expression_lib_add_math_h(expression_lib *lib) {
 	expression_lib_add_function1f(lib, "asin", asinf);
 }
 
-static void expression_lib_add_ease_h(expression_lib *lib) {
-}
+static void expression_lib_add_ease_h(expression_lib *lib) {}
 
 expression_lib *expression_lib_default() {
 	expression_lib *lib = expression_lib_create();
@@ -687,46 +668,52 @@ expression_lib *expression_lib_default() {
 	return lib;
 }
 
-void expression_lib_add_function1f(expression_lib *lib, const char *name, function1f fun) {
+void expression_lib_add_function1f(expression_lib *lib, const char *name,
+                                   function1f fun) {
 	expression_lib_function *f = calloc(1, sizeof(expression_lib_function));
 	f->param_count = 1;
 	f->function.f1 = fun;
-	g_hash_table_insert(lib->functions, (char*)name, f);
+	g_hash_table_insert(lib->functions, (char *)name, f);
 }
 
-void expression_lib_add_function2f(expression_lib *lib, const char *name, function2f fun) {
+void expression_lib_add_function2f(expression_lib *lib, const char *name,
+                                   function2f fun) {
 	expression_lib_function *f = calloc(1, sizeof(expression_lib_function));
 	f->param_count = 2;
 	f->function.f2 = fun;
-	g_hash_table_insert(lib->functions, (char*)name, f);
+	g_hash_table_insert(lib->functions, (char *)name, f);
 }
 
-void expression_lib_add_function3f(expression_lib *lib, const char *name, function3f fun) {
+void expression_lib_add_function3f(expression_lib *lib, const char *name,
+                                   function3f fun) {
 	expression_lib_function *f = calloc(1, sizeof(expression_lib_function));
 	f->param_count = 3;
 	f->function.f3 = fun;
-	g_hash_table_insert(lib->functions, (char*)name, f);
+	g_hash_table_insert(lib->functions, (char *)name, f);
 }
 
-void expression_lib_add_function4f(expression_lib *lib, const char *name, function4f fun) {
+void expression_lib_add_function4f(expression_lib *lib, const char *name,
+                                   function4f fun) {
 	expression_lib_function *f = calloc(1, sizeof(expression_lib_function));
 	f->param_count = 4;
 	f->function.f4 = fun;
-	g_hash_table_insert(lib->functions, (char*)name, f);
+	g_hash_table_insert(lib->functions, (char *)name, f);
 }
 
-void expression_lib_add_function5f(expression_lib *lib, const char *name, function5f fun) {
+void expression_lib_add_function5f(expression_lib *lib, const char *name,
+                                   function5f fun) {
 	expression_lib_function *f = calloc(1, sizeof(expression_lib_function));
 	f->param_count = 5;
 	f->function.f5 = fun;
-	g_hash_table_insert(lib->functions, (char*)name, f);
+	g_hash_table_insert(lib->functions, (char *)name, f);
 }
 
-void expression_lib_add_function6f(expression_lib *lib, const char *name, function6f fun) {
+void expression_lib_add_function6f(expression_lib *lib, const char *name,
+                                   function6f fun) {
 	expression_lib_function *f = calloc(1, sizeof(expression_lib_function));
 	f->param_count = 6;
 	f->function.f6 = fun;
-	g_hash_table_insert(lib->functions, (char*)name, f);
+	g_hash_table_insert(lib->functions, (char *)name, f);
 }
 
 bool expression_lib_is_function(expression_lib *lib, const char *name) {
@@ -738,9 +725,11 @@ int expression_lib_param_count(expression_lib *lib, const char *name) {
 	return f->param_count;
 }
 
-expression *expression_lib_build_expression(expression_lib *lib, const char *name, expression *params[]) {
+expression *expression_lib_build_expression(expression_lib *lib,
+                                            const char *name,
+                                            expression *params[]) {
 	expression_lib_function *f = g_hash_table_lookup(lib->functions, name);
-	switch(f->param_count) {
+	switch (f->param_count) {
 	case 1:
 		return expression_function1f(f->function.f1, params[0]);
 	case 2:

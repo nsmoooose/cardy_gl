@@ -43,49 +43,46 @@ theme *g_theme = 0;
 
 const char *render_object_solitaire_id = "solitaire";
 
-static void do_card_move(solitaire *sol, visual_pile *pile,
-					card_proxy *card, int count) {
-	if(!ruleset_move_card(sol->ruleset, sol->visual, pile, card, count)) {
-		ruleset_move_individual_card(sol->ruleset, sol->visual, pile, card, count);
+static void do_card_move(solitaire *sol, visual_pile *pile, card_proxy *card,
+                         int count) {
+	if (!ruleset_move_card(sol->ruleset, sol->visual, pile, card, count)) {
+		ruleset_move_individual_card(sol->ruleset, sol->visual, pile, card,
+		                             count);
 	}
 }
 
-static void process_click(
-	render_context *rcontext,
-	render_object *object, render_solitaire_data *data,
-	visual_pile *pile, card_proxy *proxy) {
+static void process_click(render_context *rcontext, render_object *object,
+                          render_solitaire_data *data, visual_pile *pile,
+                          card_proxy *proxy) {
 
 	int card_count;
 
-	if(pile && pile->action) {
+	if (pile && pile->action) {
 		pile->action->execute(pile->action);
-	}
-	else if(pile && proxy) {
-		if(data->selected_card == proxy) {
+	} else if (pile && proxy) {
+		if (data->selected_card == proxy) {
 			data->selected_card = 0;
-		}
-		else {
-			if(data->selected_card == 0) {
+		} else {
+			if (data->selected_card == 0) {
 				data->selected_card = proxy;
-			}
-			else {
-				card_count = visual_get_rest_of_pile(
-					data->sol->visual, data->selected_card);
+			} else {
+				card_count = visual_get_rest_of_pile(data->sol->visual,
+				                                     data->selected_card);
 				do_card_move(data->sol, pile, data->selected_card, card_count);
 				data->selected_card = 0;
 			}
 		}
-	}
-	else if(pile) {
-		if(data->selected_card) {
-			card_count = visual_get_rest_of_pile(
-				data->sol->visual, data->selected_card);
+	} else if (pile) {
+		if (data->selected_card) {
+			card_count =
+				visual_get_rest_of_pile(data->sol->visual, data->selected_card);
 			do_card_move(data->sol, pile, data->selected_card, card_count);
 			data->selected_card = 0;
 		}
 	}
 
-	if(data->sol->ruleset->solved && rule_check(data->sol->ruleset->solved, 0)) {
+	if (data->sol->ruleset->solved &&
+	    rule_check(data->sol->ruleset->solved, 0)) {
 		render_object_add_child(object->parent, render_object_solved());
 		render_object_free(rcontext, object);
 	}
@@ -98,14 +95,15 @@ static void callback_pile(render_event_args *event, void *data) {
 static void callback_card(render_event_args *event, void *data) {
 	render_solitaire_data *sol_data = event->object->data;
 	visual_pile *pile = visual_find_pile_from_card(sol_data->sol->visual, data);
-	process_click(event->rcontext, event->object, event->object->data, pile, data);
+	process_click(event->rcontext, event->object, event->object->data, pile,
+	              data);
 }
 
-card_geometry *card_geometry_create(
-	mem_context *context, visual_settings *settings) {
+card_geometry *card_geometry_create(mem_context *context,
+                                    visual_settings *settings) {
 
 	card_geometry *geo = mem_alloc(context, sizeof(card_geometry));
-	int i=0, j=0, side_index=0, face_index=0, coord_index=0;
+	int i = 0, j = 0, side_index = 0, face_index = 0, coord_index = 0;
 	float cw = settings->card_width;
 	float ch = settings->card_height;
 	float hw = settings->card_width / 2.0f;
@@ -123,14 +121,16 @@ card_geometry *card_geometry_create(
 
 	geo->back_vertexes = mem_alloc(context, geo->face_count * sizeof(GLfloat));
 	geo->back_normals = mem_alloc(context, geo->face_count * sizeof(GLfloat));
-	geo->back_texture_coords = mem_alloc(context, geo->face_count / 3 * 2 * sizeof(GLfloat));
+	geo->back_texture_coords =
+		mem_alloc(context, geo->face_count / 3 * 2 * sizeof(GLfloat));
 
 	geo->side_vertexes = mem_alloc(context, geo->side_count * sizeof(GLfloat));
 	geo->side_normals = mem_alloc(context, geo->side_count * sizeof(GLfloat));
 
-	geo->front_vertexes = mem_alloc(context,  geo->face_count * sizeof(GLfloat));
+	geo->front_vertexes = mem_alloc(context, geo->face_count * sizeof(GLfloat));
 	geo->front_normals = mem_alloc(context, geo->face_count * sizeof(GLfloat));
-	geo->front_texture_coords = mem_alloc(context, geo->face_count / 3 * 2 * sizeof(GLfloat));
+	geo->front_texture_coords =
+		mem_alloc(context, geo->face_count / 3 * 2 * sizeof(GLfloat));
 
 	/* top quad and side */
 	geo->side_vertexes[side_index + 0] = 0.0f - hw + cr;
@@ -616,9 +616,9 @@ card_geometry *card_geometry_create(
 	/* corner */
 	angle = 0.0f;
 	sa = M_PI / 2 / settings->corner_segments;
-	for(i=0;i<4;++i) {
-		float w=0.0, h=0.0;
-		switch(i) {
+	for (i = 0; i < 4; ++i) {
+		float w = 0.0, h = 0.0;
+		switch (i) {
 		case 0:
 			/* top left */
 			w = hw - cr;
@@ -641,7 +641,7 @@ card_geometry *card_geometry_create(
 			break;
 		}
 
-		for(j=0;j<settings->corner_segments;++j) {
+		for (j = 0; j < settings->corner_segments; ++j) {
 			geo->side_vertexes[side_index + 0] = 0.0f + w + sinf(angle) * cr;
 			geo->side_vertexes[side_index + 1] = 0.0f + h + cosf(angle) * cr;
 			geo->side_vertexes[side_index + 2] = 0.0f - ht;
@@ -650,16 +650,20 @@ card_geometry *card_geometry_create(
 			geo->side_normals[side_index + 2] = 0.0f;
 			side_index += 3;
 
-			geo->side_vertexes[side_index + 0] = 0.0f + w + sinf(angle + sa) * cr;
-			geo->side_vertexes[side_index + 1] = 0.0f + h + cosf(angle + sa) * cr;
+			geo->side_vertexes[side_index + 0] =
+				0.0f + w + sinf(angle + sa) * cr;
+			geo->side_vertexes[side_index + 1] =
+				0.0f + h + cosf(angle + sa) * cr;
 			geo->side_vertexes[side_index + 2] = 0.0f - ht;
 			geo->side_normals[side_index + 0] = 0.0f + sinf(angle);
 			geo->side_normals[side_index + 1] = 0.0f + cosf(angle);
 			geo->side_normals[side_index + 2] = 0.0f;
 			side_index += 3;
 
-			geo->side_vertexes[side_index + 0] = 0.0f + w + sinf(angle + sa) * cr;
-			geo->side_vertexes[side_index + 1] = 0.0f + h + cosf(angle + sa) * cr;
+			geo->side_vertexes[side_index + 0] =
+				0.0f + w + sinf(angle + sa) * cr;
+			geo->side_vertexes[side_index + 1] =
+				0.0f + h + cosf(angle + sa) * cr;
 			geo->side_vertexes[side_index + 2] = 0.0f + ht;
 			geo->side_normals[side_index + 0] = 0.0f + sinf(angle);
 			geo->side_normals[side_index + 1] = 0.0f + cosf(angle);
@@ -677,18 +681,24 @@ card_geometry *card_geometry_create(
 			geo->front_vertexes[face_index + 0] = 0.0f + w + sinf(angle) * cr;
 			geo->front_vertexes[face_index + 1] = 0.0f + h + cosf(angle) * cr;
 			geo->front_vertexes[face_index + 2] = 0.0f + ht;
-			geo->front_texture_coords[coord_index + 0] = (geo->front_vertexes[face_index + 0] + hw) / cw;
-			geo->front_texture_coords[coord_index + 1] = (geo->front_vertexes[face_index + 1] + hh) / ch;
+			geo->front_texture_coords[coord_index + 0] =
+				(geo->front_vertexes[face_index + 0] + hw) / cw;
+			geo->front_texture_coords[coord_index + 1] =
+				(geo->front_vertexes[face_index + 1] + hh) / ch;
 			geo->front_normals[face_index + 0] = 0.0f;
 			geo->front_normals[face_index + 1] = 0.0f;
 			geo->front_normals[face_index + 2] = 1.0f;
 			face_index += 3;
 			coord_index += 2;
-			geo->front_vertexes[face_index + 0] = 0.0f + w + sinf(angle + sa) * cr;
-			geo->front_vertexes[face_index + 1] = 0.0f + h + cosf(angle + sa) * cr;
+			geo->front_vertexes[face_index + 0] =
+				0.0f + w + sinf(angle + sa) * cr;
+			geo->front_vertexes[face_index + 1] =
+				0.0f + h + cosf(angle + sa) * cr;
 			geo->front_vertexes[face_index + 2] = 0.0f + ht;
-			geo->front_texture_coords[coord_index + 0] = (geo->front_vertexes[face_index + 0] + hw) / cw;
-			geo->front_texture_coords[coord_index + 1] = (geo->front_vertexes[face_index + 1] + hh) / ch;
+			geo->front_texture_coords[coord_index + 0] =
+				(geo->front_vertexes[face_index + 0] + hw) / cw;
+			geo->front_texture_coords[coord_index + 1] =
+				(geo->front_vertexes[face_index + 1] + hh) / ch;
 			geo->front_normals[face_index + 0] = 0.0f;
 			geo->front_normals[face_index + 1] = 0.0f;
 			geo->front_normals[face_index + 2] = 1.0f;
@@ -709,41 +719,40 @@ card_geometry *card_geometry_create(
 		}
 	}
 
-	for(i=0;i < geo->face_count;++i) {
+	for (i = 0; i < geo->face_count; ++i) {
 		geo->back_vertexes[i] = geo->front_vertexes[i];
 		geo->back_normals[i] = geo->front_normals[i];
-		if((i + 1) % 3 == 0) {
+		if ((i + 1) % 3 == 0) {
 			geo->back_vertexes[i] = 0.0f - ht;
 			geo->back_normals[i] = -1.0f;
 		}
 	}
-	for(i=0;i < geo->face_count / 3 * 2;++i) {
+	for (i = 0; i < geo->face_count / 3 * 2; ++i) {
 		geo->back_texture_coords[i] = geo->front_texture_coords[i];
 	}
 
 	return geo;
 }
 
-void render_card(render_event_args *event, visual_pile* pile,
-				 card_proxy* proxy, bool selected, card_geometry *geo) {
-	GLfloat color_sel[] = { 1.0f, 0.7f, 0.7f };
-	GLfloat color_white[] = { 1.0f, 1.0f, 1.0f };
+void render_card(render_event_args *event, visual_pile *pile, card_proxy *proxy,
+                 bool selected, card_geometry *geo) {
+	GLfloat color_sel[] = {1.0f, 0.7f, 0.7f};
+	GLfloat color_white[] = {1.0f, 1.0f, 1.0f};
 	render_solitaire_data *i = event->object->data;
 
-	if(selected) {
+	if (selected) {
 		glColor3fv(color_sel);
-	}
-	else {
+	} else {
 		glColor3fv(color_white);
 	}
 
 	glPushName(render_register_selection_callback(
-				   event->rcontext, event->object, callback_card, proxy));
+		event->rcontext, event->object, callback_card, proxy));
 
 	/* Test to see if we need to rotate the card around its axis
 	   to show the front face. */
 	glPushMatrix();
-	if(proxy->card == 0) {
+	if (proxy->card == 0) {
 		/* Rotate the card to show the front face of the card. */
 		glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
 	}
@@ -756,16 +765,17 @@ void render_card(render_event_args *event, visual_pile* pile,
 
 	/* Front of the card. */
 	glNormalPointer(GL_FLOAT, 0, geo->front_normals);
-	if(proxy->card != 0) {
+	if (proxy->card != 0) {
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, theme_get_card_texture(
-						  g_theme, proxy->card->suit, proxy->card->value));
+		glBindTexture(GL_TEXTURE_2D,
+		              theme_get_card_texture(g_theme, proxy->card->suit,
+		                                     proxy->card->value));
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glTexCoordPointer(2, GL_FLOAT, 0, geo->front_texture_coords);
 	}
 	glVertexPointer(3, GL_FLOAT, 0, geo->front_vertexes);
 	glDrawArrays(GL_TRIANGLES, 0, geo->face_count / 3);
-	if(proxy->card != 0) {
+	if (proxy->card != 0) {
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisable(GL_TEXTURE_2D);
 	}
@@ -786,12 +796,13 @@ void render_card(render_event_args *event, visual_pile* pile,
 	glPopName();
 
 	/* Do a translation of our position for the next card. */
-	glTranslatef(pile->translateX, pile->translateY, i->settings->card_thickness);
+	glTranslatef(pile->translateX, pile->translateY,
+	             i->settings->card_thickness);
 	check_gl_errors("render_card");
 }
 
-void render_pile(render_event_args *event,
-				 visual_pile* pile, visual_settings *settings, card_geometry *geo) {
+void render_pile(render_event_args *event, visual_pile *pile,
+                 visual_settings *settings, card_geometry *geo) {
 	int card_index;
 	bool selected = false;
 	render_solitaire_data *i = event->object->data;
@@ -801,29 +812,33 @@ void render_pile(render_event_args *event,
 	glTranslatef(pile->origin[0], pile->origin[1], pile->origin[2]);
 
 	glPushName(render_register_selection_callback(
-				   event->rcontext, event->object, callback_pile, pile));
+		event->rcontext, event->object, callback_pile, pile));
 
-	if(pile->rotation != 0.0f) {
+	if (pile->rotation != 0.0f) {
 		glRotatef(pile->rotation, 0.0f, 0.0f, 1.0f);
 	}
 
 	glColor3f(0.0f, 0.7f, 0.0f);
 	glBegin(GL_QUADS);
-	glVertex2f(0 - settings->card_width/2.0f, 0 + settings->card_height/2.0f);
+	glVertex2f(0 - settings->card_width / 2.0f,
+	           0 + settings->card_height / 2.0f);
 	glNormal3f(0.0f, 0.0f, 1.0f);
-	glVertex2f(0 + settings->card_width/2.0f, 0 + settings->card_height/2.0f);
+	glVertex2f(0 + settings->card_width / 2.0f,
+	           0 + settings->card_height / 2.0f);
 	glNormal3f(0.0f, 0.0f, 1.0f);
-	glVertex2f(0 + settings->card_width/2.0f, 0 - settings->card_height/2.0f);
+	glVertex2f(0 + settings->card_width / 2.0f,
+	           0 - settings->card_height / 2.0f);
 	glNormal3f(0.0f, 0.0f, 1.0f);
-	glVertex2f(0 - settings->card_width/2.0f, 0 - settings->card_height/2.0f);
+	glVertex2f(0 - settings->card_width / 2.0f,
+	           0 - settings->card_height / 2.0f);
 	glNormal3f(0.0f, 0.0f, 1.0f);
 	glEnd();
 
 	check_gl_errors("render_pile (1)");
 
 	glPushMatrix();
-	for(card_index=0;card_index<pile->card_count;++card_index) {
-		if(pile->cards[card_index] == i->selected_card) {
+	for (card_index = 0; card_index < pile->card_count; ++card_index) {
+		if (pile->cards[card_index] == i->selected_card) {
 			selected = true;
 		}
 		render_card(event, pile, pile->cards[card_index], selected, geo);
@@ -843,7 +858,7 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 	GLfloat aspect;
 	render_pick *pick;
 
-	if(i->first_frame == 0.0f) {
+	if (i->first_frame == 0.0f) {
 		i->first_frame = delta;
 		i->time_elapsed = delta;
 		return;
@@ -862,19 +877,20 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 	glEnableClientState(GL_VERTEX_ARRAY);
 
 	glGetIntegerv(GL_VIEWPORT, viewport);
-	if(viewport[3] == 0) {
+	if (viewport[3] == 0) {
 		viewport[3] = 1;
 	}
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	if(event->rcontext->pick) {
+	if (event->rcontext->pick) {
 		pick = event->rcontext->pick;
-		gluPickMatrix(pick->x, pick->y, pick->width, pick->height, pick->viewport);
+		gluPickMatrix(pick->x, pick->y, pick->width, pick->height,
+		              pick->viewport);
 	}
-	aspect = (float)viewport[2]/(float)viewport[3];
+	aspect = (float)viewport[2] / (float)viewport[3];
 	gluPerspective(i->perspective_fov, aspect, i->perspective_near,
-				   i->perspective_far);
+	               i->perspective_far);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -889,7 +905,7 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 		ease_time_protect4f(ease_quad_out, i->time_elapsed, 0.0, -25.0f, 12.0),
 		1.0f, 0.0f, 0.0f);
 
-	if(i->time_elapsed < 6.0) {
+	if (i->time_elapsed < 6.0) {
 		float distance =
 			ease_quint_out(i->time_elapsed, -2500.0f, 2500.0f, 6.0f);
 		float angle = ease_quint_out(i->time_elapsed, 720.0, -720.0f, 6.0f);
@@ -898,9 +914,9 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 	}
 
 	pile_count = i->sol->visual->pile_count;
-	for(pile_index=0;pile_index<pile_count;++pile_index) {
-		visual_pile* pile = i->sol->visual->piles[pile_index];
-		if(!pile) {
+	for (pile_index = 0; pile_index < pile_count; ++pile_index) {
+		visual_pile *pile = i->sol->visual->piles[pile_index];
+		if (!pile) {
 			continue;
 		}
 		render_pile(event, pile, i->sol->visual->settings, i->card_geometry);
@@ -916,15 +932,16 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 
 static void render_object_solitaire_change_card_theme(const char *theme) {
 	char theme_dir[PATH_MAX];
-	if(resource_get_dir(theme_dir, PATH_MAX)) {
-		strncat(theme_dir, "themes", PATH_MAX-1);
+	if (resource_get_dir(theme_dir, PATH_MAX)) {
+		strncat(theme_dir, "themes", PATH_MAX - 1);
 		theme_unload(g_theme);
 		g_theme = theme_load(theme_dir, theme);
 	}
 }
 
-static bool render_object_solitaire_keyboard_down(
-	render_event_args *event, unsigned char key, int modifiers, int x, int y) {
+static bool render_object_solitaire_keyboard_down(render_event_args *event,
+                                                  unsigned char key,
+                                                  int modifiers, int x, int y) {
 	render_object *object;
 	render_solitaire_data *i = event->object->data;
 
@@ -934,25 +951,25 @@ static bool render_object_solitaire_keyboard_down(
 	printf("Keyboard pressed: ");
 	key_modifiers = glutGetModifiers();
 	if(key_modifiers & GLUT_ACTIVE_SHIFT) {
-		printf("SHIFT+");
+	        printf("SHIFT+");
 	}
 	if(key_modifiers & GLUT_ACTIVE_CTRL) {
-		printf("CTRL+");
+	        printf("CTRL+");
 	}
 	if(key_modifiers & GLUT_ACTIVE_ALT) {
-		printf("ALT+");
+	        printf("ALT+");
 	}
 	printf("%d\n", key);
 	*/
 
-	switch(key) {
+	switch (key) {
 	case 27:
-		object = render_object_find(event->rcontext->object, render_object_mainmenu_id);
-		if(object == 0) {
+		object = render_object_find(event->rcontext->object,
+		                            render_object_mainmenu_id);
+		if (object == 0) {
 			object = render_object_find(event->rcontext->object, "desktop");
 			render_object_mainmenu(object);
-		}
-		else {
+		} else {
 			render_object_free(event->rcontext, object);
 		}
 		return true;
@@ -984,11 +1001,11 @@ static bool render_object_solitaire_keyboard_down(
 	};
 }
 
-bool render_object_solitaire_special_down(
-	render_event_args *event, int key, int modifiers, int x, int y) {
+bool render_object_solitaire_special_down(render_event_args *event, int key,
+                                          int modifiers, int x, int y) {
 	render_solitaire_data *i = event->object->data;
 
-	switch(key) {
+	switch (key) {
 	case 100:
 		/* Left */
 		i->camera_translateX -= 10.0f;
@@ -1064,10 +1081,10 @@ render_object *render_object_solitaire(solitaire_create callback) {
 	i->light_pos[2] = 100.0f;
 	i->light_pos[3] = 1.0f;
 
-	if(g_theme == 0) {
+	if (g_theme == 0) {
 		char themes_path[PATH_MAX];
 		resource_get_dir(themes_path, PATH_MAX);
-		strncat(themes_path, "themes", PATH_MAX-1);
+		strncat(themes_path, "themes", PATH_MAX - 1);
 		g_theme = theme_load(themes_path, "paris");
 	}
 

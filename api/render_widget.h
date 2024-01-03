@@ -48,19 +48,20 @@ typedef struct {
 	expression *exp;
 } widget_style_transition;
 
-widget_style_transition *widget_transition_create(
-	widget_transition_state state, float length, expression *exp);
+widget_style_transition *widget_transition_create(widget_transition_state state,
+                                                  float length,
+                                                  expression *exp);
 
-void widget_style_add_transition(
-	widget_style *style, const char *state,
-	const char *property, widget_style_transition *t);
+void widget_style_add_transition(widget_style *style, const char *state,
+                                 const char *property,
+                                 widget_style_transition *t);
 
 widget_style *widget_get_default_style(render_object *object);
 
 expression_context *widget_style_get_expression_context(widget_style *style);
 
-void widget_style_set_backcolor(
-	widget_style *style, float red, float green, float blue, float alpha);
+void widget_style_set_backcolor(widget_style *style, float red, float green,
+                                float blue, float alpha);
 
 void widget_style_set_pos(widget_style *style, float left, float top);
 void widget_style_set_left(widget_style *style, const char *expr);
@@ -77,15 +78,16 @@ expression *widget_style_get_height_expression(widget_style *style);
 void widget_style_set_rotation(widget_style *style, const char *expr);
 expression *widget_style_get_rotation_expression(widget_style *style);
 
-void widget_style_set_image(
-	widget_style *style, RsvgHandle *h, char *svg_id, int width, int height);
-void widget_style_set_click_callback(
-	widget_style *style, render_selection_callback callback);
+void widget_style_set_image(widget_style *style, RsvgHandle *h, char *svg_id,
+                            int width, int height);
+void widget_style_set_click_callback(widget_style *style,
+                                     render_selection_callback callback);
 
 void widget_style_set_image_size(widget_style *style, int width, int height);
 void widget_style_set_font_face(widget_style *style, const char *name);
 void widget_style_set_font_size(widget_style *style, float size);
 void widget_style_set_text(widget_style *style, const char *text);
-void widget_style_set_text_color(widget_style *style, float red, float green, float blue, float alpha);
+void widget_style_set_text_color(widget_style *style, float red, float green,
+                                 float blue, float alpha);
 
 #endif /* __RENDER_WIDGET_H__ */

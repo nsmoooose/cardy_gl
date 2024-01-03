@@ -9,10 +9,9 @@ START_TEST(test_sol_test1_solved) {
 	ck_assert(sol->visual->pile_count == 2);
 	ck_assert(sol->visual->piles[0]->card_count == 52);
 
-	ck_assert(
-		ruleset_move_card(
-			sol->ruleset, sol->visual, sol->visual->piles[1],
-			sol->visual->piles[0]->cards[51], 1) == true);
+	ck_assert(ruleset_move_card(sol->ruleset, sol->visual,
+	                            sol->visual->piles[1],
+	                            sol->visual->piles[0]->cards[51], 1) == true);
 
 	ck_assert(rule_check(sol->ruleset->solved, 0) == true);
 }

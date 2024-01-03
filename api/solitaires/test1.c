@@ -14,12 +14,11 @@ static void setup_rules(mem_context *context, solitaire *s, internal *i) {
 	ruleset_add_rule(context, s->ruleset, rule1);
 
 	s->ruleset->solved = rule_create(context);
-	rule_add_condition(
-		context, s->ruleset->solved,
-		condition_card_count_array(context, 1, 1, i->done));
+	rule_add_condition(context, s->ruleset->solved,
+	                   condition_card_count_array(context, 1, 1, i->done));
 }
 
-solitaire* solitaire_test1(mem_context *context, visual_settings *settings) {
+solitaire *solitaire_test1(mem_context *context, visual_settings *settings) {
 	visual_pile *deck, *done;
 	internal *i = mem_alloc(context, sizeof(internal));
 	solitaire *s = mem_alloc(context, sizeof(solitaire));
@@ -28,12 +27,12 @@ solitaire* solitaire_test1(mem_context *context, visual_settings *settings) {
 
 	i->deck = pile_create(context, 52);
 	deck = visual_pile_create(context, i->deck);
-	deck->origin[0] = 0 - settings->card_width - settings->card_spacing/2;
+	deck->origin[0] = 0 - settings->card_width - settings->card_spacing / 2;
 	visual_add_pile(context, s->visual, deck);
 
 	i->done = pile_create(context, 52);
 	done = visual_pile_create(context, i->done);
-	done->origin[0] = settings->card_width - settings->card_spacing/2;
+	done->origin[0] = settings->card_width - settings->card_spacing / 2;
 	visual_add_pile(context, s->visual, done);
 
 	card_create_deck(context, i->deck, 1);

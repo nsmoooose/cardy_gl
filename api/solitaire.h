@@ -16,12 +16,12 @@ typedef struct solitaire_St {
 	void *data;
 } solitaire;
 
-typedef solitaire *(*solitaire_create)(
-	mem_context *context, visual_settings *settings);
+typedef solitaire *(*solitaire_create)(mem_context *context,
+                                       visual_settings *settings);
 
 /** Print information about the solitaire. Usefull for debugging purposes
  *  when we need to know the content of the solitaire.
  */
-void print_solitaire_info(solitaire* sol);
+void print_solitaire_info(solitaire *sol);
 
 #endif /* __SOLITAIRE_H__ */
