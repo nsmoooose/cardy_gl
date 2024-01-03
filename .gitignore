@@ -19,5 +19,5 @@ examples/widget-window/widget-window*
 *.o
 *.a
 server/cardy_server*
-tests/cardy_tests
+tests/cardy_tests*
 TAGS

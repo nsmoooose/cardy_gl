@@ -107,7 +107,7 @@ START_TEST(test_sol_maltesercross_move_from_king_pile) {
 	/* done */
 	result = ruleset_move_card(sol->ruleset, sol->visual, sol->visual->piles[1],
 	                           sol->visual->piles[3]->cards[0], 13);
-	ck_assert_msg(result == true);
+	ck_assert(result == true);
 }
 END_TEST
 
