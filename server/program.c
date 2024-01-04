@@ -1,10 +1,16 @@
-#include <arpa/inet.h>
-#include <netinet/in.h>
+#ifdef linux
+	#include <arpa/inet.h>
+	#include <netinet/in.h>
+	#include <sys/socket.h>
+#endif
+#ifdef WIN32
+	#include <Winsock2.h>
+	#include <ws2tcpip.h>
+#endif
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/socket.h>
 #include <sys/types.h>
 
 /* TODO: Handle port argument and default to 6666 */

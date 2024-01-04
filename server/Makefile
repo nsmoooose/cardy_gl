@@ -1,3 +1,4 @@
+include ../config
 OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 
 all: cardy_server
@@ -7,4 +8,4 @@ clean:
 
 cardy_server: $(OBJECTS)
 	@echo Linking $@
-	@$(CC) $(CFLAGS) -o $@ $(OBJECTS) $(LIBS) -L../api -L../game -L../api/network -L../api/solitaires -L../game/backgrounds
+	@$(CC) $(CFLAGS) -o $@ $(OBJECTS) $(LIBS)

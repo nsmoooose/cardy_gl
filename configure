@@ -4,7 +4,7 @@ cfg=$1
 
 if [ "$cfg" == "windows" ]; then
 	cat > config <<EOF
-export LIBS=-lcardy-game -lcardy-backgrounds -lcardy-api -lcardy-network -lcardy-solitaires -lglu32 -lm -lopengl32 $(pkg-config --libs glib-2.0 gdk-pixbuf-2.0 pango cairo librsvg-2.0 libxml-2.0 pangocairo gio-2.0 freeglut) -L$(pwd)/api -L$(pwd)/game -L$(pwd)/api/network -L$(pwd)/api/solitaires -L$(pwd)/game/backgrounds
+export LIBS=-lcardy-game -lcardy-backgrounds -lcardy-api -lcardy-network -lcardy-solitaires -lglu32 -lm -lopengl32 -lws2_32 $(pkg-config --libs glib-2.0 gdk-pixbuf-2.0 pango cairo librsvg-2.0 libxml-2.0 pangocairo gio-2.0 freeglut) -L$(pwd)/api -L$(pwd)/game -L$(pwd)/api/network -L$(pwd)/api/solitaires -L$(pwd)/game/backgrounds
 export CFLAGS=-mwindows -g -Os -Wall -pedantic -Werror $(pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0 libxml-2.0 pangocairo gio-2.0)
 EOF
 

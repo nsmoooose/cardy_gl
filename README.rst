@@ -27,4 +27,16 @@ Dependencies:
 Building::
 
     ./configure
-    make
+    make cardy_gl
+
+Architecture
+============
+
+Libraries
+---------
+
+* api
+* api/network
+* api/solitaires
+* game
+* game/backgrounds
