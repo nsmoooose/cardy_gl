@@ -1,10 +1,10 @@
 #include <librsvg/rsvg.h>
 #include <limits.h>
 #include <stdlib.h>
-#include "../api/mygl.h"
-#include "../api/render_widget.h"
-#include "../api/resource.h"
-#include "../api/solitaires/solitaires.h"
+#include "api/mygl.h"
+#include "api/render_widget.h"
+#include "api/resource.h"
+#include "api/solitaires/solitaires.h"
 #include "render_solitaire.h"
 #include "render_solved.h"
 #include "render_mainmenu.h"

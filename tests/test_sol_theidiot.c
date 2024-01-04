@@ -1,5 +1,5 @@
 #include <check.h>
-#include "../api/solitaires/theidiot.h"
+#include "api/solitaires/theidiot.h"
 
 START_TEST(test_sol_theidiot_init) {
 	int card_count[] = {52, 0, 0, 0, 0, 0};

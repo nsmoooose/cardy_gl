@@ -1,5 +1,5 @@
 #include <check.h>
-#include "../api/solitaires/maltesercross.h"
+#include "api/solitaires/maltesercross.h"
 
 START_TEST(test_sol_maltesercross_init) {
 	mem_context *context = mem_context_create();

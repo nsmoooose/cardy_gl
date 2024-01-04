@@ -1,6 +1,6 @@
 #include <check.h>
 #include <stdlib.h>
-#include "../api/network/game_system_remote.h"
+#include "api/network/game_system_remote.h"
 
 #define DUMMY_SIZE 1000
 char dummy_calls[DUMMY_SIZE];

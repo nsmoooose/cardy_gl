@@ -1,5 +1,5 @@
 #include <check.h>
-#include "../api/game_registry.h"
+#include "api/game_registry.h"
 
 START_TEST(test_game_registry_create) {
 	game_registry *r = game_registry_create();

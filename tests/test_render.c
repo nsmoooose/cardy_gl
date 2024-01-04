@@ -1,7 +1,7 @@
 #include <check.h>
 #include <stdlib.h>
-#include "../api/render.h"
-#include "../api/render_widget.h"
+#include "api/render.h"
+#include "api/render_widget.h"
 
 START_TEST(test_render_context_create) {
 	render_context *c = render_context_create(0);

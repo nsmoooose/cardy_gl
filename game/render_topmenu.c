@@ -1,8 +1,8 @@
 #include <librsvg/rsvg.h>
 #include <limits.h>
 #include <stdlib.h>
-#include "../api/render_widget.h"
-#include "../api/resource.h"
+#include "api/render_widget.h"
+#include "api/resource.h"
 #include "render_topmenu.h"
 
 const char *render_object_topmenu_id = "topmenu";

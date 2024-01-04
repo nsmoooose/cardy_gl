@@ -5,10 +5,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../api/ease.h"
-#include "../api/mygl.h"
-#include "../api/resource.h"
-#include "../api/theme.h"
+#include "api/ease.h"
+#include "api/mygl.h"
+#include "api/resource.h"
+#include "api/theme.h"
 #include "render_mainmenu.h"
 #include "render_solitaire.h"
 #include "render_solved.h"

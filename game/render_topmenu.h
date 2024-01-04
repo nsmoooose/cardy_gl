@@ -1,7 +1,7 @@
 #ifndef __RENDER_TOPMENU_H__
 #define __RENDER_TOPMENU_H__
 
-#include "../api/render.h"
+#include "api/render.h"
 
 extern const char *render_object_topmenu_id;
 

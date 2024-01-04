@@ -1,6 +1,6 @@
 #include <check.h>
 #include <stdlib.h>
-#include "../api/render_widget.h"
+#include "api/render_widget.h"
 
 START_TEST(test_widget_get_default_style) {
 	render_object *ro = widget_generic(0);

@@ -1,7 +1,7 @@
 #ifndef __SOLITAIRE_NONAME1_H__
 #define __SOLITAIRE_NONAME1_H__
 
-#include "../solitaire.h"
+#include "api/solitaire.h"
 
 solitaire *solitaire_noname1(mem_context *context, visual_settings *settings);
 

@@ -1,8 +1,8 @@
 #include <unistd.h>
-#include "../../api/mygl.h"
-#include "../../api/render.h"
-#include "../../api/render_widget.h"
-#include "../../game/backgrounds/rotating_triangles.h"
+#include "api/mygl.h"
+#include "api/render.h"
+#include "api/render_widget.h"
+#include "game/backgrounds/rotating_triangles.h"
 
 render_context *g_rcontext = 0;
 

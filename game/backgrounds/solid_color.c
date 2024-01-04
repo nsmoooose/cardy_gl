@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "../../api/render.h"
+#include "api/render.h"
 
 typedef struct {
 	float red, green, blue;

@@ -1,7 +1,7 @@
 #include <check.h>
 #include <math.h>
 #include <stdlib.h>
-#include "../api/expression.h"
+#include "api/expression.h"
 
 START_TEST(test_expression_const) {
 	expression *e = expression_const(3.0f);

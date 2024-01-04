@@ -1,5 +1,5 @@
 #include <check.h>
-#include "../api/game_system.h"
+#include "api/game_system.h"
 
 START_TEST(test_game_system_local) {
 	game_system *system = game_system_local();

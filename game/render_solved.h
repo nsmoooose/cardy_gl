@@ -1,7 +1,7 @@
 #ifndef __RENDER_SOLVED_H__
 #define __RENDER_SOLVED_H__
 
-#include "../api/render.h"
+#include "api/render.h"
 
 extern const char *render_object_solved_id;
 render_object *render_object_solved();

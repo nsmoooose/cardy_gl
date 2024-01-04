@@ -1,6 +1,6 @@
 #include <check.h>
 #include <stdlib.h>
-#include "../api/rule.h"
+#include "api/rule.h"
 
 bool condition_fail_check(condition *cond, move_action *action) {
 	return false;

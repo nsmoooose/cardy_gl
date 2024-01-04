@@ -1,7 +1,7 @@
 #ifndef __GAME_SYSTEM_REMOTE_H__
 #define __GAME_SYSTEM_REMOTE_H__
 
-#include "../game_system.h"
+#include "api/game_system.h"
 
 typedef struct game_system_provider_St {
 	int (*open)(struct game_system_provider_St *provider, const char *path);

@@ -1,8 +1,8 @@
 #include <math.h>
 #include <stdlib.h>
-#include "../../api/ease.h"
-#include "../../api/mygl.h"
-#include "../../api/render.h"
+#include "api/ease.h"
+#include "api/mygl.h"
+#include "api/render.h"
 
 /* Fun algorithms:
 

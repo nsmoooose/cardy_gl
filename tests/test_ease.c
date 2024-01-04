@@ -1,5 +1,5 @@
 #include <check.h>
-#include "../api/ease.h"
+#include "api/ease.h"
 
 START_TEST(test_ease_quad_in) {
 	ck_assert(ease_quad_in(0.0f, 0.1f, 3.0f, 1.0f) == 0.1f);

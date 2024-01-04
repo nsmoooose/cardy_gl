@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "../rule.h"
+#include "api/rule.h"
 #include "noname1.h"
 
 typedef struct {

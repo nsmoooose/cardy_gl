@@ -1,7 +1,7 @@
 #include <check.h>
 #include <math.h>
 #include <stdlib.h>
-#include "../api/expression.h"
+#include "api/expression.h"
 
 START_TEST(test_expression_lib_add_function1f) {
 	expression_lib *lib = expression_lib_create();

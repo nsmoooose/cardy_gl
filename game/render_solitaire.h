@@ -1,9 +1,9 @@
 #ifndef __RENDER_SOLITAIRE_H__
 #define __RENDER_SOLITAIRE_H__
 
-#include "../api/render.h"
-#include "../api/solitaire.h"
-#include "../api/theme.h"
+#include "api/render.h"
+#include "api/solitaire.h"
+#include "api/theme.h"
 
 extern theme *g_theme;
 
