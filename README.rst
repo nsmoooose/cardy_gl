@@ -4,7 +4,21 @@ Building
 Linux
 -----
 
-TODO
+Dependencies:
+
+* Install the following dependencies::
+
+    dnf install librsvg2-devel freeglut-devel
+
+* Install additional packages if you are planning on more in depth
+  development::
+
+    dnf install check-devel
+
+Building::
+
+    ./configure linux
+    make cardy_gl
 
 Windows
 -------
@@ -26,7 +40,7 @@ Dependencies:
 
 Building::
 
-    ./configure
+    ./configure windows
     make cardy_gl
 
 Architecture

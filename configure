@@ -12,7 +12,7 @@ elif [ "$cfg" == "linux" ]; then
     # TODO Readd '-Wall -pedantic -Werror' again.
 	cat > config <<EOF
 export CFLAGS=-g -Os \$(shell pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
-export LIBS=-lcardy-game -lcardy-backgrounds -lcardy-api -lcardy-network -lcardy-solitaires -lglut -lGL -lGLU -lm \$(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
+export LIBS=-lcardy-game -lcardy-backgrounds -lcardy-api -lcardy-network -lcardy-solitaires -lglut -lGL -lGLU -lm \$(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0) -L$(pwd)/api -L$(pwd)/game -L$(pwd)/api/network -L$(pwd)/api/solitaires -L$(pwd)/game/backgrounds
 EOF
 
 else
