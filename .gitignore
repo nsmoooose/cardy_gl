@@ -1,3 +1,4 @@
+build.ninja
 config
 analysis-cov
 analysis-cppcheck

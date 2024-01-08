@@ -31,6 +31,7 @@ Dependencies:
     pacman -S mingw64/mingw-w64-x86_64-librsvg
     pacman -S mingw64/mingw-w64-x86_64-pkgconf
     pacman -S mingw64/mingw-w64-x86_64-freeglut
+    pacman -S mingw64/mingw-w64-x86_64-ninja
 
 * Install additional packages if you are planning on more in depth
   development::
@@ -41,7 +42,7 @@ Dependencies:
 Building::
 
     ./configure windows
-    make cardy_gl
+    ninja -t cardy_gl
 
 Architecture
 ============
