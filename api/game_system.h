@@ -1,5 +1,4 @@
-#ifndef __GAME_SYSTEM_H__
-#define __GAME_SYSTEM_H__
+#pragma once
 
 #include "game_registry.h"
 
@@ -10,5 +9,3 @@ typedef struct game_system_St {
 } game_system;
 
 game_system *game_system_local();
-
-#endif /* __GAME_SYSTEM_H__ */

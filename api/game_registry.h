@@ -1,5 +1,4 @@
-#ifndef __GAME_REGISTRY_H__
-#define __GAME_REGISTRY_H__
+#pragma once
 
 #include <glib.h>
 #include "solitaire.h"
@@ -20,5 +19,3 @@ void game_registry_add(game_registry *registry, const char *id, game *game);
 
 game *game_create(const char *name, bool testing, solitaire_create cb);
 void game_free(game *game);
-
-#endif /* __GAME_REGISTRY_H__ */

@@ -1,5 +1,4 @@
-#ifndef __RENDER_SOLITAIRE_H__
-#define __RENDER_SOLITAIRE_H__
+#pragma once
 
 #include "api/render.h"
 #include "api/solitaire.h"
@@ -30,5 +29,3 @@ card_geometry *card_geometry_create(mem_context *context,
 
 extern const char *render_object_solitaire_id;
 render_object *render_object_solitaire(solitaire_create callback);
-
-#endif /* __RENDER_SOLITAIRE_H__ */

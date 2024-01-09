@@ -1,5 +1,4 @@
-#ifndef __SERVER_H__
-#define __SERVER_H__
+#pragma once
 
 /*
   This is basically a list of all the messages that is needed in order
@@ -16,5 +15,3 @@
   TODO: Card movement notification
 
  */
-
-#endif /* __SERVER_H__ */

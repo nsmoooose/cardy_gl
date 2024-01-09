@@ -1,5 +1,4 @@
-#ifndef __EXPRESSION_H__
-#define __EXPRESSION_H__
+#pragma once
 
 #include <glib.h>
 #include <stdbool.h>
@@ -101,5 +100,3 @@ int expression_lib_param_count(expression_lib *lib, const char *name);
 expression *expression_lib_build_expression(expression_lib *lib,
                                             const char *name,
                                             expression *params[]);
-
-#endif /* __EXPRESSION_H__ */

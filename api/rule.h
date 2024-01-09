@@ -1,5 +1,4 @@
-#ifndef __RULE_H__
-#define __RULE_H__
+#pragma once
 
 #include "card.h"
 
@@ -95,5 +94,3 @@ bool ruleset_move_card(ruleset *ruleset, visual *visual,
 bool ruleset_move_individual_card(ruleset *ruleset, visual *visual,
                                   visual_pile *destination, card_proxy *card,
                                   int count);
-
-#endif /* __RULE_H__ */

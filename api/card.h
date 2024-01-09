@@ -1,5 +1,4 @@
-#ifndef __CARD_H__
-#define __CARD_H__
+#pragma once
 
 #include <stdbool.h>
 #include "memory.h"
@@ -177,5 +176,3 @@ visual_pile *visual_find_pile_from_card(visual *vis, card_proxy *proxy);
 int visual_get_card_index(visual_pile *pile, card_proxy *card);
 int visual_get_rest_of_pile(visual *vis, card_proxy *card);
 visual_pile *visual_pile_create(mem_context *context, pile *pile);
-
-#endif /* __CARD_H__ */

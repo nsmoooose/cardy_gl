@@ -1,5 +1,4 @@
-#ifndef __EASING_H__
-#define __EASING_H__
+#pragma once
 
 /*
    Ease between values....
@@ -67,5 +66,3 @@ float ease_elastic_out(float t, float b, float c, float d, float a, float p);
 float ease_elastic_in_out(float t, float b, float c, float d, float a, float p);
 
 float ease_linear(float t, float b, float c, float d);
-
-#endif /* __EASING_H__ */

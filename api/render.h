@@ -1,5 +1,4 @@
-#ifndef __RENDER_H__
-#define __RENDER_H__
+#pragma once
 
 #include <stdbool.h>
 #include <librsvg/rsvg.h>
@@ -123,5 +122,3 @@ void render_svg_texture(RsvgHandle *h, GLuint texture, char *node_name,
                         int width, int height);
 
 void render_rect(float x1, float y1, float x2, float y2, GLuint texture);
-
-#endif /* __RENDER_H__ */

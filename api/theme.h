@@ -1,5 +1,4 @@
-#ifndef __THEME_H__
-#define __THEME_H__
+#pragma once
 
 #include <librsvg/rsvg.h>
 #include "card.h"
@@ -33,5 +32,3 @@ GLuint theme_get_card_back_texture(theme *theme);
 
 void theme_render_card_texture(RsvgHandle *h, GLuint texture, char *node_name);
 void theme_render_card_textures(theme *theme);
-
-#endif /* __THEME_H__ */

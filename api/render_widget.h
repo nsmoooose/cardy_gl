@@ -1,5 +1,4 @@
-#ifndef __RENDER_WIDGET_H__
-#define __RENDER_WIDGET_H__
+#pragma once
 
 #include "expression.h"
 #include "render.h"
@@ -89,5 +88,3 @@ void widget_style_set_font_size(widget_style *style, float size);
 void widget_style_set_text(widget_style *style, const char *text);
 void widget_style_set_text_color(widget_style *style, float red, float green,
                                  float blue, float alpha);
-
-#endif /* __RENDER_WIDGET_H__ */

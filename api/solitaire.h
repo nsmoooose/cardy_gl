@@ -1,5 +1,4 @@
-#ifndef __SOLITAIRE_H__
-#define __SOLITAIRE_H__
+#pragma once
 
 #include "rule.h"
 
@@ -23,5 +22,3 @@ typedef solitaire *(*solitaire_create)(mem_context *context,
  *  when we need to know the content of the solitaire.
  */
 void print_solitaire_info(solitaire *sol);
-
-#endif /* __SOLITAIRE_H__ */

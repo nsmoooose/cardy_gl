@@ -1,6 +1,4 @@
-#ifndef __RENDERING_H__
-#define __RENDERING_H__
-
+#pragma once
 #include "api/solitaire.h"
 #include "api/theme.h"
 
@@ -13,5 +11,3 @@ void rendering_window_size_change(int width, int height);
 void rendering_scene();
 
 void rendering_timer(int value);
-
-#endif /* __RENDERING_H__ */
