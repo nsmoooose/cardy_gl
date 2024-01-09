@@ -2,7 +2,7 @@
 #define __EXPRESSION_H__
 
 #include <glib.h>
-#include "types.h"
+#include <stdbool.h>
 
 struct expression_context_St;
 typedef struct expression_context_St expression_context;

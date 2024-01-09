@@ -1,8 +1,8 @@
 #ifndef __CARD_H__
 #define __CARD_H__
 
+#include <stdbool.h>
 #include "memory.h"
-#include "types.h"
 
 typedef enum {
 	e_suit_none = -1,

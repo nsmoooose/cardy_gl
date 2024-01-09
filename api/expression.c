@@ -1,10 +1,10 @@
 #include <glib.h>
 #include <math.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "expression.h"
-#include "types.h"
 
 struct expression_context_St {
 	GHashTable *expressions;

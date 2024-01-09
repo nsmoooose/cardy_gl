@@ -1,10 +1,10 @@
 #ifndef __RENDER_H__
 #define __RENDER_H__
 
+#include <stdbool.h>
 #include <librsvg/rsvg.h>
 #include "memory.h"
 #include "mygl.h"
-#include "types.h"
 
 struct render_context_St;
 struct render_object_St;
