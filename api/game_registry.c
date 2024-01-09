@@ -23,8 +23,9 @@ void game_registry_add(game_registry *registry, const char *id, game *game) {
 	g_hash_table_insert(registry->games, (char *)id, game);
 }
 
-game *game_create(const char *name, solitaire_create cb) {
+game *game_create(const char *name, bool testing, solitaire_create cb) {
 	game *g = calloc(1, sizeof(game));
+	g->testing = testing;
 	g->name = strdup(name);
 	g->create_instance = cb;
 	return g;

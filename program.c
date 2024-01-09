@@ -6,6 +6,7 @@
 #include "api/card.h"
 #include "api/mygl.h"
 #include "game/render_solitaire.h"
+#include "game/render_mainmenu.h"
 #include "mouse_handler.h"
 #include "rendering.h"
 
@@ -27,8 +28,11 @@ int main(int argc, char *argv[]) {
 	int opt, width = 800, height = 600;
 	char *separator;
 
-	while ((opt = getopt(argc, argv, "hg:")) != -1) {
+	while ((opt = getopt(argc, argv, "dhg:")) != -1) {
 		switch (opt) {
+		case 'd':
+			render_testing = true;
+			break;
 		case 'h':
 			fprintf(stderr, "Usage: %s [-h] [-g] 300x200\n", argv[0]);
 			return 0;

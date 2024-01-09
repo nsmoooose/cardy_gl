@@ -43,6 +43,18 @@ Building::
     ./configure windows
     make cardy_gl
 
+
+Running
+=======
+
+Normally::
+
+    ./cardy_gl
+
+Debug mode (shows unfinished solitaires as well)::
+
+    ./cardy_gl -d
+
 Architecture
 ============
 

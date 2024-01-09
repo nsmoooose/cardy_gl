@@ -5,9 +5,6 @@
 #include <time.h>
 #include "card.h"
 
-const unsigned char true = 1;
-const unsigned char false = 0;
-
 card *card_create(mem_context *context, card_suit suit, card_value value) {
 	card *c = mem_alloc(context, sizeof(card));
 	c->value = value;

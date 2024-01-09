@@ -6,6 +6,7 @@
 
 typedef struct {
 	char *name;
+	bool testing;
 	solitaire_create create_instance;
 } game;
 
@@ -17,7 +18,7 @@ game_registry *game_registry_create();
 void game_registry_free(game_registry *registry);
 void game_registry_add(game_registry *registry, const char *id, game *game);
 
-game *game_create(const char *name, solitaire_create cb);
+game *game_create(const char *name, bool testing, solitaire_create cb);
 void game_free(game *game);
 
 #endif /* __GAME_REGISTRY_H__ */

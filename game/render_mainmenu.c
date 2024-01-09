@@ -1,6 +1,7 @@
 #include <librsvg/rsvg.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "api/mygl.h"
 #include "api/render_widget.h"
 #include "api/resource.h"
@@ -10,6 +11,7 @@
 #include "render_mainmenu.h"
 
 const char *render_object_mainmenu_id = "mainmenu";
+bool render_testing = false;
 
 static void set_solitaire(render_event_args *event,
                           solitaire_create sol_callback) {
@@ -87,6 +89,9 @@ void render_object_mainmenu(render_object *parent) {
 	g_hash_table_iter_init(&it, registry->games);
 	while (g_hash_table_iter_next(&it, &key, &value)) {
 		game *game = value;
+		if (!render_testing && game->testing == true) {
+			continue;
+		}
 		button = widget_generic(key);
 		style = widget_get_default_style(button);
 		widget_style_set_image_size(style, 128, 32);

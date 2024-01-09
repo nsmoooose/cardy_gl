@@ -3,7 +3,7 @@
 
 START_TEST(test_game_registry_create) {
 	game_registry *r = game_registry_create();
-	game *g = game_create("name", 0);
+	game *g = game_create("name", true, 0);
 	game_registry_add(r, "id", g);
 	ck_assert(g_hash_table_size(r->games) == 1);
 	ck_assert(g_hash_table_lookup(r->games, "id") == g);
