@@ -47,14 +47,12 @@ scan: clean
 deploy:
 	@mkdir -p dist/win32
 	@cp resources dist/win32/ -r
-	@cp themes dist/win32/ -r
 	@cp cardy_gl dist/win32/cardy_gl.exe
 	./copy_dependencies.sh cardy_gl dist/win32/
 
 install:
 	@cp cardy_gl /usr/bin/
 	@mkdir /usr/share/cardy_gl/ -p
-	@cp -r themes /usr/share/cardy_gl/
 	@cp -r resources /usr/share/cardy_gl/
 
 coverage: clean

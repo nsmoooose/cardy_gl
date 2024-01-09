@@ -4,7 +4,7 @@
 START_TEST(test_theme_list) {
 	int i;
 	mem_context *context = mem_context_create();
-	themes *t = theme_list(context, "themes");
+	themes *t = theme_list(context, "card_themes");
 
 	ck_assert_msg(t != 0, "No themes struct returned.");
 	ck_assert_msg(t->theme_count == 5, "Incorrect number of themes listed.");

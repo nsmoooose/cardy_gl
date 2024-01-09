@@ -933,7 +933,7 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 static void render_object_solitaire_change_card_theme(const char *theme) {
 	char theme_dir[PATH_MAX];
 	if (resource_get_dir(theme_dir, PATH_MAX)) {
-		strncat(theme_dir, "themes", PATH_MAX - 1);
+		strncat(theme_dir, "resources/card_themes", PATH_MAX - 1);
 		theme_unload(g_theme);
 		g_theme = theme_load(theme_dir, theme);
 	}
@@ -1084,7 +1084,7 @@ render_object *render_object_solitaire(solitaire_create callback) {
 	if (g_theme == 0) {
 		char themes_path[PATH_MAX];
 		resource_get_dir(themes_path, PATH_MAX);
-		strncat(themes_path, "themes", PATH_MAX - 1);
+		strncat(themes_path, "resources/card_themes", PATH_MAX - 1);
 		g_theme = theme_load(themes_path, "paris");
 	}
 
