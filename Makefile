@@ -7,6 +7,10 @@ endif
 
 OBJECTS = $(patsubst %.c,%.o,$(wildcard *.c))
 
+ifeq ($(MSYSTEM), MINGW64)
+OBJECTS+=resource.res.o
+endif
+
 all: cardy_gl cardy_server cardy_tests
 	@echo Building $@
 	@$(MAKE) -C examples $@
@@ -30,6 +34,11 @@ cardy_server:
 
 cardy_tests:
 	@$(MAKE) -C tests
+
+ifeq ($(MSYSTEM), MINGW64)
+resource.res.o: resource.rc
+	windres $^ $@
+endif
 
 cardy_gl: cardy_api cardy_game $(OBJECTS)
 	@echo Linking $@
