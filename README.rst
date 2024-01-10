@@ -66,3 +66,28 @@ Libraries
 * api/solitaires
 * game
 * game/backgrounds
+
+Rendering
+---------
+
+At the root you have a rendering context with a single render_object in it.
+Each render_object can have children with new render_object. This is then
+forming a tree structure of objects::
+
+    render_context
+     |- render_object
+         |- children
+
+Render objects is currently only big things like widgets (buttons), background.
+Individual cards are NOT a rendering object. Solitaire is currently handle by
+a single rendering object that does everything to handle the drawing of cards.
+
+How rendered objects are places now::
+
+    background (triangles)
+     |- placeholder ()
+     |   |- solitaire (the card game you have selected)
+     |   |- solitaire_solved (solved)
+     |- desktop (rotating svg)
+         |- topmenu (buttons on the)
+         |- mainmenu (select solitaire to play)
