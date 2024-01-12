@@ -23,14 +23,14 @@ static void set_solitaire(render_event_args *event,
 		render_object_find(event->rcontext->object, render_object_solved_id);
 
 	if (existing_sol) {
-		render_object_free(event->rcontext, existing_sol);
+		render_object_queue_free(event->rcontext, existing_sol);
 	}
 	if (solved) {
-		render_object_free(event->rcontext, solved);
+		render_object_queue_free(event->rcontext, solved);
 	}
 	render_object_add_child(placeholder, render_object_solitaire(sol_callback));
 
-	render_object_free(event->rcontext, event->object->parent);
+	render_object_queue_free(event->rcontext, event->object->parent);
 }
 
 static void sol_callback(render_event_args *event, void *data) {

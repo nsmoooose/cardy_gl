@@ -84,7 +84,7 @@ static void process_click(render_context *rcontext, render_object *object,
 	if (data->sol->ruleset->solved &&
 	    rule_check(data->sol->ruleset->solved, 0)) {
 		render_object_add_child(object->parent, render_object_solved());
-		render_object_free(rcontext, object);
+		render_object_queue_free(rcontext, object);
 	}
 }
 
@@ -970,7 +970,7 @@ static bool render_object_solitaire_keyboard_down(render_event_args *event,
 			object = render_object_find(event->rcontext->object, "desktop");
 			render_object_mainmenu(object);
 		} else {
-			render_object_free(event->rcontext, object);
+			render_object_queue_free(event->rcontext, object);
 		}
 		return true;
 	case '-':

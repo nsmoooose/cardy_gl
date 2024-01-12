@@ -49,6 +49,16 @@ void render_object_free(render_context *rcontext, render_object *object) {
 	}
 }
 
+void render_object_queue_free(render_context *rcontext, render_object *object) {
+	for (int i = 0; i < QUEUE_FREE_SIZE; i++) {
+		if (rcontext->queue_free[i] == NULL) {
+			rcontext->queue_free[i] = object;
+			return;
+		}
+	}
+	exit(1);
+}
+
 void render_object_add_child(render_object *parent, render_object *child) {
 	render_object **old = parent->children;
 
@@ -162,6 +172,15 @@ void render_scene_context(render_context *rcontext) {
 	}
 
 	rcontext->last_render = current_time;
+
+	for (int i=0; i<QUEUE_FREE_SIZE;i++) {
+		if (rcontext->queue_free[i]) {
+			render_object_free(rcontext, rcontext->queue_free[i]);
+			rcontext->queue_free[i] = NULL;
+		} else {
+			break;
+		}
+	}
 }
 
 GLuint render_register_selection_callback(render_context *rcontext,

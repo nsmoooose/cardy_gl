@@ -8,6 +8,8 @@
 struct render_context_St;
 struct render_object_St;
 
+#define QUEUE_FREE_SIZE 50
+
 typedef struct {
 	struct render_context_St *rcontext;
 	struct render_object_St *object;
@@ -71,6 +73,8 @@ typedef struct render_context_St {
 
 	render_selection selections[1024];
 	int selection_size;
+
+	render_object *queue_free[QUEUE_FREE_SIZE];
 } render_context;
 
 render_context *render_context_create();
@@ -80,6 +84,7 @@ void render_context_free(render_context *rcontext);
 render_object *render_object_create(const char *id);
 
 void render_object_free(render_context *rcontext, render_object *object);
+void render_object_queue_free(render_context *rcontext, render_object *object);
 
 void render_object_add_child(render_object *parent, render_object *child);
 

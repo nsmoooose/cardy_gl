@@ -22,7 +22,7 @@ static bool render_object_solved_keyboard_down(render_event_args *event,
 			object = render_object_find(event->rcontext->object, "desktop");
 			render_object_mainmenu(object);
 		} else {
-			render_object_free(event->rcontext, object);
+			render_object_queue_free(event->rcontext, object);
 		}
 		return true;
 	}
