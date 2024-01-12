@@ -1,5 +1,4 @@
 #include <windows.h>
-#include "resource.h"
 
 GLUT_ICON ICON DISCARDABLE "resources/icon.ico"
 
