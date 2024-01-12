@@ -173,7 +173,7 @@ void render_scene_context(render_context *rcontext) {
 
 	rcontext->last_render = current_time;
 
-	for (int i=0; i<QUEUE_FREE_SIZE;i++) {
+	for (int i = 0; i < QUEUE_FREE_SIZE; i++) {
 		if (rcontext->queue_free[i]) {
 			render_object_free(rcontext, rcontext->queue_free[i]);
 			rcontext->queue_free[i] = NULL;

@@ -1,11 +1,11 @@
 #ifdef linux
-	#include <arpa/inet.h>
-	#include <netinet/in.h>
-	#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
 #endif
 #ifdef WIN32
-	#include <Winsock2.h>
-	#include <ws2tcpip.h>
+#include <Winsock2.h>
+#include <ws2tcpip.h>
 #endif
 #include <pthread.h>
 #include <stdio.h>

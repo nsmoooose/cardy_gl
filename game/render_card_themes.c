@@ -6,8 +6,7 @@
 
 const char *render_object_card_themes_id = "mainmenu";
 
-static void card_theme_callback(render_event_args *event, void *data) {
-}
+static void card_theme_callback(render_event_args *event, void *data) {}
 
 static void back_callback(render_event_args *event, void *data) {
 	/* TODO: Have a better shutdown of the application. */
@@ -15,12 +14,12 @@ static void back_callback(render_event_args *event, void *data) {
 }
 
 void render_object_card_themes(render_object *parent) {
-   	char theme_dir[PATH_MAX];
+	char theme_dir[PATH_MAX];
 	if (!resource_get_dir(theme_dir, PATH_MAX)) {
-        exit (1);
-    }
+		exit(1);
+	}
 
-   	render_object *window = widget_generic(render_object_card_themes_id);
+	render_object *window = widget_generic(render_object_card_themes_id);
 	widget_style *style = widget_get_default_style(window);
 	widget_style_set_left(style, "0");
 	widget_style_set_top(style, "0");
@@ -30,13 +29,13 @@ void render_object_card_themes(render_object *parent) {
 
 	float button_top = 140.0f;
 
-    mem_context *mem = mem_context_create();
-    strncat(theme_dir, "resources/card_themes", PATH_MAX - 1);
-    themes *themes = theme_list(mem, theme_dir);
+	mem_context *mem = mem_context_create();
+	strncat(theme_dir, "resources/card_themes", PATH_MAX - 1);
+	themes *themes = theme_list(mem, theme_dir);
 
-    for (int i=0; i < themes->theme_count; i++) {
-       	render_object *button = widget_generic(themes->theme_names[i]);
-    	style = widget_get_default_style(button);
+	for (int i = 0; i < themes->theme_count; i++) {
+		render_object *button = widget_generic(themes->theme_names[i]);
+		style = widget_get_default_style(button);
 		widget_style_set_image_size(style, 128, 32);
 		/* widget_style_set_font_face(style, "Meera"); */
 		widget_style_set_font_size(style, 16.0f);
@@ -47,8 +46,8 @@ void render_object_card_themes(render_object *parent) {
 		widget_style_set_click_callback(style, card_theme_callback);
 		render_object_add_child(window, button);
 
-   		button_top += 40;
-    }
+		button_top += 40;
+	}
 
 	render_object *button = widget_generic(0);
 	style = widget_get_default_style(button);
@@ -63,5 +62,5 @@ void render_object_card_themes(render_object *parent) {
 	render_object_add_child(window, button);
 	button_top += 40;
 
-    mem_context_free(mem);
+	mem_context_free(mem);
 }

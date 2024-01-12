@@ -43,8 +43,7 @@ static void sol_callback(render_event_args *event, void *data) {
 	game_registry_free(registry);
 }
 
-static void card_theme_callback(render_event_args *event, void *data) {
-}
+static void card_theme_callback(render_event_args *event, void *data) {}
 
 static void quit_callback(render_event_args *event, void *data) {
 	/* TODO: Have a better shutdown of the application. */

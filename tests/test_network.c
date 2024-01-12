@@ -9,7 +9,6 @@ static void dummy_cat(const char *s) {
 	strncat(dummy_calls, s, DUMMY_SIZE - strlen(dummy_calls));
 }
 
-
 static int dummy_open(game_system_provider *provider, const char *path) {
 	dummy_cat("open(\"");
 	dummy_cat(path);
