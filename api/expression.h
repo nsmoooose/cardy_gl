@@ -12,7 +12,7 @@ typedef struct expression_St expression;
 struct expression_lib_St;
 typedef struct expression_lib_St expression_lib;
 
-expression_context *expression_context_create();
+expression_context *expression_context_create(void);
 void expression_context_free(expression_context *ec);
 void expression_context_set(expression_context *ec, const char *key,
                             expression *value);
@@ -75,10 +75,10 @@ expression *expression_parse(expression_lib *library, const char *exp);
 
 float expression_execute(expression_context *context, expression *exp);
 
-expression_lib *expression_lib_create();
+expression_lib *expression_lib_create(void);
 void expression_lib_free(expression_lib *lib);
 
-expression_lib *expression_lib_default();
+expression_lib *expression_lib_default(void);
 
 void expression_lib_add_function1f(expression_lib *lib, const char *name,
                                    function1f fun);

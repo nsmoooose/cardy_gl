@@ -5,7 +5,7 @@
 #include "card.h"
 #include "render.h"
 
-render_context *render_context_create(mem_context *context) {
+render_context *render_context_create(void) {
 	return calloc(1, sizeof(render_context));
 }
 

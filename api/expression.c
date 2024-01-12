@@ -32,7 +32,7 @@ struct expression_lib_St {
 	GHashTable *functions;
 };
 
-expression_context *expression_context_create() {
+expression_context *expression_context_create(void) {
 	expression_context *ec = calloc(1, sizeof(expression_context));
 	ec->expressions = g_hash_table_new(g_str_hash, g_str_equal);
 	return ec;
@@ -640,7 +640,7 @@ float expression_execute(expression_context *context, expression *exp) {
 	return exp->execute(context, exp);
 }
 
-expression_lib *expression_lib_create() {
+expression_lib *expression_lib_create(void) {
 	expression_lib *lib = calloc(1, sizeof(expression_lib));
 	lib->functions = g_hash_table_new(g_str_hash, g_str_equal);
 	return lib;
@@ -661,7 +661,7 @@ static void expression_lib_add_math_h(expression_lib *lib) {
 
 static void expression_lib_add_ease_h(expression_lib *lib) {}
 
-expression_lib *expression_lib_default() {
+expression_lib *expression_lib_default(void) {
 	expression_lib *lib = expression_lib_create();
 	expression_lib_add_math_h(lib);
 	expression_lib_add_ease_h(lib);

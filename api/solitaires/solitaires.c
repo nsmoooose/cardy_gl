@@ -6,7 +6,7 @@
 #include "heirship.h"
 #include "test1.h"
 
-game_registry *solitaire_get_registry() {
+game_registry *solitaire_get_registry(void) {
 	game_registry *r = game_registry_create();
 	game_registry_add(r, "idiot", game_create("The idiot", false, solitaire_theidiot));
 	game_registry_add(r, "malteser_cross",

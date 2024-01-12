@@ -5,14 +5,14 @@
 
 render_context *g_rcontext = 0;
 
-void rendering_scene() {
+void rendering_scene(void) {
 	glMatrixMode(GL_MODELVIEW);
 	render_scene_context(g_rcontext);
 	check_gl_errors("render_scene");
 	glutSwapBuffers();
 }
 
-void rendering_idle() {
+void rendering_idle(void) {
 	static int lastUpdate = 0;
 	static int frames = 0;
 	char buf[20];

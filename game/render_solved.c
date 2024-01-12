@@ -66,7 +66,7 @@ static void render_object_solved_free(render_event_args *event) {
 	free(event->object->data);
 }
 
-render_object *render_object_solved() {
+render_object *render_object_solved(void) {
 	render_object *o = render_object_create(render_object_solved_id);
 	o->data = calloc(1, sizeof(internal));
 	o->keyboard_down = render_object_solved_keyboard_down;

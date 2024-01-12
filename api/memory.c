@@ -12,7 +12,7 @@ static int first_free(mem_context *c) {
 	return -1;
 }
 
-mem_context *mem_context_create() {
+mem_context *mem_context_create(void) {
 	mem_context *c = calloc(1, sizeof(mem_context));
 	c->blocks = calloc(1000, sizeof(void *));
 	c->size = 1000;

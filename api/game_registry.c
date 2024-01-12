@@ -2,7 +2,7 @@
 #include <string.h>
 #include "game_registry.h"
 
-game_registry *game_registry_create() {
+game_registry *game_registry_create(void) {
 	game_registry *registry = calloc(1, sizeof(game_registry));
 	registry->games = g_hash_table_new(g_str_hash, g_str_equal);
 	return registry;

@@ -22,7 +22,7 @@ typedef struct {
 	GLuint triangle;
 } render_object_triangles_data;
 
-static void render_triangle() {
+static void render_triangle(void) {
 	glBegin(GL_TRIANGLES);
 	glVertex2f(0.0f, -3.0f);
 	glVertex2f(3.0, 3.0);
@@ -82,7 +82,7 @@ static void render_object_triangles_free(render_event_args *event) {
 	free(event->object->data);
 }
 
-render_object *render_object_triangles() {
+render_object *render_object_triangles(void) {
 	render_object *o = render_object_create("background");
 	render_object_triangles_data *d =
 		calloc(1, sizeof(render_object_triangles_data));

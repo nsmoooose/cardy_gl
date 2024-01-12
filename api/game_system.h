@@ -8,4 +8,4 @@ typedef struct game_system_St {
 	void *handle;
 } game_system;
 
-game_system *game_system_local();
+game_system *game_system_local(void);

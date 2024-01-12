@@ -6,11 +6,11 @@
 #include "program.h"
 #include "rendering.h"
 
-void rendering_setup() {
+void rendering_setup(void) {
 	render_object *desktop;
 
-	g_rcontext = render_context_create(g_context);
-	g_rcontext->object = render_object_triangles(g_context);
+	g_rcontext = render_context_create();
+	g_rcontext->object = render_object_triangles();
 
 	render_object_add_child(g_rcontext->object,
 	                        render_object_create("placeholder"));
@@ -26,7 +26,7 @@ void rendering_window_size_change(int width, int height) {
 	glViewport(0, 0, width, height);
 }
 
-void rendering_scene() {
+void rendering_scene(void) {
 	glMatrixMode(GL_MODELVIEW);
 	glInitNames();
 	render_scene_context(g_rcontext);

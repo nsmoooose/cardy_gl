@@ -4,7 +4,7 @@
 #include "api/render_widget.h"
 
 START_TEST(test_render_context_create) {
-	render_context *c = render_context_create(0);
+	render_context *c = render_context_create();
 
 	ck_assert_msg(c->object == 0, "Root object should be 0.");
 	ck_assert_msg(c->selection_size == 0,

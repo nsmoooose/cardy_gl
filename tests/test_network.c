@@ -35,7 +35,7 @@ static void dummy_close(game_system_provider *provider) {
 	dummy_cat("close();");
 }
 
-game_system_provider *dummy_provider() {
+game_system_provider *dummy_provider(void) {
 	game_system_provider *provider = calloc(1, sizeof(game_system_provider));
 	provider->open = dummy_open;
 	provider->write = dummy_write;

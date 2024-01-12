@@ -13,7 +13,7 @@ typedef struct {
 	GHashTable *games;
 } game_registry;
 
-game_registry *game_registry_create();
+game_registry *game_registry_create(void);
 void game_registry_free(game_registry *registry);
 void game_registry_add(game_registry *registry, const char *id, game *game);
 

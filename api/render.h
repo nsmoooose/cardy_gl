@@ -77,7 +77,7 @@ typedef struct render_context_St {
 	render_object *queue_free[QUEUE_FREE_SIZE];
 } render_context;
 
-render_context *render_context_create();
+render_context *render_context_create(void);
 
 void render_context_free(render_context *rcontext);
 
