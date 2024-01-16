@@ -37,6 +37,9 @@ typedef struct {
 	GLfloat diffuse_light[4];
 	GLfloat specular_light[4];
 	GLfloat light_pos[4];
+
+	themes *themes;
+	int theme_index;
 } render_solitaire_data;
 
 const char *render_object_solitaire_id = "solitaire";
@@ -962,20 +965,17 @@ static bool render_object_solitaire_keyboard_down(render_event_args *event,
 		i->camera_zoom += 10.0f;
 		return true;
 
-	case 'z':
-		card_theme_set("ancient_french");
+	case '>':
+		if(i->theme_index < (i->themes->theme_count - 1)) {
+			i->theme_index++;
+			card_theme_set(i->themes->theme_names[i->theme_index]);
+		}
 		return true;
-	case 'x':
-		card_theme_set("anglo");
-		return true;
-	case 'c':
-		card_theme_set("atlasnye");
-		return true;
-	case 'v':
-		card_theme_set("dondorf");
-		return true;
-	case 'b':
-		card_theme_set("paris");
+	case '<':
+		if(i->theme_index > 0) {
+			i->theme_index--;
+			card_theme_set(i->themes->theme_names[i->theme_index]);
+		}
 		return true;
 	default:
 		return false;
@@ -1063,6 +1063,11 @@ render_object *render_object_solitaire(solitaire_create callback) {
 	i->light_pos[3] = 1.0f;
 
 	i->sol = callback(i->context, i->settings);
+
+	char theme_dir[PATH_MAX];
+	resource_get_dir(theme_dir, PATH_MAX);
+	strncat(theme_dir, "resources/card_themes", PATH_MAX - 1);
+	i->themes = theme_list(i->context, theme_dir);
 
 	return o;
 }
