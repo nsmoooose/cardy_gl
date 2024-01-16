@@ -6,39 +6,18 @@
 #include "api/render_widget.h"
 #include "api/resource.h"
 #include "api/solitaires/solitaires.h"
-#include "render_solitaire.h"
-#include "render_solved.h"
-#include "render_mainmenu.h"
-#include "render_card_themes.h"
+#include "game/render_mainmenu.h"
+#include "game/render_card_themes.h"
+#include "game/ui.h"
 
 const char *render_object_mainmenu_id = "mainmenu";
 bool render_testing = false;
-
-static void set_solitaire(render_event_args *event,
-                          solitaire_create sol_callback) {
-	render_object *placeholder =
-		render_object_find(event->rcontext->object, "placeholder");
-	render_object *existing_sol =
-		render_object_find(event->rcontext->object, render_object_solitaire_id);
-	render_object *solved =
-		render_object_find(event->rcontext->object, render_object_solved_id);
-
-	if (existing_sol) {
-		render_object_queue_free(event->rcontext, existing_sol);
-	}
-	if (solved) {
-		render_object_queue_free(event->rcontext, solved);
-	}
-	render_object_add_child(placeholder, render_object_solitaire(sol_callback));
-
-	render_object_queue_free(event->rcontext, event->object->parent);
-}
 
 static void sol_callback(render_event_args *event, void *data) {
 	game_registry *registry = solitaire_get_registry();
 	game *game = g_hash_table_lookup(registry->games, event->object->id);
 	if (game) {
-		set_solitaire(event, game->create_instance);
+		ui_scene_solitaire(event->rcontext, game->create_instance);
 	}
 	game_registry_free(registry);
 }

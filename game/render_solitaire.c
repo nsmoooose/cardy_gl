@@ -7,11 +7,12 @@
 #include <string.h>
 #include "api/ease.h"
 #include "api/mygl.h"
+#include "api/render_widget.h"
 #include "api/resource.h"
 #include "api/theme.h"
-#include "render_mainmenu.h"
-#include "render_solitaire.h"
-#include "render_solved.h"
+#include "game/ui.h"
+#include "game/render_solitaire.h"
+#include "game/render_solved.h"
 
 typedef struct {
 	mem_context *context;
@@ -83,8 +84,7 @@ static void process_click(render_context *rcontext, render_object *object,
 
 	if (data->sol->ruleset->solved &&
 	    rule_check(data->sol->ruleset->solved, 0)) {
-		render_object_add_child(object->parent, render_object_solved());
-		render_object_queue_free(rcontext, object);
+		ui_scene_solitaire_solved(rcontext);
 	}
 }
 
@@ -942,7 +942,6 @@ static void render_object_solitaire_change_card_theme(const char *theme) {
 static bool render_object_solitaire_keyboard_down(render_event_args *event,
                                                   unsigned char key,
                                                   int modifiers, int x, int y) {
-	render_object *object;
 	render_solitaire_data *i = event->object->data;
 
 	/*
@@ -964,14 +963,7 @@ static bool render_object_solitaire_keyboard_down(render_event_args *event,
 
 	switch (key) {
 	case 27:
-		object = render_object_find(event->rcontext->object,
-		                            render_object_mainmenu_id);
-		if (object == 0) {
-			object = render_object_find(event->rcontext->object, "desktop");
-			render_object_mainmenu(object);
-		} else {
-			render_object_queue_free(event->rcontext, object);
-		}
+		ui_scene_main(event->rcontext);
 		return true;
 	case '-':
 		i->camera_zoom -= 10.0f;

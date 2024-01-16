@@ -59,6 +59,13 @@ void render_object_queue_free(render_context *rcontext, render_object *object) {
 	exit(1);
 }
 
+void render_object_queue_free_children(render_context *rcontext,
+                                       render_object *object) {
+	for (int i = 0; i < object->child_count; ++i) {
+		render_object_queue_free(rcontext, object->children[i]);
+	}
+}
+
 void render_object_add_child(render_object *parent, render_object *child) {
 	render_object **old = parent->children;
 

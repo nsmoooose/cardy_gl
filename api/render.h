@@ -85,6 +85,8 @@ render_object *render_object_create(const char *id);
 
 void render_object_free(render_context *rcontext, render_object *object);
 void render_object_queue_free(render_context *rcontext, render_object *object);
+void render_object_queue_free_children(render_context *rcontext,
+                                       render_object *object);
 
 void render_object_add_child(render_object *parent, render_object *child);
 

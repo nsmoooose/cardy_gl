@@ -91,3 +91,19 @@ How rendered objects are places now::
      |- desktop (rotating svg)
          |- topmenu (buttons on the)
          |- mainmenu (select solitaire to play)
+
+    root
+     |- desktop
+         |- mainmenu (select solitaire to play)
+
+    root
+     |- desktop
+         |- background (triangles)
+         |- topmenu (options)
+         |- solitaire
+
+    root
+     |- desktop
+         |- background (triangles)
+         |- topmenu (options)
+         |- solved

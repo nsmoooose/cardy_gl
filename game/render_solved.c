@@ -1,7 +1,8 @@
 #include <math.h>
 #include <stdlib.h>
-#include "render_mainmenu.h"
-#include "render_solved.h"
+#include "api/render_widget.h"
+#include "game/ui.h"
+#include "game/render_solved.h"
 
 const char *render_object_solved_id = "solitaire_solved";
 
@@ -12,18 +13,9 @@ typedef struct {
 static bool render_object_solved_keyboard_down(render_event_args *event,
                                                unsigned char key, int modifiers,
                                                int x, int y) {
-	render_object *object;
-
 	switch (key) {
 	case 27:
-		object = render_object_find(event->rcontext->object,
-		                            render_object_mainmenu_id);
-		if (object == 0) {
-			object = render_object_find(event->rcontext->object, "desktop");
-			render_object_mainmenu(object);
-		} else {
-			render_object_queue_free(event->rcontext, object);
-		}
+		ui_scene_main(event->rcontext);
 		return true;
 	}
 	return false;

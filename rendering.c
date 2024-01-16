@@ -1,25 +1,14 @@
 #include <unistd.h>
 #include "api/render_widget.h"
-#include "game/backgrounds/rotating_triangles.h"
-#include "game/render_mainmenu.h"
-#include "game/render_topmenu.h"
+#include "game/ui.h"
 #include "program.h"
 #include "rendering.h"
 
 void rendering_setup(void) {
-	render_object *desktop;
-
 	g_rcontext = render_context_create();
-	g_rcontext->object = render_object_triangles();
+	g_rcontext->object = render_object_create("root");
 
-	render_object_add_child(g_rcontext->object,
-	                        render_object_create("placeholder"));
-
-	desktop = widget_desktop("desktop");
-	render_object_add_child(g_rcontext->object, desktop);
-	render_object_topmenu(desktop);
-
-	render_object_mainmenu(desktop);
+	ui_scene_main(g_rcontext);
 }
 
 void rendering_window_size_change(int width, int height) {
