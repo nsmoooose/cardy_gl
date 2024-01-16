@@ -57,6 +57,7 @@ deploy:
 	@mkdir -p dist/win32
 	@cp resources dist/win32/ -r
 	@cp cardy_gl dist/win32/cardy_gl.exe
+	@strip dist/win32/cardy_gl.exe
 	./copy_dependencies.sh cardy_gl dist/win32/
 
 install:

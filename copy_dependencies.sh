@@ -5,6 +5,9 @@
 # locks it?
 # sleep 1.5
 
+mkdir -p dist/win32/lib/
+cp -r /mingw64/lib/gdk-pixbuf-2.0/ dist/win32/lib/
+
 mapfile -t files < <(ldd $1 | grep -vi WINDOWS | grep -oP "(?<=\=\> ).*(?= \()")
 for f in "${files[@]}"; do
     if [[ "$f" =~ "$(pwd)/$2" ]]; then
