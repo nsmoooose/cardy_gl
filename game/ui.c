@@ -1,5 +1,6 @@
 #include "api/render_widget.h"
 #include "game/backgrounds/rotating_triangles.h"
+#include "game/render_card_themes.h"
 #include "game/render_mainmenu.h"
 #include "game/render_solitaire.h"
 #include "game/render_solved.h"
@@ -16,6 +17,14 @@ void ui_scene_main(render_context *rcontext) {
 	render_object *desktop = widget_desktop("desktop");
 	render_object_add_child(rcontext->object, desktop);
 	render_object_mainmenu(desktop);
+}
+
+void ui_scene_card_themes(render_context *rcontext) {
+	ui_queue_free_all(rcontext);
+
+	render_object *desktop = widget_desktop("desktop");
+	render_object_add_child(rcontext->object, desktop);
+	render_object_card_themes(desktop);
 }
 
 void ui_scene_solitaire(render_context *rcontext,

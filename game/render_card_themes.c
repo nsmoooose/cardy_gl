@@ -2,15 +2,19 @@
 #include "api/render_widget.h"
 #include "api/resource.h"
 #include "api/theme.h"
-#include "render_card_themes.h"
+#include "game/card_theme.h"
+#include "game/render_card_themes.h"
+#include "game/ui.h"
 
 const char *render_object_card_themes_id = "mainmenu";
 
-static void card_theme_callback(render_event_args *event, void *data) {}
+static void card_theme_callback(render_event_args *event, void *data) {
+	card_theme_set(event->object->id);
+	ui_scene_main(event->rcontext);
+}
 
 static void back_callback(render_event_args *event, void *data) {
-	/* TODO: Have a better shutdown of the application. */
-	exit(0);
+	ui_scene_main(event->rcontext);
 }
 
 void render_object_card_themes(render_object *parent) {
@@ -54,7 +58,7 @@ void render_object_card_themes(render_object *parent) {
 	widget_style_set_image_size(style, 128, 32);
 	/* widget_style_set_font_face(style, "Meera"); */
 	widget_style_set_font_size(style, 16.0f);
-	widget_style_set_text(style, "Quit");
+	widget_style_set_text(style, "Back");
 	widget_style_set_text_color(style, 0.0f, 0.0f, 0.0f, 0.0f);
 	widget_style_set_size(style, 128.0f, 32.0f);
 	widget_style_set_pos(style, 30.0f, button_top);

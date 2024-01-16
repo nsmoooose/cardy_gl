@@ -7,7 +7,6 @@
 #include "api/resource.h"
 #include "api/solitaires/solitaires.h"
 #include "game/render_mainmenu.h"
-#include "game/render_card_themes.h"
 #include "game/ui.h"
 
 const char *render_object_mainmenu_id = "mainmenu";
@@ -22,7 +21,9 @@ static void sol_callback(render_event_args *event, void *data) {
 	game_registry_free(registry);
 }
 
-static void card_theme_callback(render_event_args *event, void *data) {}
+static void card_theme_callback(render_event_args *event, void *data) {
+	ui_scene_card_themes(event->rcontext);
+}
 
 static void quit_callback(render_event_args *event, void *data) {
 	/* TODO: Have a better shutdown of the application. */

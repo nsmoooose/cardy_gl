@@ -10,9 +10,9 @@
 #include "api/render_widget.h"
 #include "api/resource.h"
 #include "api/theme.h"
+#include "game/card_theme.h"
 #include "game/ui.h"
 #include "game/render_solitaire.h"
-#include "game/render_solved.h"
 
 typedef struct {
 	mem_context *context;
@@ -38,9 +38,6 @@ typedef struct {
 	GLfloat specular_light[4];
 	GLfloat light_pos[4];
 } render_solitaire_data;
-
-/* Themes are slow to load. Keep it global for now. */
-theme *g_theme = 0;
 
 const char *render_object_solitaire_id = "solitaire";
 
@@ -736,6 +733,7 @@ card_geometry *card_geometry_create(mem_context *context,
 
 void render_card(render_event_args *event, visual_pile *pile, card_proxy *proxy,
                  bool selected, card_geometry *geo) {
+	theme *card_theme = card_theme_get();
 	GLfloat color_sel[] = {1.0f, 0.7f, 0.7f};
 	GLfloat color_white[] = {1.0f, 1.0f, 1.0f};
 	render_solitaire_data *i = event->object->data;
@@ -768,7 +766,7 @@ void render_card(render_event_args *event, visual_pile *pile, card_proxy *proxy,
 	if (proxy->card != 0) {
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D,
-		              theme_get_card_texture(g_theme, proxy->card->suit,
+		              theme_get_card_texture(card_theme, proxy->card->suit,
 		                                     proxy->card->value));
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glTexCoordPointer(2, GL_FLOAT, 0, geo->front_texture_coords);
@@ -786,7 +784,7 @@ void render_card(render_event_args *event, visual_pile *pile, card_proxy *proxy,
 	glNormalPointer(GL_FLOAT, 0, geo->back_normals);
 	glTexCoordPointer(2, GL_FLOAT, 0, geo->back_texture_coords);
 	glVertexPointer(3, GL_FLOAT, 0, geo->back_vertexes);
-	glBindTexture(GL_TEXTURE_2D, theme_get_card_back_texture(g_theme));
+	glBindTexture(GL_TEXTURE_2D, theme_get_card_back_texture(card_theme));
 	glDrawArrays(GL_TRIANGLES, 0, geo->face_count / 3);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
@@ -930,15 +928,6 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 	i->time_elapsed += delta;
 }
 
-static void render_object_solitaire_change_card_theme(const char *theme) {
-	char theme_dir[PATH_MAX];
-	if (resource_get_dir(theme_dir, PATH_MAX)) {
-		strncat(theme_dir, "resources/card_themes", PATH_MAX - 1);
-		theme_unload(g_theme);
-		g_theme = theme_load(theme_dir, theme);
-	}
-}
-
 static bool render_object_solitaire_keyboard_down(render_event_args *event,
                                                   unsigned char key,
                                                   int modifiers, int x, int y) {
@@ -974,19 +963,19 @@ static bool render_object_solitaire_keyboard_down(render_event_args *event,
 		return true;
 
 	case 'z':
-		render_object_solitaire_change_card_theme("ancient_french");
+		card_theme_set("ancient_french");
 		return true;
 	case 'x':
-		render_object_solitaire_change_card_theme("anglo");
+		card_theme_set("anglo");
 		return true;
 	case 'c':
-		render_object_solitaire_change_card_theme("atlasnye");
+		card_theme_set("atlasnye");
 		return true;
 	case 'v':
-		render_object_solitaire_change_card_theme("dondorf");
+		card_theme_set("dondorf");
 		return true;
 	case 'b':
-		render_object_solitaire_change_card_theme("paris");
+		card_theme_set("paris");
 		return true;
 	default:
 		return false;
@@ -1072,13 +1061,6 @@ render_object *render_object_solitaire(solitaire_create callback) {
 	i->light_pos[1] = 0.0f;
 	i->light_pos[2] = 100.0f;
 	i->light_pos[3] = 1.0f;
-
-	if (g_theme == 0) {
-		char themes_path[PATH_MAX];
-		resource_get_dir(themes_path, PATH_MAX);
-		strncat(themes_path, "resources/card_themes", PATH_MAX - 1);
-		g_theme = theme_load(themes_path, "paris");
-	}
 
 	i->sol = callback(i->context, i->settings);
 
