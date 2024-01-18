@@ -460,7 +460,6 @@ expression_token **expression_tokenize(const char *exp) {
 	return tokens_to_return;
 
 error:
-	token = 0;
 	for (token = 0; tokens[token]; ++token) {
 		expression_free_token(tokens[token]);
 	}
