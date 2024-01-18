@@ -24,9 +24,21 @@
         "cards_url": "https://gitlab.gnome.org/GNOME/aisleriot/-/raw/master/cards/dondorf.svg"
     },
     {
+        "name": "Ornamental",
+        "dir": "ornamental",
+        "license_url": "https://gitlab.gnome.org/GNOME/aisleriot/-/raw/master/cards/README.ornamental",
+        "cards_url": "https://gitlab.gnome.org/GNOME/aisleriot/-/raw/master/cards/ornamental.svg"
+    },
+    {
         "name": "Paris",
         "dir": "paris",
         "license_url": "https://gitlab.gnome.org/GNOME/aisleriot/-/raw/master/cards/README.paris",
         "cards_url": "https://gitlab.gnome.org/GNOME/aisleriot/-/raw/master/cards/paris.svg"
+    },
+    {
+        "name": "Plastic",
+        "dir": "plastic",
+        "license_url": "https://gitlab.gnome.org/GNOME/aisleriot/-/raw/master/cards/README.plastic",
+        "cards_url": "https://gitlab.gnome.org/GNOME/aisleriot/-/raw/master/cards/plastic.svg"
     }
 ]
