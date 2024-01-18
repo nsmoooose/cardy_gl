@@ -966,13 +966,13 @@ static bool render_object_solitaire_keyboard_down(render_event_args *event,
 		return true;
 
 	case '>':
-		if(i->theme_index < (i->themes->theme_count - 1)) {
+		if (i->theme_index < (i->themes->theme_count - 1)) {
 			i->theme_index++;
 			card_theme_set(i->themes->theme_names[i->theme_index]);
 		}
 		return true;
 	case '<':
-		if(i->theme_index > 0) {
+		if (i->theme_index > 0) {
 			i->theme_index--;
 			card_theme_set(i->themes->theme_names[i->theme_index]);
 		}
