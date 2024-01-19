@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#include "card.h"
+#include "api/card.h"
 
 card *card_create(mem_context *context, card_suit suit, card_value value) {
 	card *c = mem_alloc(context, sizeof(card));

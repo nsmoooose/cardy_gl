@@ -4,8 +4,8 @@
 #include <dirent.h>
 #include <stdlib.h>
 #include <string.h>
-#include "render.h"
-#include "theme.h"
+#include "api/render.h"
+#include "api/theme.h"
 
 const int card_texture_width = 128;
 const int card_texture_height = 256;

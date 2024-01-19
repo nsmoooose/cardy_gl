@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
-#include "game_registry.h"
+#include "api/game_registry.h"
 
 game_registry *game_registry_create(void) {
 	game_registry *registry = calloc(1, sizeof(game_registry));

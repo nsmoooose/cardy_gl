@@ -1,6 +1,6 @@
 #include <math.h>
 #include <stdlib.h>
-#include "ease.h"
+#include "api/ease.h"
 
 float ease_time_protect4f(ease_function4f function, float t, float b, float c,
                           float d) {

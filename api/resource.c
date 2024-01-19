@@ -1,7 +1,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "resource.h"
+#include "api/resource.h"
 
 bool resource_get_dir(char *buffer, int buffer_length) {
 	struct stat s;

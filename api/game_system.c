@@ -1,6 +1,6 @@
 #include <stdlib.h>
-#include "game_system.h"
-#include "solitaires/solitaires.h"
+#include "api/game_system.h"
+#include "api/solitaires/solitaires.h"
 
 typedef struct {
 	game_registry *registry;

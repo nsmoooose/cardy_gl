@@ -1,8 +1,8 @@
 #include <cairo.h>
 #include <stdlib.h>
 #include <string.h>
-#include "expression.h"
-#include "render_widget.h"
+#include "api/expression.h"
+#include "api/render_widget.h"
 
 typedef struct {
 	float red, green, blue, alpha;

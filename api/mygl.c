@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "mygl.h"
+#include "api/mygl.h"
 
 void check_gl_errors(char *last_section) {
 	GLenum errCode;

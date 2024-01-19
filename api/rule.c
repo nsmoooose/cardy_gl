@@ -1,7 +1,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
-#include "rule.h"
+#include "api/rule.h"
 
 /* ------------------------------------------------------------------------- */
 typedef struct {
