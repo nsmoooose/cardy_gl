@@ -832,19 +832,20 @@ void render_pile(render_event_args *event, visual_pile *pile,
 		glRotatef(pile->rotation, 0.0f, 0.0f, 1.0f);
 	}
 
-	glColor3f(0.0f, 0.7f, 0.0f);
+	glColor3f(0.3f, 0.7f, 0.3f);
 	glBegin(GL_QUADS);
-	glVertex2f(0 - settings->card_width / 2.0f,
-	           0 + settings->card_height / 2.0f);
+	float extra = 3.0f;
+	glVertex2f(0 - (settings->card_width + extra) / 2.0f,
+	           0 + (settings->card_height + extra) / 2.0f);
 	glNormal3f(0.0f, 0.0f, 1.0f);
-	glVertex2f(0 + settings->card_width / 2.0f,
-	           0 + settings->card_height / 2.0f);
+	glVertex2f(0 + (settings->card_width + extra) / 2.0f,
+	           0 + (settings->card_height + extra) / 2.0f);
 	glNormal3f(0.0f, 0.0f, 1.0f);
-	glVertex2f(0 + settings->card_width / 2.0f,
-	           0 - settings->card_height / 2.0f);
+	glVertex2f(0 + (settings->card_width + extra) / 2.0f,
+	           0 - (settings->card_height + extra) / 2.0f);
 	glNormal3f(0.0f, 0.0f, 1.0f);
-	glVertex2f(0 - settings->card_width / 2.0f,
-	           0 - settings->card_height / 2.0f);
+	glVertex2f(0 - (settings->card_width + extra) / 2.0f,
+	           0 - (settings->card_height + extra) / 2.0f);
 	glNormal3f(0.0f, 0.0f, 1.0f);
 	glEnd();
 
