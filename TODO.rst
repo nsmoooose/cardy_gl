@@ -140,6 +140,14 @@ Rotation for cards
 for each card between renderings. Sugest an array in the visual pile struct with some
 predefined rotations when the pile is created.
 
+Hint: Indication when only a few cards left in a pile
+-----------------------------------------------------
+
+Hint: Show which pile that is dealing cards
+-------------------------------------------
+
+Use an svg image for this.
+
 Server application for multiuser plays
 ======================================
 
