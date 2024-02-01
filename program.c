@@ -1,5 +1,6 @@
 #include <getopt.h>
 #include <librsvg/rsvg.h>
+#include <locale.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -27,6 +28,8 @@ void window_special_key_press(int key, int x, int y) {
 int main(int argc, char *argv[]) {
 	int opt, width = 800, height = 600;
 	char *separator;
+
+	setlocale(LC_NUMERIC, "C");
 
 	while ((opt = getopt(argc, argv, "dhg:")) != -1) {
 		switch (opt) {

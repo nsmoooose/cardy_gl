@@ -5,7 +5,7 @@ static theme *g_theme = NULL;
 
 theme *card_theme_get(void) {
 	if (!g_theme) {
-		card_theme_set("paris");
+		card_theme_set("ornamental");
 	}
 	return g_theme;
 }

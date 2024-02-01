@@ -1037,8 +1037,11 @@ render_object *render_object_solitaire(solitaire_create callback) {
 	o->free = render_object_solitaire_free;
 
 	i->context = mem_context_create();
+
+	theme *card_theme = card_theme_get();
+
 	i->settings = mem_alloc(i->context, sizeof(visual_settings));
-	i->settings->corner_width = 2.0f;
+	i->settings->corner_width = card_theme->corner_width;
 	i->settings->corner_segments = 4;
 	i->settings->card_width = 40.0f;
 	i->settings->card_height = 60.0f;

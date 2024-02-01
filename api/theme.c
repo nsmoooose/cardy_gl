@@ -53,6 +53,23 @@ themes *theme_list(mem_context *context, const char *themes_directory) {
 	return t;
 }
 
+char *file_read(const char *filename) {
+	FILE *fp = fopen(filename, "r");
+	if(!fp) {
+		exit(1);
+	}
+	fseek(fp, 0, SEEK_END);
+	int len = ftell(fp);
+
+	fseek(fp, 0, SEEK_SET);
+
+	/* File buffer including null termination. */
+	char *buffer = calloc(len + 1, 1);
+	fread(buffer, len, 1, fp);
+	fclose(fp);
+	return buffer;
+}
+
 theme *theme_load(const char *themes_directory, const char *name) {
 	theme *t;
 	char *buffer = calloc(1, 1000);
@@ -61,6 +78,12 @@ theme *theme_load(const char *themes_directory, const char *name) {
 	t = calloc(1, sizeof(theme));
 	t->theme_directory = buffer;
 	theme_render_card_textures(t);
+
+	char corner_width_file[MAX_PATH];
+	snprintf(corner_width_file, MAX_PATH, "%s/corner_width", buffer);
+	char *data = file_read(corner_width_file);
+	t->corner_width = atof(data);
+	free(data);
 	return t;
 }
 

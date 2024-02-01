@@ -16,6 +16,8 @@ typedef struct {
 	GLuint card_textures[55];
 
 	char *theme_directory;
+
+	float corner_width;
 } theme;
 
 typedef struct {
