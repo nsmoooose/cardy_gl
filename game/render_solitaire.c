@@ -99,6 +99,18 @@ static void callback_card(render_event_args *event, void *data) {
 	              data);
 }
 
+static void card_geometry_free(mem_context *context, card_geometry *geometry) {
+	mem_free(context, geometry->back_vertexes);
+	mem_free(context, geometry->back_normals);
+	mem_free(context, geometry->back_texture_coords);
+	mem_free(context, geometry->side_vertexes);
+	mem_free(context, geometry->side_normals);
+	mem_free(context, geometry->front_vertexes);
+	mem_free(context, geometry->front_normals);
+	mem_free(context, geometry->front_texture_coords);
+	mem_free(context, geometry);
+}
+
 card_geometry *card_geometry_create(mem_context *context,
                                     visual_settings *settings) {
 
@@ -983,12 +995,24 @@ static bool render_object_solitaire_keyboard_down(render_event_args *event,
 		if (i->theme_index < (i->themes->theme_count - 1)) {
 			i->theme_index++;
 			card_theme_set(i->themes->theme_names[i->theme_index]);
+
+			i->settings->corner_width = card_theme_get()->corner_width;
+
+			/* Theme affects corner radius of cards */
+			card_geometry_free(i->context, i->card_geometry);
+			i->card_geometry = card_geometry_create(i->context, i->settings);
 		}
 		return true;
 	case '<':
 		if (i->theme_index > 0) {
 			i->theme_index--;
 			card_theme_set(i->themes->theme_names[i->theme_index]);
+
+			i->settings->corner_width = card_theme_get()->corner_width;
+
+			/* Theme affects corner radius of cards */
+			card_geometry_free(i->context, i->card_geometry);
+			i->card_geometry = card_geometry_create(i->context, i->settings);
 		}
 		return true;
 	default:
