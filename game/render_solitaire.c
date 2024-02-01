@@ -678,18 +678,30 @@ card_geometry *card_geometry_create(mem_context *context,
 			geo->side_normals[side_index + 2] = 0.0f;
 			side_index += 3;
 
+			/*
+			  Example of a front facing triangle in the top right corner.
+
+			     1__ 2
+			     /  /
+			    / /
+			   //
+			  /
+			 3
+
+			*/
 			geo->front_vertexes[face_index + 0] = 0.0f + w + sinf(angle) * cr;
 			geo->front_vertexes[face_index + 1] = 0.0f + h + cosf(angle) * cr;
 			geo->front_vertexes[face_index + 2] = 0.0f + ht;
 			geo->front_texture_coords[coord_index + 0] =
 				(geo->front_vertexes[face_index + 0] + hw) / cw;
 			geo->front_texture_coords[coord_index + 1] =
-				(geo->front_vertexes[face_index + 1] + hh) / ch;
+				1.0f - (geo->front_vertexes[face_index + 1] + hh) / ch;
 			geo->front_normals[face_index + 0] = 0.0f;
 			geo->front_normals[face_index + 1] = 0.0f;
 			geo->front_normals[face_index + 2] = 1.0f;
 			face_index += 3;
 			coord_index += 2;
+
 			geo->front_vertexes[face_index + 0] =
 				0.0f + w + sinf(angle + sa) * cr;
 			geo->front_vertexes[face_index + 1] =
@@ -698,17 +710,18 @@ card_geometry *card_geometry_create(mem_context *context,
 			geo->front_texture_coords[coord_index + 0] =
 				(geo->front_vertexes[face_index + 0] + hw) / cw;
 			geo->front_texture_coords[coord_index + 1] =
-				(geo->front_vertexes[face_index + 1] + hh) / ch;
+				1.0f - (geo->front_vertexes[face_index + 1] + hh) / ch;
 			geo->front_normals[face_index + 0] = 0.0f;
 			geo->front_normals[face_index + 1] = 0.0f;
 			geo->front_normals[face_index + 2] = 1.0f;
 			face_index += 3;
 			coord_index += 2;
+
 			geo->front_vertexes[face_index + 0] = w;
 			geo->front_vertexes[face_index + 1] = h;
 			geo->front_vertexes[face_index + 2] = 0.0f + ht;
 			geo->front_texture_coords[coord_index + 0] = (w + hw) / cw;
-			geo->front_texture_coords[coord_index + 1] = (h + hh) / ch;
+			geo->front_texture_coords[coord_index + 1] = 1.0f - (h + hh) / ch;
 			geo->front_normals[face_index + 0] = 0.0f;
 			geo->front_normals[face_index + 1] = 0.0f;
 			geo->front_normals[face_index + 2] = 1.0f;
