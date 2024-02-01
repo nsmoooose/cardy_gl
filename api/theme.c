@@ -55,7 +55,7 @@ themes *theme_list(mem_context *context, const char *themes_directory) {
 
 char *file_read(const char *filename) {
 	FILE *fp = fopen(filename, "r");
-	if(!fp) {
+	if (!fp) {
 		exit(1);
 	}
 	fseek(fp, 0, SEEK_END);
