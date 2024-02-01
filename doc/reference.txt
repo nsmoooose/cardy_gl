@@ -1,6 +1,0 @@
-
-# librsvg
-http://library.gnome.org/devel/rsvg/stable/index.html
-
-# Cairo documentation
-http://cairographics.org/manual/
