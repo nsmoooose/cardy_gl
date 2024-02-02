@@ -18,7 +18,7 @@ game_registry *solitaire_get_registry(void) {
 	game_registry_add(r, "pyramid",
 	                  game_create("Pyramid", true, solitaire_pyramid));
 	game_registry_add(r, "heirship",
-	                  game_create("Heirship", true, solitaire_heirship));
+	                  game_create("Heirship", false, solitaire_heirship));
 	game_registry_add(r, "test1", game_create("Test1", true, solitaire_test1));
 	return r;
 }
