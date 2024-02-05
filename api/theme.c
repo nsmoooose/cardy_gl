@@ -79,8 +79,8 @@ theme *theme_load(const char *themes_directory, const char *name) {
 	t->theme_directory = buffer;
 	theme_render_card_textures(t);
 
-	char corner_width_file[MAX_PATH];
-	snprintf(corner_width_file, MAX_PATH, "%s/corner_width", buffer);
+	char corner_width_file[FILENAME_MAX];
+	snprintf(corner_width_file, FILENAME_MAX, "%s/corner_width", buffer);
 	char *data = file_read(corner_width_file);
 	t->corner_width = atof(data);
 	free(data);
