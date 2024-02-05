@@ -12,25 +12,9 @@ void rendering_scene(void) {
 	glutSwapBuffers();
 }
 
-void rendering_idle(void) {
-	static int lastUpdate = 0;
-	static int frames = 0;
-	char buf[20];
-	int currentTime;
-
+void rendering_timer(int value) {
 	glutPostRedisplay();
-
-	currentTime = glutGet(GLUT_ELAPSED_TIME);
-	frames++;
-
-	if ((currentTime - lastUpdate) >= 1000) {
-		sprintf(buf, "Cardy 4.0 (fps: %d)", frames);
-		glutSetWindowTitle(buf);
-		frames = 0;
-		lastUpdate = currentTime;
-	}
-
-	usleep(50000);
+	glutTimerFunc(1000 / 60, rendering_timer, 0);
 }
 
 int main(int argc, char **argv) {
@@ -41,7 +25,7 @@ int main(int argc, char **argv) {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(800, 600);
 	glutCreateWindow("example-desktop");
-	glutIdleFunc(rendering_idle);
+	glutTimerFunc(1000 / 60, rendering_timer, 0);
 	glutDisplayFunc(rendering_scene);
 
 	glMatrixMode(GL_PROJECTION);
