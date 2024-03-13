@@ -56,7 +56,8 @@ void render_object_mainmenu(render_object *parent) {
 	style = widget_get_default_style(button);
 	widget_style_set_left(style, "viewport_width/2-width/2");
 	widget_style_set_top(style, "viewport_height/2-height/2");
-	widget_style_set_size(style, 300.0f, 300.0f);
+	widget_style_set_width(style, "viewport_height/1.5");
+	widget_style_set_height(style, "viewport_height/1.5");
 	widget_style_set_image(style, h, "#background", 512, 512);
 	widget_style_set_rotation(style, style_key_render_time);
 	render_object_add_child(window, button);
