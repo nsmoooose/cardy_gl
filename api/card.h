@@ -63,6 +63,10 @@ typedef struct visual_pile_St {
 	 */
 	float origin[3];
 
+	/** If the pile should be visible or not.
+	 */
+	bool visible;
+
 	/** Rotation of the pile of cards. All cards rendered on this pile
 	 *  will have the same rotation.
 	 */

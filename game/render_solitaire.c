@@ -946,7 +946,10 @@ void render_object_solitaire_render(render_event_args *event, float delta) {
 		if (!pile) {
 			continue;
 		}
-		render_pile(event, pile, i->sol->visual->settings, i->card_geometry);
+		if (pile->visible) {
+			render_pile(event, pile, i->sol->visual->settings,
+			            i->card_geometry);
+		}
 	}
 	glDisable(GL_DEPTH_TEST);
 	glPopMatrix();

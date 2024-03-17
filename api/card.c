@@ -315,6 +315,7 @@ int visual_get_rest_of_pile(visual *vis, card_proxy *card) {
 
 visual_pile *visual_pile_create(mem_context *context, pile *pile) {
 	visual_pile *p = mem_alloc(context, sizeof(visual_pile));
+	p->visible = true;
 	p->data = pile;
 	p->cards = mem_alloc(context, pile->size * sizeof(card_proxy *));
 	return p;

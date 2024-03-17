@@ -37,6 +37,10 @@ typedef struct {
 	pile *pile3;
 	pile *pile4;
 	pile *pile5;
+
+	struct {
+		visual_pile *pile1, *pile2, *pile3, *pile4, *pile5;
+	} visual;
 } internal;
 
 typedef struct {
@@ -69,6 +73,7 @@ static void action_deal_execute(visual_pile_action *action) {
 
 		if (card_count(i->deck) == 0) {
 			i->state = 2;
+			i->visual.pile5->visible = false;
 			card_move_all_array(i->deck, 5, i->pile1, i->pile2, i->pile3,
 			                    i->pile4, i->pile5);
 			card_hide_all(i->deck);
@@ -89,6 +94,7 @@ static void action_deal_execute(visual_pile_action *action) {
 	} else if (i->state == 2) {
 		if (card_count(i->deck) == 0) {
 			i->state = 3;
+			i->visual.pile4->visible = false;
 			card_move_all_array(i->deck, 5, i->pile1, i->pile2, i->pile3,
 			                    i->pile4, i->pile5);
 			card_hide_all(i->deck);
@@ -106,6 +112,7 @@ static void action_deal_execute(visual_pile_action *action) {
 	} else if (i->state == 3) {
 		if (card_count(i->deck) == 0) {
 			i->state = 4;
+			i->visual.pile3->visible = false;
 			card_move_all_array(i->deck, 5, i->pile1, i->pile2, i->pile3,
 			                    i->pile4, i->pile5);
 			card_hide_all(i->deck);
@@ -121,6 +128,7 @@ static void action_deal_execute(visual_pile_action *action) {
 	} else if (i->state == 4) {
 		if (card_count(i->deck) == 0) {
 			i->state = 5;
+			i->visual.pile2->visible = false;
 			card_move_all_array(i->deck, 5, i->pile1, i->pile2, i->pile3,
 			                    i->pile4, i->pile5);
 			card_hide_all(i->deck);
@@ -139,6 +147,11 @@ static void action_deal_execute(visual_pile_action *action) {
 			card_reveal_all(i->pile1);
 		}
 	} else if (i->state == 6) {
+		i->visual.pile1->visible = true;
+		i->visual.pile2->visible = true;
+		i->visual.pile3->visible = true;
+		i->visual.pile4->visible = true;
+		i->visual.pile5->visible = true;
 		card_move_all_array(i->deck, 19, i->src1, i->src2, i->src3, i->src4,
 		                    i->king1, i->king2, i->king3, i->king4, i->center,
 		                    i->build1, i->build2, i->build3, i->build4, i->done,
@@ -431,30 +444,35 @@ solitaire *solitaire_maltesercross(mem_context *context,
 	pile1->origin[1] = 0 - (settings->card_height / 2 +
 	                        settings->card_spacing * 3 + settings->card_height +
 	                        settings->card_width + settings->card_height / 2);
+	i->visual.pile1 = pile1;
 	visual_add_pile(context, s->visual, pile1);
 
 	i->pile2 = pile_create(context, 52);
 	pile2 = visual_pile_create(context, i->pile2);
 	pile2->origin[0] = 0 - (settings->card_spacing + settings->card_width);
 	pile2->origin[1] = pile1->origin[1];
+	i->visual.pile2 = pile2;
 	visual_add_pile(context, s->visual, pile2);
 
 	i->pile3 = pile_create(context, 52);
 	pile3 = visual_pile_create(context, i->pile3);
 	pile3->origin[0] = 0;
 	pile3->origin[1] = pile1->origin[1];
+	i->visual.pile3 = pile3;
 	visual_add_pile(context, s->visual, pile3);
 
 	i->pile4 = pile_create(context, 52);
 	pile4 = visual_pile_create(context, i->pile4);
 	pile4->origin[0] = settings->card_spacing + settings->card_width;
 	pile4->origin[1] = pile1->origin[1];
+	i->visual.pile4 = pile4;
 	visual_add_pile(context, s->visual, pile4);
 
 	i->pile5 = pile_create(context, 52);
 	pile5 = visual_pile_create(context, i->pile5);
 	pile5->origin[0] = settings->card_spacing * 2 + settings->card_width * 2;
 	pile5->origin[1] = pile1->origin[1];
+	i->visual.pile5 = pile5;
 	visual_add_pile(context, s->visual, pile5);
 
 	for (index = 0; index < s->visual->pile_count; ++index) {
