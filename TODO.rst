@@ -74,6 +74,9 @@ Angle on camera controlled by slidebar
 Random rotation of each card
 ----------------------------
 
+Undo of last action
+-------------------
+
 State transitions
 -----------------
 

@@ -89,7 +89,7 @@ static void setup_rules(mem_context *context, solitaire *s, internal *i) {
 
 	s->ruleset = ruleset_create(context);
 
-	/* We allow to build down regardless of suit on king piles. */
+	/* We allow to build down or up regardless of suit on king piles. */
 	r = rule_create(context);
 	rule_add_condition(context, r, src);
 	rule_add_condition(context, r, condition_top_card(context));
@@ -102,6 +102,10 @@ static void setup_rules(mem_context *context, solitaire *s, internal *i) {
 			context,
 			condition_top_card_compare(context, 0, e_dest_1higher_value),
 			condition_top_card_compare(context, 0, e_dest_1lower_value)));
+	rule_add_condition(
+		context, r,
+		condition_not(context, condition_source_card_equal(
+								   context, e_suit_none, 1, e_equal_value, 0)));
 	ruleset_add_rule(context, s->ruleset, r);
 
 	/* We allow to build up regardless of suit on ace piles. */
