@@ -3,12 +3,13 @@
 #include <stdlib.h>
 #include "api/render_widget.h"
 #include "api/resource.h"
-#include "render_topmenu.h"
+#include "game/render_topmenu.h"
+#include "game/ui.h"
 
 const char *render_object_topmenu_id = "topmenu";
 
 static void topmenu_menu_callback(render_event_args *event, void *data) {
-	printf("Go to main menu.\n");
+	ui_scene_main(event->rcontext);
 }
 
 static void topmenu_options_callback(render_event_args *event, void *data) {
