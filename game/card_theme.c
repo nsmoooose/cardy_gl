@@ -18,7 +18,7 @@ void card_theme_set(const char *name) {
 
 	char theme_dir[PATH_MAX];
 	if (resource_get_dir(theme_dir, PATH_MAX)) {
-		strncat(theme_dir, "resources/card_themes", PATH_MAX - 1);
+		strncat(theme_dir, "resources/card_decks/french/themes", PATH_MAX - 1);
 		g_theme = theme_load(theme_dir, name);
 	}
 }

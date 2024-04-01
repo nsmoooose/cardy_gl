@@ -34,7 +34,7 @@ void render_object_card_themes(render_object *parent) {
 	float button_top = 140.0f;
 
 	mem_context *mem = mem_context_create();
-	strncat(theme_dir, "resources/card_themes", PATH_MAX - 1);
+	strncat(theme_dir, "resources/card_decks/french/themes", PATH_MAX - 1);
 	themes *themes = theme_list(mem, theme_dir);
 
 	for (int i = 0; i < themes->theme_count; i++) {

@@ -1110,7 +1110,7 @@ render_object *render_object_solitaire(solitaire_create callback) {
 
 	char theme_dir[PATH_MAX];
 	resource_get_dir(theme_dir, PATH_MAX);
-	strncat(theme_dir, "resources/card_themes", PATH_MAX - 1);
+	strncat(theme_dir, "resources/card_decks/french/themes", PATH_MAX - 1);
 	i->themes = theme_list(i->context, theme_dir);
 
 	return o;

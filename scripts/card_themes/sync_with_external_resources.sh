@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-destination=$(pwd)/../../resources/card_themes
+destination=$(pwd)/../../resources/card_decks/french/themes
 if [[ ! -d $destination ]]; then
     echo "ERROR: '$destination' does not exist!"
     exit 1
