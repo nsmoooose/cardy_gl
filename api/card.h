@@ -4,6 +4,11 @@
 #include "memory.h"
 
 typedef enum {
+	e_deck_french,
+	e_deck_skipbo
+} deck_type;
+
+typedef enum {
 	e_suit_none = -1,
 	e_suit_first = 0,
 	e_clubs = e_suit_first,
@@ -20,6 +25,7 @@ struct card_proxy_St;
 /** This is information about a single card.
  */
 typedef struct {
+	deck_type type;
 	card_value value;
 	card_suit suit;
 
@@ -110,7 +116,7 @@ typedef struct {
 
 /** Creates a single card with the suit and value.
  */
-card *card_create(mem_context *context, card_suit suit, card_value value);
+card *card_create(mem_context *context, deck_type type, card_suit suit, card_value value);
 
 /** Frees the memory used by the card.
  */
@@ -118,7 +124,8 @@ void card_free(mem_context *context, card *card);
 
 /** Creates a deck of cards with 52 cards if the array permits it.
  */
-void card_create_deck(mem_context *context, pile *pile, card_value ace);
+void card_create_deck_french(mem_context *context, pile *pile, card_value ace);
+void card_create_deck_skipbo(mem_context *context, pile *pile);
 
 /** Counts the number of cards that exists within the array.
  */

@@ -5,8 +5,9 @@
 #include <time.h>
 #include "api/card.h"
 
-card *card_create(mem_context *context, card_suit suit, card_value value) {
+card *card_create(mem_context *context, deck_type type, card_suit suit, card_value value) {
 	card *c = mem_alloc(context, sizeof(card));
+	c->type = type;
 	c->value = value;
 	c->suit = suit;
 	c->proxy = mem_alloc(context, sizeof(card_proxy));
@@ -20,7 +21,7 @@ void card_free(mem_context *context, card *card) {
 	}
 }
 
-void card_create_deck(mem_context *context, pile *pile, card_value ace) {
+void card_create_deck_french(mem_context *context, pile *pile, card_value ace) {
 	int index = 0;
 	card *card;
 	card_suit suit;
@@ -28,12 +29,18 @@ void card_create_deck(mem_context *context, pile *pile, card_value ace) {
 
 	for (suit = e_suit_first; suit <= e_suit_last; ++suit) {
 		for (value = 1; value < 14; ++value, ++index) {
-			card = card_create(context, suit, value);
+			card = card_create(context, e_deck_french, suit, value);
 			if (value == 1) {
 				card->value = ace;
 			}
 			card_append(card, pile);
 		}
+	}
+}
+
+void card_create_deck_skipbo(mem_context *context, pile *pile, card_value ace) {
+	for (int i=0;i < 3; i++) {
+		for (int value = 1; value < 13)
 	}
 }
 
