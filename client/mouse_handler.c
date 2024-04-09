@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include "api/mygl.h"
-#include "game/render_solitaire.h"
-#include "mouse_handler.h"
-#include "program.h"
-#include "rendering.h"
+#include "client/render_solitaire.h"
+#include "client/mouse_handler.h"
+#include "client/program.h"
+#include "client/rendering.h"
 
 #define MAX_SELECTION 2000
 

@@ -37,6 +37,7 @@ Dependencies:
 
     pacman -S mingw64/mingw-w64-x86_64-jq
     pacman -S mingw64/mingw-w64-x86_64-check
+    pacman -S mingw64/mingw-w64-x86_64-lcov
 
 Building::
 

@@ -2,9 +2,9 @@
 #include "api/render_widget.h"
 #include "api/resource.h"
 #include "api/theme.h"
-#include "game/card_theme.h"
-#include "game/render_card_themes.h"
-#include "game/ui.h"
+#include "client/card_theme.h"
+#include "client/render_card_themes.h"
+#include "client/ui.h"
 
 const char *render_object_card_themes_id = "mainmenu";
 

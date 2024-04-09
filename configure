@@ -4,8 +4,9 @@ cfg=$1
 
 if [ "$cfg" == "windows" ]; then
 	cat > config <<EOF
-export LIBS=-lcardy-game -lcardy-backgrounds -lcardy-api -lcardy-network -lcardy-solitaires -lglu32 -lm -lopengl32 -lws2_32 $(pkg-config --libs glib-2.0 gdk-pixbuf-2.0 pango cairo librsvg-2.0 libxml-2.0 pangocairo gio-2.0 freeglut) -L$(pwd)/api -L$(pwd)/game -L$(pwd)/api/network -L$(pwd)/api/solitaires -L$(pwd)/game/backgrounds
+export LIBS=-lglu32 -lm -lopengl32 -lws2_32 $(pkg-config --libs glib-2.0 gdk-pixbuf-2.0 pango cairo librsvg-2.0 libxml-2.0 pangocairo gio-2.0 freeglut)
 export CFLAGS=-std=gnu18 -I$(pwd) -mwindows -g -Os -Wall -Wstrict-prototypes -pedantic -Werror $(pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0 libxml-2.0 pangocairo gio-2.0)
+export LIBS_TESTS=$(pkg-config --libs check)
 EOF
 
 elif [ "$cfg" == "linux" ]; then
@@ -13,6 +14,7 @@ elif [ "$cfg" == "linux" ]; then
 	cat > config <<EOF
 export CFLAGS=-I$(pwd) -g -Os -Wall -Wstrict-prototypes \$(shell pkg-config --cflags glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0)
 export LIBS=-std=gnu18 -lcardy-game -lcardy-backgrounds -lcardy-api -lcardy-network -lcardy-solitaires -lglut -lGL -lGLU -lm \$(shell pkg-config --libs glib-2.0 gdk-pixbuf-2.0 cairo librsvg-2.0) -L$(pwd)/api -L$(pwd)/game -L$(pwd)/api/network -L$(pwd)/api/solitaires -L$(pwd)/game/backgrounds
+export LIBS_TESTS=$(pkg-config --libs check)
 EOF
 
 else

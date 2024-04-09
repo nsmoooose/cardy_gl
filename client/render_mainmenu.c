@@ -6,8 +6,8 @@
 #include "api/render_widget.h"
 #include "api/resource.h"
 #include "api/solitaires/solitaires.h"
-#include "game/render_mainmenu.h"
-#include "game/ui.h"
+#include "client/render_mainmenu.h"
+#include "client/ui.h"
 
 const char *render_object_mainmenu_id = "mainmenu";
 bool render_testing = false;

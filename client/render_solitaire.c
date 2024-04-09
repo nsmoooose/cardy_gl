@@ -10,9 +10,9 @@
 #include "api/render_widget.h"
 #include "api/resource.h"
 #include "api/theme.h"
-#include "game/card_theme.h"
-#include "game/ui.h"
-#include "game/render_solitaire.h"
+#include "client/card_theme.h"
+#include "client/ui.h"
+#include "client/render_solitaire.h"
 
 typedef struct {
 	mem_context *context;

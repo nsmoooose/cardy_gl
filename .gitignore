@@ -3,6 +3,8 @@ analysis-cov
 analysis-cppcheck
 .doxygen
 cardy_gl*
+cardy_server*
+cardy_tests*
 coverage
 dependencies/librsvg*
 dependencies/bin
@@ -11,13 +13,9 @@ dependencies/include
 dependencies/lib
 dependencies/share
 dist
-examples/background/example-background*
-examples/solved/example-solved*
-examples/widget-window/widget-window*
+example_*
 *.gcda
 *.gcno
 *.o
 *.a
-server/cardy_server*
-tests/cardy_tests*
 TAGS

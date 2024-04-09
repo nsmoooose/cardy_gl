@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include "api/render_widget.h"
 #include "api/resource.h"
-#include "game/render_topmenu.h"
-#include "game/ui.h"
+#include "client/render_topmenu.h"
+#include "client/ui.h"
 
 const char *render_object_topmenu_id = "topmenu";
 

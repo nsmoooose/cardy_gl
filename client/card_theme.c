@@ -1,5 +1,5 @@
 #include "api/resource.h"
-#include "game/card_theme.h"
+#include "client/card_theme.h"
 
 static theme *g_theme = NULL;
 

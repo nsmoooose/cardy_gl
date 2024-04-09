@@ -1,8 +1,8 @@
 #include <unistd.h>
 #include "api/render_widget.h"
-#include "game/ui.h"
-#include "program.h"
-#include "rendering.h"
+#include "client/ui.h"
+#include "client/program.h"
+#include "client/rendering.h"
 
 void rendering_setup(void) {
 	g_rcontext = render_context_create();

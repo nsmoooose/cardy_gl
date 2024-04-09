@@ -6,10 +6,10 @@
 #include <string.h>
 #include "api/card.h"
 #include "api/mygl.h"
-#include "game/render_solitaire.h"
-#include "game/render_mainmenu.h"
-#include "mouse_handler.h"
-#include "rendering.h"
+#include "client/render_solitaire.h"
+#include "client/render_mainmenu.h"
+#include "client/mouse_handler.h"
+#include "client/rendering.h"
 
 mem_context *g_context = 0;
 render_context *g_rcontext = 0;

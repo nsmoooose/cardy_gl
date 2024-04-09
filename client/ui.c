@@ -1,11 +1,11 @@
 #include "api/render_widget.h"
-#include "game/backgrounds/rotating_triangles.h"
-#include "game/render_card_themes.h"
-#include "game/render_mainmenu.h"
-#include "game/render_solitaire.h"
-#include "game/render_solved.h"
-#include "game/render_topmenu.h"
-#include "game/ui.h"
+#include "client/backgrounds/rotating_triangles.h"
+#include "client/render_card_themes.h"
+#include "client/render_mainmenu.h"
+#include "client/render_solitaire.h"
+#include "client/render_solved.h"
+#include "client/render_topmenu.h"
+#include "client/ui.h"
 
 static void ui_queue_free_all(render_context *rcontext) {
 	render_object_queue_free_children(rcontext, rcontext->object);
