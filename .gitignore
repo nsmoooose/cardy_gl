@@ -17,5 +17,4 @@ example_*
 *.gcda
 *.gcno
 *.o
-*.a
 TAGS
