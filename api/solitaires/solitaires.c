@@ -1,4 +1,5 @@
 #include "solitaires.h"
+#include "klondyke.h"
 #include "theidiot.h"
 #include "maltesercross.h"
 #include "noname1.h"
@@ -13,6 +14,8 @@ game_registry *solitaire_get_registry(void) {
 	game_registry_add(
 		r, "malteser_cross",
 		game_create("Malteser cross", false, solitaire_maltesercross));
+	game_registry_add(r, "klondyke",
+	                  game_create("Klondyke", false, solitaire_klondyke));
 	game_registry_add(r, "noname1",
 	                  game_create("Noname1", false, solitaire_noname1));
 	game_registry_add(r, "pyramid",
