@@ -43,10 +43,10 @@ examples: example_background example_solved example_widget
 example_background: $(OBJECTS_API) $(OBJECTS_CLIENT_BACKGROUNDS) $(OBJECTS_EXAMPLES_BACKGROUND)
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 
-example_solved: $(OBJECTS_EXAMPLES_SOLVED)
+example_solved: $(OBJECTS_API) $(OBJECTS_CLIENT_BACKGROUNDS) $(OBJECTS_EXAMPLES_SOLVED)
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 
-example_widget-window: $(OBJECTS_EXAMPLES_WIDGET_WINDOW)
+example_widget-window: $(OBJECTS_API) $(OBJECTS_CLIENT_BACKGROUNDS) $(OBJECTS_EXAMPLES_WIDGET_WINDOW)
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 
 ifeq ($(MSYSTEM), MINGW64)

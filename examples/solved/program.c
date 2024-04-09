@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include "api/mygl.h"
 #include "api/render.h"
-#include "game/render_solved.h"
+#include "client/render_solved.h"
 
 render_context *g_rcontext = 0;
 
