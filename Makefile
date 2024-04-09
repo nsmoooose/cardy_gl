@@ -40,7 +40,7 @@ cardy_tests: $(OBJECTS_API) $(OBJECTS_API_NETWORK) $(OBJECTS_API_SOLITAIRES) $(O
 
 examples: example_background example_solved example_widget
 
-example_background: $(OBJECTS_EXAMPLES_BACKGROUND) $(OBJECTS_API) $(OBJECTS_CLIENT_BACKGROUNDS)
+example_background: $(OBJECTS_API) $(OBJECTS_CLIENT_BACKGROUNDS) $(OBJECTS_EXAMPLES_BACKGROUND)
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 
 example_solved: $(OBJECTS_EXAMPLES_SOLVED)
