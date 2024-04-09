@@ -82,7 +82,7 @@ static void process_click(render_context *rcontext, render_object *object,
 		}
 	}
 
-	if (data->sol->ruleset->solved &&
+	if (data->sol->ruleset && data->sol->ruleset->solved &&
 	    rule_check(data->sol->ruleset->solved, 0)) {
 		ui_scene_solitaire_solved(rcontext);
 	}
