@@ -46,7 +46,8 @@ const char *render_object_solitaire_id = "solitaire";
 
 static void do_card_move(solitaire *sol, visual_pile *pile, card_proxy *card,
                          int count) {
-	if (!ruleset_move_card(sol->ruleset, sol->visual, pile, card, count)) {
+	if (sol->ruleset &&
+	    !ruleset_move_card(sol->ruleset, sol->visual, pile, card, count)) {
 		ruleset_move_individual_card(sol->ruleset, sol->visual, pile, card,
 		                             count);
 	}
