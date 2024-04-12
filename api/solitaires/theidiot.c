@@ -33,6 +33,11 @@ static void action_deal_execute(visual_pile_action *action) {
 		card_append(card2, i->pile2);
 		card_append(card3, i->pile3);
 		card_append(card4, i->pile4);
+	} else if (card_count(i->deck) == 0) {
+		card_move_all_array(i->deck, 5, i->pile1, i->pile2, i->pile3, i->pile4,
+		                    i->done);
+		card_hide_all(i->deck);
+		card_shuffle(i->deck);
 	}
 
 	visual_sync(sol->visual);
