@@ -18,6 +18,10 @@ void rendering_window_size_change(int width, int height) {
 void rendering_scene(void) {
 	glMatrixMode(GL_MODELVIEW);
 	glInitNames();
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	render_scene_context(g_rcontext);
 	check_gl_errors("render_scene");
 	glutSwapBuffers();

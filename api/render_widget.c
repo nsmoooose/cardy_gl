@@ -317,10 +317,12 @@ void widget_style_set_text(widget_style *style, const char *text) {
 	cr = cairo_create(cairo_surface);
 
 	/* Set the background color of the bitmap generated. */
-	cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
+	cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+	cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.0);
 	cairo_rectangle(cr, 0, 0, style->image_width, style->image_height);
 	cairo_fill(cr);
 
+	cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 	cairo_set_source_rgba(cr, style->text_color[0], style->text_color[1],
 	                      style->text_color[2], style->text_color[3]);
 	if (style->font_face) {
