@@ -62,7 +62,7 @@ ctags:
 	@ctags -e --recurse=yes --exclude=analysis/* --exclude=.doxygen/*
 
 format:
-	clang-format.exe -i $(shell find -name "*.c" -or -name "*.h")
+	clang-format -i $(shell find -name "*.c" -or -name "*.h")
 
 scan: clean
 	scan-build make cardy_gl
