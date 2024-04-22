@@ -81,8 +81,8 @@ void render_object_mainmenu(render_object *parent) {
 		widget_style_set_image_size(style, 128, 32);
 		/* widget_style_set_font_face(style, "Meera"); */
 		widget_style_set_font_size(style, 16.0f);
+		widget_style_set_text_color(style, 0.0f, 0.0f, 0.0f, 1.0f);
 		widget_style_set_text(style, game->name);
-		widget_style_set_text_color(style, 0.0f, 0.0f, 0.0f, 0.0f);
 		widget_style_set_size(style, 128.0f, 32.0f);
 		widget_style_set_pos(style, 30.0f, button_top);
 		widget_style_set_click_callback(style, sol_callback);
@@ -97,8 +97,8 @@ void render_object_mainmenu(render_object *parent) {
 	widget_style_set_image_size(style, 128, 32);
 	/* widget_style_set_font_face(style, "Meera"); */
 	widget_style_set_font_size(style, 16.0f);
+	widget_style_set_text_color(style, 0.0f, 0.0f, 0.0f, 1.0f);
 	widget_style_set_text(style, "Card theme");
-	widget_style_set_text_color(style, 0.0f, 0.0f, 0.0f, 0.0f);
 	widget_style_set_size(style, 128.0f, 32.0f);
 	widget_style_set_pos(style, 30.0f, button_top);
 	widget_style_set_click_callback(style, card_theme_callback);
@@ -110,8 +110,8 @@ void render_object_mainmenu(render_object *parent) {
 	widget_style_set_image_size(style, 128, 32);
 	/* widget_style_set_font_face(style, "Meera"); */
 	widget_style_set_font_size(style, 16.0f);
+	widget_style_set_text_color(style, 0.0f, 0.0f, 0.0f, 1.0f);
 	widget_style_set_text(style, "Quit");
-	widget_style_set_text_color(style, 0.0f, 0.0f, 0.0f, 0.0f);
 	widget_style_set_size(style, 128.0f, 32.0f);
 	widget_style_set_pos(style, 30.0f, button_top);
 	widget_style_set_click_callback(style, quit_callback);

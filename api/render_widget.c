@@ -321,8 +321,8 @@ void widget_style_set_text(widget_style *style, const char *text) {
 	cairo_rectangle(cr, 0, 0, style->image_width, style->image_height);
 	cairo_fill(cr);
 
-	cairo_set_source_rgb(cr, style->text_color[0], style->text_color[1],
-	                     style->text_color[2]);
+	cairo_set_source_rgba(cr, style->text_color[0], style->text_color[1],
+	                      style->text_color[2], style->text_color[3]);
 	if (style->font_face) {
 		cairo_select_font_face(cr, style->font_face, CAIRO_FONT_SLANT_NORMAL,
 		                       CAIRO_FONT_WEIGHT_NORMAL);
