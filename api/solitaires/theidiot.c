@@ -3,6 +3,7 @@
 #include "theidiot.h"
 
 typedef struct {
+	pile *deal;
 	pile *deck;
 	pile *pile1, *pile2, *pile3, *pile4;
 	pile *done;
@@ -11,10 +12,41 @@ typedef struct {
 typedef struct {
 	solitaire *sol;
 	internal *i;
-} action_deal_data;
+} action_data;
+
+static void action_deck_execute(visual_pile_action *action);
 
 static void action_deal_execute(visual_pile_action *action) {
-	action_deal_data *data = action->data;
+	action_data *data = action->data;
+	internal *i = data->i;
+	solitaire *sol = data->sol;
+
+	if (card_count(i->deal)) {
+		card_move_all(i->deck, i->deal);
+		action_deck_execute(action);
+	} else {
+		card_move_all_array(i->deal, 6, i->deck, i->pile1, i->pile2, i->pile3,
+		                    i->pile4, i->done);
+		card_hide_all(i->deal);
+		card_shuffle(i->deal);
+	}
+
+	visual_sync(sol->visual);
+}
+
+static visual_pile_action *action_deal(mem_context *context, solitaire *sol,
+                                       internal *i) {
+	visual_pile_action *action = mem_alloc(context, sizeof(visual_pile_action));
+	action_data *data = mem_alloc(context, sizeof(action_data));
+	data->sol = sol;
+	data->i = i;
+	action->data = data;
+	action->execute = action_deal_execute;
+	return action;
+}
+
+static void action_deck_execute(visual_pile_action *action) {
+	action_data *data = action->data;
 	internal *i = data->i;
 	solitaire *sol = data->sol;
 
@@ -43,20 +75,19 @@ static void action_deal_execute(visual_pile_action *action) {
 	visual_sync(sol->visual);
 }
 
-static visual_pile_action *action_deal(mem_context *context, solitaire *sol,
+static visual_pile_action *action_deck(mem_context *context, solitaire *sol,
                                        internal *i) {
-	visual_pile_action *deal_action =
-		mem_alloc(context, sizeof(visual_pile_action));
-	action_deal_data *data = mem_alloc(context, sizeof(action_deal_data));
+	visual_pile_action *action = mem_alloc(context, sizeof(visual_pile_action));
+	action_data *data = mem_alloc(context, sizeof(action_data));
 	data->sol = sol;
 	data->i = i;
-	deal_action->data = data;
-	deal_action->execute = action_deal_execute;
-	return deal_action;
+	action->data = data;
+	action->execute = action_deck_execute;
+	return action;
 }
 
 solitaire *solitaire_theidiot(mem_context *context, visual_settings *settings) {
-	visual_pile *deck, *pile1, *pile2, *pile3, *pile4, *done;
+	visual_pile *deal, *deck, *pile1, *pile2, *pile3, *pile4, *done;
 	rule *rule1, *rule2;
 	condition *pile1_4_cond;
 
@@ -71,6 +102,14 @@ solitaire *solitaire_theidiot(mem_context *context, visual_settings *settings) {
 
 	s->visual = visual_create(context, settings);
 
+	i->deal = pile_create(context, 52);
+	deal = visual_pile_create(context, i->deal);
+	deal->origin[0] = 0;
+	deal->origin[1] = 160.0f;
+	deal->rotation = 90.0f;
+	deal->action = action_deal(context, s, i);
+	visual_add_pile(context, s->visual, deal);
+
 	i->deck = pile_create(context, 52);
 	deck = visual_pile_create(context, i->deck);
 	deck->origin[0] =
@@ -79,7 +118,7 @@ solitaire *solitaire_theidiot(mem_context *context, visual_settings *settings) {
 	         settings->card_width / 2);
 	deck->origin[1] = 40.0f;
 	deck->rotation = 45.0f;
-	deck->action = action_deal(context, s, i);
+	deck->action = action_deck(context, s, i);
 	visual_add_pile(context, s->visual, deck);
 
 	i->pile1 = pile_create(context, 13);
@@ -123,8 +162,8 @@ solitaire *solitaire_theidiot(mem_context *context, visual_settings *settings) {
 	done->rotation = -45.0f;
 	visual_add_pile(context, s->visual, done);
 
-	card_create_deck(context, i->deck, 14);
-	card_shuffle(i->deck);
+	card_create_deck(context, i->deal, 14);
+	card_shuffle(i->deal);
 
 	visual_sync(s->visual);
 
