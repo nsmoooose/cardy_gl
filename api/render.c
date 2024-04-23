@@ -293,9 +293,12 @@ void render_svg_texture(RsvgHandle *h, GLuint texture, char *node_name,
 		cairo_data, CAIRO_FORMAT_ARGB32, width, height, stride);
 
 	cr = cairo_create(cairo_surface);
-	cairo_set_source_rgba(cr, 1.0f, 1.0f, 1.0f, 1.0f);
+	cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+	cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.0);
 	cairo_rectangle(cr, 0, 0, width, height);
 	cairo_fill(cr);
+
+	cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 
 	/* rsvg_handle_render_element will make sure that the vector is zoomed
 	   in to fit into the bitmap. But it will keep the aspect ratio of the

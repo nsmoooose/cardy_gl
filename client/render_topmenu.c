@@ -26,9 +26,10 @@ void render_object_topmenu(render_object *parent) {
 
 	render_object *window = widget_generic(render_object_topmenu_id);
 	style = widget_get_default_style(window);
-	widget_style_set_backcolor(style, 1.0f, 1.0f, 1.0f, 1.0f);
+	widget_style_set_backcolor(style, 1.0f, 1.0f, 1.0f, 0.5f);
 	widget_style_set_pos(style, 0.0f, 0.0f);
-	widget_style_set_size(style, 64.0f * 2 + 4 * 4.0f, 72.0f);
+	widget_style_set_width(style, "viewport_width");
+	widget_style_set_height(style, "72");
 	render_object_add_child(parent, window);
 
 	render_object *menu = widget_generic(0);
