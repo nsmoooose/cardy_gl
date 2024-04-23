@@ -2,6 +2,7 @@
 #include "klondyke.h"
 
 typedef struct {
+	pile *deal;
 	pile *deck;
 	pile *src;
 	pile *build[7];
@@ -11,10 +12,43 @@ typedef struct {
 typedef struct {
 	solitaire *sol;
 	internal *i;
-} action_deal_data;
+} action_data;
+
+static void action_deck_execute(visual_pile_action *action);
 
 static void action_deal_execute(visual_pile_action *action) {
-	action_deal_data *data = action->data;
+	action_data *data = action->data;
+	internal *i = data->i;
+	solitaire *sol = data->sol;
+
+	if (card_count(i->deal) == 52) {
+		card_move_all(i->deck, i->deal);
+		action_deck_execute(action);
+	} else {
+		card_move_all_array(i->deal, 13, i->deck, i->src, i->build[0],
+		                    i->build[1], i->build[2], i->build[3], i->build[4],
+		                    i->build[5], i->build[6], i->ace[0], i->ace[1],
+		                    i->ace[2], i->ace[3]);
+		card_hide_all(i->deal);
+		card_shuffle(i->deal);
+	}
+
+	visual_sync(sol->visual);
+}
+
+static visual_pile_action *action_deal(mem_context *context, solitaire *sol,
+                                       internal *i) {
+	visual_pile_action *action = mem_alloc(context, sizeof(visual_pile_action));
+	action_data *data = mem_alloc(context, sizeof(action_data));
+	data->sol = sol;
+	data->i = i;
+	action->data = data;
+	action->execute = action_deal_execute;
+	return action;
+}
+
+static void action_deck_execute(visual_pile_action *action) {
+	action_data *data = action->data;
 	internal *i = data->i;
 	solitaire *sol = data->sol;
 
@@ -52,16 +86,15 @@ static void action_deal_execute(visual_pile_action *action) {
 	visual_sync(sol->visual);
 }
 
-static visual_pile_action *action_deal(mem_context *context, solitaire *sol,
+static visual_pile_action *action_deck(mem_context *context, solitaire *sol,
                                        internal *i) {
-	visual_pile_action *deal_action =
-		mem_alloc(context, sizeof(visual_pile_action));
-	action_deal_data *data = mem_alloc(context, sizeof(action_deal_data));
+	visual_pile_action *action = mem_alloc(context, sizeof(visual_pile_action));
+	action_data *data = mem_alloc(context, sizeof(action_data));
 	data->sol = sol;
 	data->i = i;
-	deal_action->data = data;
-	deal_action->execute = action_deal_execute;
-	return deal_action;
+	action->data = data;
+	action->execute = action_deck_execute;
+	return action;
 }
 
 solitaire *solitaire_klondyke(mem_context *context, visual_settings *settings) {
@@ -71,11 +104,19 @@ solitaire *solitaire_klondyke(mem_context *context, visual_settings *settings) {
 	s->data = i;
 	s->visual = visual_create(context, settings);
 
+	i->deal = pile_create(context, 52);
+	visual_pile *deal = visual_pile_create(context, i->deal);
+	deal->origin[0] = 0 - (5 * (settings->card_width + settings->card_spacing));
+	deal->origin[1] = settings->card_height + settings->card_spacing;
+	deal->rotation = 30.0f;
+	deal->action = action_deal(context, s, i);
+	visual_add_pile(context, s->visual, deal);
+
 	i->deck = pile_create(context, 52);
 	visual_pile *deck = visual_pile_create(context, i->deck);
 	deck->origin[0] = 0 - (3 * (settings->card_width + settings->card_spacing));
 	deck->origin[1] = settings->card_height + settings->card_spacing;
-	deck->action = action_deal(context, s, i);
+	deck->action = action_deck(context, s, i);
 	visual_add_pile(context, s->visual, deck);
 
 	i->src = pile_create(context, 52);
@@ -106,8 +147,8 @@ solitaire *solitaire_klondyke(mem_context *context, visual_settings *settings) {
 		visual_add_pile(context, s->visual, build[x]);
 	}
 
-	card_create_deck(context, i->deck, 1);
-	card_shuffle(i->deck);
+	card_create_deck(context, i->deal, 1);
+	card_shuffle(i->deal);
 
 	s->ruleset = ruleset_create(context);
 
