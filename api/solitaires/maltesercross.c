@@ -5,6 +5,7 @@
 typedef struct {
 	char state;
 
+	pile *deal;
 	pile *deck;
 
 	/* The four piles where we draw cards from. */
@@ -46,10 +47,54 @@ typedef struct {
 typedef struct {
 	solitaire *sol;
 	internal *i;
-} action_deal_data;
+} action_data;
+
+static void action_deck_execute(visual_pile_action *action);
+
+static void maltesercross_reset(internal *i) {
+	i->visual.pile1->visible = true;
+	i->visual.pile2->visible = true;
+	i->visual.pile3->visible = true;
+	i->visual.pile4->visible = true;
+	i->visual.pile5->visible = true;
+	card_move_all_array(i->deal, 20, i->deck, i->src1, i->src2, i->src3,
+	                    i->src4, i->king1, i->king2, i->king3, i->king4,
+	                    i->center, i->build1, i->build2, i->build3, i->build4,
+	                    i->done, i->pile1, i->pile2, i->pile3, i->pile4,
+	                    i->pile5);
+	card_hide_all(i->deal);
+	card_shuffle(i->deal);
+	i->state = 0;
+}
 
 static void action_deal_execute(visual_pile_action *action) {
-	action_deal_data *data = action->data;
+	action_data *data = action->data;
+	internal *i = data->i;
+	solitaire *sol = data->sol;
+
+	if (card_count(i->deal) == 104) {
+		card_move_all(i->deck, i->deal);
+		action_deck_execute(action);
+	} else {
+		maltesercross_reset(i);
+	}
+
+	visual_sync(sol->visual);
+}
+
+static visual_pile_action *action_deal(mem_context *context, solitaire *sol,
+                                       internal *i) {
+	visual_pile_action *action = mem_alloc(context, sizeof(visual_pile_action));
+	action_data *data = mem_alloc(context, sizeof(action_data));
+	data->sol = sol;
+	data->i = i;
+	action->data = data;
+	action->execute = action_deal_execute;
+	return action;
+}
+
+static void action_deck_execute(visual_pile_action *action) {
+	action_data *data = action->data;
 	internal *i = data->i;
 	solitaire *sol = data->sol;
 
@@ -147,33 +192,21 @@ static void action_deal_execute(visual_pile_action *action) {
 			card_reveal_all(i->pile1);
 		}
 	} else if (i->state == 6) {
-		i->visual.pile1->visible = true;
-		i->visual.pile2->visible = true;
-		i->visual.pile3->visible = true;
-		i->visual.pile4->visible = true;
-		i->visual.pile5->visible = true;
-		card_move_all_array(i->deck, 19, i->src1, i->src2, i->src3, i->src4,
-		                    i->king1, i->king2, i->king3, i->king4, i->center,
-		                    i->build1, i->build2, i->build3, i->build4, i->done,
-		                    i->pile1, i->pile2, i->pile3, i->pile4, i->pile5);
-		card_hide_all(i->deck);
-		card_shuffle(i->deck);
-		i->state = 0;
+		maltesercross_reset(i);
 	}
 
 	visual_sync(sol->visual);
 }
 
-static visual_pile_action *action_deal(mem_context *context, solitaire *sol,
+static visual_pile_action *action_deck(mem_context *context, solitaire *sol,
                                        internal *i) {
-	visual_pile_action *deal_action =
-		mem_alloc(context, sizeof(visual_pile_action));
-	action_deal_data *data = mem_alloc(context, sizeof(action_deal_data));
+	visual_pile_action *action = mem_alloc(context, sizeof(visual_pile_action));
+	action_data *data = mem_alloc(context, sizeof(action_data));
 	data->sol = sol;
 	data->i = i;
-	deal_action->data = data;
-	deal_action->execute = action_deal_execute;
-	return deal_action;
+	action->data = data;
+	action->execute = action_deck_execute;
+	return action;
 }
 
 static void setup_rules(mem_context *context, solitaire *s, internal *i) {
@@ -280,7 +313,7 @@ static void setup_rules(mem_context *context, solitaire *s, internal *i) {
 
 solitaire *solitaire_maltesercross(mem_context *context,
                                    visual_settings *settings) {
-	visual_pile *deck, *done, *king1, *king2, *king3, *king4;
+	visual_pile *deal, *deck, *done, *king1, *king2, *king3, *king4;
 	visual_pile *src1, *src2, *src3, *src4;
 	visual_pile *center, *build1, *build2, *build3, *build4;
 	visual_pile *pile1, *pile2, *pile3, *pile4, *pile5;
@@ -297,13 +330,22 @@ solitaire *solitaire_maltesercross(mem_context *context,
 	s->data = i;
 	s->visual = visual_create(context, settings);
 
+	i->deal = pile_create(context, 104);
+	deal = visual_pile_create(context, i->deal);
+	deal->origin[0] = 0 - (settings->card_width + settings->card_spacing * 2 +
+	                       settings->card_height * 2);
+	deal->origin[1] = 0 - settings->card_width * 2 + separator;
+	deal->rotation = -30.0f;
+	deal->action = action_deal(context, s, i);
+	visual_add_pile(context, s->visual, deal);
+
 	i->deck = pile_create(context, 104);
 	deck = visual_pile_create(context, i->deck);
 	deck->origin[0] = 0 - (settings->card_width + settings->card_spacing * 2 +
 	                       settings->card_height * 2);
 	deck->origin[1] = settings->card_width + separator;
 	deck->rotation = -30.0f;
-	deck->action = action_deal(context, s, i);
+	deck->action = action_deck(context, s, i);
 	visual_add_pile(context, s->visual, deck);
 
 	i->done = pile_create(context, 104);
@@ -479,10 +521,9 @@ solitaire *solitaire_maltesercross(mem_context *context,
 		s->visual->piles[index]->origin[1] += settings->card_height;
 	}
 
-	card_create_deck(context, i->deck, 1);
-	card_create_deck(context, i->deck, 1);
-
-	card_shuffle(i->deck);
+	card_create_deck(context, i->deal, 1);
+	card_create_deck(context, i->deal, 1);
+	card_shuffle(i->deal);
 
 	visual_sync(s->visual);
 
