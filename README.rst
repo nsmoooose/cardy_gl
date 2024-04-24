@@ -82,29 +82,3 @@ forming a tree structure of objects::
 Render objects is currently only big things like widgets (buttons), background.
 Individual cards are NOT a rendering object. Solitaire is currently handle by
 a single rendering object that does everything to handle the drawing of cards.
-
-How rendered objects are places now::
-
-    background (triangles)
-     |- placeholder ()
-     |   |- solitaire (the card game you have selected)
-     |   |- solitaire_solved (solved)
-     |- desktop (rotating svg)
-         |- topmenu (buttons on the)
-         |- mainmenu (select solitaire to play)
-
-    root
-     |- desktop
-         |- mainmenu (select solitaire to play)
-
-    root
-     |- desktop
-         |- background (triangles)
-         |- topmenu (options)
-         |- solitaire
-
-    root
-     |- desktop
-         |- background (triangles)
-         |- topmenu (options)
-         |- solved

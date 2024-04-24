@@ -4,4 +4,4 @@
 
 extern const char *render_object_topmenu_id;
 
-void render_object_topmenu(render_object *parent);
+render_object *render_object_topmenu(void);

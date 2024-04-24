@@ -16,7 +16,7 @@ static void topmenu_quit_callback(render_event_args *event, void *data) {
 	exit(0);
 }
 
-void render_object_topmenu(render_object *parent) {
+render_object *render_object_topmenu(void) {
 	char file_buffer[PATH_MAX];
 	widget_style *style;
 	RsvgHandle *h;
@@ -30,7 +30,6 @@ void render_object_topmenu(render_object *parent) {
 	widget_style_set_pos(style, 0.0f, 0.0f);
 	widget_style_set_width(style, "viewport_width");
 	widget_style_set_height(style, "72");
-	render_object_add_child(parent, window);
 
 	render_object *menu = widget_generic(0);
 	style = widget_get_default_style(menu);
@@ -49,4 +48,6 @@ void render_object_topmenu(render_object *parent) {
 	render_object_add_child(window, quit);
 
 	render_svg_close(h);
+
+	return window;
 }

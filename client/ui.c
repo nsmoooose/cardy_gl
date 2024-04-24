@@ -31,14 +31,23 @@ void ui_scene_solitaire(render_context *rcontext,
                         solitaire_create sol_callback) {
 	ui_queue_free_all(rcontext);
 
+	/*
+	root
+	 |- game
+	     |- triangles
+		 |- solitaire
+	     |- desktop
+	         |- topmenu
+	*/
+
 	render_object *game = render_object_create("game");
 	render_object_add_child(rcontext->object, game);
 	render_object_add_child(game, render_object_triangles());
+	render_object_add_child(game, render_object_solitaire(sol_callback));
 
 	render_object *desktop = widget_desktop("desktop");
 	render_object_add_child(game, desktop);
-	render_object_topmenu(desktop);
-	render_object_add_child(desktop, render_object_solitaire(sol_callback));
+	render_object_add_child(desktop, render_object_topmenu());
 }
 
 void ui_scene_solitaire_solved(render_context *rcontext) {
