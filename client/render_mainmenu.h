@@ -4,4 +4,4 @@
 
 extern const char *render_object_mainmenu_id;
 extern bool render_testing;
-void render_object_mainmenu(render_object *parent);
+render_object *render_object_mainmenu(void);

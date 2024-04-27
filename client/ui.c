@@ -16,7 +16,7 @@ void ui_scene_main(render_context *rcontext) {
 
 	render_object *desktop = widget_desktop("desktop");
 	render_object_add_child(rcontext->object, desktop);
-	render_object_mainmenu(desktop);
+	render_object_add_child(desktop, render_object_mainmenu());
 }
 
 void ui_scene_card_themes(render_context *rcontext) {
@@ -35,7 +35,7 @@ void ui_scene_solitaire(render_context *rcontext,
 	root
 	 |- game
 	     |- triangles
-		 |- solitaire
+	     |- solitaire
 	     |- desktop
 	         |- topmenu
 	*/

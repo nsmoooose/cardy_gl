@@ -30,7 +30,7 @@ static void quit_callback(render_event_args *event, void *data) {
 	exit(0);
 }
 
-void render_object_mainmenu(render_object *parent) {
+render_object *render_object_mainmenu(void) {
 	render_object *window, *button;
 	widget_style *style;
 	float button_top = 140.0f;
@@ -44,7 +44,6 @@ void render_object_mainmenu(render_object *parent) {
 	widget_style_set_top(style, "0");
 	widget_style_set_width(style, "viewport_width");
 	widget_style_set_height(style, "viewport_height");
-	render_object_add_child(parent, window);
 
 	render_object_add_child(window, ui_menu_background());
 
@@ -95,4 +94,6 @@ void render_object_mainmenu(render_object *parent) {
 	widget_style_set_click_callback(style, quit_callback);
 	render_object_add_child(window, button);
 	button_top += 40;
+
+	return window;
 }
