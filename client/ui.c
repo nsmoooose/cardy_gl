@@ -1,11 +1,11 @@
 #include "api/render_widget.h"
 #include "client/backgrounds/rotating_triangles.h"
 #include "client/render_card_themes.h"
-#include "client/render_mainmenu.h"
 #include "client/render_solitaire.h"
 #include "client/render_solved.h"
 #include "client/render_topmenu.h"
 #include "client/ui.h"
+#include "client/ui_mainmenu.h"
 
 static void ui_queue_free_all(render_context *rcontext) {
 	render_object_queue_free_children(rcontext, rcontext->object);
@@ -16,7 +16,7 @@ void ui_scene_main(render_context *rcontext) {
 
 	render_object *desktop = widget_desktop("desktop");
 	render_object_add_child(rcontext->object, desktop);
-	render_object_add_child(desktop, render_object_mainmenu());
+	render_object_add_child(desktop, ui_mainmenu());
 }
 
 void ui_scene_card_themes(render_context *rcontext) {

@@ -5,9 +5,9 @@
 #include "api/mygl.h"
 #include "api/render_widget.h"
 #include "api/solitaires/solitaires.h"
-#include "client/render_mainmenu.h"
 #include "client/ui.h"
 #include "client/ui_menu_background.h"
+#include "client/ui_mainmenu.h"
 
 const char *render_object_mainmenu_id = "mainmenu";
 bool render_testing = false;
@@ -30,7 +30,7 @@ static void quit_callback(render_event_args *event, void *data) {
 	exit(0);
 }
 
-render_object *render_object_mainmenu(void) {
+render_object *ui_mainmenu(void) {
 	render_object *window, *button;
 	widget_style *style;
 	float button_top = 140.0f;
