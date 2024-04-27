@@ -5,6 +5,7 @@
 #include "client/card_theme.h"
 #include "client/render_card_themes.h"
 #include "client/ui.h"
+#include "client/ui_menu_background.h"
 
 const char *render_object_card_themes_id = "mainmenu";
 
@@ -30,6 +31,8 @@ void render_object_card_themes(render_object *parent) {
 	widget_style_set_width(style, "viewport_width");
 	widget_style_set_height(style, "viewport_height");
 	render_object_add_child(parent, window);
+
+	render_object_add_child(window, ui_menu_background());
 
 	float button_top = 140.0f;
 

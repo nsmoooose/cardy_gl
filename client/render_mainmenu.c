@@ -4,10 +4,10 @@
 #include <stdbool.h>
 #include "api/mygl.h"
 #include "api/render_widget.h"
-#include "api/resource.h"
 #include "api/solitaires/solitaires.h"
 #include "client/render_mainmenu.h"
 #include "client/ui.h"
+#include "client/ui_menu_background.h"
 
 const char *render_object_mainmenu_id = "mainmenu";
 bool render_testing = false;
@@ -31,18 +31,12 @@ static void quit_callback(render_event_args *event, void *data) {
 }
 
 void render_object_mainmenu(render_object *parent) {
-	char file_buffer[PATH_MAX];
 	render_object *window, *button;
 	widget_style *style;
-	RsvgHandle *h;
 	float button_top = 140.0f;
 	GHashTableIter it;
 	gpointer key, value;
 	game_registry *registry = solitaire_get_registry();
-
-	resource_locate_file("resources/images/mainmenu.svg", file_buffer,
-	                     PATH_MAX);
-	h = render_svg_open(file_buffer);
 
 	window = widget_generic(render_object_mainmenu_id);
 	style = widget_get_default_style(window);
@@ -52,23 +46,7 @@ void render_object_mainmenu(render_object *parent) {
 	widget_style_set_height(style, "viewport_height");
 	render_object_add_child(parent, window);
 
-	button = widget_generic(0);
-	style = widget_get_default_style(button);
-	widget_style_set_left(style, "viewport_width/2-width/2");
-	widget_style_set_top(style, "viewport_height/2-height/2");
-	widget_style_set_width(style, "viewport_height/1.5");
-	widget_style_set_height(style, "viewport_height/1.5");
-	widget_style_set_image(style, h, "#background", 512, 512);
-	widget_style_set_rotation(style, style_key_render_time);
-	render_object_add_child(window, button);
-
-	button = widget_generic(0);
-	style = widget_get_default_style(button);
-	widget_style_set_pos(style, 0.0f, 0.0f);
-	widget_style_set_size(style, 342.0f, 138.0f);
-	widget_style_set_image(style, h, "#logo", 256, 128);
-	render_object_add_child(window, button);
-	render_svg_close(h);
+	render_object_add_child(window, ui_menu_background());
 
 	g_hash_table_iter_init(&it, registry->games);
 	while (g_hash_table_iter_next(&it, &key, &value)) {
