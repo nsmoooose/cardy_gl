@@ -35,21 +35,20 @@ render_object *ui_mainmenu(void) {
 
 	render_object_add_child(window, ui_menu_background());
 
-	char pos_top[20];
 	float button_top = 140.0f;
-	snprintf(pos_top, 20, "%f", button_top);
-	render_object_add_child(
-		window, ui_button(0, "30", pos_top, "Solitaire", solitaire_callback));
+	render_object_add_child(window, ui_button(0, expression_const(30),
+	                                          expression_const(button_top),
+	                                          "Solitaire", solitaire_callback));
 	button_top += 40;
 
-	snprintf(pos_top, 20, "%f", button_top);
 	render_object_add_child(
-		window, ui_button(0, "30", pos_top, "Card theme", card_theme_callback));
+		window, ui_button(0, expression_const(30), expression_const(button_top),
+	                      "Card theme", card_theme_callback));
 	button_top += 40;
 
-	snprintf(pos_top, 20, "%f", button_top);
-	render_object_add_child(window,
-	                        ui_button(0, "30", pos_top, "Quit", quit_callback));
+	render_object_add_child(window, ui_button(0, expression_const(30),
+	                                          expression_const(button_top),
+	                                          "Quit", quit_callback));
 	button_top += 40;
 
 	return window;

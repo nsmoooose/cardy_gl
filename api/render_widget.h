@@ -64,7 +64,9 @@ void widget_style_set_backcolor(widget_style *style, float red, float green,
 
 void widget_style_set_pos(widget_style *style, float left, float top);
 void widget_style_set_left(widget_style *style, const char *expr);
+void widget_style_set_left_e(widget_style *style, expression *expr);
 void widget_style_set_top(widget_style *style, const char *expr);
+void widget_style_set_top_e(widget_style *style, expression *expr);
 expression *widget_style_get_top_expression(widget_style *style);
 expression *widget_style_get_left_expression(widget_style *style);
 

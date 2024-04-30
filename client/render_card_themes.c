@@ -36,23 +36,22 @@ void render_object_card_themes(render_object *parent) {
 	render_object_add_child(window, ui_menu_background());
 
 	float button_top = 140.0f;
-	char pos_top[20];
 
 	mem_context *mem = mem_context_create();
 	strncat(theme_dir, "resources/card_themes", PATH_MAX - 1);
 	themes *themes = theme_list(mem, theme_dir);
 
 	for (int i = 0; i < themes->theme_count; i++) {
-		snprintf(pos_top, 20, "%f", button_top);
 		render_object_add_child(
-			window, ui_button(themes->theme_names[i], "30", pos_top,
+			window, ui_button(themes->theme_names[i], expression_const(30),
+		                      expression_const(button_top),
 		                      themes->theme_names[i], card_theme_callback));
 		button_top += 40;
 	}
 
-	snprintf(pos_top, 20, "%f", button_top);
-	render_object_add_child(window,
-	                        ui_button(0, "30", pos_top, "Back", back_callback));
+	render_object_add_child(window, ui_button(0, expression_const(30),
+	                                          expression_const(button_top),
+	                                          "Back", back_callback));
 	button_top += 40;
 
 	mem_context_free(mem);
