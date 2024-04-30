@@ -5,6 +5,7 @@
 #include "client/render_solved.h"
 #include "client/render_topmenu.h"
 #include "client/ui.h"
+#include "client/ui_solitaire_select.h"
 #include "client/ui_mainmenu.h"
 
 static void ui_queue_free_all(render_context *rcontext) {
@@ -17,6 +18,14 @@ void ui_scene_main(render_context *rcontext) {
 	render_object *desktop = widget_desktop("desktop");
 	render_object_add_child(rcontext->object, desktop);
 	render_object_add_child(desktop, ui_mainmenu());
+}
+
+void ui_scene_solitaire_select(render_context *rcontext) {
+	ui_queue_free_all(rcontext);
+
+	render_object *desktop = widget_desktop("desktop");
+	render_object_add_child(rcontext->object, desktop);
+	render_object_add_child(desktop, ui_solitaire_select());
 }
 
 void ui_scene_card_themes(render_context *rcontext) {
