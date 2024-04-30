@@ -5,6 +5,7 @@
 #include "client/card_theme.h"
 #include "client/render_card_themes.h"
 #include "client/ui.h"
+#include "client/ui_button.h"
 #include "client/ui_menu_background.h"
 
 const char *render_object_card_themes_id = "mainmenu";
@@ -35,38 +36,23 @@ void render_object_card_themes(render_object *parent) {
 	render_object_add_child(window, ui_menu_background());
 
 	float button_top = 140.0f;
+	char pos_top[20];
 
 	mem_context *mem = mem_context_create();
 	strncat(theme_dir, "resources/card_themes", PATH_MAX - 1);
 	themes *themes = theme_list(mem, theme_dir);
 
 	for (int i = 0; i < themes->theme_count; i++) {
-		render_object *button = widget_generic(themes->theme_names[i]);
-		style = widget_get_default_style(button);
-		widget_style_set_image_size(style, 128, 32);
-		/* widget_style_set_font_face(style, "Meera"); */
-		widget_style_set_font_size(style, 16.0f);
-		widget_style_set_text_color(style, 0.0f, 0.0f, 0.0f, 1.0f);
-		widget_style_set_text(style, themes->theme_names[i]);
-		widget_style_set_size(style, 128.0f, 32.0f);
-		widget_style_set_pos(style, 30.0f, button_top);
-		widget_style_set_click_callback(style, card_theme_callback);
-		render_object_add_child(window, button);
-
+		snprintf(pos_top, 20, "%f", button_top);
+		render_object_add_child(
+			window, ui_button(themes->theme_names[i], "30", pos_top,
+		                      themes->theme_names[i], card_theme_callback));
 		button_top += 40;
 	}
 
-	render_object *button = widget_generic(0);
-	style = widget_get_default_style(button);
-	widget_style_set_image_size(style, 128, 32);
-	/* widget_style_set_font_face(style, "Meera"); */
-	widget_style_set_font_size(style, 16.0f);
-	widget_style_set_text_color(style, 0.0f, 0.0f, 0.0f, 1.0f);
-	widget_style_set_text(style, "Back");
-	widget_style_set_size(style, 128.0f, 32.0f);
-	widget_style_set_pos(style, 30.0f, button_top);
-	widget_style_set_click_callback(style, back_callback);
-	render_object_add_child(window, button);
+	snprintf(pos_top, 20, "%f", button_top);
+	render_object_add_child(window,
+	                        ui_button(0, "30", pos_top, "Back", back_callback));
 	button_top += 40;
 
 	mem_context_free(mem);
