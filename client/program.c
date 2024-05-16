@@ -26,7 +26,7 @@ void window_special_key_press(int key, int x, int y) {
 }
 
 int main(int argc, char *argv[]) {
-	int opt, width = 800, height = 600;
+	int opt, width = 1024, height = 1024;
 	char *separator;
 
 	setlocale(LC_NUMERIC, "C");
