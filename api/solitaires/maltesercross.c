@@ -98,7 +98,7 @@ static void action_deck_execute(visual_pile_action *action) {
 	internal *i = data->i;
 	solitaire *sol = data->sol;
 
-	if (data->i->state == 0) {
+	if (data->i->state == 0 && card_count(i->deck) == 104) {
 		card_move_count(i->src1, i->deck, 13);
 		card_move_count(i->src2, i->deck, 13);
 		card_move_count(i->src3, i->deck, 13);
