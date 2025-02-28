@@ -31,6 +31,7 @@ clean:
 	$(RM) api/solitaires/*.o api/solitaires/*.gcda api/solitaires/*.gcno
 	$(RM) client/*.o client/*.gcda client/*.gcno
 	$(RM) client/backgrounds/*.o client/backgrounds/*.gcda client/backgrounds/*.gcno
+	$(RM) compile_commands.json
 
 cardy_server: $(OBJECTS_SERVER)
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
@@ -88,5 +89,11 @@ coverage: clean
 	@lcov --directory . --capture --output-file coverage/coverage.info
 	@echo ===========================================================================
 	@genhtml -o coverage/ coverage/coverage.info
+
+# A target for generating a definition of all compile commands.
+# This is used if you have Emacs as code editor together with
+# lsp-mode and clangd for quick code navigation.
+compile_commands.json:
+	bear -- $(MAKE) clean all
 
 .PHONY: all clean ctags deploy examples format scan deploy coverage install

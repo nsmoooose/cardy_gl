@@ -1,4 +1,5 @@
 config
+compile_commands.json
 analysis-cov
 analysis-cppcheck
 .doxygen
