@@ -1,6 +1,5 @@
 #include <math.h>
 #include <stdlib.h>
-#include "api/render_widget.h"
 #include "client/ui.h"
 #include "client/render_solved.h"
 

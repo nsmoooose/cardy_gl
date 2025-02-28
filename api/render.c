@@ -2,7 +2,6 @@
 #include <librsvg/rsvg.h>
 #include <stdlib.h>
 #include <string.h>
-#include "api/card.h"
 #include "api/render.h"
 
 render_context *render_context_create(void) {

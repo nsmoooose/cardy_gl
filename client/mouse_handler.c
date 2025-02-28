@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "api/mygl.h"
-#include "client/render_solitaire.h"
 #include "client/mouse_handler.h"
 #include "client/program.h"
 #include "client/rendering.h"

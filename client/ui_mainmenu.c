@@ -2,7 +2,6 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "api/mygl.h"
 #include "api/render_widget.h"
 #include "client/ui.h"
 #include "client/ui_button.h"
